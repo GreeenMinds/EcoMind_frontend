@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  width: 280px;
+  min-height: 100vh;
+  background: #f7f8fa;
+  border-right: 1px solid #e3e5e8;
+}
+
+.dash-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100vh;
+  padding: 36px 16px;
+}
+
+.dash-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  color: #555b66;
+  font-size: 1.05rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.dash-item:hover {
+  color: #2f8f25;
+}
+
+.dash-item.active {
+  border-color: #69d255;
+  background: #eefae9;
+  color: #2f8f25;
+}

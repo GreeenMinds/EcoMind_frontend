@@ -1,0 +1,10 @@
+{
+  "sidebar": {
+    "profile": "Perfil",
+    "quests": "Retos",
+    "community": "Comunidad",
+    "ranking": "Ranking",
+    "store": "Tienda",
+    "settings": "Ajustes"
+  }
+}
