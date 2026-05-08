@@ -4,7 +4,10 @@ export class Quest implements BaseEntity {
   private _id: number;
   private _minigame_id: number | null;
   private _category: string;
+  private _title: string;
   private _description: string;
+  private _image_url: string | null;
+  private _age: number;
   private _type: string;
   private _reward_gems: number;
   private _reward_ecopoints: number;
@@ -15,7 +18,10 @@ export class Quest implements BaseEntity {
     id: number;
     minigame_id: number | null;
     category: string;
+    title: string;
     description: string;
+    image_url: string | null;
+    age: number;
     type: string;
     reward_gems: number;
     reward_ecopoints: number;
@@ -25,7 +31,10 @@ export class Quest implements BaseEntity {
     this._id = quest.id;
     this._minigame_id = quest.minigame_id;
     this._category = quest.category;
+    this._title = quest.title;
     this._description = quest.description;
+    this._image_url = quest.image_url;
+    this._age = quest.age;
     this._type = quest.type;
     this._reward_gems = quest.reward_gems;
     this._reward_ecopoints = quest.reward_ecopoints;
@@ -57,12 +66,36 @@ export class Quest implements BaseEntity {
     this._category = value;
   }
 
+  get title(): string {
+    return this._title;
+  }
+
+  set title(value: string) {
+    this._title = value;
+  }
+
   get description(): string {
     return this._description;
   }
 
   set description(value: string) {
     this._description = value;
+  }
+
+  get image_url(): string | null {
+    return this._image_url;
+  }
+
+  set image_url(value: string | null) {
+    this._image_url = value;
+  }
+
+  get age(): number {
+    return this._age;
+  }
+
+  set age(value: number) {
+    this._age = value;
   }
 
   get type(): string {
