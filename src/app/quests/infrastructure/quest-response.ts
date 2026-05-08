@@ -1,12 +1,11 @@
 import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
 
-export interface QuestsResponse extends BaseResponse {
+export interface QuestResponse extends BaseResponse {
   quests: QuestResource[];
 }
 
 export interface QuestResource extends BaseResource {
   id: number;
-  challenge_id: number;
   minigame_id: number | null;
   category: string;
   description: string;
