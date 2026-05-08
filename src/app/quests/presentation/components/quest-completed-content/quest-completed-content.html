@@ -1,0 +1,12 @@
+<section class="quest-completed">
+  <h2>You completed the activity!</h2>
+  <img src="/assets/images/quests/complete.png" alt="Activity completed">
+
+  @if (detail(); as detail) {
+    @if (detail.quest.reward_ecopoints > 0) {
+      <strong>+{{ detail.quest.reward_ecopoints }} ecoPoints</strong>
+    }
+  }
+
+  <a class="continue-action" routerLink="/quests">Continue</a>
+</section>

@@ -1,0 +1,58 @@
+@if (detail(); as detail) {
+  <section class="quest-activities">
+    <header class="activity-route-header">
+      <a class="back-link" [routerLink]="['/quests', detail.quest.id]" aria-label="Back">
+        <span aria-hidden="true">&lsaquo;</span>
+        Back
+      </a>
+      <span>QUEST</span>
+    </header>
+
+    <header class="activities-header">
+      <h2>{{ detail.quest.title }}</h2>
+    </header>
+
+    @if (detail.activities.length > 0) {
+      <div class="activity-list">
+        @for (activityProgress of detail.activities; track activityProgress.activity.id) {
+          <label class="activity-item" [class.completed]="activityProgress.completed">
+            <input
+              type="checkbox"
+              [checked]="activityProgress.completed"
+              [disabled]="!detail.started || detail.completed"
+              (change)="toggleActivity(activityProgress.activity.id, $any($event.target).checked)"
+            >
+            <span>{{ activityProgress.activity.description }}</span>
+          </label>
+        }
+      </div>
+
+      <div class="quest-progress">
+        <span>Progress: {{ detail.completedActivitiesCount }} / {{ detail.activitiesCount }}</span>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-value" [style.width.%]="detail.progress"></div>
+        </div>
+      </div>
+    } @else {
+      <p class="empty-copy">This quest has no registered activities.</p>
+    }
+
+    <button
+      type="button"
+      class="primary-action"
+      [disabled]="!canCompleteQuest() || detail.completed"
+      (click)="completeQuest()"
+    >
+      @if (detail.completed) {
+        Activity completed
+      } @else {
+        Complete activity
+      }
+    </button>
+  </section>
+} @else {
+  <section class="quest-activities empty-state">
+    <h2>Quest not found</h2>
+    <a class="back-link" routerLink="/quests">Back to quests</a>
+  </section>
+}

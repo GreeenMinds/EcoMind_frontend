@@ -1,0 +1,52 @@
+@if (detail(); as detail) {
+  <section class="quest-detail">
+    <header class="detail-header">
+      <a class="back-link" routerLink="/quests" aria-label="Back">
+        <span aria-hidden="true">&lsaquo;</span>
+        Back
+      </a>
+      <span>QUEST</span>
+    </header>
+
+    <h2>{{ detail.quest.title }}</h2>
+
+    <div class="quest-meta">
+      <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
+      @if (detail.quest.age > 0) {
+        <span>+{{ detail.quest.age }} years</span>
+      }
+      <span>{{ detail.quest.time }} min</span>
+      @if (detail.quest.reward_gems > 0) {
+        <span class="gem-reward">+{{ detail.quest.reward_gems }} gems</span>
+      }
+      @if (detail.quest.reward_ecopoints > 0) {
+        <span>{{ detail.quest.reward_ecopoints }} ecoPoints</span>
+      }
+    </div>
+
+    <p class="quest-copy">{{ detail.quest.description }}</p>
+
+    <div class="quest-visual-space">
+      @if (detail.quest.image_url) {
+        <img
+          class="quest-illustration"
+          [src]="detail.quest.image_url"
+          [alt]="detail.quest.title"
+        >
+      }
+    </div>
+
+    <button
+      type="button"
+      class="primary-action"
+      (click)="startQuest()"
+    >
+      {{ actionLabel() }}
+    </button>
+  </section>
+} @else {
+  <section class="quest-detail empty-state">
+    <h2>Quest not found</h2>
+    <a class="back-link" routerLink="/quests">Back to quests</a>
+  </section>
+}

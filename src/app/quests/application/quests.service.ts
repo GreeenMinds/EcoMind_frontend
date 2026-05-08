@@ -127,6 +127,7 @@ export class QuestsService {
         return this.getQuestSummaries()();
       }
       return this.getQuestSummaries()().filter((summary) =>
+        summary.quest.title.toLowerCase().includes(normalizedSearchTerm) ||
         summary.quest.description.toLowerCase().includes(normalizedSearchTerm) ||
         summary.quest.category.toLowerCase().includes(normalizedSearchTerm) ||
         summary.quest.type.toLowerCase().includes(normalizedSearchTerm),
@@ -436,7 +437,7 @@ export class QuestsService {
       activitiesCount: activities.length,
       completedActivitiesCount,
       started: Boolean(questUser),
-      completed: questUser?.status === 'completed' || progress >= 100,
+      completed: questUser?.status === 'completed',
       expired: this.isExpired(quest.expiration_date),
       themeType: this.resolveQuestThemeType(quest),
     };

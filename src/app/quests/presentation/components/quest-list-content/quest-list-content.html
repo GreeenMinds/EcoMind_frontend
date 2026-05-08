@@ -1,0 +1,12 @@
+<section class="quest-list">
+  <app-quest-category-selector
+    [categories]="categories"
+    [selectedCategory]="selectedCategory()"
+    (categorySelected)="selectCategory($event)"
+  ></app-quest-category-selector>
+
+  <app-quest-card-grid
+    [quests]="filteredQuests()"
+    (questSelected)="selectQuest($event)"
+  ></app-quest-card-grid>
+</section>
