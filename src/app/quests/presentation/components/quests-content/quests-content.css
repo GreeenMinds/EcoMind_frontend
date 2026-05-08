@@ -1,0 +1,17 @@
+.quest-detail {
+  max-width: 680px;
+  margin: 24px auto;
+}
+
+.activity-list {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}

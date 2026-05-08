@@ -29,6 +29,7 @@ export interface QuestSummary {
   started: boolean;
   completed: boolean;
   expired: boolean;
+  themeType: string;
 }
 
 export interface QuestDetail extends QuestSummary {
@@ -329,7 +330,18 @@ export class QuestsService {
 
     activityUser.progress = 100;
     activityUser.end_date = this.getTodayDate();
-    this.updateActivityUser(activityUser, 'Failed to complete activity');
+    this.updateActivityUser(activityUser, 'Failed to complete activity', true);
+  }
+
+  resetActivity(activityId: number): void {
+    const activityUser = this.findCurrentUserActivity(activityId);
+    if (!activityUser) {
+      return;
+    }
+
+    activityUser.progress = 0;
+    activityUser.end_date = null;
+    this.updateActivityUser(activityUser, 'Failed to reset activity', true);
   }
 
   recordMinigameAttempt(questId: number, score: number, metadata: Record<string, unknown>): void {
@@ -426,6 +438,7 @@ export class QuestsService {
       started: Boolean(questUser),
       completed: questUser?.status === 'completed' || progress >= 100,
       expired: this.isExpired(quest.expiration_date),
+      themeType: this.resolveQuestThemeType(quest),
     };
   }
 
@@ -450,6 +463,25 @@ export class QuestsService {
       return 0;
     }
     return Math.round((completedActivitiesCount / activities.length) * 100);
+  }
+
+  private resolveQuestThemeType(quest: Quest): string {
+    if (quest.type === 'minigame') {
+      return 'minigame';
+    }
+
+    const activities = this.activities().filter((activity) => activity.quest_id === quest.id);
+    return activities
+      .map((activity) => activity.type)
+      .sort((a, b) => this.getActivityTypeWeight(b) - this.getActivityTypeWeight(a))[0] ?? quest.type;
+  }
+
+  private getActivityTypeWeight(type: string): number {
+    const weights: Record<string, number> = {
+      checkbox: 10,
+    };
+
+    return weights[type] ?? 0;
   }
 
   private findCurrentUserQuest(questId: number): QuestUser | undefined {
@@ -493,6 +525,7 @@ export class QuestsService {
       .subscribe({
         next: (createdActivityUser) => {
           this.activitiesUserSignal.update((activitiesUser) => [...activitiesUser, createdActivityUser]);
+          this.syncQuestProgressFromActivity(activityId);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -522,7 +555,11 @@ export class QuestsService {
       });
   }
 
-  private updateActivityUser(activityUser: ActivityUser, fallbackMessage: string): void {
+  private updateActivityUser(
+    activityUser: ActivityUser,
+    fallbackMessage: string,
+    syncQuestProgress = false,
+  ): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.questsApi
@@ -533,6 +570,9 @@ export class QuestsService {
           this.activitiesUserSignal.update((activitiesUser) =>
             activitiesUser.map((item) => (item.id === updatedActivityUser.id ? updatedActivityUser : item)),
           );
+          if (syncQuestProgress) {
+            this.syncQuestProgressFromActivity(updatedActivityUser.activity_id);
+          }
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -540,6 +580,29 @@ export class QuestsService {
           this.loadingSignal.set(false);
         },
       });
+  }
+
+  private syncQuestProgressFromActivity(activityId: number): void {
+    const activity = this.activities().find((item) => item.id === activityId);
+    if (!activity) {
+      return;
+    }
+
+    const questUser = this.findCurrentUserQuest(activity.quest_id);
+    if (!questUser || questUser.status === 'completed') {
+      return;
+    }
+
+    const activities = this.activities().filter((item) => item.quest_id === activity.quest_id);
+    const completedActivitiesCount = activities.filter((item) => {
+      const activityUser = this.findCurrentUserActivity(item.id);
+      return (activityUser?.progress ?? 0) >= 100;
+    }).length;
+
+    questUser.progress = this.calculateActivityProgress(activities, completedActivitiesCount);
+    questUser.status = questUser.progress >= 100 ? 'ready_to_complete' : 'in_progress';
+    questUser.end_date = null;
+    this.updateQuestUser(questUser, 'Failed to update quest progress');
   }
 
   private isExpired(expirationDate: string | null): boolean {
