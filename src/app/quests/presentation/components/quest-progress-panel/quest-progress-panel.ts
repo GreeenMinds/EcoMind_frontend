@@ -1,4 +1,4 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {QuestSummary, QuestsService} from '../../../application/quests.service';
 
@@ -20,6 +20,7 @@ export class QuestProgressPanel {
   private readonly questSummaries = this.questsService.getQuestSummaries();
 
   readonly maxProgressItems = 4;
+  readonly modalOpen = signal(false);
 
   private readonly activeProgressSummaries = computed(() =>
     this.pickProgressSummaries(
@@ -31,15 +32,22 @@ export class QuestProgressPanel {
   readonly progressItems = computed<ProgressPanelItem[]>(() => {
     return this.activeProgressSummaries()
       .slice(0, this.maxProgressItems)
-      .map((summary) => ({
-        questId: summary.quest.id,
-        label: summary.quest.title,
-        progress: Math.round(summary.progress),
-        route: this.getProgressItemRoute(summary),
-      }));
+      .map((summary) => this.toProgressPanelItem(summary));
   });
 
+  readonly allProgressItems = computed<ProgressPanelItem[]>(() =>
+    this.activeProgressSummaries().map((summary) => this.toProgressPanelItem(summary)),
+  );
+
   readonly hasMoreProgressItems = computed(() => this.activeProgressSummaries().length > this.maxProgressItems);
+
+  openModal(): void {
+    this.modalOpen.set(true);
+  }
+
+  closeModal(): void {
+    this.modalOpen.set(false);
+  }
 
   private pickProgressSummaries(
     summaries: QuestSummary[],
@@ -66,5 +74,14 @@ export class QuestProgressPanel {
     }
 
     return ['/quests', summary.quest.id];
+  }
+
+  private toProgressPanelItem(summary: QuestSummary): ProgressPanelItem {
+    return {
+      questId: summary.quest.id,
+      label: summary.quest.title,
+      progress: Math.round(summary.progress),
+      route: this.getProgressItemRoute(summary),
+    };
   }
 }

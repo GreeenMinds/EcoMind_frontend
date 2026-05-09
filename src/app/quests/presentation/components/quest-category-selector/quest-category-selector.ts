@@ -1,5 +1,6 @@
 import {NgStyle} from '@angular/common';
 import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
+import {RouterLink} from '@angular/router';
 
 interface QuestCategoryConfig {
   label: string;
@@ -12,7 +13,7 @@ interface QuestCategoryConfig {
 
 @Component({
   selector: 'app-quest-category-selector',
-  imports: [NgStyle],
+  imports: [NgStyle, RouterLink],
   templateUrl: './quest-category-selector.html',
   styleUrl: './quest-category-selector.css',
 })

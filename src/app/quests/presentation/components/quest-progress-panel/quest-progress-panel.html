@@ -17,6 +17,27 @@
   }
 
   @if (hasMoreProgressItems()) {
-    <button type="button" class="progress-more">See more</button>
+    <button type="button" class="progress-more" (click)="openModal()">See more</button>
   }
 </section>
+
+@if (modalOpen()) {
+  <div class="progress-modal-backdrop" role="presentation" (click)="closeModal()"></div>
+
+  <section class="progress-modal" role="dialog" aria-modal="true" aria-label="All active quests">
+    <h3>Active quests</h3>
+
+    <div class="modal-progress-list">
+      @for (item of allProgressItems(); track item.questId) {
+        <div class="modal-progress-item">
+          <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-value" [style.width.%]="item.progress"></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button type="button" class="modal-close" (click)="closeModal()">Back</button>
+  </section>
+}
