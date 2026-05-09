@@ -12,8 +12,8 @@
   position: relative;
   z-index: 20;
   display: grid;
-  width: min(420px, calc(100vw - 48px));
-  margin: 24px auto 32px;
+  width: min(522px, calc(100vw - 48px));
+  margin: 24px auto 24px;
 }
 
 .category-menu.open {
@@ -47,12 +47,12 @@
   justify-content: center;
   gap: 14px;
   width: 100%;
-  min-height: 54px;
+  min-height: 64px;
   border: 0;
   border-radius: 999px;
   padding: 0 28px;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   text-shadow: 0 2px 2px rgba(0, 0, 0, 0.18);
   cursor: pointer;
@@ -64,7 +64,7 @@
     filter 160ms ease,
     box-shadow 160ms ease;
   background: var(--quest-bg);
-  box-shadow: 0 6px 0 var(--quest-shadow);
+  box-shadow: 0 7px 0 var(--quest-shadow);
 }
 
 .category-pill::before {
@@ -105,4 +105,33 @@
   background: #6ba64f;
   box-shadow: 0 6px 0 #4d7f38;
   margin-top: 34px;
+}
+
+@media (max-width: 1180px) {
+  .category-menu {
+    width: min(452px, calc(100vw - 48px));
+  }
+
+  .category-pill {
+    min-height: 58px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .category-menu {
+    width: min(360px, calc(100vw - 32px));
+    margin: 16px auto 18px;
+  }
+
+  .category-pill {
+    min-height: 52px;
+    padding: 0 22px;
+    font-size: 18px;
+  }
+
+  .category-icon {
+    max-width: 38px;
+    max-height: 38px;
+  }
 }

@@ -1,0 +1,22 @@
+<section class="progress-card" aria-label="Quest progress">
+  <h2>Progress</h2>
+
+  @if (progressItems().length > 0) {
+    <div class="progress-list">
+      @for (item of progressItems(); track item.questId) {
+        <div class="progress-item">
+          <a [routerLink]="item.route">{{ item.label }}</a>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-value" [style.width.%]="item.progress"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="empty-progress">No active quests yet</p>
+  }
+
+  @if (hasMoreProgressItems()) {
+    <button type="button" class="progress-more">See more</button>
+  }
+</section>

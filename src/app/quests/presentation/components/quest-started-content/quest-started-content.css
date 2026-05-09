@@ -30,3 +30,16 @@ img {
     transform: translateY(-8px) scale(1.02);
   }
 }
+
+@media (max-width: 680px) {
+  .quest-animation {
+    min-height: 320px;
+    gap: 22px;
+    padding: 0 16px;
+  }
+
+  img {
+    width: min(140px, 48vw);
+    min-height: 120px;
+  }
+}

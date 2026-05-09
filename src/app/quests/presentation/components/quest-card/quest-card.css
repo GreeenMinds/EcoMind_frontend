@@ -91,3 +91,34 @@
 .quest-card small {
   display: none;
 }
+
+@media (max-width: 1180px) {
+  .quest-card {
+    min-height: 118px;
+    border-radius: 30px;
+  }
+
+  .quest-card-icon {
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (max-width: 680px) {
+  .quest-card {
+    min-height: 104px;
+    border-radius: 28px;
+    box-shadow:
+      0 9px 12px rgba(0, 0, 0, 0.16),
+      0 10px 0 var(--quest-shadow);
+  }
+
+  .quest-card::before {
+    box-shadow: inset 0 11px 0 var(--quest-top-light);
+  }
+
+  .quest-card-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
