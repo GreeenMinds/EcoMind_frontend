@@ -1,0 +1,50 @@
+<div class="modal-backdrop">
+  <form class="modal-card" (ngSubmit)="submit()">
+    <header>
+      <h2>New Event</h2>
+      <button type="button" class="attach">⌕</button>
+    </header>
+
+    <label>
+      Name
+      <input name="name" [(ngModel)]="name">
+    </label>
+
+    <div class="two-columns">
+      <label>
+        Date
+        <input type="date" name="date" [(ngModel)]="date">
+      </label>
+
+      <label>
+        Time
+        <input type="time" name="startTime" [(ngModel)]="startTime">
+      </label>
+    </div>
+
+    <label>
+      Meeting point
+      <input name="location" [(ngModel)]="location">
+    </label>
+
+    <label>
+      Description
+      <textarea name="description" [(ngModel)]="description"></textarea>
+    </label>
+
+    <div class="two-columns">
+      <label>
+        Latitud
+        <input type="number" name="latitude" [(ngModel)]="latitude">
+      </label>
+
+      <label>
+        Longitud
+        <input type="number" name="longitude" [(ngModel)]="longitude">
+      </label>
+    </div>
+
+    <button type="submit" class="primary">Create event</button>
+    <button type="button" class="secondary" (click)="close.emit()">Cancel</button>
+  </form>
+</div>

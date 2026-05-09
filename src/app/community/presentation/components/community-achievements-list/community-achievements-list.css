@@ -1,0 +1,42 @@
+.achievements {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h2 {
+  margin: 28px 0 28px;
+  text-align: center;
+  font-size: 26px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+button {
+  min-width: 94px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  background: #e1e1e1;
+  color: #444;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.active {
+  background: #68a94f;
+  color: white;
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+}
+
+p {
+  text-align: center;
+  color: #888;
+}

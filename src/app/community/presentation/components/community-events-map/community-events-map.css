@@ -1,0 +1,78 @@
+.map-card {
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: #dff4d5;
+  color: #477d35;
+}
+
+h3 {
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+
+.mock-map {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  background:
+    linear-gradient(#cbd9c9 4px, transparent 4px) 0 38px / 100% 44px,
+    linear-gradient(90deg, #cbd9c9 4px, transparent 4px) 72px 0 / 76px 100%,
+    #e9f0e8;
+}
+
+.marker,
+.user-marker {
+  position: absolute;
+}
+
+.marker {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.marker-a { left: 72px; top: 46px; background: #ff5858; }
+.marker-b { left: 120px; top: 96px; background: #ffbc2f; }
+.marker-c { left: 176px; top: 84px; background: #39a1ff; }
+
+.user-marker {
+  right: 42px;
+  top: 72px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #a9d0aa;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+button {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 6px;
+  border: 0;
+  border-radius: 4px;
+  background: white;
+  font-weight: 700;
+}
+
+ul {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #39a1ff;
+}

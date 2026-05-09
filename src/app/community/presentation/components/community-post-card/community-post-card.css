@@ -1,0 +1,60 @@
+.post-card {
+  min-height: 128px;
+  display: grid;
+  grid-template-columns: 48px 1fr 92px;
+  gap: 12px;
+  align-items: center;
+  padding: 18px;
+  border: 3px solid #dedede;
+  border-radius: 42px;
+  background: white;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e2f5d8;
+  color: #4e8f39;
+  font-weight: 800;
+  border: 2px solid #333;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+span {
+  font-size: 11px;
+  color: #999;
+}
+
+p {
+  margin: 10px 0 8px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.points {
+  height: 28px;
+  padding: 5px 12px;
+  border-radius: 9px;
+  background: #86bd78;
+  color: white;
+  font-size: 13px;
+}
+
+img {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+}

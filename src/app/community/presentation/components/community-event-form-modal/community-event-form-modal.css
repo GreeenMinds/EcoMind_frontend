@@ -1,0 +1,81 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.modal-card {
+  width: min(680px, calc(100vw - 32px));
+  display: grid;
+  gap: 18px;
+  padding: 34px;
+  border-radius: 28px;
+  background: white;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+header,
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center;
+}
+
+h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.attach {
+  justify-self: end;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 14px;
+  background: #68a94f;
+  color: white;
+  font-size: 24px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: #eef0ff;
+  padding: 14px 18px;
+  outline: 0;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.primary,
+.secondary {
+  height: 56px;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary {
+  background: #68a94f;
+}
+
+.secondary {
+  background: #a6a6a6;
+}

@@ -217,7 +217,7 @@ export class CommunityService {
           this.loadingSignal.set(false);
         },
         error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'No se pudo cancelar la inscripción'));
+          this.errorSignal.set(this.formatError(error, 'Could not cancel the registration'));
           this.loadingSignal.set(false);
         },
       });
@@ -264,7 +264,7 @@ export class CommunityService {
           this.loadingSignal.set(false);
         },
         error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'No se pudo crear el evento'));
+          this.errorSignal.set(this.formatError(error, 'Could not create the event'));
           this.loadingSignal.set(false);
         },
       });
@@ -300,7 +300,7 @@ export class CommunityService {
           this.loadingSignal.set(false);
         },
         error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'No se pudo cargar la comunidad'));
+          this.errorSignal.set(this.formatError(error, 'Could not load the community'));
           this.loadingSignal.set(false);
         },
       });
@@ -339,7 +339,7 @@ export class CommunityService {
           this.loadingSignal.set(false);
         },
         error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'No se pudo registrar al evento'));
+          this.errorSignal.set(this.formatError(error, 'Could not register for the event'));
           this.loadingSignal.set(false);
         },
       });
@@ -368,7 +368,7 @@ export class CommunityService {
   private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
-        ? `${fallback}: Recurso no encontrado`
+        ? `${fallback}: Resource not found`
         : error.message;
     }
 

@@ -1155,7 +1155,43 @@
       "family_id": 1,
       "registration_type": "family",
       "registered_at": "2026-10-20T10:00:00",
-      "status": "active"
+      "status": "cancelled"
+    },
+    {
+      "id": 2,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:34:28.911Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 3,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:34:31.000Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 4,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:41:37.031Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 5,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:41:39.879Z",
+      "status": "cancelled"
     }
   ],
   "community_post": [

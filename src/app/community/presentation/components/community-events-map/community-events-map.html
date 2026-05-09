@@ -1,0 +1,21 @@
+<section class="map-card">
+  <h3>Nearby Events</h3>
+
+  <div class="mock-map">
+    <span class="marker marker-a"></span>
+    <span class="marker marker-b"></span>
+    <span class="marker marker-c"></span>
+    <span class="user-marker">Joined</span>
+    <button>+</button>
+    <button>-</button>
+  </div>
+
+  <ul>
+    @for (summary of events.slice(0, 3); track summary.event.id) {
+      <li>
+        <span class="dot"></span>
+        {{ summary.event.name }} - {{ summary.event.date }}, {{ summary.event.start_time.slice(11, 16) }}
+      </li>
+    }
+  </ul>
+</section>
