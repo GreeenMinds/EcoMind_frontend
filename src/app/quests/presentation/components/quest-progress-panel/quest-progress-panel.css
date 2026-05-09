@@ -98,3 +98,46 @@
   font-size: 12px;
   font-weight: 700;
 }
+
+@media (max-width: 1180px) {
+  :host {
+    width: min(100%, 320px);
+  }
+
+  .progress-card {
+    min-height: 230px;
+    padding: 46px 30px 32px;
+  }
+
+  .progress-card h2 {
+    min-width: 132px;
+    font-size: 15px;
+  }
+
+  .progress-list {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 680px) {
+  :host {
+    width: min(100%, 360px);
+  }
+
+  .progress-card {
+    min-height: 0;
+    padding: 44px 24px 28px;
+    border-radius: 28px;
+  }
+
+  .progress-card h2 {
+    left: 10px;
+    min-width: 120px;
+    padding: 6px 20px 7px;
+    font-size: 14px;
+  }
+
+  .progress-item a {
+    font-size: 12px;
+  }
+}

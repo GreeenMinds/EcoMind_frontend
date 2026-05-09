@@ -71,3 +71,38 @@
 .quest-page-dot.active {
   background: #9b9b9b;
 }
+
+@media (max-width: 1180px) {
+  .quest-carousel {
+    max-width: 520px;
+  }
+
+  .quest-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 36px 34px;
+    padding: 0 30px 16px;
+  }
+}
+
+@media (max-width: 680px) {
+  .quest-carousel {
+    --page-gap: 72px;
+    max-width: min(360px, calc(100vw - 32px));
+    margin-top: 6px;
+  }
+
+  .quest-carousel::before,
+  .quest-carousel::after {
+    width: 18px;
+  }
+
+  .quest-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 0 28px 14px;
+  }
+
+  .quest-page-dots {
+    margin-bottom: 20px;
+  }
+}

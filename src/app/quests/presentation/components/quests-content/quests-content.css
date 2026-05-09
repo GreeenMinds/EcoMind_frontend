@@ -107,3 +107,67 @@
     max-width: 420px;
   }
 }
+
+@media (max-width: 1180px) {
+  .quests-shell.has-side-panel {
+    grid-template-columns: 520px minmax(280px, 320px);
+    gap: 36px;
+  }
+
+  .quests-shell.has-side-panel .quests-main {
+    max-width: 520px;
+    transform: translateX(8px);
+  }
+
+  .streak-card {
+    width: min(100%, 320px);
+  }
+
+  .streak-title {
+    font-size: 27px;
+  }
+
+  .streak-value {
+    min-height: 62px;
+  }
+
+  .streak-value strong {
+    font-size: 46px;
+  }
+
+  .ranking-line {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 960px) {
+  .quests-shell.has-side-panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .quests-shell.has-side-panel .quests-main {
+    max-width: 590px;
+    transform: none;
+    justify-self: center;
+  }
+
+  .quest-side-panel {
+    grid-template-columns: minmax(220px, 300px) minmax(280px, 360px);
+    justify-content: center;
+    align-items: stretch;
+    order: -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .quest-side-panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+
+  .streak-card,
+  app-quest-progress-panel {
+    max-width: 360px;
+  }
+}
