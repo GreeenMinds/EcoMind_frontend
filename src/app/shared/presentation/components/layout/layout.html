@@ -3,6 +3,20 @@
     <div class="app-header-left">
       <img src="/assets/images/ecomind_logo.png" alt="EcoMind" class="app-logo">
     </div>
+
+    <div class="app-header-profile" aria-label="User summary">
+      <div class="header-stat gem-stat">
+        <span class="gem-icon" aria-hidden="true"></span>
+        <span>{{ currentUser()?.gem_balance ?? 0 }}</span>
+      </div>
+
+      <div class="header-stat streak-stat">
+        <img class="streak-icon" src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
+        <span>{{ currentUser()?.streak ?? 0 }}</span>
+      </div>
+
+      <div class="profile-photo" aria-hidden="true"></div>
+    </div>
   </div>
 </header>
 
