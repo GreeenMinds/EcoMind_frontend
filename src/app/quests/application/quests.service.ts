@@ -486,15 +486,15 @@ export class QuestsService {
   }
 
   private findCurrentUserQuest(questId: number): QuestUser | undefined {
-    return this.questsUser().find(
-      (questUser) => questUser.quest_id === questId && questUser.user_id === this.currentUserId(),
-    );
+    return this.questsUser()
+      .filter((questUser) => questUser.quest_id === questId && questUser.user_id === this.currentUserId())
+      .sort((a, b) => b.id - a.id)[0];
   }
 
   private findCurrentUserActivity(activityId: number): ActivityUser | undefined {
-    return this.activitiesUser().find(
-      (activityUser) => activityUser.activity_id === activityId && activityUser.user_id === this.currentUserId(),
-    );
+    return this.activitiesUser()
+      .filter((activityUser) => activityUser.activity_id === activityId && activityUser.user_id === this.currentUserId())
+      .sort((a, b) => b.id - a.id)[0];
   }
 
   private findCurrentUserMinigameAttempts(questId: number): MinigameAttempt[] {
