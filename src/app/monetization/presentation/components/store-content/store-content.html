@@ -1,1 +1,72 @@
-<p>store-content works!</p>
+<div class="store-page">
+
+  <!-- Skeleton loader -->
+  <div class="store-skeleton" *ngIf="loading()">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-tabs"></div>
+    <div class="skeleton-grid">
+      <div class="skeleton-card" *ngFor="let _ of [1,2,3,4]"></div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading()">
+
+    <!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+    <div class="store-header">
+
+      <div class="store-title-block">
+        <h1 class="store-title">Ecomind Store</h1>
+        <p class="store-subtitle">Customize your eco-experience</p>
+      </div>
+
+      <!-- Saldo de gemas (HU-035 E4: muestra la cantidad real) -->
+      <div class="gem-balance-chip">
+        <span class="gem-chip-icon">💎</span>
+        <span class="gem-chip-value">{{ gemBalance() | number }}</span>
+        <span class="gem-chip-label">gems</span>
+      </div>
+
+    </div>
+
+    <!-- ══ TABS ════════════════════════════════════════════════════════════ -->
+    <div class="store-tabs" role="tablist">
+
+      <button
+        role="tab"
+        class="tab-btn"
+        [class.active-green]="activeTab === 'cosmetics'"
+        (click)="setTab('cosmetics')">
+        Avatars & Cosmetics
+      </button>
+
+      <button
+        role="tab"
+        class="tab-btn"
+        [class.active-green]="activeTab === 'multipliers'"
+        (click)="setTab('multipliers')">
+        XP Multiplier
+      </button>
+
+      <button
+        role="tab"
+        class="tab-btn"
+        [class.active-blue]="activeTab === 'gems'"
+        (click)="setTab('gems')">
+        Gems
+      </button>
+
+    </div>
+
+    <!-- ══ CONTENIDO POR TAB ════════════════════════════════════════════════ -->
+    <div class="tab-content">
+
+      <!-- Delegado a sub-componentes (cada uno inyecta el servicio) -->
+      <app-cosmetics-tab  *ngIf="activeTab === 'cosmetics'"/>
+      <app-multipliers-tab *ngIf="activeTab === 'multipliers'"></app-multipliers-tab>
+      <app-gems-tab        *ngIf="activeTab === 'gems'"/>
+
+    </div>
+
+  </ng-container>
+
+</div>

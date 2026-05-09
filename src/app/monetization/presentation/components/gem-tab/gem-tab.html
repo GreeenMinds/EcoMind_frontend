@@ -1,0 +1,60 @@
+<h2 class="section-title">Gems</h2>
+
+<!-- Error dinámico -->
+<div class="inline-error" *ngIf="error()">{{ error() }}</div>
+
+<!-- Grid de paquetes estilo Moderno -->
+<div class="gems-grid" *ngIf="packages().length > 0; else emptyGems">
+  <div class="gem-card" *ngFor="let pkg of filteredPackages(); let i = index">
+
+    <!-- Contenedor de imagen: permite aplicar sombras y brillos -->
+    <div class="gem-img-wrap">
+      <img [src]="getGemImage(pkg.gemAmount)" class="gem-icon-img" alt="Gema">
+    </div>
+
+    <h3 class="gem-amount">{{ pkg.gemAmount | number }} gems</h3>
+    <p class="gem-price">S/. {{ pkg.realPrice | number:'1.2-2' }}</p>
+
+    <!-- Botón con color temático de gemas (cian) -->
+    <button class="buy-gem-btn" (click)="openModal(pkg)">
+      Buy
+    </button>
+  </div>
+</div>
+
+<!-- Banner del Gran Paquete con diseño Premium -->
+<div class="gran-banner">
+  <div class="gran-info">
+    <h2 class="gran-title">Mega Bundle!</h2>
+    <ul class="gran-list">
+      <li><span>10,000 Gems</span></li>
+      <li><span>3 Exclusive Avatars</span></li>
+      <li><span>3x Multiplier for one wee</span></li>
+    </ul>
+  </div>
+
+  <div class="gran-right">
+    <span class="gran-price-label">S/. 149.99</span>
+    <button class="gran-buy-btn" (click)="openModal(granPaquete)">
+      Buy
+    </button>
+  </div>
+
+  <!-- Imagen lateral del saco de gemas (reemplaza al emoji) -->
+  <img src="/assets/images/gem/gem_pack_4.png" class="gran-visual" alt="Pack Ahorro">
+</div>
+
+<ng-template #emptyGems>
+  <div class="empty-inventory">
+    <span class="empty-icon">💎</span>
+    <p class="empty-state" *ngIf="!loading()">No bundles currently available.</p>
+  </div>
+</ng-template>
+
+<!-- Modal de pago -->
+<app-pay-modal
+  [gemPackage]="selectedPackage"
+  [visible]="showModal"
+  (closed)="onModalClosed()"
+  (paymentDone)="onPaymentDone($event)">
+</app-pay-modal>
