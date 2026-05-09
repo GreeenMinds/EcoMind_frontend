@@ -6,6 +6,7 @@ import {QuestCompletedContent} from './quests/presentation/components/quest-comp
 import {QuestDetailContent} from './quests/presentation/components/quest-detail-content/quest-detail-content';
 import {QuestListContent} from './quests/presentation/components/quest-list-content/quest-list-content';
 import {QuestStartedContent} from './quests/presentation/components/quest-started-content/quest-started-content';
+import {QuestSearchContent} from './quests/presentation/components/quest-search-content/quest-search-content';
 import {ProfileContent} from './profile/presentation/components/profile-content/profile-content';
 import {StoreContent} from './monetization/presentation/components/store-content/store-content';
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
@@ -23,6 +24,10 @@ export const routes: Routes = [
       {
         path: '',
         component: QuestListContent,
+      },
+      {
+        path: 'search',
+        component: QuestSearchContent,
       },
       {
         path: ':questId',

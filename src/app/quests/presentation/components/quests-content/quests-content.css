@@ -20,7 +20,7 @@
 .quests-shell.has-side-panel .quests-main {
   width: 100%;
   max-width: 590px;
-  transform: translateX(16px);
+  margin-left: 16px;
 }
 
 .quest-side-panel {
@@ -116,7 +116,7 @@
 
   .quests-shell.has-side-panel .quests-main {
     max-width: 520px;
-    transform: translateX(8px);
+    margin-left: 8px;
   }
 
   .streak-card {
@@ -148,7 +148,7 @@
 
   .quests-shell.has-side-panel .quests-main {
     max-width: 590px;
-    transform: none;
+    margin-left: 0;
     justify-self: center;
   }
 
