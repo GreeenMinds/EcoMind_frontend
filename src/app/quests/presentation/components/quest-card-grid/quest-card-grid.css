@@ -1,8 +1,8 @@
 .quest-carousel {
   --carousel-bg: #f7f8fa;
-  --page-gap: 150px;
-  max-width: 860px;
-  margin: 32px auto;
+  --page-gap: 120px;
+  max-width: 590px;
+  margin: 8px auto 28px;
   overflow: hidden;
   touch-action: pan-y;
   user-select: none;
@@ -16,7 +16,7 @@
   top: 0;
   bottom: 0;
   z-index: 2;
-  width: 72px;
+  width: 26px;
   pointer-events: none;
 }
 
@@ -31,6 +31,8 @@
 }
 
 .quest-page-track {
+  position: relative;
+  z-index: 1;
   display: flex;
   gap: var(--page-gap);
   transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -40,9 +42,9 @@
 .quest-grid {
   flex: 0 0 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 42px 76px;
-  padding: 0 76px 18px;
+  grid-template-columns: repeat(2, minmax(210px, 1fr));
+  gap: 42px 44px;
+  padding: 0 34px 18px;
   box-sizing: border-box;
 }
 

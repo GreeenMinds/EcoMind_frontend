@@ -6,24 +6,34 @@
 }
 
 .quests-shell.has-side-panel {
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 76px;
-  padding-right: 42px;
+  display: grid;
+  grid-template-columns: 590px minmax(280px, 400px);
+  gap: 64px;
+  justify-content: start;
+  padding-right: 0;
 }
 
 .quests-main {
   min-width: 0;
 }
 
+.quests-shell.has-side-panel .quests-main {
+  width: 100%;
+  max-width: 590px;
+  transform: translateX(16px);
+}
+
 .quest-side-panel {
   display: grid;
   gap: 44px;
-  justify-items: center;
+  justify-items: stretch;
+  width: 100%;
   padding-top: 0;
 }
 
 .streak-card {
-  width: 100%;
+  width: min(100%, 360px);
+  justify-self: center;
   border-radius: 34px;
   background: #ffffff;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
@@ -82,23 +92,14 @@
   object-fit: contain;
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 900px) {
   .quests-shell.has-side-panel {
     grid-template-columns: 1fr;
-    padding-right: 0;
   }
 
-  .quest-side-panel {
-    grid-template-columns: minmax(260px, 320px) minmax(320px, 460px);
-    justify-content: center;
-    align-items: stretch;
-    order: -1;
-  }
-}
-
-@media (max-width: 640px) {
   .quest-side-panel {
     grid-template-columns: minmax(0, 1fr);
+    order: -1;
   }
 
   .streak-card,

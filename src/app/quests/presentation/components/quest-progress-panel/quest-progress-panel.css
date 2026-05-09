@@ -1,15 +1,16 @@
 :host {
   display: block;
-  width: 100%;
+  width: min(100%, 360px);
+  justify-self: center;
 }
 
 .progress-card {
   position: relative;
   display: grid;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
   min-height: 260px;
-  padding: 52px 28px 38px;
+  padding: 52px 36px 38px;
   border-radius: 34px;
   background: #ffffff;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
@@ -37,12 +38,12 @@
 
 .progress-list {
   display: grid;
-  gap: 22px;
+  gap: 20px;
 }
 
 .progress-item {
   display: grid;
-  gap: 9px;
+  gap: 5px;
 }
 
 .progress-item a {
@@ -62,7 +63,7 @@
 }
 
 .progress-track {
-  height: 17px;
+  height: 15px;
   overflow: hidden;
   border-radius: 999px;
   background: #e7e7e7;
