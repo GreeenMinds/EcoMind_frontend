@@ -1,0 +1,55 @@
+@if (categoryMenuOpen()) {
+  <button
+    type="button"
+    class="category-backdrop"
+    aria-label="Cerrar categorias"
+    (click)="closeCategoryMenu()"
+  ></button>
+}
+
+<div class="category-menu" [class.open]="categoryMenuOpen()">
+  <button
+    type="button"
+    class="category-pill category-trigger"
+    [ngStyle]="getCategoryTheme(selectedCategory)"
+    (click)="toggleCategoryMenu()"
+  >
+    <span>{{ getCategoryConfig(selectedCategory).label }}</span>
+    <img
+      class="category-icon"
+      [src]="getCategoryConfig(selectedCategory).iconUrl"
+      [alt]="getCategoryConfig(selectedCategory).label"
+      [style.width.px]="getCategoryConfig(selectedCategory).iconSize"
+      [style.height.px]="getCategoryConfig(selectedCategory).iconSize"
+      (error)="$any($event.target).hidden = true"
+    >
+  </button>
+
+  <div class="category-options">
+    @for (category of categories; track category) {
+      @if (category !== selectedCategory) {
+        <button
+          type="button"
+          class="category-pill"
+          [ngStyle]="getCategoryTheme(category)"
+          (click)="selectCategory(category)"
+        >
+          <span>{{ getCategoryConfig(category).label }}</span>
+          <img
+            class="category-icon"
+            [src]="getCategoryConfig(category).iconUrl"
+            [alt]="getCategoryConfig(category).label"
+            [style.width.px]="getCategoryConfig(category).iconSize"
+            [style.height.px]="getCategoryConfig(category).iconSize"
+            (error)="$any($event.target).hidden = true"
+          >
+        </button>
+      }
+    }
+
+    <button type="button" class="category-pill category-search">
+      <span>Buscar</span>
+      <img class="category-icon search-icon" src="/assets/images/quests/search.png" alt="Search" width="45" height="45">
+    </button>
+  </div>
+</div>

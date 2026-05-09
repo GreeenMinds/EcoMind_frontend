@@ -1060,6 +1060,33 @@
       "progress": 50,
       "start_date": "2026-05-05",
       "end_date": null
+    },
+    {
+      "id": 9,
+      "user_id": 1,
+      "quest_id": 7,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-05-08",
+      "end_date": null
+    },
+    {
+      "id": 10,
+      "user_id": 1,
+      "quest_id": 9,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-05-08",
+      "end_date": null
+    },
+    {
+      "id": 11,
+      "user_id": 1,
+      "quest_id": 17,
+      "status": "completed",
+      "progress": 100,
+      "start_date": "2026-05-08",
+      "end_date": "2026-05-08"
     }
   ],
   "activity_user": [
@@ -1116,6 +1143,48 @@
       "id": 8,
       "user_id": 4,
       "activity_id": 4,
+      "progress": 0,
+      "end_date": null
+    },
+    {
+      "id": 9,
+      "user_id": 1,
+      "activity_id": 3,
+      "progress": 100,
+      "end_date": "2026-05-08"
+    },
+    {
+      "id": 10,
+      "user_id": 1,
+      "activity_id": 4,
+      "progress": 100,
+      "end_date": "2026-05-08"
+    },
+    {
+      "id": 11,
+      "user_id": 1,
+      "activity_id": 5,
+      "progress": 100,
+      "end_date": "2026-05-08"
+    },
+    {
+      "id": 12,
+      "user_id": 1,
+      "activity_id": 17,
+      "progress": 100,
+      "end_date": "2026-05-08"
+    },
+    {
+      "id": 13,
+      "user_id": 1,
+      "activity_id": 10,
+      "progress": 0,
+      "end_date": null
+    },
+    {
+      "id": 14,
+      "user_id": 1,
+      "activity_id": 17,
       "progress": 0,
       "end_date": null
     }
