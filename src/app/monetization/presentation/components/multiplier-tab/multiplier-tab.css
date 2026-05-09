@@ -1,10 +1,4 @@
 @import '../shared.css';
-
-/* ══════════════════════════════════════════════
-   MULTIPLIER TAB
-   ══════════════════════════════════════════════ */
-
-/* Más espacio entre el título y la primera card */
 .section-title {
   margin-bottom: 2rem;
 }
