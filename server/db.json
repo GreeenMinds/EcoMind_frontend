@@ -17,7 +17,7 @@
       "streak": 7,
       "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 180,
+      "gem_balance": 400,
       "ecopoints": 420
     },
     {
@@ -29,7 +29,7 @@
       "streak": 3,
       "commitment": "I will use less plastic during the week.",
       "registered_at": "2026-05-01",
-      "gem_balance": 90,
+      "gem_balance": 350,
       "ecopoints": 160
     },
     {
@@ -41,7 +41,7 @@
       "streak": 5,
       "commitment": "I will sort my waste before throwing it away.",
       "registered_at": "2026-05-02",
-      "gem_balance": 135,
+      "gem_balance": 1600,
       "ecopoints": 280
     },
     {
@@ -53,7 +53,7 @@
       "streak": 1,
       "commitment": null,
       "registered_at": "2026-05-03",
-      "gem_balance": 70,
+      "gem_balance": 250,
       "ecopoints": 95
     }
   ],
@@ -1200,6 +1200,304 @@
       "unit": "trees",
       "participants": 245,
       "status": "active"
+    }
+  ],
+  "cosmetic": [
+    {
+      "id": 1,
+      "name": "Eco Hat",
+      "description": "A sustainable green hat.",
+      "price": 150,
+      "type": "hat",
+      "image_url": "/assets/images/cosmetics/eco-hat.png"
+    },
+    {
+      "id": 2,
+      "name": "Leaf Wings",
+      "description": "A builder fairy",
+      "price": 400,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/leaf-wings.png"
+    },
+    {
+      "id": 3,
+      "name": "Luna Lunette",
+      "description": "Mystic moon explorer avatar.",
+      "price": 450,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/luna-lunette.png"
+    },
+    {
+      "id": 4,
+      "name": "Sal Solcito",
+      "description": "Bright and cheerful avatar.",
+      "price": 100,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/sal-solcito.png"
+    },
+    {
+      "id": 5,
+      "name": "Rosalina",
+      "description": "Legendary cosmic avatar.",
+      "price": 5000,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/rosalina.png"
+    },
+    {
+      "id": 6,
+      "name": "Observatorio",
+      "description": "Galaxy observatory themed avatar.",
+      "price": 3000,
+      "type": "cosmetic",
+      "image_url": "/assets/images/cosmetics/observatorio.png"
+    },
+    {
+      "id": 7,
+      "name": "Ranma Saotome",
+      "description": "Limited martial artist avatar.",
+      "price": 1500,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/ranma.png"
+    },
+    {
+      "id": 8,
+      "name": "Mickey Mouse",
+      "description": "Classic cartoon avatar.",
+      "price": 200,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/mickey.png"
+    },
+    {
+      "id": 9,
+      "name": "Sonic",
+      "description": "Fast blue hedgehog avatar.",
+      "price": 350,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/sonic.png"
+    },
+    {
+      "id": 10,
+      "name": "Alex",
+      "description": "Modern eco adventurer avatar.",
+      "price": 500,
+      "type": "avatar",
+      "image_url": "/assets/images/avatars/alex.png"
+    }
+  ],
+  "user_cosmetic": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "cosmetic_id": 1,
+      "acquired_at": "2026-05-02",
+      "equipped": false
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "cosmetic_id": 3,
+      "acquired_at": "2026-05-03",
+      "equipped": false
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "cosmetic_id": 4,
+      "acquired_at": "2026-05-04",
+      "equipped": true
+    },
+    {
+      "id": 4,
+      "user_id": 3,
+      "cosmetic_id": 2,
+      "acquired_at": "2026-05-04",
+      "equipped": false
+    },
+    {
+      "id": 5,
+      "user_id": 4,
+      "cosmetic_id": 8,
+      "acquired_at": "2026-05-05",
+      "equipped": true
+    }
+  ],
+  "multiplier": [
+    {
+      "id": 1,
+      "multiplier_factor": 1.5,
+      "duration_minutes": 60,
+      "gem_cost": 100
+    },
+    {
+      "id": 2,
+      "multiplier_factor": 2,
+      "duration_minutes": 120,
+      "gem_cost": 250
+    },
+    {
+      "id": 3,
+      "multiplier_factor": 3,
+      "duration_minutes": 300,
+      "gem_cost": 700
+    }
+  ],
+  "user_multiplier": [
+    {
+      "id": 1,
+      "multiplier_id": 1,
+      "user_id": 2,
+      "start_date": "2026-05-06T10:00:00",
+      "end_date": "2026-05-06T11:00:00"
+    }
+  ],
+  "gem_package": [
+    {
+      "id": 1,
+      "name": "Starter Pack",
+      "gem_amount": 500,
+      "real_price": 4.99,
+      "currency": "PEN"
+    },
+    {
+      "id": 2,
+      "name": "Eco Pack",
+      "gem_amount": 1000,
+      "real_price": 10.99,
+      "currency": "PEN"
+    },
+    {
+      "id": 3,
+      "name": "Mega Pack",
+      "gem_amount": 2000,
+      "real_price": 21.99,
+      "currency": "PEN"
+    },
+    {
+      "id": 4,
+      "name": "Ultra Pack",
+      "gem_amount": 5000,
+      "real_price": 65.99,
+      "currency": "PEN"
+    },
+    {
+      "id": 5,
+      "name": "Gran paquete",
+      "gem_amount": 10000,
+      "real_price": 149.98,
+      "currency": "PEN",
+      "Description": "10,000 gems + 3 exclusive avatars + 3x multiplier for one week"
+    }
+  ],
+  "gem_purchase": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "package_id": 2,
+      "purchase_date": "2026-05-02",
+      "amount_paid": 10.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-001"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "package_id": 1,
+      "purchase_date": "2026-05-03",
+      "amount_paid": 4.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-002"
+    },
+    {
+      "id": 3,
+      "user_id": 3,
+      "package_id": 3,
+      "purchase_date": "2026-05-04",
+      "amount_paid": 21.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-003"
+    },
+    {
+      "id": 4,
+      "user_id": 4,
+      "package_id": 1,
+      "purchase_date": "2026-05-05",
+      "amount_paid": 4.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-004"
+    }
+  ],
+  "gem_movement": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "type": "purchase",
+      "amount": 1000,
+      "origin": "gem_package",
+      "origin_id": 2
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "type": "spend",
+      "amount": -150,
+      "origin": "cosmetic",
+      "origin_id": 1
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "type": "spend",
+      "amount": -450,
+      "origin": "cosmetic",
+      "origin_id": 3
+    },
+    {
+      "id": 4,
+      "user_id": 2,
+      "type": "purchase",
+      "amount": 500,
+      "origin": "gem_package",
+      "origin_id": 1
+    },
+    {
+      "id": 5,
+      "user_id": 2,
+      "type": "spend",
+      "amount": -100,
+      "origin": "cosmetic",
+      "origin_id": 4
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "type": "purchase",
+      "amount": 2000,
+      "origin": "gem_package",
+      "origin_id": 3
+    },
+    {
+      "id": 7,
+      "user_id": 3,
+      "type": "spend",
+      "amount": -400,
+      "origin": "cosmetic",
+      "origin_id": 2
+    },
+    {
+      "id": 8,
+      "user_id": 4,
+      "type": "purchase",
+      "amount": 500,
+      "origin": "gem_package",
+      "origin_id": 1
+    },
+    {
+      "id": 9,
+      "user_id": 4,
+      "type": "spend",
+      "amount": -200,
+      "origin": "cosmetic",
+      "origin_id": 8
     }
   ]
 }

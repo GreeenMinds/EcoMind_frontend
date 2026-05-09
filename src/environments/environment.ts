@@ -24,4 +24,11 @@ export const environment = {
   platformProviderCommunityPostEndpointPath: '/community_post',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
+  platformProviderCosmeticEndpointPath: '/cosmetic',
+  platformProviderUserCosmeticEndpointPath: '/user_cosmetic',
+  platformProviderMultiplierEndpointPath: '/multiplier',
+  platformProviderUserMultiplierEndpointPath: '/user_multiplier',
+  platformProviderGemPackageEndpointPath: '/gem_package',
+  platformProviderGemPurchaseEndpointPath: '/gem_purchase',
+  platformProviderGemMovementEndpointPath: '/gem_movement',
 };
