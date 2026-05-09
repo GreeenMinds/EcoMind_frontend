@@ -21,4 +21,7 @@ export const environment = {
   platformProviderUserQuestEndpointPath: '/quest_user',
   platformProviderUserActivityEndpointPath: '/activity_user',
   platformProviderMinigameAttemptEndpointPath: '/minigame_attempt',
+  platformProviderCommunityPostEndpointPath: '/community_post',
+  platformProviderCommunityGoalEndpointPath: '/community_goal',
+  platformProviderEventRegistrationEndpointPath: '/event_registration',
 };
