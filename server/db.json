@@ -1,7 +1,7 @@
 {
   "community": [
     {
-      "community_id": 1,
+      "id": 1,
       "name": "EcoMind Lima",
       "user_count": 4,
       "location": "Lima, Peru"
@@ -9,7 +9,7 @@
   ],
   "user": [
     {
-      "user_id": 1,
+      "id": 1,
       "community_id": 1,
       "email": "carlos@ecomind.test",
       "birth_date": "1985-04-12",
@@ -21,7 +21,7 @@
       "ecopoints": 420
     },
     {
-      "user_id": 2,
+      "id": 2,
       "community_id": 1,
       "email": "nico@ecomind.test",
       "birth_date": "2013-09-21",
@@ -33,7 +33,7 @@
       "ecopoints": 160
     },
     {
-      "user_id": 3,
+      "id": 3,
       "community_id": 1,
       "email": "valeria@ecomind.test",
       "birth_date": "2001-02-08",
@@ -45,7 +45,7 @@
       "ecopoints": 280
     },
     {
-      "user_id": 4,
+      "id": 4,
       "community_id": 1,
       "email": "mateo@ecomind.test",
       "birth_date": "1999-11-17",
@@ -59,18 +59,20 @@
   ],
   "family": [
     {
-      "family_id": 1,
+      "id": 1,
       "name": "Mendoza Family"
     }
   ],
   "family_user": [
     {
+      "id": 1,
       "user_id": 1,
       "family_id": 1,
       "family_role": "parent",
       "joined_at": "2026-05-01"
     },
     {
+      "id": 2,
       "user_id": 2,
       "family_id": 1,
       "family_role": "child",
@@ -79,31 +81,37 @@
   ],
   "friend": [
     {
+      "id": 1,
       "user_id": 1,
       "friend_id": 3,
       "status": "accepted"
     },
     {
+      "id": 2,
       "user_id": 1,
       "friend_id": 4,
       "status": "accepted"
     },
     {
+      "id": 3,
       "user_id": 2,
       "friend_id": 3,
       "status": "accepted"
     },
     {
+      "id": 4,
       "user_id": 2,
       "friend_id": 4,
       "status": "accepted"
     },
     {
+      "id": 5,
       "user_id": 3,
       "friend_id": 4,
       "status": "accepted"
     },
     {
+      "id": 6,
       "user_id": 4,
       "friend_id": 1,
       "status": "pending"
@@ -111,55 +119,55 @@
   ],
   "achievement": [
     {
-      "achievement_id": 1,
+      "id": 1,
       "name": "Active community",
-      "description": "All members started at least one challenge.",
+      "description": "All members started at least one quest.",
       "type": "community"
     },
     {
-      "achievement_id": 2,
+      "id": 2,
       "name": "Collective saving",
-      "description": "The community completed water and energy challenges.",
+      "description": "The community completed water and energy quests.",
       "type": "community"
     },
     {
-      "achievement_id": 3,
+      "id": 3,
       "name": "Recycling in motion",
-      "description": "The community completed recycling challenges.",
+      "description": "The community completed recycling quests.",
       "type": "community"
     },
     {
-      "achievement_id": 4,
+      "id": 4,
       "name": "First step",
-      "description": "Complete your first challenge.",
+      "description": "Complete your first quest.",
       "type": "user"
     },
     {
-      "achievement_id": 5,
+      "id": 5,
       "name": "Water saver",
-      "description": "Complete a water challenge.",
+      "description": "Complete a water quest.",
       "type": "user"
     },
     {
-      "achievement_id": 6,
+      "id": 6,
       "name": "Energy conscious",
-      "description": "Complete an energy challenge.",
+      "description": "Complete an energy quest.",
       "type": "user"
     },
     {
-      "achievement_id": 7,
+      "id": 7,
       "name": "Beginner recycler",
-      "description": "Complete a recycling challenge.",
+      "description": "Complete a recycling quest.",
       "type": "user"
     },
     {
-      "achievement_id": 8,
+      "id": 8,
       "name": "Daily consistency",
       "description": "Complete a daily quest.",
       "type": "user"
     },
     {
-      "achievement_id": 9,
+      "id": 9,
       "name": "Weekly top",
       "description": "Finish among the top three in the weekly ranking.",
       "type": "ranking"
@@ -167,16 +175,19 @@
   ],
   "community_achievement": [
     {
+      "id": 1,
       "community_id": 1,
       "achievement_id": 1,
       "date": "2026-05-02"
     },
     {
+      "id": 2,
       "community_id": 1,
       "achievement_id": 2,
       "date": "2026-05-04"
     },
     {
+      "id": 3,
       "community_id": 1,
       "achievement_id": 3,
       "date": "2026-05-05"
@@ -184,51 +195,61 @@
   ],
   "user_achievement": [
     {
+      "id": 1,
       "achievement_id": 4,
       "user_id": 1,
       "date": "2026-05-01"
     },
     {
+      "id": 2,
       "achievement_id": 5,
       "user_id": 1,
       "date": "2026-05-02"
     },
     {
+      "id": 3,
       "achievement_id": 6,
       "user_id": 1,
       "date": "2026-05-01"
     },
     {
+      "id": 4,
       "achievement_id": 7,
       "user_id": 1,
       "date": "2026-05-03"
     },
     {
+      "id": 5,
       "achievement_id": 9,
       "user_id": 1,
       "date": "2026-05-06"
     },
     {
+      "id": 6,
       "achievement_id": 4,
       "user_id": 2,
       "date": "2026-05-02"
     },
     {
+      "id": 7,
       "achievement_id": 8,
       "user_id": 2,
       "date": "2026-05-02"
     },
     {
+      "id": 8,
       "achievement_id": 4,
       "user_id": 3,
       "date": "2026-05-01"
     },
     {
+      "id": 9,
       "achievement_id": 7,
       "user_id": 3,
       "date": "2026-05-01"
     },
     {
+      "id": 10,
       "achievement_id": 8,
       "user_id": 3,
       "date": "2026-05-02"
@@ -236,115 +257,181 @@
   ],
   "event": [
     {
-      "event_id": 1,
+      "id": 1,
       "community_id": 1,
       "author_id": 1,
-      "name": "Waste-free week",
-      "description": "Complete daily challenges to reduce waste.",
-      "date": "2026-05-10",
-      "start_time": "2026-05-10T09:00:00",
-      "end_time": "2026-05-10T18:00:00",
+      "name": "Trash collection",
+      "description": "We will meet at the central park to collect waste and clean green areas.",
+      "date": "2026-10-26",
+      "start_time": "2026-10-26T10:00:00",
+      "end_time": "2026-10-26T12:00:00",
       "location": "Central Park",
-      "capacity": 50
+      "latitude": -12.0464,
+      "longitude": -77.0428,
+      "capacity": 50,
+      "image_url": "/assets/images/community/trash-collection.png"
     },
     {
-      "event_id": 2,
+      "id": 2,
       "community_id": 1,
       "author_id": 3,
-      "name": "Water saving at home",
-      "description": "Add water-saving actions with your community.",
-      "date": "2026-05-14",
-      "start_time": "2026-05-14T10:00:00",
-      "end_time": "2026-05-14T16:00:00",
-      "location": "EcoMind Lima",
-      "capacity": 40
+      "name": "Community harvest",
+      "description": "We will meet at the neighborhood ecological garden to harvest fresh products.",
+      "date": "2026-11-09",
+      "start_time": "2026-11-09T09:00:00",
+      "end_time": "2026-11-09T12:00:00",
+      "location": "Neighborhood ecological garden",
+      "latitude": -12.0553,
+      "longitude": -77.0452,
+      "capacity": 35,
+      "image_url": "/assets/images/community/community-harvest.png"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Beach cleanup",
+      "description": "We will meet at San Miguel beach to remove plastic and waste.",
+      "date": "2026-11-02",
+      "start_time": "2026-11-02T11:00:00",
+      "end_time": "2026-11-02T14:00:00",
+      "location": "San Miguel Beach",
+      "latitude": -12.0816,
+      "longitude": -77.0822,
+      "capacity": 60,
+      "image_url": "/assets/images/community/beach-cleanup.png"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "author_id": 4,
+      "name": "River cleanup",
+      "description": "Join the community to clean the river area and sort recyclable waste.",
+      "date": "2026-11-15",
+      "start_time": "2026-11-15T10:00:00",
+      "end_time": "2026-11-15T13:00:00",
+      "location": "Rimac River area",
+      "latitude": -12.0321,
+      "longitude": -77.0304,
+      "capacity": 45,
+      "image_url": "/assets/images/community/river-cleanup.png"
+    },
+    {
+      "id": 5,
+      "community_id": 1,
+      "author_id": 3,
+      "name": "Urban planting",
+      "description": "We will plant native trees and care for green spaces in the neighborhood.",
+      "date": "2026-11-18",
+      "start_time": "2026-11-18T09:00:00",
+      "end_time": "2026-11-18T12:00:00",
+      "location": "Community green area",
+      "latitude": -12.0508,
+      "longitude": -77.0375,
+      "capacity": 40,
+      "image_url": "/assets/images/community/urban-planting.png"
+    },
+    {
+      "id": 6,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Recycling workshop",
+      "description": "Learn how to separate recyclable materials and reuse everyday objects.",
+      "date": "2026-11-20",
+      "start_time": "2026-11-20T16:00:00",
+      "end_time": "2026-11-20T18:00:00",
+      "location": "EcoMind Lima community center",
+      "latitude": -12.0602,
+      "longitude": -77.0418,
+      "capacity": 30,
+      "image_url": "/assets/images/community/recycling-workshop.png"
     }
   ],
   "preference": [
     {
-      "preference_id": 1,
+      "id": 1,
       "user_id": 1,
       "theme": "dark",
       "language": "en"
     },
     {
-      "preference_id": 2,
+      "id": 2,
       "user_id": 2,
       "theme": "light",
       "language": "en"
     },
     {
-      "preference_id": 3,
+      "id": 3,
       "user_id": 3,
       "theme": "dark",
       "language": "en"
     },
     {
-      "preference_id": 4,
+      "id": 4,
       "user_id": 4,
       "theme": "system",
       "language": "en"
     }
   ],
-  "notifications": [
+  "notification": [
     {
-      "notification_id": 1,
+      "id": 1,
       "preference_id": 1,
       "name": "Daily quests",
       "type": "daily_quest",
       "active": true
     },
     {
-      "notification_id": 2,
+      "id": 2,
       "preference_id": 1,
       "name": "Friend requests",
       "type": "friendship",
       "active": true
     },
     {
-      "notification_id": 3,
+      "id": 3,
       "preference_id": 1,
       "name": "Community events",
       "type": "event",
       "active": true
     },
     {
-      "notification_id": 4,
+      "id": 4,
       "preference_id": 2,
       "name": "Daily quests",
       "type": "daily_quest",
       "active": true
     },
     {
-      "notification_id": 5,
+      "id": 5,
       "preference_id": 2,
       "name": "Friend requests",
       "type": "friendship",
       "active": true
     },
     {
-      "notification_id": 6,
+      "id": 6,
       "preference_id": 2,
       "name": "Weekly ranking",
       "type": "ranking",
       "active": false
     },
     {
-      "notification_id": 7,
+      "id": 7,
       "preference_id": 3,
       "name": "Daily quests",
       "type": "daily_quest",
       "active": true
     },
     {
-      "notification_id": 8,
+      "id": 8,
       "preference_id": 3,
       "name": "Community events",
       "type": "event",
       "active": true
     },
     {
-      "notification_id": 9,
+      "id": 9,
       "preference_id": 4,
       "name": "Friend requests",
       "type": "friendship",
@@ -353,7 +440,7 @@
   ],
   "user_notification": [
     {
-      "user_notification_id": 1,
+      "id": 1,
       "user_id": 1,
       "type": "friendship",
       "title": "Friend request",
@@ -364,18 +451,18 @@
       "reference_id": 4
     },
     {
-      "user_notification_id": 2,
+      "id": 2,
       "user_id": 2,
-      "type": "challenge",
+      "type": "quest",
       "title": "Active daily quest",
       "message": "Your daily quest expires today.",
       "read": false,
       "created_at": "2026-05-06T08:00:00",
-      "reference_type": "challenge",
+      "reference_type": "quest",
       "reference_id": 13
     },
     {
-      "user_notification_id": 3,
+      "id": 3,
       "user_id": 3,
       "type": "event",
       "title": "Community event",
@@ -386,7 +473,7 @@
       "reference_id": 2
     },
     {
-      "user_notification_id": 4,
+      "id": 4,
       "user_id": 1,
       "type": "achievement",
       "title": "New achievement",
@@ -399,7 +486,7 @@
   ],
   "ranking": [
     {
-      "ranking_id": 1,
+      "id": 1,
       "name": "Global ranking",
       "type": "global",
       "start_date": "2026-05-01T00:00:00",
@@ -407,7 +494,7 @@
       "status": true
     },
     {
-      "ranking_id": 2,
+      "id": 2,
       "name": "May week 1 ranking",
       "type": "weekly",
       "start_date": "2026-05-01T00:00:00",
@@ -415,7 +502,7 @@
       "status": true
     },
     {
-      "ranking_id": 3,
+      "id": 3,
       "name": "Lima community ranking",
       "type": "community",
       "start_date": "2026-05-01T00:00:00",
@@ -425,72 +512,84 @@
   ],
   "user_ranking": [
     {
+      "id": 1,
       "user_id": 1,
       "ranking_id": 1,
       "rank": 1,
       "score": 420
     },
     {
+      "id": 2,
       "user_id": 3,
       "ranking_id": 1,
       "rank": 2,
       "score": 280
     },
     {
+      "id": 3,
       "user_id": 2,
       "ranking_id": 1,
       "rank": 3,
       "score": 160
     },
     {
+      "id": 4,
       "user_id": 4,
       "ranking_id": 1,
       "rank": 4,
       "score": 95
     },
     {
+      "id": 5,
       "user_id": 1,
       "ranking_id": 2,
       "rank": 1,
       "score": 120
     },
     {
+      "id": 6,
       "user_id": 3,
       "ranking_id": 2,
       "rank": 2,
       "score": 90
     },
     {
+      "id": 7,
       "user_id": 2,
       "ranking_id": 2,
       "rank": 3,
       "score": 65
     },
     {
+      "id": 8,
       "user_id": 4,
       "ranking_id": 2,
       "rank": 4,
       "score": 30
     },
     {
+      "id": 9,
       "user_id": 1,
       "ranking_id": 3,
       "rank": 1,
       "score": 420
     },
     {
+      "id": 10,
       "user_id": 3,
       "ranking_id": 3,
       "rank": 2,
       "score": 280
     },
     {
+      "id": 11,
       "user_id": 2,
       "ranking_id": 3,
       "rank": 3,
       "score": 160
     },
     {
+      "id": 12,
       "user_id": 4,
       "ranking_id": 3,
       "rank": 4,
@@ -499,90 +598,111 @@
   ],
   "minigame": [
     {
-      "minigame_id": 1,
+      "id": 1,
       "name": "Eco Sort",
       "description": "Sort waste into the correct bin.",
       "url": "/minigames/eco-sort/index.html"
     },
     {
-      "minigame_id": 2,
+      "id": 2,
       "name": "Water Saver",
       "description": "Avoid wasting water in a quick game.",
       "url": "/minigames/water-saver/index.html"
     }
   ],
-  "challenge": [
+  "quest": [
     {
-      "challenge_id": 1,
+      "id": 1,
       "minigame_id": null,
       "category": "energy",
-      "description": "Turn off unnecessary lights",
+      "title": "Turn off unnecessary lights",
+      "description": "Check the rooms at home and turn off any lights you are not using. This small habit reduces energy use and helps protect the planet.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 20,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 25,
       "expiration_date": null,
       "time": 10
     },
     {
-      "challenge_id": 2,
+      "id": 2,
       "minigame_id": null,
       "category": "energy",
-      "description": "Unplug unused chargers",
+      "title": "Unplug unused chargers",
+      "description": "Find chargers that are plugged in without charging a device and unplug them. Avoiding standby power waste also makes a difference.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 25,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 20,
       "expiration_date": null,
       "time": 15
     },
     {
-      "challenge_id": 3,
+      "id": 3,
       "minigame_id": null,
       "category": "energy",
-      "description": "Use natural light to study",
+      "title": "Use natural light to study",
+      "description": "Use daylight to study, read, or work. Open curtains and organize your space so you rely less on artificial lighting.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 15,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 20,
       "expiration_date": null,
       "time": 20
     },
     {
-      "challenge_id": 4,
+      "id": 4,
       "minigame_id": null,
       "category": "energy",
-      "description": "Reduce screen time for one hour",
+      "title": "Reduce screen time for one hour",
+      "description": "Take a one-hour screen break. You will save energy and give your eyes and mind a useful rest.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 30,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 30,
       "expiration_date": null,
       "time": 60
     },
     {
-      "challenge_id": 5,
+      "id": 5,
       "minigame_id": null,
       "category": "water",
-      "description": "Turn off the faucet while brushing your teeth",
+      "title": "Turn off the faucet while brushing your teeth",
+      "description": "Turn off the faucet while brushing your teeth. This quick action prevents several liters of water from being wasted each day.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 20,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 25,
       "expiration_date": null,
       "time": 5
     },
     {
-      "challenge_id": 6,
+      "id": 6,
       "minigame_id": null,
       "category": "water",
-      "description": "Take a five-minute shower",
+      "title": "Take a five-minute shower",
+      "description": "Try to finish your shower in five minutes. Getting ready before turning on the water helps reduce waste without making it complicated.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 35,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 35,
       "expiration_date": null,
       "time": 5
     },
     {
-      "challenge_id": 7,
+      "id": 7,
       "minigame_id": 2,
       "category": "water",
-      "description": "Complete Water Saver",
+      "title": "Complete Water Saver",
+      "description": "Play Water Saver and show that you can avoid wasting water. You can play again anytime to improve your score.",
+      "image_url": null,
+      "age": 0,
       "type": "minigame",
       "reward_gems": 0,
       "reward_ecopoints": 50,
@@ -590,43 +710,55 @@
       "time": 10
     },
     {
-      "challenge_id": 8,
+      "id": 8,
       "minigame_id": null,
       "category": "water",
-      "description": "Reuse water for a plant",
+      "title": "Reuse water for a plant",
+      "description": "Reuse clean water to water a plant. Small decisions at home can give a valuable resource a second use.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 30,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 30,
       "expiration_date": null,
       "time": 15
     },
     {
-      "challenge_id": 9,
+      "id": 9,
       "minigame_id": null,
       "category": "recycle",
-      "description": "Separate paper and cardboard",
+      "title": "Separate paper and cardboard",
+      "description": "Separate paper and cardboard from other waste. Keeping them clean and dry makes recycling easier.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 20,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 25,
       "expiration_date": null,
       "time": 10
     },
     {
-      "challenge_id": 10,
+      "id": 10,
       "minigame_id": null,
       "category": "recycle",
-      "description": "Clean a container before recycling it",
+      "title": "Clean a container before recycling it",
+      "description": "Rinse or clean a container before recycling it. A clean container has a better chance of returning to the recycling cycle.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 20,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 25,
       "expiration_date": null,
       "time": 10
     },
     {
-      "challenge_id": 11,
+      "id": 11,
       "minigame_id": 1,
       "category": "recycle",
-      "description": "Complete Eco Sort",
+      "title": "Complete Eco Sort",
+      "description": "Play Eco Sort and practice placing waste in the correct bin. You can repeat it to improve your score.",
+      "image_url": null,
+      "age": 0,
       "type": "minigame",
       "reward_gems": 0,
       "reward_ecopoints": 60,
@@ -634,251 +766,296 @@
       "time": 10
     },
     {
-      "challenge_id": 12,
+      "id": 12,
       "minigame_id": null,
       "category": "recycle",
-      "description": "Identify three recyclable items",
+      "title": "Identify three recyclable items",
+      "description": "Look around and identify three items that can be recycled. Recognizing them is the first step toward sorting them better.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 25,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 30,
       "expiration_date": null,
       "time": 15
     },
     {
-      "challenge_id": 13,
+      "id": 13,
       "minigame_id": null,
       "category": "daily_quest",
-      "description": "Use a reusable bottle",
+      "title": "Daily quest - 2026-05-07",
+      "description": "Use a reusable bottle during the day. Avoiding one disposable bottle helps reduce single-use waste.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 15,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 20,
       "expiration_date": "2026-05-07T23:59:59",
       "time": 5
     },
     {
-      "challenge_id": 14,
+      "id": 14,
       "minigame_id": null,
       "category": "daily_quest",
-      "description": "Walk or ride a bike for a short trip",
+      "title": "Daily quest - 2026-05-07",
+      "description": "Walk or ride a bike for a short trip. Sustainable mobility reduces emissions and can make your routine more active.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 25,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 30,
       "expiration_date": "2026-05-07T23:59:59",
       "time": 20
     },
     {
-      "challenge_id": 15,
+      "id": 15,
       "minigame_id": null,
       "category": "daily_quest",
-      "description": "Avoid using a plastic bag",
+      "title": "Daily quest - 2026-05-07",
+      "description": "Avoid using a plastic bag on your next purchase. Bringing a reusable bag helps reduce unnecessary waste.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 20,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 20,
       "expiration_date": "2026-05-07T23:59:59",
       "time": 5
     },
     {
-      "challenge_id": 16,
+      "id": 16,
       "minigame_id": null,
       "category": "daily_quest",
-      "description": "Share an eco action with a friend",
+      "title": "Daily quest - 2026-05-07",
+      "description": "Share an eco-friendly action you did today with someone else. Talking about these habits can inspire more people.",
+      "image_url": null,
+      "age": 0,
       "type": "activities",
       "reward_gems": 30,
-      "reward_ecopoints": 0,
+      "reward_ecopoints": 25,
       "expiration_date": "2026-05-07T23:59:59",
       "time": 10
+    },
+    {
+      "id": 17,
+      "minigame_id": null,
+      "category": "energy",
+      "title": "Wash clothes with cold water",
+      "description": "Wash clothes with cold water when possible. This saves energy and can also help protect some fabrics.",
+      "image_url": null,
+      "age": 0,
+      "type": "activities",
+      "reward_gems": 20,
+      "reward_ecopoints": 25,
+      "expiration_date": null,
+      "time": 20
     }
   ],
   "activity": [
     {
-      "activity_id": 1,
-      "challenge_id": 1,
+      "id": 1,
+      "quest_id": 1,
       "description": "Check the rooms",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 2,
-      "challenge_id": 1,
+      "id": 2,
+      "quest_id": 1,
       "description": "Turn off unused lights",
       "order": 2,
       "type": "checkbox",
       "image_url": "/activities/lights-off.png"
     },
     {
-      "activity_id": 3,
-      "challenge_id": 2,
+      "id": 3,
+      "quest_id": 2,
       "description": "Look for plugged-in chargers",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 4,
-      "challenge_id": 2,
+      "id": 4,
+      "quest_id": 2,
       "description": "Unplug unused chargers",
       "order": 2,
       "type": "checkbox",
       "image_url": "/activities/unplug.png"
     },
     {
-      "activity_id": 5,
-      "challenge_id": 3,
+      "id": 5,
+      "quest_id": 3,
       "description": "Open curtains or blinds",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 6,
-      "challenge_id": 4,
+      "id": 6,
+      "quest_id": 4,
       "description": "Log one hour without screens",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 7,
-      "challenge_id": 5,
+      "id": 7,
+      "quest_id": 5,
       "description": "Turn off the faucet while brushing your teeth",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 8,
-      "challenge_id": 6,
+      "id": 8,
+      "quest_id": 6,
       "description": "Time a five-minute shower",
       "order": 1,
       "type": "checkbox",
       "image_url": "/activities/shower.png"
     },
     {
-      "activity_id": 9,
-      "challenge_id": 8,
+      "id": 9,
+      "quest_id": 8,
       "description": "Save reusable water",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 10,
-      "challenge_id": 9,
+      "id": 10,
+      "quest_id": 9,
       "description": "Separate clean paper",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 11,
-      "challenge_id": 10,
+      "id": 11,
+      "quest_id": 10,
       "description": "Rinse a recyclable container",
       "order": 1,
       "type": "checkbox",
       "image_url": "/activities/container.png"
     },
     {
-      "activity_id": 12,
-      "challenge_id": 12,
+      "id": 12,
+      "quest_id": 12,
       "description": "Find three recyclable items",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 13,
-      "challenge_id": 13,
+      "id": 13,
+      "quest_id": 13,
       "description": "Use a reusable bottle today",
       "order": 1,
       "type": "checkbox",
       "image_url": "/activities/bottle.png"
     },
     {
-      "activity_id": 14,
-      "challenge_id": 14,
+      "id": 14,
+      "quest_id": 14,
       "description": "Take a short trip without a car",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 15,
-      "challenge_id": 15,
+      "id": 15,
+      "quest_id": 15,
       "description": "Refuse a plastic bag",
       "order": 1,
       "type": "checkbox",
       "image_url": null
     },
     {
-      "activity_id": 16,
-      "challenge_id": 16,
+      "id": 16,
+      "quest_id": 16,
       "description": "Tell a friend about an eco action",
       "order": 1,
       "type": "checkbox",
       "image_url": "/activities/friend.png"
+    },
+    {
+      "id": 17,
+      "quest_id": 17,
+      "description": "Use cold water for one laundry load",
+      "order": 1,
+      "type": "checkbox",
+      "image_url": null
     }
   ],
-  "challenge_user": [
+  "quest_user": [
     {
+      "id": 1,
       "user_id": 1,
-      "challenge_id": 1,
+      "quest_id": 1,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-01",
       "end_date": "2026-05-01"
     },
     {
+      "id": 2,
       "user_id": 1,
-      "challenge_id": 5,
+      "quest_id": 5,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
       "end_date": "2026-05-02"
     },
     {
+      "id": 3,
       "user_id": 1,
-      "challenge_id": 11,
+      "quest_id": 11,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-03",
       "end_date": "2026-05-03"
     },
     {
+      "id": 4,
       "user_id": 2,
-      "challenge_id": 13,
+      "quest_id": 13,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
       "end_date": "2026-05-02"
     },
     {
+      "id": 5,
       "user_id": 2,
-      "challenge_id": 7,
+      "quest_id": 7,
       "status": "in_progress",
       "progress": 40,
       "start_date": "2026-05-04",
       "end_date": null
     },
     {
+      "id": 6,
       "user_id": 3,
-      "challenge_id": 9,
+      "quest_id": 9,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-01",
       "end_date": "2026-05-01"
     },
     {
+      "id": 7,
       "user_id": 3,
-      "challenge_id": 14,
+      "quest_id": 14,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
       "end_date": "2026-05-02"
     },
     {
+      "id": 8,
       "user_id": 4,
-      "challenge_id": 2,
+      "quest_id": 2,
       "status": "in_progress",
       "progress": 50,
       "start_date": "2026-05-05",
@@ -887,48 +1064,56 @@
   ],
   "activity_user": [
     {
+      "id": 1,
       "user_id": 1,
       "activity_id": 1,
       "progress": 100,
       "end_date": "2026-05-01"
     },
     {
+      "id": 2,
       "user_id": 1,
       "activity_id": 2,
       "progress": 100,
       "end_date": "2026-05-01"
     },
     {
+      "id": 3,
       "user_id": 1,
       "activity_id": 7,
       "progress": 100,
       "end_date": "2026-05-02"
     },
     {
+      "id": 4,
       "user_id": 2,
       "activity_id": 13,
       "progress": 100,
       "end_date": "2026-05-02"
     },
     {
+      "id": 5,
       "user_id": 3,
       "activity_id": 10,
       "progress": 100,
       "end_date": "2026-05-01"
     },
     {
+      "id": 6,
       "user_id": 3,
       "activity_id": 14,
       "progress": 100,
       "end_date": "2026-05-02"
     },
     {
+      "id": 7,
       "user_id": 4,
       "activity_id": 3,
       "progress": 100,
       "end_date": "2026-05-05"
     },
     {
+      "id": 8,
       "user_id": 4,
       "activity_id": 4,
       "progress": 0,
@@ -937,9 +1122,9 @@
   ],
   "minigame_attempt": [
     {
-      "attempt_id": 1,
+      "id": 1,
       "user_id": 1,
-      "challenge_id": 11,
+      "quest_id": 11,
       "score": 860,
       "status": "completed",
       "start_date": "2026-05-03T16:00:00",
@@ -950,9 +1135,9 @@
       }
     },
     {
-      "attempt_id": 2,
+      "id": 2,
       "user_id": 2,
-      "challenge_id": 7,
+      "quest_id": 7,
       "score": 420,
       "status": "started",
       "start_date": "2026-05-04T18:10:00",
@@ -960,6 +1145,61 @@
       "metadata": {
         "level": 2
       }
+    }
+  ],
+  "event_registration": [
+    {
+      "id": 1,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-10-20T10:00:00",
+      "status": "active"
+    }
+  ],
+  "community_post": [
+    {
+      "id": 1,
+      "community_id": 1,
+      "user_id": 1,
+      "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
+      "points": 50,
+      "likes": 70,
+      "image_url": "/assets/images/community/clean-energy.png",
+      "created_at": "2026-05-09T09:00:00"
+    },
+    {
+      "id": 2,
+      "community_id": 1,
+      "user_id": 3,
+      "content": "I completed 7 days without using single-use plastic at home.",
+      "points": 35,
+      "likes": 70,
+      "image_url": "/assets/images/community/no-plastic-bag.png",
+      "created_at": "2026-05-09T08:15:00"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "user_id": 4,
+      "content": "I completed the plastic reduction challenge for 30 days. I removed almost all plastic from my home.",
+      "points": 45,
+      "likes": 70,
+      "image_url": "/assets/images/community/no-plastic-bottle.png",
+      "created_at": "2026-05-09T07:50:00"
+    }
+  ],
+  "community_goal": [
+    {
+      "id": 1,
+      "community_id": 1,
+      "title": "Plant 1000 trees",
+      "target": 1000,
+      "progress": 730,
+      "unit": "trees",
+      "participants": 245,
+      "status": "active"
     }
   ]
 }
