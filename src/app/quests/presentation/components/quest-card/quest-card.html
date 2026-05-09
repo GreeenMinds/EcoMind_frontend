@@ -12,5 +12,5 @@
     [alt]="summary.themeType"
   >
   <span class="quest-card-title">{{ summary.quest.title }}</span>
-  <small>{{ summary.status }} - {{ summary.progress }}%</small>
+  <small>{{ 'quests.statuses.' + summary.status | translate }} - {{ summary.progress }}%</small>
 </button>

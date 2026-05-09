@@ -1,11 +1,11 @@
 @if (detail(); as detail) {
   <section class="quest-activities">
     <header class="activity-route-header">
-      <a class="back-link" [routerLink]="['/quests', detail.quest.id]" aria-label="Back">
+      <a class="back-link" [routerLink]="['/quests', detail.quest.id]" [attr.aria-label]="'common.back' | translate">
         <span aria-hidden="true">&lsaquo;</span>
-        Back
+        {{ 'common.back' | translate }}
       </a>
-      <span>QUEST</span>
+      <span>{{ 'quests.singular' | translate }}</span>
     </header>
 
     <header class="activities-header">
@@ -28,13 +28,13 @@
       </div>
 
       <div class="quest-progress">
-        <span>Progress: {{ detail.completedActivitiesCount }} / {{ detail.activitiesCount }}</span>
+        <span>{{ 'quests.progressCount' | translate: {completed: detail.completedActivitiesCount, total: detail.activitiesCount} }}</span>
         <div class="progress-track" aria-hidden="true">
           <div class="progress-value" [style.width.%]="detail.progress"></div>
         </div>
       </div>
     } @else {
-      <p class="empty-copy">This quest has no registered activities.</p>
+      <p class="empty-copy">{{ 'quests.emptyActivities' | translate }}</p>
     }
 
     <button
@@ -44,15 +44,15 @@
       (click)="completeQuest()"
     >
       @if (detail.completed) {
-        Activity completed
+        {{ 'quests.activityCompleted' | translate }}
       } @else {
-        Complete activity
+        {{ 'quests.completeActivity' | translate }}
       }
     </button>
   </section>
 } @else {
   <section class="quest-activities empty-state">
-    <h2>Quest not found</h2>
-    <a class="back-link" routerLink="/quests">Back to quests</a>
+    <h2>{{ 'quests.notFound' | translate }}</h2>
+    <a class="back-link" routerLink="/quests">{{ 'quests.backToQuests' | translate }}</a>
   </section>
 }

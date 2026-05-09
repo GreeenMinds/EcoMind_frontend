@@ -4,16 +4,16 @@
   </div>
 
   @if (showQuestSummaryPanel()) {
-  <aside class="quest-side-panel" aria-label="Progress summary">
-    <section class="streak-card" aria-label="Streak and ranking">
-      <div class="streak-title">Streak</div>
+  <aside class="quest-side-panel" [attr.aria-label]="'quests.progressSummary' | translate">
+    <section class="streak-card" [attr.aria-label]="'quests.streakAndRanking' | translate">
+      <div class="streak-title">{{ 'quests.streak' | translate }}</div>
       <div class="streak-value">
         <img class="streak-icon" src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
         <strong>{{ streakPlaceholder }}</strong>
       </div>
-      <div class="ranking-line" aria-label="Rank placeholder">
+      <div class="ranking-line" [attr.aria-label]="'quests.rankPlaceholder' | translate">
         <img class="ranking-icon" src="/assets/images/quests/throphy.png" alt="" aria-hidden="true">
-        <span>Rank {{ rankingPlaceholder }}</span>
+        <span>{{ 'quests.rank' | translate: {rank: rankingPlaceholder} }}</span>
       </div>
     </section>
 

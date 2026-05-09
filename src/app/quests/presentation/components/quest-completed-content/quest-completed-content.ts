@@ -1,12 +1,13 @@
 import {Component, computed, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, RouterLink} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 import {map} from 'rxjs';
 import {QuestsService} from '../../../application/quests.service';
 
 @Component({
   selector: 'app-quest-completed-content',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './quest-completed-content.html',
   styleUrl: './quest-completed-content.css',
 })

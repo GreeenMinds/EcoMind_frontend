@@ -1,16 +1,18 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {QuestSummary, QuestsService} from '../../../application/quests.service';
 
 @Component({
   selector: 'app-quest-search-content',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './quest-search-content.html',
   styleUrl: './quest-search-content.css',
 })
 export class QuestSearchContent {
   readonly questsService = inject(QuestsService);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
   private readonly questSummaries = this.questsService.getQuestSummaries();
 
   readonly searchInput = signal('');
@@ -125,44 +127,43 @@ export class QuestSearchContent {
 
   getActionLabel(summary: QuestSummary): string {
     if (summary.completed) {
-      return summary.quest.type === 'activities' ? 'View activity' : 'View quest';
+      return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
     }
     if (summary.started) {
-      return summary.quest.type === 'activities' ? 'View activity' : 'View quest';
+      return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
     }
-    return 'Start';
+    return this.translate.instant('quests.actions.start');
   }
 
   getCategoryLabel(category: string): string {
-    if (category === 'all') {
-      return 'All categories';
-    }
-    return category.replaceAll('_', ' ');
+    const key = `quests.categories.${category}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? category.replaceAll('_', ' ') : translated;
   }
 
   getQuestTypeLabel(type: string): string {
-    if (type === 'all') {
-      return 'All quest types';
-    }
-    return type === 'activities' ? 'Activities' : 'Minigame';
+    const key = `quests.types.${type}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? type : translated;
   }
 
   getActivityTypeLabel(type: string): string {
-    if (type === 'all') {
-      return 'All activity types';
-    }
-    return type === 'checkbox' ? 'Checkbox' : 'Minigame';
+    const key = `quests.activityTypes.${type}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? type : translated;
   }
 
   getQuestAgeLabel(summary: QuestSummary): string {
-    return summary.quest.age > 0 ? `${summary.quest.age}+ years` : 'General';
+    return summary.quest.age > 0
+      ? this.translate.instant('common.yearsPlus', {count: summary.quest.age})
+      : this.translate.instant('common.general');
   }
 
   getRewardLabel(summary: QuestSummary): string {
     if (summary.quest.reward_ecopoints > 0) {
-      return `${summary.quest.reward_ecopoints} ecoPoints`;
+      return this.translate.instant('common.ecoPoints', {count: summary.quest.reward_ecopoints});
     }
-    return `+${summary.quest.reward_gems} gems`;
+    return this.translate.instant('common.gems', {count: summary.quest.reward_gems});
   }
 
   getQuestTypeTheme(type: string): Record<string, string> {

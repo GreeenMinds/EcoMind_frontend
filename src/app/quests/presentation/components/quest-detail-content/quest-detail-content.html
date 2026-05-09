@@ -1,11 +1,11 @@
 @if (detail(); as detail) {
   <section class="quest-detail">
     <header class="detail-header">
-      <a class="back-link" routerLink="/quests" aria-label="Back">
+      <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
         <span aria-hidden="true">&lsaquo;</span>
-        Back
+        {{ 'common.back' | translate }}
       </a>
-      <span>QUEST</span>
+      <span>{{ 'quests.singular' | translate }}</span>
     </header>
 
     <h2>{{ detail.quest.title }}</h2>
@@ -13,14 +13,14 @@
     <div class="quest-meta">
       <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
       @if (detail.quest.age > 0) {
-        <span>+{{ detail.quest.age }} years</span>
+        <span>{{ 'common.yearsPlus' | translate: {count: detail.quest.age} }}</span>
       }
-      <span>{{ detail.quest.time }} min</span>
+      <span>{{ 'common.minutes' | translate: {count: detail.quest.time} }}</span>
       @if (detail.quest.reward_gems > 0) {
-        <span class="gem-reward">+{{ detail.quest.reward_gems }} gems</span>
+        <span class="gem-reward">{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</span>
       }
       @if (detail.quest.reward_ecopoints > 0) {
-        <span>{{ detail.quest.reward_ecopoints }} ecoPoints</span>
+        <span>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</span>
       }
     </div>
 
@@ -46,7 +46,7 @@
   </section>
 } @else {
   <section class="quest-detail empty-state">
-    <h2>Quest not found</h2>
-    <a class="back-link" routerLink="/quests">Back to quests</a>
+    <h2>{{ 'quests.notFound' | translate }}</h2>
+    <a class="back-link" routerLink="/quests">{{ 'quests.backToQuests' | translate }}</a>
   </section>
 }

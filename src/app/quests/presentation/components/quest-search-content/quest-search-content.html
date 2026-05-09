@@ -1,10 +1,10 @@
 <section class="quest-search-page">
   <header class="search-header">
-    <a class="back-link" routerLink="/quests" aria-label="Back">
+    <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
       <span aria-hidden="true">&lsaquo;</span>
-      Back
+      {{ 'common.back' | translate }}
     </a>
-    <span>SEARCH QUESTS</span>
+    <span>{{ 'quests.searchTitle' | translate }}</span>
   </header>
 
   <div class="search-toolbar">
@@ -15,17 +15,17 @@
         [value]="searchInput()"
         (input)="updateSearchInput($event)"
         (keydown.enter)="applySearch()"
-        placeholder="Search quests by name"
+        [placeholder]="'quests.searchPlaceholder' | translate"
       >
       <span class="search-icon">⌕</span>
     </label>
 
-    <button type="button" class="search-action" (click)="applySearch()">Search</button>
+    <button type="button" class="search-action" (click)="applySearch()">{{ 'common.search' | translate }}</button>
   </div>
 
-  <div class="filter-row" aria-label="Quest filters">
+  <div class="filter-row" [attr.aria-label]="'quests.filters' | translate">
     <label>
-      <span>Category</span>
+      <span>{{ 'quests.category' | translate }}</span>
       <select [value]="selectedCategory()" (change)="updateCategory($event)">
         @for (category of categories(); track category) {
           <option [value]="category">{{ getCategoryLabel(category) }}</option>
@@ -34,7 +34,7 @@
     </label>
 
     <label>
-      <span>Quest type</span>
+      <span>{{ 'quests.questType' | translate }}</span>
       <select [value]="selectedQuestType()" (change)="updateQuestType($event)">
         @for (type of questTypes(); track type) {
           <option [value]="type">{{ getQuestTypeLabel(type) }}</option>
@@ -43,7 +43,7 @@
     </label>
 
     <label>
-      <span>Activity type</span>
+      <span>{{ 'quests.activityType' | translate }}</span>
       <select
         [value]="selectedActivityType()"
         [disabled]="selectedQuestType() === 'minigame'"
@@ -56,7 +56,7 @@
     </label>
 
     <label>
-      <span>Minimum age</span>
+      <span>{{ 'quests.minimumAge' | translate }}</span>
       <input
         type="number"
         min="0"
@@ -66,15 +66,15 @@
       >
     </label>
 
-    <button type="button" class="clear-action" (click)="clearFilters()">Clear</button>
+    <button type="button" class="clear-action" (click)="clearFilters()">{{ 'common.clear' | translate }}</button>
   </div>
 
   @if (questsService.loading()) {
-    <p class="state-text">Loading quests...</p>
+    <p class="state-text">{{ 'quests.loading' | translate }}</p>
   } @else if (questsService.error()) {
     <p class="state-text error">{{ questsService.error() }}</p>
   } @else if (filteredQuests().length === 0) {
-    <p class="state-text">No quests found</p>
+    <p class="state-text">{{ 'quests.noneFound' | translate }}</p>
   } @else {
     <div class="result-list">
       @for (summary of filteredQuests(); track summary.quest.id) {
@@ -83,7 +83,7 @@
             <div class="tag-row">
               <span class="tag category" [class]="summary.quest.category">{{ getCategoryLabel(summary.quest.category) }}</span>
               <span class="tag">{{ getQuestTypeLabel(summary.quest.type) }}</span>
-              <span class="tag">{{ summary.quest.time }} min</span>
+              <span class="tag">{{ 'common.minutes' | translate: {count: summary.quest.time} }}</span>
               @if (summary.quest.age > 0) {
                 <span class="tag">{{ getQuestAgeLabel(summary) }}</span>
               }
@@ -91,7 +91,7 @@
                 <span class="tag reward">{{ getRewardLabel(summary) }}</span>
               }
               @if (summary.quest.reward_gems > 0) {
-                <span class="tag gem-reward">+{{ summary.quest.reward_gems }} gems</span>
+                <span class="tag gem-reward">{{ 'common.gems' | translate: {count: summary.quest.reward_gems} }}</span>
               }
             </div>
 

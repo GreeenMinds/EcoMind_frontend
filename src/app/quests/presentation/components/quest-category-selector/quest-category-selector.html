@@ -2,7 +2,7 @@
   <button
     type="button"
     class="category-backdrop"
-    aria-label="Cerrar categorias"
+    [attr.aria-label]="'quests.categoryMenuClose' | translate"
     (click)="closeCategoryMenu()"
   ></button>
 }
@@ -48,8 +48,8 @@
     }
 
     <button type="button" class="category-pill category-search" routerLink="/quests/search">
-      <span>Buscar</span>
-      <img class="category-icon search-icon" src="/assets/images/quests/search.png" alt="Search" width="45" height="45">
+      <span>{{ 'common.search' | translate }}</span>
+      <img class="category-icon search-icon" src="/assets/images/quests/search.png" [alt]="'quests.alt.search' | translate" width="45" height="45">
     </button>
   </div>
 </div>

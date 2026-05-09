@@ -1,10 +1,11 @@
 import {Component, computed, effect, EventEmitter, input, Output, signal} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
 import {QuestSummary} from '../../../application/quests.service';
 import {QuestCard} from '../quest-card/quest-card';
 
 @Component({
   selector: 'app-quest-card-grid',
-  imports: [QuestCard],
+  imports: [QuestCard, TranslatePipe],
   templateUrl: './quest-card-grid.html',
   styleUrl: './quest-card-grid.css',
 })

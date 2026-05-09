@@ -1,10 +1,11 @@
 import {NgStyle} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
 import {QuestSummary} from '../../../application/quests.service';
 
 @Component({
   selector: 'app-quest-card',
-  imports: [NgStyle],
+  imports: [NgStyle, TranslatePipe],
   templateUrl: './quest-card.html',
   styleUrl: './quest-card.css',
 })

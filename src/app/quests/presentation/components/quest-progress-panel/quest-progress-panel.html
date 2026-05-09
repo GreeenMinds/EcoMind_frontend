@@ -1,5 +1,5 @@
-<section class="progress-card" aria-label="Quest progress">
-  <h2>Progress</h2>
+<section class="progress-card" [attr.aria-label]="'quests.progress' | translate">
+  <h2>{{ 'quests.progress' | translate }}</h2>
 
   @if (progressItems().length > 0) {
     <div class="progress-list">
@@ -13,19 +13,19 @@
       }
     </div>
   } @else {
-    <p class="empty-progress">No active quests yet</p>
+    <p class="empty-progress">{{ 'quests.activeEmpty' | translate }}</p>
   }
 
   @if (hasMoreProgressItems()) {
-    <button type="button" class="progress-more" (click)="openModal()">See more</button>
+    <button type="button" class="progress-more" (click)="openModal()">{{ 'quests.seeMore' | translate }}</button>
   }
 </section>
 
 @if (modalOpen()) {
   <div class="progress-modal-backdrop" role="presentation" (click)="closeModal()"></div>
 
-  <section class="progress-modal" role="dialog" aria-modal="true" aria-label="All active quests">
-    <h3>Active quests</h3>
+  <section class="progress-modal" role="dialog" aria-modal="true" [attr.aria-label]="'quests.allActive' | translate">
+    <h3>{{ 'quests.activeQuests' | translate }}</h3>
 
     <div class="modal-progress-list">
       @for (item of allProgressItems(); track item.questId) {
@@ -38,6 +38,6 @@
       }
     </div>
 
-    <button type="button" class="modal-close" (click)="closeModal()">Back</button>
+    <button type="button" class="modal-close" (click)="closeModal()">{{ 'common.back' | translate }}</button>
   </section>
 }

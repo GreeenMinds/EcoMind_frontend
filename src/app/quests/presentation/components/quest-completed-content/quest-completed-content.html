@@ -1,12 +1,12 @@
 <section class="quest-completed">
-  <h2>You completed the activity!</h2>
-  <img src="/assets/images/quests/complete.png" alt="Activity completed">
+  <h2>{{ 'quests.completedActivity' | translate }}</h2>
+  <img src="/assets/images/quests/complete.png" [alt]="'quests.alt.activityCompleted' | translate">
 
   @if (detail(); as detail) {
     @if (detail.quest.reward_ecopoints > 0) {
-      <strong>+{{ detail.quest.reward_ecopoints }} ecoPoints</strong>
+      <strong>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</strong>
     }
   }
 
-  <a class="continue-action" routerLink="/quests">Continue</a>
+  <a class="continue-action" routerLink="/quests">{{ 'common.continue' | translate }}</a>
 </section>

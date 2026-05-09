@@ -1,5 +1,6 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 import {QuestSummary, QuestsService} from '../../../application/quests.service';
 
 interface ProgressPanelItem {
@@ -11,7 +12,7 @@ interface ProgressPanelItem {
 
 @Component({
   selector: 'app-quest-progress-panel',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './quest-progress-panel.html',
   styleUrl: './quest-progress-panel.css',
 })

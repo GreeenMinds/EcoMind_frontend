@@ -1,8 +1,10 @@
 import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quest-started-content',
+  imports: [TranslatePipe],
   templateUrl: './quest-started-content.html',
   styleUrl: './quest-started-content.css',
 })

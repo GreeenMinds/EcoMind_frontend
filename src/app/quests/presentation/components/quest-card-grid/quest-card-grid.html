@@ -19,13 +19,13 @@
   </div>
 </div>
 
-<div class="quest-page-dots" aria-label="Paginas de retos">
+<div class="quest-page-dots" [attr.aria-label]="'quests.pagination.pages' | translate">
   @for (page of pages(); track page) {
     <button
       type="button"
       class="quest-page-dot"
       [class.active]="currentPage() === page"
-      [attr.aria-label]="'Pagina ' + (page + 1)"
+      [attr.aria-label]="'quests.pagination.page' | translate: {page: page + 1}"
       (click)="selectPage(page)"
     ></button>
   }
