@@ -1,14 +1,14 @@
-import {computed, DestroyRef, inject, Injectable, Signal, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {forkJoin, map, of, retry, switchMap} from 'rxjs';
-import {CurrentUser} from '../../shared/application/current-user';
-import {ActivityUser} from '../domain/model/activity-user.entity';
-import {Activity} from '../domain/model/activity.entity';
-import {MinigameAttempt} from '../domain/model/minigame-attempt.entity';
-import {Minigame} from '../domain/model/minigame.entity';
-import {QuestUser} from '../domain/model/quest-user.entity';
-import {Quest} from '../domain/model/quest.entity';
-import {QuestsApi} from '../infrastructure/quests-api';
+import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, map, of, retry, switchMap } from 'rxjs';
+import { CurrentUser } from '../../shared/application/current-user';
+import { ActivityUser } from '../domain/model/activity-user.entity';
+import { Activity } from '../domain/model/activity.entity';
+import { MinigameAttempt } from '../domain/model/minigame-attempt.entity';
+import { Minigame } from '../domain/model/minigame.entity';
+import { QuestUser } from '../domain/model/quest-user.entity';
+import { Quest } from '../domain/model/quest.entity';
+import { QuestsApi } from '../infrastructure/quests-api';
 
 export interface ActivityProgress {
   activity: Activity;
@@ -93,11 +93,15 @@ export class QuestsService {
   getDailyQuest(): Signal<QuestSummary | undefined> {
     // TODO: When the real API supports daily quest scheduling, match the quest by the current date.
     // The fake API only exposes daily quests through the category and expiration date.
-    return computed(() => this.getQuestSummaries()().find((summary) => summary.quest.category === 'daily_quest'));
+    return computed(() =>
+      this.getQuestSummaries()().find((summary) => summary.quest.category === 'daily_quest'),
+    );
   }
 
   getActiveQuests(): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => summary.started && !summary.completed));
+    return computed(() =>
+      this.getQuestSummaries()().filter((summary) => summary.started && !summary.completed),
+    );
   }
 
   getCompletedQuests(): Signal<QuestSummary[]> {
@@ -109,15 +113,21 @@ export class QuestsService {
   }
 
   getQuestsByCategory(category: string): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => summary.quest.category === category));
+    return computed(() =>
+      this.getQuestSummaries()().filter((summary) => summary.quest.category === category),
+    );
   }
 
   getQuestsByStatus(status: string): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => summary.status === status));
+    return computed(() =>
+      this.getQuestSummaries()().filter((summary) => summary.status === status),
+    );
   }
 
   getQuestsByType(type: string): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => summary.quest.type === type));
+    return computed(() =>
+      this.getQuestSummaries()().filter((summary) => summary.quest.type === type),
+    );
   }
 
   searchQuests(searchTerm: string): Signal<QuestSummary[]> {
@@ -126,11 +136,12 @@ export class QuestsService {
       if (!normalizedSearchTerm) {
         return this.getQuestSummaries()();
       }
-      return this.getQuestSummaries()().filter((summary) =>
-        summary.quest.title.toLowerCase().includes(normalizedSearchTerm) ||
-        summary.quest.description.toLowerCase().includes(normalizedSearchTerm) ||
-        summary.quest.category.toLowerCase().includes(normalizedSearchTerm) ||
-        summary.quest.type.toLowerCase().includes(normalizedSearchTerm),
+      return this.getQuestSummaries()().filter(
+        (summary) =>
+          summary.quest.title.toLowerCase().includes(normalizedSearchTerm) ||
+          summary.quest.description.toLowerCase().includes(normalizedSearchTerm) ||
+          summary.quest.category.toLowerCase().includes(normalizedSearchTerm) ||
+          summary.quest.type.toLowerCase().includes(normalizedSearchTerm),
       );
     });
   }
@@ -140,7 +151,9 @@ export class QuestsService {
   }
 
   getMissingActivitiesForQuest(questId: number): Signal<ActivityProgress[]> {
-    return computed(() => this.buildActivitiesProgress(questId).filter((activity) => !activity.completed));
+    return computed(() =>
+      this.buildActivitiesProgress(questId).filter((activity) => !activity.completed),
+    );
   }
 
   getActivityFeedback(activityId: number): Signal<ActivityUser | undefined> {
@@ -179,7 +192,7 @@ export class QuestsService {
   getQuestRewardPreview(questId: number): Signal<{ gems: number; ecopoints: number } | undefined> {
     return computed(() => {
       const quest = this.quests().find((item) => item.id === questId);
-      return quest ? {gems: quest.reward_gems, ecopoints: quest.reward_ecopoints} : undefined;
+      return quest ? { gems: quest.reward_gems, ecopoints: quest.reward_ecopoints } : undefined;
     });
   }
 
@@ -215,12 +228,13 @@ export class QuestsService {
       .pipe(
         retry(2),
         switchMap((createdQuestUser) => {
-          const activitiesToStart = quest.type === 'activities'
-            ? this.activities().filter((activity) => activity.quest_id === questId)
-            : [];
+          const activitiesToStart =
+            quest.type === 'activities'
+              ? this.activities().filter((activity) => activity.quest_id === questId)
+              : [];
 
           if (activitiesToStart.length === 0) {
-            return of({createdQuestUser, createdActivitiesUser: [] as ActivityUser[]});
+            return of({ createdQuestUser, createdActivitiesUser: [] as ActivityUser[] });
           }
 
           return forkJoin(
@@ -235,14 +249,12 @@ export class QuestsService {
                 }),
               ),
             ),
-          ).pipe(
-            map((createdActivitiesUser) => ({createdQuestUser, createdActivitiesUser})),
-          );
+          ).pipe(map((createdActivitiesUser) => ({ createdQuestUser, createdActivitiesUser })));
         }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
-        next: ({createdQuestUser, createdActivitiesUser}) => {
+        next: ({ createdQuestUser, createdActivitiesUser }) => {
           this.questsUserSignal.update((questsUser) => [...questsUser, createdQuestUser]);
           this.activitiesUserSignal.update((activitiesUser) => [
             ...activitiesUser,
@@ -282,7 +294,9 @@ export class QuestsService {
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.questsUserSignal.update((questsUser) => questsUser.filter((item) => item.id !== questUser.id));
+          this.questsUserSignal.update((questsUser) =>
+            questsUser.filter((item) => item.id !== questUser.id),
+          );
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -312,7 +326,10 @@ export class QuestsService {
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (createdActivityUser) => {
-          this.activitiesUserSignal.update((activitiesUser) => [...activitiesUser, createdActivityUser]);
+          this.activitiesUserSignal.update((activitiesUser) => [
+            ...activitiesUser,
+            createdActivityUser,
+          ]);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -423,14 +440,19 @@ export class QuestsService {
   private buildQuestSummary(quest: Quest): QuestSummary {
     const questUser = this.findCurrentUserQuest(quest.id);
     const activities = this.activities().filter((activity) => activity.quest_id === quest.id);
-    const completedActivitiesCount = this.buildActivitiesProgress(quest.id).filter((activity) => activity.completed).length;
+    const completedActivitiesCount = this.buildActivitiesProgress(quest.id).filter(
+      (activity) => activity.completed,
+    ).length;
     const latestMinigameAttempt = this.findLatestMinigameAttempt(quest.id);
-    const progress = questUser?.progress ?? this.calculateActivityProgress(activities, completedActivitiesCount);
+    const progress =
+      questUser?.progress ?? this.calculateActivityProgress(activities, completedActivitiesCount);
 
     return {
       quest,
       questUser,
-      minigame: quest.minigame_id ? this.minigames().find((minigame) => minigame.id === quest.minigame_id) : undefined,
+      minigame: quest.minigame_id
+        ? this.minigames().find((minigame) => minigame.id === quest.minigame_id)
+        : undefined,
       latestMinigameAttempt,
       progress,
       status: questUser?.status ?? 'pending',
@@ -459,7 +481,10 @@ export class QuestsService {
       });
   }
 
-  private calculateActivityProgress(activities: Activity[], completedActivitiesCount: number): number {
+  private calculateActivityProgress(
+    activities: Activity[],
+    completedActivitiesCount: number,
+  ): number {
     if (activities.length === 0) {
       return 0;
     }
@@ -472,9 +497,12 @@ export class QuestsService {
     }
 
     const activities = this.activities().filter((activity) => activity.quest_id === quest.id);
-    return activities
-      .map((activity) => activity.type)
-      .sort((a, b) => this.getActivityTypeWeight(b) - this.getActivityTypeWeight(a))[0] ?? quest.type;
+    return (
+      activities
+        .map((activity) => activity.type)
+        .sort((a, b) => this.getActivityTypeWeight(b) - this.getActivityTypeWeight(a))[0] ??
+      quest.type
+    );
   }
 
   private getActivityTypeWeight(type: string): number {
@@ -493,7 +521,8 @@ export class QuestsService {
 
   private findCurrentUserActivity(activityId: number): ActivityUser | undefined {
     return this.activitiesUser().find(
-      (activityUser) => activityUser.activity_id === activityId && activityUser.user_id === this.currentUserId(),
+      (activityUser) =>
+        activityUser.activity_id === activityId && activityUser.user_id === this.currentUserId(),
     );
   }
 
@@ -505,8 +534,9 @@ export class QuestsService {
   }
 
   private findLatestMinigameAttempt(questId: number): MinigameAttempt | undefined {
-    return this.findCurrentUserMinigameAttempts(questId)
-      .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())[0];
+    return this.findCurrentUserMinigameAttempts(questId).sort(
+      (a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
+    )[0];
   }
 
   private createCompletedActivity(activityId: number): void {
@@ -525,7 +555,10 @@ export class QuestsService {
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (createdActivityUser) => {
-          this.activitiesUserSignal.update((activitiesUser) => [...activitiesUser, createdActivityUser]);
+          this.activitiesUserSignal.update((activitiesUser) => [
+            ...activitiesUser,
+            createdActivityUser,
+          ]);
           this.syncQuestProgressFromActivity(activityId);
           this.loadingSignal.set(false);
         },
@@ -569,7 +602,9 @@ export class QuestsService {
       .subscribe({
         next: (updatedActivityUser) => {
           this.activitiesUserSignal.update((activitiesUser) =>
-            activitiesUser.map((item) => (item.id === updatedActivityUser.id ? updatedActivityUser : item)),
+            activitiesUser.map((item) =>
+              item.id === updatedActivityUser.id ? updatedActivityUser : item,
+            ),
           );
           if (syncQuestProgress) {
             this.syncQuestProgressFromActivity(updatedActivityUser.activity_id);
@@ -616,7 +651,9 @@ export class QuestsService {
 
   private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
-      return error.message.includes('Resource not found') ? `${fallback}: Not found` : error.message;
+      return error.message.includes('Resource not found')
+        ? `${fallback}: Not found`
+        : error.message;
     }
     return fallback;
   }

@@ -260,25 +260,91 @@
       "id": 1,
       "community_id": 1,
       "author_id": 1,
-      "name": "Waste-free week",
-      "description": "Complete daily quests to reduce waste.",
-      "date": "2026-05-10",
-      "start_time": "2026-05-10T09:00:00",
-      "end_time": "2026-05-10T18:00:00",
+      "name": "Trash collection",
+      "description": "We will meet at the central park to collect waste and clean green areas.",
+      "date": "2026-10-26",
+      "start_time": "2026-10-26T10:00:00",
+      "end_time": "2026-10-26T12:00:00",
       "location": "Central Park",
-      "capacity": 50
+      "latitude": -12.0464,
+      "longitude": -77.0428,
+      "capacity": 50,
+      "image_url": "/assets/images/community/trash-collection.png"
     },
     {
       "id": 2,
       "community_id": 1,
       "author_id": 3,
-      "name": "Water saving at home",
-      "description": "Add water-saving actions with your community.",
-      "date": "2026-05-14",
-      "start_time": "2026-05-14T10:00:00",
-      "end_time": "2026-05-14T16:00:00",
-      "location": "EcoMind Lima",
-      "capacity": 40
+      "name": "Community harvest",
+      "description": "We will meet at the neighborhood ecological garden to harvest fresh products.",
+      "date": "2026-11-09",
+      "start_time": "2026-11-09T09:00:00",
+      "end_time": "2026-11-09T12:00:00",
+      "location": "Neighborhood ecological garden",
+      "latitude": -12.0553,
+      "longitude": -77.0452,
+      "capacity": 35,
+      "image_url": "/assets/images/community/community-harvest.png"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Beach cleanup",
+      "description": "We will meet at San Miguel beach to remove plastic and waste.",
+      "date": "2026-11-02",
+      "start_time": "2026-11-02T11:00:00",
+      "end_time": "2026-11-02T14:00:00",
+      "location": "San Miguel Beach",
+      "latitude": -12.0816,
+      "longitude": -77.0822,
+      "capacity": 60,
+      "image_url": "/assets/images/community/beach-cleanup.png"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "author_id": 4,
+      "name": "River cleanup",
+      "description": "Join the community to clean the river area and sort recyclable waste.",
+      "date": "2026-11-15",
+      "start_time": "2026-11-15T10:00:00",
+      "end_time": "2026-11-15T13:00:00",
+      "location": "Rimac River area",
+      "latitude": -12.0321,
+      "longitude": -77.0304,
+      "capacity": 45,
+      "image_url": "/assets/images/community/river-cleanup.png"
+    },
+    {
+      "id": 5,
+      "community_id": 1,
+      "author_id": 3,
+      "name": "Urban planting",
+      "description": "We will plant native trees and care for green spaces in the neighborhood.",
+      "date": "2026-11-18",
+      "start_time": "2026-11-18T09:00:00",
+      "end_time": "2026-11-18T12:00:00",
+      "location": "Community green area",
+      "latitude": -12.0508,
+      "longitude": -77.0375,
+      "capacity": 40,
+      "image_url": "/assets/images/community/urban-planting.png"
+    },
+    {
+      "id": 6,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Recycling workshop",
+      "description": "Learn how to separate recyclable materials and reuse everyday objects.",
+      "date": "2026-11-20",
+      "start_time": "2026-11-20T16:00:00",
+      "end_time": "2026-11-20T18:00:00",
+      "location": "EcoMind Lima community center",
+      "latitude": -12.0602,
+      "longitude": -77.0418,
+      "capacity": 30,
+      "image_url": "/assets/images/community/recycling-workshop.png"
     }
   ],
   "preference": [
@@ -1148,6 +1214,61 @@
       "metadata": {
         "level": 2
       }
+    }
+  ],
+  "event_registration": [
+    {
+      "id": 1,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-10-20T10:00:00",
+      "status": "active"
+    }
+  ],
+  "community_post": [
+    {
+      "id": 1,
+      "community_id": 1,
+      "user_id": 1,
+      "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
+      "points": 50,
+      "likes": 70,
+      "image_url": "/assets/images/community/clean-energy.png",
+      "created_at": "2026-05-09T09:00:00"
+    },
+    {
+      "id": 2,
+      "community_id": 1,
+      "user_id": 3,
+      "content": "I completed 7 days without using single-use plastic at home.",
+      "points": 35,
+      "likes": 70,
+      "image_url": "/assets/images/community/no-plastic-bag.png",
+      "created_at": "2026-05-09T08:15:00"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "user_id": 4,
+      "content": "I completed the plastic reduction challenge for 30 days. I removed almost all plastic from my home.",
+      "points": 45,
+      "likes": 70,
+      "image_url": "/assets/images/community/no-plastic-bottle.png",
+      "created_at": "2026-05-09T07:50:00"
+    }
+  ],
+  "community_goal": [
+    {
+      "id": 1,
+      "community_id": 1,
+      "title": "Plant 1000 trees",
+      "target": 1000,
+      "progress": 730,
+      "unit": "trees",
+      "participants": 245,
+      "status": "active"
     }
   ]
 }
