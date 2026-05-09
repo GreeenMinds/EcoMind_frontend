@@ -1,0 +1,52 @@
+@if (detail(); as detail) {
+  <section class="quest-detail">
+    <header class="detail-header">
+      <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
+        <span aria-hidden="true">&lsaquo;</span>
+        {{ 'common.back' | translate }}
+      </a>
+      <span>{{ 'quests.singular' | translate }}</span>
+    </header>
+
+    <h2>{{ detail.quest.title }}</h2>
+
+    <div class="quest-meta">
+      <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
+      @if (detail.quest.age > 0) {
+        <span>{{ 'common.yearsPlus' | translate: {count: detail.quest.age} }}</span>
+      }
+      <span>{{ 'common.minutes' | translate: {count: detail.quest.time} }}</span>
+      @if (detail.quest.reward_gems > 0) {
+        <span class="gem-reward">{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</span>
+      }
+      @if (detail.quest.reward_ecopoints > 0) {
+        <span>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</span>
+      }
+    </div>
+
+    <p class="quest-copy">{{ detail.quest.description }}</p>
+
+    <div class="quest-visual-space">
+      @if (detail.quest.image_url) {
+        <img
+          class="quest-illustration"
+          [src]="detail.quest.image_url"
+          [alt]="detail.quest.title"
+        >
+      }
+    </div>
+
+    <button
+      type="button"
+      class="primary-action"
+      (click)="startQuest()"
+    >
+      {{ actionLabel() }}
+    </button>
+  </section>
+} @else {
+  <section class="quest-detail empty-state">
+    <h2>{{ 'quests.notFound' | translate }}</h2>
+    <a class="back-link" routerLink="/quests">{{ 'quests.backToQuests' | translate }}</a>
+  </section>
+}

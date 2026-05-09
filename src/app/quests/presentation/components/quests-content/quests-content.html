@@ -1,1 +1,23 @@
-<p>quests-content works!</p>
+<section class="quests-shell" [class.has-side-panel]="showQuestSummaryPanel()">
+  <div class="quests-main">
+    <router-outlet></router-outlet>
+  </div>
+
+  @if (showQuestSummaryPanel()) {
+  <aside class="quest-side-panel" [attr.aria-label]="'quests.progressSummary' | translate">
+    <section class="streak-card" [attr.aria-label]="'quests.streakAndRanking' | translate">
+      <div class="streak-title">{{ 'quests.streak' | translate }}</div>
+      <div class="streak-value">
+        <img class="streak-icon" src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
+        <strong>{{ streakPlaceholder }}</strong>
+      </div>
+      <div class="ranking-line" [attr.aria-label]="'quests.rankPlaceholder' | translate">
+        <img class="ranking-icon" src="/assets/images/quests/throphy.png" alt="" aria-hidden="true">
+        <span>{{ 'quests.rank' | translate: {rank: rankingPlaceholder} }}</span>
+      </div>
+    </section>
+
+    <app-quest-progress-panel></app-quest-progress-panel>
+  </aside>
+  }
+</section>

@@ -1,0 +1,32 @@
+<div
+  class="quest-carousel"
+  (wheel)="onWheel($event)"
+  (pointerdown)="onPointerDown($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerCancel()"
+>
+  <div class="quest-page-track" [style.transform]="trackTransform()">
+    @for (page of questPages(); track $index) {
+      <div class="quest-grid">
+        @for (summary of page; track summary.quest.id) {
+    <app-quest-card
+      [summary]="summary"
+      (questSelected)="selectQuest($event)"
+    ></app-quest-card>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<div class="quest-page-dots" [attr.aria-label]="'quests.pagination.pages' | translate">
+  @for (page of pages(); track page) {
+    <button
+      type="button"
+      class="quest-page-dot"
+      [class.active]="currentPage() === page"
+      [attr.aria-label]="'quests.pagination.page' | translate: {page: page + 1}"
+      (click)="selectPage(page)"
+    ></button>
+  }
+</div>

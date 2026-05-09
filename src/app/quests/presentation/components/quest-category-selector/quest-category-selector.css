@@ -1,0 +1,140 @@
+.category-backdrop {
+  position: fixed;
+  top: 64px;
+  right: 0;
+  bottom: 0;
+  left: 280px;
+  z-index: 10;
+  border: 0;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(3px);
+  cursor: default;
+}
+
+.category-menu {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  width: min(522px, calc(100vw - 48px));
+  margin: 24px auto 24px;
+}
+
+.category-menu.open {
+  margin-bottom: 32px;
+}
+
+.category-options {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.category-menu.open .category-options {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.category-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 64px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 28px;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 160ms ease,
+    filter 160ms ease,
+    box-shadow 160ms ease;
+  background: var(--quest-bg);
+  box-shadow: 0 7px 0 var(--quest-shadow);
+}
+
+.category-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 12px 0 rgba(255, 255, 255, 0.22);
+  z-index: -1;
+}
+
+.category-trigger {
+  transform-origin: top center;
+}
+
+.category-menu.open .category-trigger {
+  transform: translateY(0) scale(1.01);
+}
+
+.category-pill:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.category-pill:active {
+  transform: translateY(2px);
+}
+
+.category-icon {
+  object-fit: contain;
+}
+
+.search-icon {
+  transform: translate(8px, 2px);
+}
+
+.category-search {
+  background: #6ba64f;
+  box-shadow: 0 6px 0 #4d7f38;
+  margin-top: 34px;
+}
+
+@media (max-width: 1180px) {
+  .category-menu {
+    width: min(452px, calc(100vw - 48px));
+  }
+
+  .category-pill {
+    min-height: 58px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .category-menu {
+    width: min(360px, calc(100vw - 32px));
+    margin: 16px auto 18px;
+  }
+
+  .category-pill {
+    min-height: 52px;
+    padding: 0 22px;
+    font-size: 18px;
+  }
+
+  .category-icon {
+    max-width: 38px;
+    max-height: 38px;
+  }
+}

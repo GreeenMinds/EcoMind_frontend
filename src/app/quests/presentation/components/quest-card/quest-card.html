@@ -1,0 +1,16 @@
+<button
+  type="button"
+  class="quest-card"
+  [class.completed]="summary.completed"
+  [class.in-progress]="summary.started && !summary.completed"
+  [ngStyle]="getQuestTypeTheme(summary.themeType)"
+  (click)="selectQuest()"
+>
+  <img
+    class="quest-card-icon"
+    [src]="getQuestTypeIcon(summary.themeType)"
+    [alt]="summary.themeType"
+  >
+  <span class="quest-card-title">{{ summary.quest.title }}</span>
+  <small>{{ 'quests.statuses.' + summary.status | translate }} - {{ summary.progress }}%</small>
+</button>
