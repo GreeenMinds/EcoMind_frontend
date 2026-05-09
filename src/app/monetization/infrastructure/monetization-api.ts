@@ -78,7 +78,7 @@ export class MonetizationApi extends BaseApi {
 
   // ─── COMANDOS: COSMÉTICOS (HU-029) ───────────────────────────────────────
 
-  /** Crea registro user_cosmetic → compra (E1) */
+  /** Crea registro user_cosmetic → buy (E1) */
   purchaseCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {
     return this.userCosmeticsEndpoint.create(userCosmetic);
   }
@@ -88,21 +88,21 @@ export class MonetizationApi extends BaseApi {
     return this.userCosmeticsEndpoint.update(userCosmetic, userCosmetic.id);
   }
 
-  // ─── COMANDOS: MULTIPLICADORES (HU-031) ──────────────────────────────────
+  // COMANDOS: MULTIPLICADORES (HU-031)
 
-  /** Crea registro user_multiplier → activa multiplicador (E1) */
+  /** Creates user_multiplier record → activates multiplier (E1) */
   purchaseMultiplier(userMultiplier: UserMultiplierEntity): Observable<UserMultiplierEntity> {
     return this.userMultipliersEndpoint.create(userMultiplier);
   }
 
-  // ─── COMANDOS: GEMAS (HU-035) ────────────────────────────────────────────
+  // COMANDOS: GEMAS (HU-035)
 
-  /** Crea registro gem_purchase → compra con dinero real (E1) */
+  /** Creates gem_purchase record → purchase with real money (E1) */
   purchaseGemPackage(gemPurchase: GemPurchaseEntity): Observable<GemPurchaseEntity> {
     return this.gemPurchasesEndpoint.create(gemPurchase);
   }
 
-  /** Registra movimiento en gem_movement */
+  /** Registers movement in gem_movement */
   registerGemMovement(movement: GemMovementEntity): Observable<GemMovementEntity> {
     return this.gemMovementsEndpoint.create(movement);
   }

@@ -1,0 +1,49 @@
+/* ── SKELETON ───────────────────────────────────────────────────────────────── */
+.store-skeleton { padding: 2rem; }
+.skeleton-title,
+.skeleton-tabs,
+.skeleton-card {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 12px;
+}
+.skeleton-title  { height: 2rem;   width: 240px; margin-bottom: 1.5rem; }
+.skeleton-tabs   { height: 2.8rem; width: 100%;  margin-bottom: 2rem; }
+.skeleton-grid   { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap:1.2rem; }
+.skeleton-card   { height: 280px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ── PAGE ───────────────────────────────────────────────────────────────────── */
+.store-page { width: 100%; padding: 2rem; box-sizing: border-box; }
+
+/* ── HEADER ─────────────────────────────────────────────────────────────────── */
+.store-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 1.8rem; flex-wrap: wrap; gap: 1rem;
+}
+.store-title       { font-size: 3rem; font-weight: 700; color: #6cab4f; margin: 0; }
+.store-subtitle    { font-size: 1rem; color: #999; margin: 0.5rem 0 0; }
+.gem-balance-chip {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: #e8f5e9; border: 2px solid #c8e6c9;
+  border-radius: 14px; padding: 0.55rem 1.1rem;
+}
+.gem-chip-icon  { font-size: 1.2rem; }
+.gem-chip-value { font-size: 1.2rem; font-weight: 800; color: #29b6e8; }
+.gem-chip-label { font-size: 0.8rem; color: #888; }
+
+/* ── TABS ───────────────────────────────────────────────────────────────────── */
+.store-tabs { display: flex; gap: 0.7rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+.tab-btn {
+  border: none; background: #ececec; border-radius: 14px;
+  padding: 0.7rem 1.4rem; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; color: #555; transition: all 0.2s;
+}
+.tab-btn:hover     { background: #ddd; }
+.active-green      { background: #74b34d; color: white; }
+.active-blue       { background: #29b6e8; color: white; }
+
+/* ── TAB CONTENT ────────────────────────────────────────────────────────────── */
+.tab-content { animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
