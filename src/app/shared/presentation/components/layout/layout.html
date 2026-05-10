@@ -17,8 +17,15 @@
         <span>{{ currentUser()?.streak ?? 0 }}</span>
       </div>
 
-      <div class="profile-photo" aria-hidden="true"></div>
-    </div> </div> </header>
+      <div
+        class="profile-photo"
+        [style.--avatar-hue]="getAvatarHue(currentUser()?.id)"
+        aria-label="Current user">
+        {{ getInitials(currentUser()?.name) }}
+      </div>
+    </div>
+  </div>
+</header>
 
 <div class="app-layout">
   <app-sidebar></app-sidebar>

@@ -53,6 +53,10 @@ export class ProfileService {
     return this.profileApi.getUser(userId);
   }
 
+  getUsers(): Observable<User[]> {
+    return this.profileApi.getUsers();
+  }
+
   updateUser(user: User): Observable<User> {
     return this.profileApi.updateUser(user);
   }
@@ -127,6 +131,16 @@ export class ProfileService {
     return this.profileApi.getFamilyUsersByUserId(this.currentUserId());
   }
 
+  getFamilyUsers(): Observable<FamilyUser[]> {
+    return this.profileApi.getFamilyUsers();
+  }
+
+  getFamilyUsersByFamilyId(familyId: number): Observable<FamilyUser[]> {
+    return this.getFamilyUsers().pipe(
+      map((familyUsers) => familyUsers.filter((familyUser) => familyUser.family_id === familyId)),
+    );
+  }
+
   getCurrentUserFamilies(): Observable<Family[]> {
     return this.getCurrentUserFamilyUsers().pipe(
       switchMap((familyUsers) =>
@@ -143,5 +157,25 @@ export class ProfileService {
 
   getCurrentUserFriends(): Observable<Friend[]> {
     return this.profileApi.getFriendsByUserId(this.currentUserId());
+  }
+
+  updateFamily(family: Family): Observable<Family> {
+    return this.profileApi.updateFamily(family);
+  }
+
+  addFamilyMember(familyUser: FamilyUser): Observable<FamilyUser> {
+    return this.profileApi.createFamilyUser(familyUser);
+  }
+
+  getFriends(): Observable<Friend[]> {
+    return this.profileApi.getFriends();
+  }
+
+  removeFamilyMember(familyUserId: number): Observable<void> {
+    return this.profileApi.deleteFamilyUser(familyUserId);
+  }
+
+  removeFriend(friendId: number): Observable<void> {
+    return this.profileApi.deleteFriend(friendId);
   }
 }

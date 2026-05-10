@@ -78,6 +78,12 @@ export class ProfileApi extends BaseApi {
     );
   }
 
+  getFamilyUsersByFamilyId(familyId: number): Observable<FamilyUser[]> {
+    return this.getFamilyUsers().pipe(
+      map((familyUsers) => familyUsers.filter((familyUser) => familyUser.family_id === familyId)),
+    );
+  }
+
   createFamilyUser(familyUser: FamilyUser): Observable<FamilyUser> {
     return this.familyUsersEndpoint.create(familyUser);
   }
@@ -99,6 +105,12 @@ export class ProfileApi extends BaseApi {
       map((friends) =>
         friends.filter((friend) => friend.user_id === userId || friend.friend_id === userId),
       ),
+    );
+  }
+
+  getAcceptedFriendsByUserId(userId: number): Observable<Friend[]> {
+    return this.getFriendsByUserId(userId).pipe(
+      map((friends) => friends.filter((friend) => friend.status === 'accepted')),
     );
   }
 

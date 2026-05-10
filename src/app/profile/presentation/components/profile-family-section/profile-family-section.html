@@ -1,0 +1,75 @@
+<section class="family-shell">
+  <article class="family-banner">
+    <div>
+      <p class="profile-eyebrow">Grupo principal</p>
+      <h2>{{ family?.name || 'Sin familia' }}</h2>
+      <p>{{ familySummary }}</p>
+      <p class="family-banner__commitment">
+        {{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}
+      </p>
+    </div>
+
+    @if (canManageFamily) {
+      <button class="family-banner__cta" type="button" (click)="editCommitment.emit()">
+        Editar compromiso
+      </button>
+    }
+  </article>
+
+  @if (canManageFamily) {
+    <article class="family-invite">
+      <h3>Invitar a la familia</h3>
+
+      @if (inviteCandidates.length > 0) {
+        <div class="family-invite__controls">
+          <select #candidateSelect class="family-input">
+            @for (candidate of inviteCandidates; track candidate.id) {
+              <option [value]="candidate.id">{{ candidate.name }}</option>
+            }
+          </select>
+
+          <select #roleSelect class="family-input">
+            <option value="child">Hijo/Hija</option>
+            <option value="parent">Padre/Madre</option>
+          </select>
+
+          <button
+            class="profile-action profile-action--invite"
+            type="button"
+            (click)="emitInvite(candidateSelect.value, roleSelect.value)">
+            Agregar a la familia
+          </button>
+        </div>
+      } @else {
+        <p class="empty-copy">No hay usuarios disponibles para invitar.</p>
+      }
+    </article>
+  }
+
+  <section class="family-members">
+    <div class="family-members__header">
+      <h2>Miembros de la Familia ({{ members.length }})</h2>
+    </div>
+
+    @if (members.length > 0) {
+      <div class="family-grid">
+        @for (member of members; track member.membership.id) {
+          <article class="family-member-card">
+            <div
+              class="avatar avatar--member"
+              [style.--avatar-hue]="getAvatarHue(member.user.id)">
+              {{ getInitials(member.user.name) }}
+            </div>
+            <h3>{{ member.user.name }}</h3>
+            <span class="family-role-chip">{{ getRoleLabel(member.membership.family_role) }}</span>
+            <button class="profile-action" type="button" (click)="openMember.emit(member)">
+              Ver perfil
+            </button>
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="empty-copy">No hay miembros de familia asociados a este perfil.</p>
+    }
+  </section>
+</section>

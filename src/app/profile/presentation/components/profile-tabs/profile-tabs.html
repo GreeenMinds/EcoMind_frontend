@@ -1,0 +1,37 @@
+<nav class="profile-tabs" aria-label="Secciones del perfil">
+  <button
+    class="profile-tab"
+    type="button"
+    [class.is-active]="activeTab === 'summary'"
+    (click)="tabChange.emit('summary')">
+    Resumen
+  </button>
+  <button
+    class="profile-tab"
+    type="button"
+    [class.is-active]="activeTab === 'family'"
+    (click)="tabChange.emit('family')">
+    Familia
+  </button>
+  <button
+    class="profile-tab"
+    type="button"
+    [class.is-active]="activeTab === 'progress'"
+    (click)="tabChange.emit('progress')">
+    Ver Progreso
+  </button>
+  <button
+    class="profile-tab"
+    type="button"
+    [class.is-active]="activeTab === 'favorites'"
+    (click)="tabChange.emit('favorites')">
+    Favoritos
+  </button>
+  <button
+    class="profile-tab"
+    type="button"
+    [class.is-active]="activeTab === 'friends'"
+    (click)="tabChange.emit('friends')">
+    Amigos
+  </button>
+</nav>

@@ -1,0 +1,58 @@
+<section class="friends-shell">
+  <article class="friends-banner">
+    <div>
+      <p class="profile-eyebrow">Comunidad</p>
+      <h2>Red de amigos</h2>
+      <p>
+        Contactos registrados.
+      </p>
+    </div>
+    <div class="friends-banner__stats">
+      <strong>{{ acceptedCount }}</strong>
+      <span>amistades activas</span>
+    </div>
+  </article>
+
+  <section class="friends-list">
+    <div class="friends-list__header">
+      <h2>Amigos ({{ friends.length }})</h2>
+    </div>
+
+    @if (friends.length > 0) {
+      <div class="friends-grid">
+        @for (item of friends; track item.relationship.id) {
+          <article class="friend-card">
+            <div
+              class="avatar avatar--member"
+              [style.--avatar-hue]="getAvatarHue(item.user.id)">
+              {{ getInitials(item.user.name) }}
+            </div>
+
+            <h3>{{ item.user.name }}</h3>
+            <p class="friend-card__handle">{{ buildHandle(item.user) }}</p>
+            <span class="friend-status-chip">{{ item.statusLabel }}</span>
+
+            <div class="friend-card__meta">
+              <span>{{ item.user.ecopoints }} ecoPoints</span>
+              <span>{{ item.mutualCount }} en comun</span>
+            </div>
+
+            <div class="friend-card__actions">
+              <button class="profile-action" type="button" (click)="emitOpenFriend(item)">
+                Ver perfil
+              </button>
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                (click)="emitRemoveFriend(item)">
+                Eliminar
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="empty-copy">Aun no hay amistades registradas para este perfil.</p>
+    }
+  </section>
+</section>
