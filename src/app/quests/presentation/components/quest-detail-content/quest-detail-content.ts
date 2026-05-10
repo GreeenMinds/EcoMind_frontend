@@ -25,6 +25,12 @@ export class QuestDetailContent {
     const id = this.questId();
     return Number.isFinite(id) ? this.questsService.getQuestDetail(id)() : undefined;
   });
+  readonly collaborativeContext = computed(() => {
+    const detail = this.detail();
+    return detail?.quest.type === 'collaborative'
+      ? this.questsService.getCollaborativeContext(detail.quest.id)()
+      : undefined;
+  });
 
   readonly actionLabel = computed(() => {
     const detail = this.detail();
@@ -34,12 +40,34 @@ export class QuestDetailContent {
       return this.translate.instant(detail.latestMinigameAttempt ? 'quests.actions.playAgain' : 'quests.actions.play');
     }
 
+    if (detail.completed) {
+      return this.translate.instant('quests.actions.startAgain');
+    }
+
     return this.translate.instant(detail.started ? 'quests.actions.viewActivity' : 'quests.actions.startActivity');
+  });
+
+  readonly showPrimaryAction = computed(() => {
+    const detail = this.detail();
+    const context = this.collaborativeContext();
+    return detail?.quest.type !== 'collaborative' || !context?.pendingInvitation;
+  });
+
+  readonly primaryActionDisabled = computed(() => {
+    const detail = this.detail();
+    const context = this.collaborativeContext();
+    return Boolean(
+      detail?.quest.type === 'collaborative' &&
+        context?.isAcceptedParticipant &&
+        !context.isOwner &&
+        !detail.started,
+    );
   });
 
   startQuest(): void {
     const detail = this.detail();
     if (!detail) return;
+    if (this.primaryActionDisabled()) return;
 
     if (detail.quest.type === 'minigame') {
       if (!detail.started) {
@@ -48,6 +76,17 @@ export class QuestDetailContent {
       if (detail.minigame?.url) {
         window.location.href = detail.minigame.url;
       }
+      return;
+    }
+
+    if (detail.quest.type === 'collaborative') {
+      if (!detail.started) {
+        this.questsService.startCollaborativeQuest(detail.quest.id);
+        void this.router.navigate(['/quests', detail.quest.id, 'started']);
+        return;
+      }
+
+      void this.router.navigate(['/quests', detail.quest.id, 'activities']);
       return;
     }
 
@@ -72,6 +111,40 @@ export class QuestDetailContent {
     const key = `quests.categories.${category}`;
     const translated = this.translate.instant(key);
     return translated === key ? category.replaceAll('_', ' ') : translated;
+  }
+
+  inviteFriend(friendUserId: number): void {
+    const detail = this.detail();
+    if (!detail) return;
+
+    this.questsService.inviteFriendToCollaborativeQuest(detail.quest.id, friendUserId);
+  }
+
+  acceptInvitation(memberId: number): void {
+    this.questsService.acceptCollaborativeInvitation(memberId);
+  }
+
+  declineInvitation(memberId: number): void {
+    this.questsService.declineCollaborativeInvitation(memberId);
+  }
+
+  leaveQuest(memberId: number): void {
+    this.questsService.leaveCollaborativeQuest(memberId);
+  }
+
+  removeMember(memberId: number): void {
+    this.questsService.removeCollaborativeMember(memberId);
+  }
+
+  getUserInitials(name: string | undefined): string {
+    if (!name) return '?';
+    return name
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase();
   }
 
 }

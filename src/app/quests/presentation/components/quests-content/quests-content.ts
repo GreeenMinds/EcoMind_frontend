@@ -1,6 +1,8 @@
 import {Component, inject} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {Router, RouterOutlet} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
+import {ProfileService} from '../../../../profile/application/profile.service';
 import {QuestProgressPanel} from '../quest-progress-panel/quest-progress-panel';
 
 @Component({
@@ -11,8 +13,9 @@ import {QuestProgressPanel} from '../quest-progress-panel/quest-progress-panel';
 })
 export class QuestsContent {
   private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
 
-  readonly streakPlaceholder = 16;
+  readonly userStreak = toSignal(this.profileService.getUserStreak(), {initialValue: 0});
   readonly rankingPlaceholder = 220;
 
   showQuestSummaryPanel(): boolean {

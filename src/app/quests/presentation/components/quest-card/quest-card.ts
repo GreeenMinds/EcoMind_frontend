@@ -17,6 +17,10 @@ export class QuestCard {
     this.questSelected.emit(this.summary.quest.id);
   }
 
+  getDisplayType(): string {
+    return this.summary.quest.type === 'collaborative' ? 'collaborative' : this.summary.themeType;
+  }
+
   getQuestTypeTheme(type: string): Record<string, string> {
     const themes: Record<string, Record<string, string>> = {
       checkbox: {
@@ -28,6 +32,11 @@ export class QuestCard {
         '--quest-bg': '#3fa8f5',
         '--quest-shadow': '#4b66df',
         '--quest-top-light': '#83caff',
+      },
+      collaborative: {
+        '--quest-bg': '#ffc44d',
+        '--quest-shadow': '#d9901f',
+        '--quest-top-light': '#ffe079',
       },
     };
 
@@ -42,6 +51,7 @@ export class QuestCard {
     const icons: Record<string, string> = {
       checkbox: '/assets/images/quests/checkbox.png',
       minigame: '/assets/images/quests/game.png',
+      collaborative: '/assets/images/quests/colab.png',
     };
 
     return icons[type] ?? '/assets/images/quests/checkbox.png';
