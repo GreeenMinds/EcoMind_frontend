@@ -1,13 +1,17 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 10000;
   display: grid;
   place-items: center;
+  overflow: auto;
+  padding: 24px 0;
   background: rgba(0, 0, 0, 0.48);
 }
 
 .modal-card {
+  position: relative;
+  z-index: 10001;
   width: min(680px, calc(100vw - 32px));
   display: grid;
   gap: 18px;
@@ -47,6 +51,12 @@ label {
   font-weight: 700;
 }
 
+.optional {
+  color: #8b8b8b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 input,
 textarea {
   width: 100%;
@@ -60,6 +70,15 @@ textarea {
 textarea {
   min-height: 110px;
   resize: vertical;
+}
+
+.location-map {
+  position: relative;
+  z-index: 0;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #e9f0e8;
 }
 
 .primary,
@@ -78,4 +97,18 @@ textarea {
 
 .secondary {
   background: #a6a6a6;
+}
+
+:host ::ng-deep .event-location-marker {
+  border-radius: 50%;
+  background: #68a94f;
+  box-shadow: 0 0 0 5px rgba(104, 169, 79, 0.24);
+}
+
+:host ::ng-deep .event-location-marker span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid white;
+  border-radius: 50%;
 }

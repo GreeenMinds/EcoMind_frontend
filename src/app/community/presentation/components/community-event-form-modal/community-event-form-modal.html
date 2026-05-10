@@ -32,17 +32,38 @@
       <textarea name="description" [(ngModel)]="description"></textarea>
     </label>
 
+    <label>
+      Image URL <span class="optional">(optional)</span>
+      <input
+        type="url"
+        name="imageUrl"
+        placeholder="https://example.com/event-image.jpg"
+        [(ngModel)]="imageUrl">
+    </label>
+
     <div class="two-columns">
       <label>
         Latitud
-        <input type="number" name="latitude" [(ngModel)]="latitude">
+        <input
+          type="number"
+          name="latitude"
+          step="0.000001"
+          [(ngModel)]="latitude"
+          (ngModelChange)="syncMarkerWithCoordinates()">
       </label>
 
       <label>
         Longitud
-        <input type="number" name="longitude" [(ngModel)]="longitude">
+        <input
+          type="number"
+          name="longitude"
+          step="0.000001"
+          [(ngModel)]="longitude"
+          (ngModelChange)="syncMarkerWithCoordinates()">
       </label>
     </div>
+
+    <div #locationMap class="location-map" aria-label="Event location map"></div>
 
     <button type="submit" class="primary">Create event</button>
     <button type="button" class="secondary" (click)="close.emit()">Cancel</button>
