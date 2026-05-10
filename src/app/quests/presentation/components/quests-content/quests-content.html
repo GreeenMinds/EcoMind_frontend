@@ -9,7 +9,7 @@
       <div class="streak-title">{{ 'quests.streak' | translate }}</div>
       <div class="streak-value">
         <img class="streak-icon" src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
-        <strong>{{ streakPlaceholder }}</strong>
+        <strong>{{ userStreak() }}</strong>
       </div>
       <div class="ranking-line" [attr.aria-label]="'quests.rankPlaceholder' | translate">
         <img class="ranking-icon" src="/assets/images/quests/throphy.png" alt="" aria-hidden="true">

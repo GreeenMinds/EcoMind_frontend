@@ -15,10 +15,10 @@
       "birth_date": "1985-04-12",
       "name": "Carlos Mendoza",
       "streak": 7,
-      "commitment": null,
+      "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 440,
-      "ecopoints": 460
+      "gem_balance": 400,
+      "ecopoints": 420
     },
     {
       "id": 2,
@@ -1234,8 +1234,7 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
-      "end_date": "2026-05-02",
-      "collaborative_session_id": null
+      "end_date": "2026-05-02"
     },
     {
       "id": 8,
@@ -1276,26 +1275,6 @@
       "start_date": "2026-05-09",
       "end_date": null,
       "collaborative_session_id": 3
-    },
-    {
-      "id": 14,
-      "user_id": 1,
-      "quest_id": 2,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-10",
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 15,
-      "user_id": 1,
-      "quest_id": 3,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-10",
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
     }
   ],
   "activity_user": [
@@ -1410,38 +1389,6 @@
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": 3
-    },
-    {
-      "id": 19,
-      "user_id": 1,
-      "activity_id": 3,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 20,
-      "user_id": 1,
-      "activity_id": 4,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 21,
-      "user_id": 1,
-      "activity_id": 4,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 22,
-      "user_id": 1,
-      "activity_id": 5,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
     }
   ],
   "minigame_attempt": [
@@ -1524,15 +1471,6 @@
       "family_id": null,
       "registration_type": "individual",
       "registered_at": "2026-05-09T23:44:17.135Z",
-      "status": "cancelled"
-    },
-    {
-      "id": 7,
-      "event_id": 1,
-      "user_id": 1,
-      "family_id": null,
-      "registration_type": "individual",
-      "registered_at": "2026-05-10T09:06:02.914Z",
       "status": "cancelled"
     }
   ],

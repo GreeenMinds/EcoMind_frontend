@@ -58,6 +58,7 @@
     "types": {
       "all": "All quest types",
       "activities": "Activities",
+      "collaborative": "Collaborative",
       "minigame": "Minigame"
     },
     "activityTypes": {
@@ -80,8 +81,32 @@
       "startActivity": "Start activity",
       "viewActivity": "View activity",
       "viewQuest": "View quest",
+      "startAgain": "Start again",
       "play": "Play",
       "playAgain": "Play again"
+    },
+    "collaboration": {
+      "panel": "Collaborative quest",
+      "inviteFriends": "Invite friends",
+      "participants": "Participants",
+      "joinRequest": "Join request",
+      "joinCopy": "You were invited to join this collaborative quest.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "invite": "Invite",
+      "invited": "Invited",
+      "busy": "Busy",
+      "leave": "Leave quest",
+      "remove": "Remove participant",
+      "organizer": "Organizer",
+      "unknownUser": "Unknown user",
+      "statuses": {
+        "accepted": "Participant",
+        "pending": "Waiting for confirmation",
+        "declined": "Declined",
+        "left": "Left",
+        "removed": "Removed"
+      }
     },
     "alt": {
       "search": "Search",

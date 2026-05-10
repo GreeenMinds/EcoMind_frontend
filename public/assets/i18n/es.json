@@ -58,6 +58,7 @@
     "types": {
       "all": "Todos los tipos de reto",
       "activities": "Actividades",
+      "collaborative": "Colaborativo",
       "minigame": "Minijuego"
     },
     "activityTypes": {
@@ -80,8 +81,32 @@
       "startActivity": "Iniciar actividad",
       "viewActivity": "Ver actividad",
       "viewQuest": "Ver reto",
+      "startAgain": "Iniciar de nuevo",
       "play": "Jugar",
       "playAgain": "Jugar de nuevo"
+    },
+    "collaboration": {
+      "panel": "Reto colaborativo",
+      "inviteFriends": "Invitar amigos",
+      "participants": "Participantes",
+      "joinRequest": "Solicitud de union",
+      "joinCopy": "Te invitaron a unirte a este reto colaborativo.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "invite": "Invitar",
+      "invited": "Invitado",
+      "busy": "Ocupado",
+      "leave": "Abandonar reto",
+      "remove": "Quitar participante",
+      "organizer": "Organizador",
+      "unknownUser": "Usuario desconocido",
+      "statuses": {
+        "accepted": "Participante",
+        "pending": "Esperando confirmacion",
+        "declined": "Rechazado",
+        "left": "Abandono",
+        "removed": "Removido"
+      }
     },
     "alt": {
       "search": "Buscar",

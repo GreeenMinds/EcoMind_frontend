@@ -14,6 +14,7 @@ export class ActivityUserAssembler implements BaseAssembler<ActivityUser, Activi
       activity_id: resource.activity_id,
       progress: resource.progress,
       end_date: resource.end_date,
+      collaborative_session_id: resource.collaborative_session_id ?? null,
     });
   }
 
@@ -24,6 +25,7 @@ export class ActivityUserAssembler implements BaseAssembler<ActivityUser, Activi
       activity_id: entity.activity_id,
       progress: entity.progress,
       end_date: entity.end_date,
+      collaborative_session_id: entity.collaborative_session_id,
     } as ActivityUserResource;
   }
 }

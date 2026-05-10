@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {QuestsService} from '../../../application/quests.service';
 import {QuestCardGrid} from '../quest-card-grid/quest-card-grid';
@@ -15,7 +15,8 @@ export class QuestListContent {
   private readonly router = inject(Router);
 
   readonly categories = ['energy', 'water', 'recycle', 'daily_quest'];
-  readonly selectedCategory = signal('energy');
+  readonly selectedCategory = this.questsService.selectedListCategory;
+  readonly selectedPage = this.questsService.selectedListPage;
 
   readonly filteredQuests = computed(() =>
     this.questsService
@@ -24,7 +25,11 @@ export class QuestListContent {
   );
 
   selectCategory(category: string): void {
-    this.selectedCategory.set(category);
+    this.questsService.selectListCategory(category);
+  }
+
+  selectPage(page: number): void {
+    this.questsService.selectListPage(page);
   }
 
   selectQuest(questId: number): void {

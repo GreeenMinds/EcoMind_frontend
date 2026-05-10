@@ -1,4 +1,4 @@
-import {Component, computed, effect, EventEmitter, input, Output, signal} from '@angular/core';
+import {Component, computed, effect, EventEmitter, input, Output, signal, untracked} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import {QuestSummary} from '../../../application/quests.service';
 import {QuestCard} from '../quest-card/quest-card';
@@ -12,7 +12,9 @@ import {QuestCard} from '../quest-card/quest-card';
 export class QuestCardGrid {
   readonly quests = input.required<QuestSummary[]>();
   readonly selectedQuestId = input<number | null>(null);
+  readonly initialPage = input(0);
   @Output() questSelected = new EventEmitter<number>();
+  @Output() pageSelected = new EventEmitter<number>();
 
   readonly pageSize = 4;
   readonly currentPage = signal(0);
@@ -43,7 +45,11 @@ export class QuestCardGrid {
   constructor() {
     effect(() => {
       this.quests();
-      this.currentPage.set(0);
+      this.currentPage.set(this.clampPage(untracked(() => this.initialPage())));
+    });
+
+    effect(() => {
+      this.currentPage.set(this.clampPage(this.initialPage()));
     });
   }
 
@@ -52,7 +58,9 @@ export class QuestCardGrid {
   }
 
   selectPage(page: number): void {
-    this.currentPage.set(this.clampPage(page));
+    const nextPage = this.clampPage(page);
+    this.currentPage.set(nextPage);
+    this.pageSelected.emit(nextPage);
   }
 
   nextPage(): void {

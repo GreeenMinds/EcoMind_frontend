@@ -12,4 +12,5 @@ export interface QuestUserResource extends BaseResource {
   progress: number;
   start_date: string;
   end_date: string | null;
+  collaborative_session_id: number | null;
 }

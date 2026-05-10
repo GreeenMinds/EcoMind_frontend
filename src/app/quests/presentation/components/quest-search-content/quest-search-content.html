@@ -109,12 +109,12 @@
 
           <div
             class="quest-type-card"
-            [style.--quest-bg]="getQuestTypeTheme(summary.themeType)['--quest-bg']"
-            [style.--quest-shadow]="getQuestTypeTheme(summary.themeType)['--quest-shadow']"
-            [style.--quest-top-light]="getQuestTypeTheme(summary.themeType)['--quest-top-light']"
+            [style.--quest-bg]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-bg']"
+            [style.--quest-shadow]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-shadow']"
+            [style.--quest-top-light]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-top-light']"
             aria-hidden="true"
           >
-            <img [src]="getQuestTypeIcon(summary.themeType)" alt="">
+            <img [src]="getQuestTypeIcon(getQuestDisplayType(summary))" alt="">
           </div>
         </article>
       }

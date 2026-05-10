@@ -16,6 +16,7 @@ export class QuestUserAssembler implements BaseAssembler<QuestUser, QuestUserRes
       progress: resource.progress,
       start_date: resource.start_date,
       end_date: resource.end_date,
+      collaborative_session_id: resource.collaborative_session_id ?? null,
     });
   }
 
@@ -28,6 +29,7 @@ export class QuestUserAssembler implements BaseAssembler<QuestUser, QuestUserRes
       progress: entity.progress,
       start_date: entity.start_date,
       end_date: entity.end_date,
+      collaborative_session_id: entity.collaborative_session_id,
     } as QuestUserResource;
   }
 }
