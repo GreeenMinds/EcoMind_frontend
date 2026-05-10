@@ -1,0 +1,26 @@
+.achievement-card {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 28px;
+  border: 3px solid #68a94f;
+  border-radius: 30px;
+  background: white;
+}
+
+.icon {
+  font-size: 42px;
+  text-align: center;
+}
+
+h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+p {
+  margin: 0;
+  font-size: 14px;
+}

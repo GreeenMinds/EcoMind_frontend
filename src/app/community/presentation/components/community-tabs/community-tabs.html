@@ -1,0 +1,5 @@
+<div class="tabs">
+  <button [class.active]="activeTab === 'all'" (click)="tabChange.emit('all')">All</button>
+  <button [class.active]="activeTab === 'achievements'" (click)="tabChange.emit('achievements')">Achievements</button>
+  <button [class.active]="activeTab === 'events'" (click)="tabChange.emit('events')">Events</button>
+</div>

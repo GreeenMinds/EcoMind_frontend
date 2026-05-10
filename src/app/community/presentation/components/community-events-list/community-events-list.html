@@ -1,0 +1,17 @@
+<section class="events-layout">
+  <div>
+    <button class="create-button" (click)="createEvent.emit()">+ Create event</button>
+
+    <div class="events-list">
+      @for (summary of events; track summary.event.id) {
+        <app-community-event-card
+          [summary]="summary"
+          (join)="joinEvent.emit($event)"
+          (cancel)="cancelRegistration.emit($event)">
+        </app-community-event-card>
+      }
+    </div>
+  </div>
+
+  <app-community-events-map [events]="events"></app-community-events-map>
+</section>

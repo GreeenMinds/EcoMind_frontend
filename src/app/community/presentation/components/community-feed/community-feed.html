@@ -1,0 +1,11 @@
+<section class="feed">
+  <h2>Community Feed</h2>
+
+  <div class="post-list">
+    @for (summary of posts; track summary.post.id) {
+      <app-community-post-card [summary]="summary"></app-community-post-card>
+    } @empty {
+      <p class="empty">No posts to show.</p>
+    }
+  </div>
+</section>
