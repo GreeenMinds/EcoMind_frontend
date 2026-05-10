@@ -156,7 +156,7 @@ export class MonetizationStoreService {
 
     if (this.gemBalance() < cosmetic.price) {
       this.setError(
-        `Gemas insuficientes. Necesitas ${cosmetic.price} 💎 pero tienes ${this.gemBalance()} 💎.`,
+        `Insufficient gems. You need ${cosmetic.price} gems but you only have ${this.gemBalance()} .`,
       );
       return;
     }
@@ -182,7 +182,7 @@ export class MonetizationStoreService {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al procesar la compra'));
+          this.setError(this.formatError(err, 'Error processing purchase'));
           this.loadingSignal.set(false);
         },
       });
@@ -193,7 +193,7 @@ export class MonetizationStoreService {
   toggleEquip(summary: CosmeticSummary): void {
 
     if (!summary.owned || !summary.userRecord) {
-      this.setError('Debes obtener este artículo primero.');
+      this.setError('You must obtain this item first.');
       return;
     }
 
@@ -228,7 +228,7 @@ export class MonetizationStoreService {
             );
           },
           error: (err) => {
-            this.setError(this.formatError(err, 'Error al desequipar el artículo anterior'));
+            this.setError(this.formatError(err, 'Error unequipping the previous item'));
           },
         });
     }
@@ -245,7 +245,7 @@ export class MonetizationStoreService {
           this.errorSignal.set(null);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al equipar el artículo'));
+          this.setError(this.formatError(err, 'Error equipping the item'));
         },
       });
   }
@@ -256,7 +256,7 @@ export class MonetizationStoreService {
 
     if (this.gemBalance() < multiplier.gemCost) {
       this.setError(
-        `Gemas insuficientes. Necesitas ${multiplier.gemCost} 💎 pero tienes ${this.gemBalance()} 💎.`,
+        `Insufficient gems. You need ${multiplier.gemCost} gems but you only have ${this.gemBalance()} .`,
       );
       return;
     }
@@ -290,8 +290,6 @@ export class MonetizationStoreService {
       });
   }
 
-  // ─── COMPRAR PAQUETE DE GEMAS ─────────────────────────────────────────────
-
   purchaseGemPackage(gemPackage: GemPackageEntity): void {
 
     const purchase = new GemPurchaseEntity();
@@ -320,7 +318,7 @@ export class MonetizationStoreService {
           this.errorSignal.set(null);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al procesar el pago'));
+          this.setError(this.formatError(err, 'Error processing payment'));
           this.loadingSignal.set(false);
         },
       });
@@ -376,7 +374,7 @@ export class MonetizationStoreService {
   private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
-        ? `${fallback}: No encontrado`
+        ? `${fallback}: Not found`
         : error.message;
     }
     return fallback;
@@ -410,7 +408,7 @@ export class MonetizationStoreService {
       .subscribe({
         next: () => {
           this.loadData();
-          console.log('¡Paquete especial entregado!');
+          console.log('Special package delivered!');
         },
         complete: () => this.loadingSignal.set(false),
       });

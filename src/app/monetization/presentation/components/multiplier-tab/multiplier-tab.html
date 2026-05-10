@@ -1,0 +1,70 @@
+<h2 class="section-title">XP Multiplier</h2>
+
+<div class="inline-error" *ngIf="error()">{{ error() }}</div>
+
+<ng-container *ngIf="summaries().length > 0; else emptyMultipliers">
+
+  <div
+    class="multiplier-card"
+    *ngFor="let s of summaries(); let i = index"
+    [style.background]="cardBg(i)"
+    [class.featured]="i === 2">
+
+    <div class="multiplier-body">
+
+      <!-- ── Izquierda ── -->
+      <div class="multiplier-info">
+
+        <h4 class="multiplier-title" [style.color]="titleColor(i)">
+          Multiplier ×{{ s.multiplier.multiplierFactor }}
+        </h4>
+
+        <p class="multiplier-desc" [style.color]="descColor(i)">
+          Receive <strong [style.color]="descColor(i)">{{ s.multiplier.multiplierFactor }}×</strong>
+          more ecoPoints for {{ s.multiplier.durationMinutes }} minutes
+        </p>
+
+        <!-- 💎 precio + botón en la MISMA fila -->
+        <div class="price-action-row">
+          <div class="multiplier-price" [style.color]="priceColor(i)">
+            <span class="gem-icon">💎</span>
+            <span>{{ s.multiplier.gemCost | number }}</span>
+          </div>
+
+          <button
+            class="action-btn multiplier-btn"
+            [class.buy-btn-light]="i !== 2"
+            [class.buy-btn-dark]="i === 2"
+            [class.active-btn]="s.active"
+            [disabled]="s.active || loading()"
+            (click)="buy(s)">
+            {{ s.active ? '✓ Active' : 'Buy' }}
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ── Derecha: planeta (+ cohete en card 0) ── -->
+      <div class="multiplier-imgs">
+        <img
+          class="planet-img"
+          [src]="planetImg(i)"
+          [alt]="'Multiplicador x' + s.multiplier.multiplierFactor"
+          onerror="this.style.display='none'">
+
+        <img
+          *ngIf="showRocket(i)"
+          class="rocket-img"
+          src="assets/images/multiplier/rocket.png"
+          alt="Cohete"
+          onerror="this.style.display='none'">
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #emptyMultipliers>
+  <p class="empty-state" *ngIf="!loading()">No hay multiplicadores disponibles.</p>
+</ng-template>
