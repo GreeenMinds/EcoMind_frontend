@@ -1,0 +1,40 @@
+.goal-card {
+  padding: 22px 28px;
+  border-radius: 20px;
+  background: #dff4d5;
+  color: #477d35;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+p {
+  margin: 0 0 22px;
+  font-size: 12px;
+}
+
+.progress-track {
+  height: 10px;
+  border-radius: 2px;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #68a94f;
+}
+
+.markers,
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 10px;
+}
+
+footer {
+  margin-top: 28px;
+}

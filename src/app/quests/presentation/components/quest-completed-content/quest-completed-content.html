@@ -1,0 +1,15 @@
+<section class="quest-completed">
+  <h2>{{ 'quests.completedActivity' | translate }}</h2>
+  <img src="/assets/images/quests/complete.png" [alt]="'quests.alt.activityCompleted' | translate">
+
+  @if (detail(); as detail) {
+    @if (detail.quest.reward_gems > 0) {
+      <strong>{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</strong>
+    }
+    @if (detail.quest.reward_ecopoints > 0) {
+      <strong>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</strong>
+    }
+  }
+
+  <a class="continue-action" routerLink="/quests">{{ 'common.continue' | translate }}</a>
+</section>

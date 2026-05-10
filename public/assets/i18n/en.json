@@ -6,5 +6,112 @@
     "ranking": "Ranking",
     "store": "Store",
     "settings": "Settings"
+  },
+  "common": {
+    "back": "Back",
+    "continue": "Continue",
+    "search": "Search",
+    "clear": "Clear",
+    "general": "General",
+    "minutes": "{{ count }} min",
+    "yearsPlus": "{{ count }}+ years",
+    "ecoPoints": "{{ count }} ecoPoints",
+    "gems": "+{{ count }} gems"
+  },
+  "quests": {
+    "singular": "Quest",
+    "searchTitle": "Search quests",
+    "filters": "Quest filters",
+    "searchPlaceholder": "Search quests by name",
+    "category": "Category",
+    "questType": "Quest type",
+    "activityType": "Activity type",
+    "minimumAge": "Minimum age",
+    "loading": "Loading quests...",
+    "noneFound": "No quests found",
+    "notFound": "Quest not found",
+    "backToQuests": "Back to quests",
+    "progress": "Progress",
+    "progressCount": "Progress: {{ completed }} / {{ total }}",
+    "emptyActivities": "This quest has no registered activities.",
+    "completeActivity": "Complete activity",
+    "activityCompleted": "Activity completed",
+    "startedActivity": "You started an activity!",
+    "completedActivity": "You completed the activity!",
+    "activeEmpty": "No active quests yet",
+    "seeMore": "See more",
+    "allActive": "All active quests",
+    "activeQuests": "Active quests",
+    "progressSummary": "Progress summary",
+    "streakAndRanking": "Streak and ranking",
+    "streak": "Streak",
+    "rank": "Rank {{ rank }}",
+    "rankPlaceholder": "Rank placeholder",
+    "categoryMenuClose": "Close categories",
+    "categories": {
+      "all": "All categories",
+      "energy": "Energy",
+      "water": "Water",
+      "recycle": "Recycle",
+      "daily_quest": "Daily Quest"
+    },
+    "types": {
+      "all": "All quest types",
+      "activities": "Activities",
+      "collaborative": "Collaborative",
+      "minigame": "Minigame"
+    },
+    "activityTypes": {
+      "all": "All activity types",
+      "checkbox": "Checkbox",
+      "minigame": "Minigame"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "ready_to_complete": "Ready to complete",
+      "completed": "Completed"
+    },
+    "pagination": {
+      "pages": "Quest pages",
+      "page": "Page {{ page }}"
+    },
+    "actions": {
+      "start": "Start",
+      "startActivity": "Start activity",
+      "viewActivity": "View activity",
+      "viewQuest": "View quest",
+      "startAgain": "Start again",
+      "play": "Play",
+      "playAgain": "Play again"
+    },
+    "collaboration": {
+      "panel": "Collaborative quest",
+      "inviteFriends": "Invite friends",
+      "participants": "Participants",
+      "joinRequest": "Join request",
+      "joinCopy": "You were invited to join this collaborative quest.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "invite": "Invite",
+      "invited": "Invited",
+      "busy": "Busy",
+      "leave": "Leave quest",
+      "remove": "Remove participant",
+      "organizer": "Organizer",
+      "unknownUser": "Unknown user",
+      "statuses": {
+        "accepted": "Participant",
+        "pending": "Waiting for confirmation",
+        "declined": "Declined",
+        "left": "Left",
+        "removed": "Removed"
+      }
+    },
+    "alt": {
+      "search": "Search",
+      "activityStarted": "Activity started",
+      "activityCompleted": "Activity completed"
+    }
   }
 }

@@ -1,0 +1,30 @@
+.events-layout {
+  display: grid;
+  grid-template-columns: minmax(380px, 1fr) 320px;
+  gap: 28px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.create-button {
+  height: 32px;
+  padding: 0 24px;
+  margin: 0 0 22px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #68a94f;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.events-list {
+  display: grid;
+  gap: 22px;
+}
+
+@media (max-width: 900px) {
+  .events-layout {
+    grid-template-columns: 1fr;
+  }
+}

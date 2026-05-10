@@ -6,5 +6,112 @@
     "ranking": "Ranking",
     "store": "Tienda",
     "settings": "Ajustes"
+  },
+  "common": {
+    "back": "Volver",
+    "continue": "Continuar",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "general": "General",
+    "minutes": "{{ count }} min",
+    "yearsPlus": "{{ count }}+ años",
+    "ecoPoints": "{{ count }} ecoPoints",
+    "gems": "+{{ count }} gemas"
+  },
+  "quests": {
+    "singular": "Reto",
+    "searchTitle": "Buscar retos",
+    "filters": "Filtros de retos",
+    "searchPlaceholder": "Buscar retos por nombre",
+    "category": "Categoria",
+    "questType": "Tipo de reto",
+    "activityType": "Tipo de actividad",
+    "minimumAge": "Edad minima",
+    "loading": "Cargando retos...",
+    "noneFound": "No se encontraron retos",
+    "notFound": "Reto no encontrado",
+    "backToQuests": "Volver a retos",
+    "progress": "Progreso",
+    "progressCount": "Progreso: {{ completed }} / {{ total }}",
+    "emptyActivities": "Este reto no tiene actividades registradas.",
+    "completeActivity": "Completar actividad",
+    "activityCompleted": "Actividad completada",
+    "startedActivity": "Iniciaste una actividad!",
+    "completedActivity": "Completaste la actividad!",
+    "activeEmpty": "Aun no tienes retos activos",
+    "seeMore": "Ver mas",
+    "allActive": "Todos los retos activos",
+    "activeQuests": "Retos activos",
+    "progressSummary": "Resumen de progreso",
+    "streakAndRanking": "Racha y ranking",
+    "streak": "Racha",
+    "rank": "Ranking {{ rank }}",
+    "rankPlaceholder": "Marcador de ranking",
+    "categoryMenuClose": "Cerrar categorias",
+    "categories": {
+      "all": "Todas las categorias",
+      "energy": "Energia",
+      "water": "Agua",
+      "recycle": "Reciclaje",
+      "daily_quest": "Reto diario"
+    },
+    "types": {
+      "all": "Todos los tipos de reto",
+      "activities": "Actividades",
+      "collaborative": "Colaborativo",
+      "minigame": "Minijuego"
+    },
+    "activityTypes": {
+      "all": "Todos los tipos de actividad",
+      "checkbox": "Lista",
+      "minigame": "Minijuego"
+    },
+    "statuses": {
+      "pending": "Pendiente",
+      "in_progress": "En progreso",
+      "ready_to_complete": "Listo para completar",
+      "completed": "Completado"
+    },
+    "pagination": {
+      "pages": "Paginas de retos",
+      "page": "Pagina {{ page }}"
+    },
+    "actions": {
+      "start": "Iniciar",
+      "startActivity": "Iniciar actividad",
+      "viewActivity": "Ver actividad",
+      "viewQuest": "Ver reto",
+      "startAgain": "Iniciar de nuevo",
+      "play": "Jugar",
+      "playAgain": "Jugar de nuevo"
+    },
+    "collaboration": {
+      "panel": "Reto colaborativo",
+      "inviteFriends": "Invitar amigos",
+      "participants": "Participantes",
+      "joinRequest": "Solicitud de union",
+      "joinCopy": "Te invitaron a unirte a este reto colaborativo.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "invite": "Invitar",
+      "invited": "Invitado",
+      "busy": "Ocupado",
+      "leave": "Abandonar reto",
+      "remove": "Quitar participante",
+      "organizer": "Organizador",
+      "unknownUser": "Usuario desconocido",
+      "statuses": {
+        "accepted": "Participante",
+        "pending": "Esperando confirmacion",
+        "declined": "Rechazado",
+        "left": "Abandono",
+        "removed": "Removido"
+      }
+    },
+    "alt": {
+      "search": "Buscar",
+      "activityStarted": "Actividad iniciada",
+      "activityCompleted": "Actividad completada"
+    }
   }
 }

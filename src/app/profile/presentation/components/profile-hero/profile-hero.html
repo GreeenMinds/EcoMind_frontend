@@ -1,0 +1,51 @@
+@if (user; as currentUser) {
+  <section class="profile-hero">
+    <div class="profile-hero__identity">
+      <div
+        class="avatar avatar--hero"
+        [style.--avatar-hue]="getAvatarHue(currentUser.id)">
+        {{ getInitials(currentUser.name) }}
+      </div>
+
+      <div class="profile-hero__copy">
+        <p class="profile-eyebrow">EcoMind profile</p>
+        <h1>{{ currentUser.name }}</h1>
+        <p class="profile-handle">{{ handle }}</p>
+      </div>
+    </div>
+
+    <div class="profile-hero__stats">
+      <article class="profile-stat">
+        <strong>{{ currentUser.ecopoints }}</strong>
+        <span>Puntos Totales</span>
+      </article>
+
+      <article class="profile-stat">
+        <strong>{{ friendCount }}</strong>
+        <span>Amigos</span>
+      </article>
+    </div>
+
+    <div class="profile-hero__actions">
+      @if (isViewingOwnProfile) {
+        <button class="profile-action" type="button" (click)="editProfile.emit()">
+          Editar Perfil
+        </button>
+        <button class="profile-action profile-action--solid" type="button" (click)="shareProfile.emit()">
+          Compartir Perfil
+        </button>
+      } @else {
+        <button class="profile-action" type="button" (click)="shareProfile.emit()">
+          Compartir Perfil
+        </button>
+        <button
+          class="profile-action profile-action--danger"
+          type="button"
+          [disabled]="saving"
+          (click)="removeMember.emit()">
+          Eliminar
+        </button>
+      }
+    </div>
+  </section>
+}

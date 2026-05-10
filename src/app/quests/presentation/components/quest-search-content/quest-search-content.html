@@ -1,0 +1,123 @@
+<section class="quest-search-page">
+  <header class="search-header">
+    <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
+      <span aria-hidden="true">&lsaquo;</span>
+      {{ 'common.back' | translate }}
+    </a>
+    <span>{{ 'quests.searchTitle' | translate }}</span>
+  </header>
+
+  <div class="search-toolbar">
+    <label class="search-bar">
+      <span class="menu-icon">☰</span>
+      <input
+        type="search"
+        [value]="searchInput()"
+        (input)="updateSearchInput($event)"
+        (keydown.enter)="applySearch()"
+        [placeholder]="'quests.searchPlaceholder' | translate"
+      >
+      <span class="search-icon">⌕</span>
+    </label>
+
+    <button type="button" class="search-action" (click)="applySearch()">{{ 'common.search' | translate }}</button>
+  </div>
+
+  <div class="filter-row" [attr.aria-label]="'quests.filters' | translate">
+    <label>
+      <span>{{ 'quests.category' | translate }}</span>
+      <select [value]="selectedCategory()" (change)="updateCategory($event)">
+        @for (category of categories(); track category) {
+          <option [value]="category">{{ getCategoryLabel(category) }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>{{ 'quests.questType' | translate }}</span>
+      <select [value]="selectedQuestType()" (change)="updateQuestType($event)">
+        @for (type of questTypes(); track type) {
+          <option [value]="type">{{ getQuestTypeLabel(type) }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>{{ 'quests.activityType' | translate }}</span>
+      <select
+        [value]="selectedActivityType()"
+        [disabled]="selectedQuestType() === 'minigame'"
+        (change)="updateActivityType($event)"
+      >
+        @for (type of activityTypes(); track type) {
+          <option [value]="type">{{ getActivityTypeLabel(type) }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>{{ 'quests.minimumAge' | translate }}</span>
+      <input
+        type="number"
+        min="0"
+        [value]="minimumAge()"
+        (input)="updateAge($event)"
+        placeholder="0"
+      >
+    </label>
+
+    <button type="button" class="clear-action" (click)="clearFilters()">{{ 'common.clear' | translate }}</button>
+  </div>
+
+  @if (questsService.loading()) {
+    <p class="state-text">{{ 'quests.loading' | translate }}</p>
+  } @else if (questsService.error()) {
+    <p class="state-text error">{{ questsService.error() }}</p>
+  } @else if (filteredQuests().length === 0) {
+    <p class="state-text">{{ 'quests.noneFound' | translate }}</p>
+  } @else {
+    <div class="result-list">
+      @for (summary of filteredQuests(); track summary.quest.id) {
+        <article class="quest-result">
+          <div class="result-copy">
+            <div class="tag-row">
+              <span class="tag category" [class]="summary.quest.category">{{ getCategoryLabel(summary.quest.category) }}</span>
+              <span class="tag">{{ getQuestTypeLabel(summary.quest.type) }}</span>
+              <span class="tag">{{ 'common.minutes' | translate: {count: summary.quest.time} }}</span>
+              @if (summary.quest.age > 0) {
+                <span class="tag">{{ getQuestAgeLabel(summary) }}</span>
+              }
+              @if (summary.quest.reward_ecopoints > 0) {
+                <span class="tag reward">{{ getRewardLabel(summary) }}</span>
+              }
+              @if (summary.quest.reward_gems > 0) {
+                <span class="tag gem-reward">{{ 'common.gems' | translate: {count: summary.quest.reward_gems} }}</span>
+              }
+            </div>
+
+            <h2>{{ summary.quest.title }}</h2>
+            <p>{{ summary.quest.description }}</p>
+
+            <button
+              type="button"
+              class="result-action"
+              (click)="handleQuestAction(summary)"
+            >
+              {{ getActionLabel(summary) }}
+            </button>
+          </div>
+
+          <div
+            class="quest-type-card"
+            [style.--quest-bg]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-bg']"
+            [style.--quest-shadow]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-shadow']"
+            [style.--quest-top-light]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-top-light']"
+            aria-hidden="true"
+          >
+            <img [src]="getQuestTypeIcon(getQuestDisplayType(summary))" alt="">
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

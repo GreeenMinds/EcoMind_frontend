@@ -14,6 +14,10 @@ import {ActivityUser} from '../domain/model/activity-user.entity';
 import {ActivitiesUserApiEndpoint} from './activities-user-api-endpoint';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
+import {CollaborativeQuestSession} from '../domain/model/collaborative-quest-session.entity';
+import {CollaborativeQuestMember} from '../domain/model/collaborative-quest-member.entity';
+import {CollaborativeQuestSessionsApiEndpoint} from './collaborative-quest-sessions-api-endpoint';
+import {CollaborativeQuestMembersApiEndpoint} from './collaborative-quest-members-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +29,8 @@ export class QuestsApi extends BaseApi {
   private readonly minigameAttemptsEndpoint: MinigameAttemptsApiEndpoint;
   private readonly activitiesEndpoint: ActivitiesApiEndpoint;
   private readonly activitiesUserEndpoint: ActivitiesUserApiEndpoint;
+  private readonly collaborativeSessionsEndpoint: CollaborativeQuestSessionsApiEndpoint;
+  private readonly collaborativeMembersEndpoint: CollaborativeQuestMembersApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -34,6 +40,8 @@ export class QuestsApi extends BaseApi {
     this.minigameAttemptsEndpoint = new MinigameAttemptsApiEndpoint(http);
     this.activitiesEndpoint = new ActivitiesApiEndpoint(http);
     this.activitiesUserEndpoint = new ActivitiesUserApiEndpoint(http);
+    this.collaborativeSessionsEndpoint = new CollaborativeQuestSessionsApiEndpoint(http);
+    this.collaborativeMembersEndpoint = new CollaborativeQuestMembersApiEndpoint(http);
   }
 
   //get all quests
@@ -157,6 +165,46 @@ export class QuestsApi extends BaseApi {
 
   deleteActivityUser(id: number): Observable<void> {
     return this.activitiesUserEndpoint.delete(id);
+  }
+
+  getCollaborativeQuestSessions(): Observable<CollaborativeQuestSession[]> {
+    return this.collaborativeSessionsEndpoint.getAll();
+  }
+
+  createCollaborativeQuestSession(
+    session: CollaborativeQuestSession,
+  ): Observable<CollaborativeQuestSession> {
+    return this.collaborativeSessionsEndpoint.create(session);
+  }
+
+  updateCollaborativeQuestSession(
+    session: CollaborativeQuestSession,
+  ): Observable<CollaborativeQuestSession> {
+    return this.collaborativeSessionsEndpoint.update(session, session.id);
+  }
+
+  deleteCollaborativeQuestSession(id: number): Observable<void> {
+    return this.collaborativeSessionsEndpoint.delete(id);
+  }
+
+  getCollaborativeQuestMembers(): Observable<CollaborativeQuestMember[]> {
+    return this.collaborativeMembersEndpoint.getAll();
+  }
+
+  createCollaborativeQuestMember(
+    member: CollaborativeQuestMember,
+  ): Observable<CollaborativeQuestMember> {
+    return this.collaborativeMembersEndpoint.create(member);
+  }
+
+  updateCollaborativeQuestMember(
+    member: CollaborativeQuestMember,
+  ): Observable<CollaborativeQuestMember> {
+    return this.collaborativeMembersEndpoint.update(member, member.id);
+  }
+
+  deleteCollaborativeQuestMember(id: number): Observable<void> {
+    return this.collaborativeMembersEndpoint.delete(id);
   }
 
   getActivitiesByQuestId(questId: number): Observable<Activity[]> {

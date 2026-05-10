@@ -1,0 +1,45 @@
+.quest-animation {
+  display: grid;
+  min-height: 420px;
+  place-content: center;
+  justify-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+h2 {
+  margin: 0;
+  color: #111111;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+img {
+  width: min(160px, 42vw);
+  min-height: 140px;
+  object-fit: contain;
+  animation: started-hop 760ms ease-in-out infinite alternate;
+}
+
+@keyframes started-hop {
+  from {
+    transform: translateY(6px) scale(0.98);
+  }
+
+  to {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@media (max-width: 680px) {
+  .quest-animation {
+    min-height: 320px;
+    gap: 22px;
+    padding: 0 16px;
+  }
+
+  img {
+    width: min(140px, 48vw);
+    min-height: 120px;
+  }
+}

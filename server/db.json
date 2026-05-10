@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "EcoMind Lima",
-      "user_count": 4,
+      "user_count": 9,
       "location": "Lima, Peru"
     }
   ],
@@ -55,12 +55,73 @@
       "registered_at": "2026-05-03",
       "gem_balance": 250,
       "ecopoints": 95
+    },
+    {
+      "id": 5,
+      "community_id": 1,
+      "email": "lucia@ecomind.test",
+      "birth_date": "1998-06-30",
+      "name": "Lucia Flores",
+      "streak": 6,
+      "commitment": "I will reduce food waste and compost organic leftovers.",
+      "registered_at": "2026-05-04",
+      "gem_balance": 520,
+      "ecopoints": 310
+    },
+    {
+      "id": 6,
+      "community_id": 1,
+      "email": "diego@ecomind.test",
+      "birth_date": "1996-08-11",
+      "name": "Diego Ramos",
+      "streak": 4,
+      "commitment": "I will bike to work three times per week.",
+      "registered_at": "2026-05-04",
+      "gem_balance": 470,
+      "ecopoints": 245
+    },
+    {
+      "id": 7,
+      "community_id": 1,
+      "email": "andrea@ecomind.test",
+      "birth_date": "2000-01-19",
+      "name": "Andrea Paredes",
+      "streak": 9,
+      "commitment": "I will save water by collecting and reusing rinse water.",
+      "registered_at": "2026-05-05",
+      "gem_balance": 710,
+      "ecopoints": 390
+    },
+    {
+      "id": 8,
+      "community_id": 1,
+      "email": "jorge@ecomind.test",
+      "birth_date": "1994-12-05",
+      "name": "Jorge Quispe",
+      "streak": 2,
+      "commitment": null,
+      "registered_at": "2026-05-05",
+      "gem_balance": 360,
+      "ecopoints": 180
+    },
+    {
+      "id": 9,
+      "community_id": 1,
+      "email": "sofia@ecomind.test",
+      "birth_date": "2002-04-27",
+      "name": "Sofia Calderon",
+      "streak": 8,
+      "commitment": "I will avoid single-use plastics when shopping.",
+      "registered_at": "2026-05-06",
+      "gem_balance": 680,
+      "ecopoints": 355
     }
   ],
   "family": [
     {
       "id": 1,
-      "name": "Mendoza Family"
+      "name": "Mendoza Family",
+      "commitment": "Como familia, reduciremos residuos y ahorraremos agua cada semana."
     }
   ],
   "family_user": [
@@ -72,20 +133,14 @@
       "joined_at": "2026-05-01"
     },
     {
-      "id": 2,
-      "user_id": 2,
+      "id": 7,
+      "user_id": 4,
       "family_id": 1,
       "family_role": "child",
-      "joined_at": "2026-05-01"
+      "joined_at": "2026-05-10"
     }
   ],
   "friend": [
-    {
-      "id": 1,
-      "user_id": 1,
-      "friend_id": 3,
-      "status": "accepted"
-    },
     {
       "id": 2,
       "user_id": 1,
@@ -115,6 +170,24 @@
       "user_id": 4,
       "friend_id": 1,
       "status": "pending"
+    },
+    {
+      "id": 8,
+      "user_id": 1,
+      "friend_id": 6,
+      "status": "accepted"
+    },
+    {
+      "id": 9,
+      "user_id": 1,
+      "friend_id": 7,
+      "status": "accepted"
+    },
+    {
+      "id": 10,
+      "user_id": 1,
+      "friend_id": 8,
+      "status": "accepted"
     }
   ],
   "achievement": [
@@ -269,7 +342,7 @@
       "latitude": -12.0464,
       "longitude": -77.0428,
       "capacity": 50,
-      "image_url": "/assets/images/community/trash-collection.png"
+      "image_url": "https://i.imgur.com/nCIRKcQ.jpeg"
     },
     {
       "id": 2,
@@ -284,7 +357,7 @@
       "latitude": -12.0553,
       "longitude": -77.0452,
       "capacity": 35,
-      "image_url": "/assets/images/community/community-harvest.png"
+      "image_url": "https://i.imgur.com/zURCX3c.jpeg"
     },
     {
       "id": 3,
@@ -299,7 +372,7 @@
       "latitude": -12.0816,
       "longitude": -77.0822,
       "capacity": 60,
-      "image_url": "/assets/images/community/beach-cleanup.png"
+      "image_url": "https://i.imgur.com/uG9lzC5.jpeg"
     },
     {
       "id": 4,
@@ -314,7 +387,7 @@
       "latitude": -12.0321,
       "longitude": -77.0304,
       "capacity": 45,
-      "image_url": "/assets/images/community/river-cleanup.png"
+      "image_url": "https://i.imgur.com/ZFDEJ5p.jpeg"
     },
     {
       "id": 5,
@@ -329,7 +402,7 @@
       "latitude": -12.0508,
       "longitude": -77.0375,
       "capacity": 40,
-      "image_url": "/assets/images/community/urban-planting.png"
+      "image_url": "https://i.imgur.com/YOaOIev.jpeg"
     },
     {
       "id": 6,
@@ -344,7 +417,22 @@
       "latitude": -12.0602,
       "longitude": -77.0418,
       "capacity": 30,
-      "image_url": "/assets/images/community/recycling-workshop.png"
+      "image_url": "https://i.imgur.com/WTGj7uU.jpeg"
+    },
+    {
+      "id": 7,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Creative Recycling Crafts Workshop",
+      "description": "Join us for a fun outdoor workshop where we will transform recyclable materials such as plastic bottles, cardboard, cans, and old fabric into creative handmade decorations and useful crafts. This family-friendly event promotes sustainability, creativity, and teamwork while helping reduce waste in our community. All basic materials and tools will be provided, but participants are encouraged to bring clean reusable items from home.",
+      "date": "2026-05-18",
+      "start_time": "2026-05-18T03:30:00",
+      "end_time": "2026-05-18T03:30:00",
+      "location": "Main Entrance, Magic Water Circuit Park",
+      "latitude": -12.0691,
+      "longitude": -77.0376,
+      "capacity": 30,
+      "image_url": "https://i.imgur.com/RooGZI4.jpeg"
     }
   ],
   "preference": [
@@ -776,6 +864,48 @@
       "reward_ecopoints": 25,
       "expiration_date": null,
       "time": 20
+    },
+    {
+      "id": 18,
+      "minigame_id": null,
+      "category": "energy",
+      "title": "Save energy together",
+      "description": "Turn off unused lights and appliances with friends. Small coordinated actions make the habit easier to keep.",
+      "image_url": "/assets/images/quests/light.png",
+      "age": 0,
+      "type": "collaborative",
+      "reward_gems": 0,
+      "reward_ecopoints": 50,
+      "expiration_date": null,
+      "time": 60
+    },
+    {
+      "id": 19,
+      "minigame_id": null,
+      "category": "water",
+      "title": "Five-minute shower team",
+      "description": "Invite friends to take shorter showers today and compare progress as a group.",
+      "image_url": "/assets/images/quests/water.png",
+      "age": 0,
+      "type": "collaborative",
+      "reward_gems": 0,
+      "reward_ecopoints": 45,
+      "expiration_date": null,
+      "time": 30
+    },
+    {
+      "id": 20,
+      "minigame_id": null,
+      "category": "recycle",
+      "title": "Recycling squad check",
+      "description": "Work with friends to identify recyclable items and prepare them correctly before disposal.",
+      "image_url": "/assets/images/quests/recycle.png",
+      "age": 0,
+      "type": "collaborative",
+      "reward_gems": 0,
+      "reward_ecopoints": 55,
+      "expiration_date": null,
+      "time": 45
     }
   ],
   "activity": [
@@ -914,6 +1044,54 @@
       "order": 1,
       "type": "checkbox",
       "image_url": null
+    },
+    {
+      "id": 18,
+      "quest_id": 18,
+      "description": "Turn off unused lights",
+      "order": 1,
+      "type": "checkbox",
+      "image_url": "/activities/lights-off.png"
+    },
+    {
+      "id": 19,
+      "quest_id": 18,
+      "description": "Unplug idle devices",
+      "order": 2,
+      "type": "checkbox",
+      "image_url": "/activities/unplug.png"
+    },
+    {
+      "id": 20,
+      "quest_id": 19,
+      "description": "Take a shower under five minutes",
+      "order": 1,
+      "type": "checkbox",
+      "image_url": "/activities/shower.png"
+    },
+    {
+      "id": 21,
+      "quest_id": 19,
+      "description": "Share one water-saving tip",
+      "order": 2,
+      "type": "checkbox",
+      "image_url": null
+    },
+    {
+      "id": 22,
+      "quest_id": 20,
+      "description": "Find three recyclable items",
+      "order": 1,
+      "type": "checkbox",
+      "image_url": null
+    },
+    {
+      "id": 23,
+      "quest_id": 20,
+      "description": "Rinse one recyclable container",
+      "order": 2,
+      "type": "checkbox",
+      "image_url": "/activities/container.png"
     }
   ],
   "quest_user": [
@@ -924,7 +1102,8 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-01",
-      "end_date": "2026-05-01"
+      "end_date": "2026-05-01",
+      "collaborative_session_id": null
     },
     {
       "id": 2,
@@ -933,7 +1112,8 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
-      "end_date": "2026-05-02"
+      "end_date": "2026-05-02",
+      "collaborative_session_id": null
     },
     {
       "id": 3,
@@ -942,7 +1122,8 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-03",
-      "end_date": "2026-05-03"
+      "end_date": "2026-05-03",
+      "collaborative_session_id": null
     },
     {
       "id": 4,
@@ -951,7 +1132,8 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-02",
-      "end_date": "2026-05-02"
+      "end_date": "2026-05-02",
+      "collaborative_session_id": null
     },
     {
       "id": 5,
@@ -960,7 +1142,8 @@
       "status": "in_progress",
       "progress": 40,
       "start_date": "2026-05-04",
-      "end_date": null
+      "end_date": null,
+      "collaborative_session_id": null
     },
     {
       "id": 6,
@@ -969,7 +1152,8 @@
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-01",
-      "end_date": "2026-05-01"
+      "end_date": "2026-05-01",
+      "collaborative_session_id": null
     },
     {
       "id": 7,
@@ -987,7 +1171,38 @@
       "status": "in_progress",
       "progress": 50,
       "start_date": "2026-05-05",
-      "end_date": null
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 13,
+      "user_id": 1,
+      "quest_id": 1,
+      "status": "completed",
+      "progress": 100,
+      "start_date": "2026-05-10",
+      "end_date": "2026-05-10",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 9,
+      "user_id": 2,
+      "quest_id": 20,
+      "status": "in_progress",
+      "progress": 50,
+      "start_date": "2026-05-09",
+      "end_date": null,
+      "collaborative_session_id": 3
+    },
+    {
+      "id": 10,
+      "user_id": 4,
+      "quest_id": 20,
+      "status": "in_progress",
+      "progress": 50,
+      "start_date": "2026-05-09",
+      "end_date": null,
+      "collaborative_session_id": 3
     }
   ],
   "activity_user": [
@@ -996,56 +1211,112 @@
       "user_id": 1,
       "activity_id": 1,
       "progress": 100,
-      "end_date": "2026-05-01"
+      "end_date": "2026-05-10",
+      "collaborative_session_id": null
     },
     {
       "id": 2,
       "user_id": 1,
       "activity_id": 2,
       "progress": 100,
-      "end_date": "2026-05-01"
+      "end_date": "2026-05-10",
+      "collaborative_session_id": null
     },
     {
       "id": 3,
       "user_id": 1,
       "activity_id": 7,
       "progress": 100,
-      "end_date": "2026-05-02"
+      "end_date": "2026-05-02",
+      "collaborative_session_id": null
     },
     {
       "id": 4,
       "user_id": 2,
       "activity_id": 13,
       "progress": 100,
-      "end_date": "2026-05-02"
+      "end_date": "2026-05-02",
+      "collaborative_session_id": null
     },
     {
       "id": 5,
       "user_id": 3,
       "activity_id": 10,
       "progress": 100,
-      "end_date": "2026-05-01"
+      "end_date": "2026-05-01",
+      "collaborative_session_id": null
     },
     {
       "id": 6,
       "user_id": 3,
       "activity_id": 14,
       "progress": 100,
-      "end_date": "2026-05-02"
+      "end_date": "2026-05-02",
+      "collaborative_session_id": null
     },
     {
       "id": 7,
       "user_id": 4,
       "activity_id": 3,
       "progress": 100,
-      "end_date": "2026-05-05"
+      "end_date": "2026-05-05",
+      "collaborative_session_id": null
     },
     {
       "id": 8,
       "user_id": 4,
       "activity_id": 4,
       "progress": 0,
-      "end_date": null
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 17,
+      "user_id": 1,
+      "activity_id": 1,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 18,
+      "user_id": 1,
+      "activity_id": 2,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 9,
+      "user_id": 2,
+      "activity_id": 22,
+      "progress": 100,
+      "end_date": "2026-05-09",
+      "collaborative_session_id": 3
+    },
+    {
+      "id": 10,
+      "user_id": 2,
+      "activity_id": 23,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": 3
+    },
+    {
+      "id": 11,
+      "user_id": 4,
+      "activity_id": 22,
+      "progress": 100,
+      "end_date": "2026-05-09",
+      "collaborative_session_id": 3
+    },
+    {
+      "id": 12,
+      "user_id": 4,
+      "activity_id": 23,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": 3
     }
   ],
   "minigame_attempt": [
@@ -1083,7 +1354,52 @@
       "family_id": 1,
       "registration_type": "family",
       "registered_at": "2026-10-20T10:00:00",
-      "status": "active"
+      "status": "cancelled"
+    },
+    {
+      "id": 2,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:34:28.911Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 3,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:34:31.000Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 4,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:41:37.031Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 5,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:41:39.879Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 6,
+      "event_id": 7,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T23:44:17.135Z",
+      "status": "cancelled"
     }
   ],
   "community_post": [
@@ -1094,7 +1410,7 @@
       "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
       "points": 50,
       "likes": 70,
-      "image_url": "/assets/images/community/clean-energy.png",
+      "image_url": "https://i.imgur.com/nscRbEZ.jpeg",
       "created_at": "2026-05-09T09:00:00"
     },
     {
@@ -1104,7 +1420,7 @@
       "content": "I completed 7 days without using single-use plastic at home.",
       "points": 35,
       "likes": 70,
-      "image_url": "/assets/images/community/no-plastic-bag.png",
+      "image_url": "https://i.imgur.com/E6n0Z8m.jpeg",
       "created_at": "2026-05-09T08:15:00"
     },
     {
@@ -1114,7 +1430,7 @@
       "content": "I completed the plastic reduction challenge for 30 days. I removed almost all plastic from my home.",
       "points": 45,
       "likes": 70,
-      "image_url": "/assets/images/community/no-plastic-bottle.png",
+      "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
     }
   ],
@@ -1426,6 +1742,133 @@
       "amount": -200,
       "origin": "cosmetic",
       "origin_id": 8
+    }
+  ],
+  "collaborative_quest_session": [
+    {
+      "id": 1,
+      "quest_id": 18,
+      "owner_user_id": 1,
+      "status": "pending",
+      "created_at": "2026-05-09",
+      "started_at": null,
+      "completed_at": null
+    },
+    {
+      "id": 2,
+      "quest_id": 19,
+      "owner_user_id": 3,
+      "status": "pending",
+      "created_at": "2026-05-09",
+      "started_at": null,
+      "completed_at": null
+    },
+    {
+      "id": 3,
+      "quest_id": 20,
+      "owner_user_id": 2,
+      "status": "started",
+      "created_at": "2026-05-08",
+      "started_at": "2026-05-09",
+      "completed_at": null
+    }
+  ],
+  "collaborative_quest_member": [
+    {
+      "id": 1,
+      "session_id": 1,
+      "user_id": 1,
+      "invited_by_user_id": null,
+      "role": "owner",
+      "status": "accepted",
+      "invited_at": null,
+      "responded_at": "2026-05-09",
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 2,
+      "session_id": 1,
+      "user_id": 3,
+      "invited_by_user_id": 1,
+      "role": "participant",
+      "status": "accepted",
+      "invited_at": "2026-05-09",
+      "responded_at": "2026-05-09",
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 3,
+      "session_id": 1,
+      "user_id": 4,
+      "invited_by_user_id": 1,
+      "role": "participant",
+      "status": "pending",
+      "invited_at": "2026-05-09",
+      "responded_at": null,
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 4,
+      "session_id": 2,
+      "user_id": 3,
+      "invited_by_user_id": null,
+      "role": "owner",
+      "status": "accepted",
+      "invited_at": null,
+      "responded_at": "2026-05-09",
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 5,
+      "session_id": 2,
+      "user_id": 1,
+      "invited_by_user_id": 3,
+      "role": "participant",
+      "status": "pending",
+      "invited_at": "2026-05-09",
+      "responded_at": null,
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 6,
+      "session_id": 3,
+      "user_id": 2,
+      "invited_by_user_id": null,
+      "role": "owner",
+      "status": "accepted",
+      "invited_at": null,
+      "responded_at": "2026-05-08",
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 7,
+      "session_id": 3,
+      "user_id": 4,
+      "invited_by_user_id": 2,
+      "role": "participant",
+      "status": "accepted",
+      "invited_at": "2026-05-08",
+      "responded_at": "2026-05-08",
+      "left_at": null,
+      "removed_at": null
+    },
+    {
+      "id": 8,
+      "session_id": 3,
+      "user_id": 3,
+      "invited_by_user_id": 2,
+      "role": "participant",
+      "status": "declined",
+      "invited_at": "2026-05-08",
+      "responded_at": "2026-05-09",
+      "left_at": null,
+      "removed_at": null
     }
   ]
 }
