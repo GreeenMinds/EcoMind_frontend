@@ -87,6 +87,8 @@ export class QuestsService {
   private readonly collaborativeMembersSignal = signal<CollaborativeQuestMember[]>([]);
   private readonly usersSignal = signal<User[]>([]);
   private readonly friendsSignal = signal<Friend[]>([]);
+  private readonly selectedListCategorySignal = signal('energy');
+  private readonly selectedListPageSignal = signal(0);
 
   readonly quests = this.questsSignal.asReadonly();
   readonly questsUser = this.questsUserSignal.asReadonly();
@@ -97,6 +99,8 @@ export class QuestsService {
   readonly collaborativeSessions = this.collaborativeSessionsSignal.asReadonly();
   readonly collaborativeMembers = this.collaborativeMembersSignal.asReadonly();
   readonly users = this.usersSignal.asReadonly();
+  readonly selectedListCategory = this.selectedListCategorySignal.asReadonly();
+  readonly selectedListPage = this.selectedListPageSignal.asReadonly();
 
   private readonly loadingSignal = signal<boolean>(false);
   readonly loading = this.loadingSignal.asReadonly();
@@ -120,6 +124,17 @@ export class QuestsService {
 
   refresh(): void {
     this.loadQuestData();
+  }
+
+  selectListCategory(category: string): void {
+    if (category !== this.selectedListCategory()) {
+      this.selectedListPageSignal.set(0);
+    }
+    this.selectedListCategorySignal.set(category);
+  }
+
+  selectListPage(page: number): void {
+    this.selectedListPageSignal.set(page);
   }
 
   getQuestSummaries(): Signal<QuestSummary[]> {

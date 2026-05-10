@@ -17,8 +17,8 @@
       "streak": 7,
       "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 465,
-      "ecopoints": 495
+      "gem_balance": 400,
+      "ecopoints": 420
     },
     {
       "id": 2,
@@ -1188,36 +1188,6 @@
       "start_date": "2026-05-09",
       "end_date": null,
       "collaborative_session_id": 3
-    },
-    {
-      "id": 14,
-      "user_id": 1,
-      "quest_id": 17,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-10",
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 15,
-      "user_id": 1,
-      "quest_id": 3,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-10",
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 16,
-      "user_id": 1,
-      "quest_id": 4,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-10",
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
     }
   ],
   "activity_user": [
@@ -1332,30 +1302,6 @@
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": 3
-    },
-    {
-      "id": 19,
-      "user_id": 1,
-      "activity_id": 17,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 20,
-      "user_id": 1,
-      "activity_id": 5,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 21,
-      "user_id": 1,
-      "activity_id": 6,
-      "progress": 100,
-      "end_date": "2026-05-10",
-      "collaborative_session_id": null
     }
   ],
   "minigame_attempt": [
