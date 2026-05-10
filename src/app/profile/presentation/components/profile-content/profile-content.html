@@ -85,7 +85,7 @@
         <app-profile-family-section
           [family]="primaryFamily()"
           [familySummary]="getFamilySummary()"
-          [familyCommitment]="primaryFamily()?.commitment || null"
+          [familyCommitment]="primaryFamily().commitment || null"
           [members]="familyMembers()"
           [canManageFamily]="canManageFamily()"
           [inviteCandidates]="familyInviteCandidates()"
