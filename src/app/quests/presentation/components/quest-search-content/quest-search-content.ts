@@ -36,7 +36,7 @@ export class QuestSearchContent {
     'all',
     ...this.getUniqueSortedValues(
       this.questSummaries()
-        .filter((summary) => summary.quest.type === 'activities')
+        .filter((summary) => ['activities', 'collaborative'].includes(summary.quest.type))
         .map((summary) => summary.themeType),
     ),
   ]);
@@ -61,7 +61,7 @@ export class QuestSearchContent {
         (!term || searchableText.includes(term)) &&
         (category === 'all' || summary.quest.category === category) &&
         (questType === 'all' || summary.quest.type === questType) &&
-        (questType === 'minigame' || activityType === 'all' || summary.themeType === activityType) &&
+            (questType === 'minigame' || activityType === 'all' || summary.themeType === activityType) &&
         summary.quest.age <= age
       );
     });
@@ -107,7 +107,12 @@ export class QuestSearchContent {
 
   handleQuestAction(summary: QuestSummary): void {
     if (summary.completed) {
-      void this.router.navigate(this.getQuestRoute(summary));
+      this.questsService.startQuest(summary.quest.id);
+      if (['activities', 'collaborative'].includes(summary.quest.type)) {
+        void this.router.navigate(['/quests', summary.quest.id, 'started']);
+        return;
+      }
+      void this.router.navigate(['/quests', summary.quest.id]);
       return;
     }
 
@@ -117,7 +122,7 @@ export class QuestSearchContent {
     }
 
     this.questsService.startQuest(summary.quest.id);
-    if (summary.quest.type === 'activities') {
+    if (['activities', 'collaborative'].includes(summary.quest.type)) {
       void this.router.navigate(['/quests', summary.quest.id, 'started']);
       return;
     }
@@ -127,7 +132,7 @@ export class QuestSearchContent {
 
   getActionLabel(summary: QuestSummary): string {
     if (summary.completed) {
-      return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
+      return this.translate.instant('quests.actions.startAgain');
     }
     if (summary.started) {
       return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
@@ -166,6 +171,10 @@ export class QuestSearchContent {
     return this.translate.instant('common.gems', {count: summary.quest.reward_gems});
   }
 
+  getQuestDisplayType(summary: QuestSummary): string {
+    return summary.quest.type === 'collaborative' ? 'collaborative' : summary.themeType;
+  }
+
   getQuestTypeTheme(type: string): Record<string, string> {
     const themes: Record<string, Record<string, string>> = {
       checkbox: {
@@ -177,6 +186,11 @@ export class QuestSearchContent {
         '--quest-bg': '#3fa8f5',
         '--quest-shadow': '#4b66df',
         '--quest-top-light': '#83caff',
+      },
+      collaborative: {
+        '--quest-bg': '#ffc44d',
+        '--quest-shadow': '#d9901f',
+        '--quest-top-light': '#ffe079',
       },
     };
 
@@ -191,13 +205,14 @@ export class QuestSearchContent {
     const icons: Record<string, string> = {
       checkbox: '/assets/images/quests/checkbox.png',
       minigame: '/assets/images/quests/game.png',
+      collaborative: '/assets/images/quests/light.png',
     };
 
     return icons[type] ?? '/assets/images/quests/checkbox.png';
   }
 
   private getQuestRoute(summary: QuestSummary): (string | number)[] {
-    if (summary.quest.type === 'activities') {
+    if (['activities', 'collaborative'].includes(summary.quest.type)) {
       return ['/quests', summary.quest.id, 'activities'];
     }
     return ['/quests', summary.quest.id];

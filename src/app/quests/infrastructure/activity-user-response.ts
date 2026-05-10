@@ -10,4 +10,5 @@ export interface ActivityUserResource extends BaseResource {
   activity_id: number;
   progress: number;
   end_date: string | null;
+  collaborative_session_id: number | null;
 }

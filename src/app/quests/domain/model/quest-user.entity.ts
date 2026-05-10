@@ -8,6 +8,7 @@ export class QuestUser implements BaseEntity {
   private _progress: number;
   private _start_date: string;
   private _end_date: string | null;
+  private _collaborative_session_id: number | null;
 
   constructor(questUser: {
     id: number;
@@ -17,6 +18,7 @@ export class QuestUser implements BaseEntity {
     progress: number;
     start_date: string;
     end_date: string | null;
+    collaborative_session_id?: number | null;
   }) {
     this._id = questUser.id;
     this._user_id = questUser.user_id;
@@ -25,6 +27,7 @@ export class QuestUser implements BaseEntity {
     this._progress = questUser.progress;
     this._start_date = questUser.start_date;
     this._end_date = questUser.end_date;
+    this._collaborative_session_id = questUser.collaborative_session_id ?? null;
   }
 
   get id(): number {
@@ -81,5 +84,13 @@ export class QuestUser implements BaseEntity {
 
   set end_date(value: string | null) {
     this._end_date = value;
+  }
+
+  get collaborative_session_id(): number | null {
+    return this._collaborative_session_id;
+  }
+
+  set collaborative_session_id(value: number | null) {
+    this._collaborative_session_id = value;
   }
 }

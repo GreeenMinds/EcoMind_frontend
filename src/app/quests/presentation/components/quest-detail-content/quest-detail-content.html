@@ -1,49 +1,146 @@
 @if (detail(); as detail) {
-  <section class="quest-detail">
-    <header class="detail-header">
-      <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
-        <span aria-hidden="true">&lsaquo;</span>
-        {{ 'common.back' | translate }}
-      </a>
-      <span>{{ 'quests.singular' | translate }}</span>
-    </header>
+  <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'collaborative'">
+    <section class="quest-detail">
+      <header class="detail-header">
+        <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
+          <span aria-hidden="true">&lsaquo;</span>
+          {{ 'common.back' | translate }}
+        </a>
+        <span>{{ 'quests.singular' | translate }}</span>
+      </header>
 
-    <h2>{{ detail.quest.title }}</h2>
+      <h2>{{ detail.quest.title }}</h2>
 
-    <div class="quest-meta">
-      <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
-      @if (detail.quest.age > 0) {
-        <span>{{ 'common.yearsPlus' | translate: {count: detail.quest.age} }}</span>
-      }
-      <span>{{ 'common.minutes' | translate: {count: detail.quest.time} }}</span>
-      @if (detail.quest.reward_gems > 0) {
-        <span class="gem-reward">{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</span>
-      }
-      @if (detail.quest.reward_ecopoints > 0) {
-        <span>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</span>
-      }
-    </div>
+      <div class="quest-meta">
+        <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
+        @if (detail.quest.age > 0) {
+          <span>{{ 'common.yearsPlus' | translate: {count: detail.quest.age} }}</span>
+        }
+        <span>{{ 'common.minutes' | translate: {count: detail.quest.time} }}</span>
+        @if (detail.quest.reward_gems > 0) {
+          <span class="gem-reward">{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</span>
+        }
+        @if (detail.quest.reward_ecopoints > 0) {
+          <span>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</span>
+        }
+      </div>
 
-    <p class="quest-copy">{{ detail.quest.description }}</p>
+      <p class="quest-copy">{{ detail.quest.description }}</p>
 
-    <div class="quest-visual-space">
-      @if (detail.quest.image_url) {
-        <img
-          class="quest-illustration"
-          [src]="detail.quest.image_url"
-          [alt]="detail.quest.title"
+      <div class="quest-visual-space">
+        @if (detail.quest.image_url) {
+          <img
+            class="quest-illustration"
+            [src]="detail.quest.image_url"
+            [alt]="detail.quest.title"
+          >
+        }
+      </div>
+
+      @if (showPrimaryAction()) {
+        <button
+          type="button"
+          class="primary-action"
+          [disabled]="primaryActionDisabled()"
+          (click)="startQuest()"
         >
+          {{ actionLabel() }}
+        </button>
       }
-    </div>
+    </section>
 
-    <button
-      type="button"
-      class="primary-action"
-      (click)="startQuest()"
-    >
-      {{ actionLabel() }}
-    </button>
-  </section>
+    @if (detail.quest.type === 'collaborative' && collaborativeContext(); as context) {
+      <aside class="collaboration-panel" [attr.aria-label]="'quests.collaboration.panel' | translate">
+        @if (context.pendingInvitation; as invitation) {
+          <section class="collaboration-card join-card">
+            <h3>{{ 'quests.collaboration.joinRequest' | translate }}</h3>
+            <p>{{ 'quests.collaboration.joinCopy' | translate }}</p>
+            <button
+              type="button"
+              class="panel-action"
+              [disabled]="!context.canAcceptInvitation"
+              (click)="acceptInvitation(invitation.id)"
+            >
+              {{ 'quests.collaboration.accept' | translate }}
+            </button>
+            <button
+              type="button"
+              class="panel-action secondary"
+              (click)="declineInvitation(invitation.id)"
+            >
+              {{ 'quests.collaboration.decline' | translate }}
+            </button>
+          </section>
+        }
+
+        @if (context.canInvite) {
+          <section class="collaboration-card invite-card">
+            <h3>{{ 'quests.collaboration.inviteFriends' | translate }}</h3>
+            <div class="friend-list">
+              @for (option of context.inviteOptions; track option.user.id) {
+                <div class="friend-row">
+                  <span class="avatar">{{ getUserInitials(option.user.name) }}</span>
+                  <span class="friend-name">{{ option.user.name }}</span>
+                  <button
+                    type="button"
+                    class="small-action"
+                    [disabled]="!option.canInvite"
+                    (click)="inviteFriend(option.user.id)"
+                  >
+                    @if (option.alreadyInvited) {
+                      {{ 'quests.collaboration.invited' | translate }}
+                    } @else if (option.isBusy) {
+                      {{ 'quests.collaboration.busy' | translate }}
+                    } @else {
+                      {{ 'quests.collaboration.invite' | translate }}
+                    }
+                  </button>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        @if (context.participants.length > 0) {
+          <section class="collaboration-card participants-card">
+            <h3>{{ 'quests.collaboration.participants' | translate }}</h3>
+            <div class="participant-list">
+              @for (participant of context.participants; track participant.member.id) {
+                <div class="participant-row" [class.pending]="participant.member.status === 'pending'">
+                  <span class="avatar">{{ getUserInitials(participant.user?.name) }}</span>
+                  <div class="participant-copy">
+                    <strong>{{ participant.user?.name || ('quests.collaboration.unknownUser' | translate) }}</strong>
+                    <small>
+                      @if (participant.member.role === 'owner') {
+                        {{ 'quests.collaboration.organizer' | translate }}
+                      } @else {
+                        {{ 'quests.collaboration.statuses.' + participant.member.status | translate }}
+                      }
+                    </small>
+                  </div>
+                  @if (context.isOwner && detail.started === false && participant.member.role !== 'owner') {
+                    <button
+                      type="button"
+                      class="icon-action"
+                      [attr.aria-label]="'quests.collaboration.remove' | translate"
+                      (click)="removeMember(participant.member.id)"
+                    >
+                      x
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+            @if (context.canLeave && context.currentMember?.role !== 'owner') {
+              <button type="button" class="panel-action secondary" (click)="leaveQuest(context.currentMember!.id)">
+                {{ 'quests.collaboration.leave' | translate }}
+              </button>
+            }
+          </section>
+        }
+      </aside>
+    }
+  </div>
 } @else {
   <section class="quest-detail empty-state">
     <h2>{{ 'quests.notFound' | translate }}</h2>

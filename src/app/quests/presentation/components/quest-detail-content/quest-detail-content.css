@@ -1,7 +1,21 @@
+.quest-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.quest-detail-layout.has-collaboration {
+  grid-template-columns: minmax(0, 660px) minmax(280px, 360px);
+}
+
 .quest-detail {
   display: grid;
   gap: 18px;
   max-width: 660px;
+  width: 100%;
   margin: 0 auto;
   padding: 22px 24px 32px;
 }
@@ -145,13 +159,150 @@ h2 {
   background: #b8b8b8;
   box-shadow: 0 6px 0 #8d8d8d;
   cursor: not-allowed;
+  text-shadow: 0 2px 2px rgba(80, 80, 80, 0.32);
+}
+
+.primary-action:disabled::before {
+  box-shadow: inset 0 8px 0 #d0d0d0;
 }
 
 .empty-state {
   text-align: center;
 }
 
+.collaboration-panel {
+  display: grid;
+  gap: 14px;
+  padding: 28px 0 32px;
+}
+
+.collaboration-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.collaboration-card h3 {
+  margin: 0;
+  color: #222222;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.join-card p {
+  margin: 0;
+  color: #555555;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.friend-list,
+.participant-list {
+  display: grid;
+  gap: 12px;
+}
+
+.friend-row,
+.participant-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f4c7a1;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.friend-name,
+.participant-copy strong {
+  min-width: 0;
+  color: #202020;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.participant-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.participant-copy small {
+  color: #6f6f6f;
+  font-size: 0.72rem;
+}
+
+.participant-row.pending {
+  opacity: 0.58;
+}
+
+.panel-action,
+.small-action,
+.icon-action {
+  border: 0;
+  background: #5b9d49;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.panel-action {
+  min-height: 38px;
+  padding: 10px 16px;
+  border-radius: 6px;
+}
+
+.panel-action.secondary {
+  background: #f2f2f2;
+  color: #333333;
+}
+
+.small-action {
+  min-width: 74px;
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.78rem;
+}
+
+.icon-action {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #eeeeee;
+  color: #333333;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.panel-action:disabled,
+.small-action:disabled {
+  background: #d8d8d8;
+  color: #777777;
+  cursor: not-allowed;
+}
+
 @media (max-width: 680px) {
+  .quest-detail-layout,
+  .quest-detail-layout.has-collaboration {
+    grid-template-columns: 1fr;
+  }
+
   .quest-detail {
     gap: 16px;
     padding: 14px 12px 28px;
@@ -188,5 +339,20 @@ h2 {
     width: min(280px, 100%);
     min-height: 46px;
     font-size: 1.08rem;
+  }
+
+  .collaboration-panel {
+    padding: 0 12px 28px;
+  }
+
+  .friend-row,
+  .participant-row {
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
   }
 }
