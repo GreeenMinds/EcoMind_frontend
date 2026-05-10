@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Family } from '../domain/model/family.entity';
@@ -29,11 +29,22 @@ export interface ProfileSummary {
 export class ProfileService {
   private readonly profileApi = inject(ProfileApi);
   private readonly currentUser = inject(CurrentUser);
+  private readonly currentUserSignal = signal<User | null>(null);
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
 
   getCurrentUser(): Observable<User> {
     return this.profileApi.getUser(this.currentUserId());
+  }
+
+  refreshCurrentUser(): Observable<User> {
+    return this.getCurrentUser();
+  }
+
+  syncUser(user: User): void {
+    if (user.id === this.currentUserId()) {
+      this.currentUserSignal.set(user);
+    }
   }
 
   getUser(userId: number): Observable<User> {
@@ -72,13 +83,15 @@ export class ProfileService {
   getCurrentUserFamilies(): Observable<Family[]> {
     return this.getCurrentUserFamilyUsers().pipe(
       switchMap((familyUsers) =>
-        this.profileApi.getFamilies().pipe(
-          map((families) =>
-            families.filter((family) =>
-              familyUsers.some((familyUser) => familyUser.family_id === family.id),
+        this.profileApi
+          .getFamilies()
+          .pipe(
+            map((families) =>
+              families.filter((family) =>
+                familyUsers.some((familyUser) => familyUser.family_id === family.id),
+              ),
             ),
           ),
-        ),
       ),
     );
   }
@@ -210,5 +223,9 @@ export class ProfileService {
         return this.profileApi.updateUser(user);
       }),
     );
+  }
+
+  getCurrentUserFriends(): Observable<Friend[]> {
+    return this.profileApi.getFriendsByUserId(this.currentUserId());
   }
 }

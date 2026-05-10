@@ -1,4 +1,4 @@
-import {BaseEntity} from '../../../shared/infrastructure/base-entity';
+import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 
 export class ActivityUser implements BaseEntity {
   private _id: number;
@@ -6,6 +6,7 @@ export class ActivityUser implements BaseEntity {
   private _activity_id: number;
   private _progress: number;
   private _end_date: string | null;
+  private _collaborative_session_id: number | null;
 
   constructor(activityUser: {
     id: number;
@@ -13,12 +14,14 @@ export class ActivityUser implements BaseEntity {
     activity_id: number;
     progress: number;
     end_date: string | null;
+    collaborative_session_id?: number | null;
   }) {
     this._id = activityUser.id;
     this._user_id = activityUser.user_id;
     this._activity_id = activityUser.activity_id;
     this._progress = activityUser.progress;
     this._end_date = activityUser.end_date;
+    this._collaborative_session_id = activityUser.collaborative_session_id ?? null;
   }
 
   get id(): number {
@@ -59,5 +62,13 @@ export class ActivityUser implements BaseEntity {
 
   set end_date(value: string | null) {
     this._end_date = value;
+  }
+
+  get collaborative_session_id(): number | null {
+    return this._collaborative_session_id;
+  }
+
+  set collaborative_session_id(value: number | null) {
+    this._collaborative_session_id = value;
   }
 }

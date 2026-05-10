@@ -1,9 +1,9 @@
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {BaseApiEndpoint} from '../../shared/infrastructure/base-api-endpoint';
-import {Activity} from '../domain/model/activity.entity';
-import {ActivityAssembler} from './activity-assembler';
-import {ActivityResponse, ActivityResource} from './activity-response';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
+import { Activity } from '../domain/model/activity.entity';
+import { ActivityAssembler } from './activity-assembler';
+import { ActivityResponse, ActivityResource } from './activity-response';
 
 export class ActivitiesApiEndpoint extends BaseApiEndpoint<
   Activity,

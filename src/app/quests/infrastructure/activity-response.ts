@@ -1,6 +1,6 @@
-import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
+import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
-export interface ActivityResponse extends BaseResponse{
+export interface ActivityResponse extends BaseResponse {
   activities: ActivityResource[];
 }
 

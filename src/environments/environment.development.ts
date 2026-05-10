@@ -20,6 +20,8 @@ export const environment = {
   platformProviderActivityEndpointPath: '/activity',
   platformProviderUserQuestEndpointPath: '/quest_user',
   platformProviderUserActivityEndpointPath: '/activity_user',
+  platformProviderCollaborativeQuestSessionEndpointPath: '/collaborative_quest_session',
+  platformProviderCollaborativeQuestMemberEndpointPath: '/collaborative_quest_member',
   platformProviderMinigameAttemptEndpointPath: '/minigame_attempt',
   platformProviderCommunityPostEndpointPath: '/community_post',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
@@ -31,6 +33,4 @@ export const environment = {
   platformProviderGemPackageEndpointPath: '/gem_package',
   platformProviderGemPurchaseEndpointPath: '/gem_purchase',
   platformProviderGemMovementEndpointPath: '/gem_movement',
-
-
 };
