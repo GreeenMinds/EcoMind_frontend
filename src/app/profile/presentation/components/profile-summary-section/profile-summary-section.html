@@ -1,0 +1,38 @@
+<article class="surface-card">
+  <div class="surface-card__header">
+    <h2>{{ title }}</h2>
+    @if (canEdit) {
+      <button class="surface-link" type="button" (click)="editCommitment.emit()">
+        Editar
+      </button>
+    }
+  </div>
+
+  <div class="commitment-callout">
+    {{ commitment || emptyCommitmentText }}
+  </div>
+
+  <p class="surface-meta">{{ dateLabel }}</p>
+</article>
+
+<article class="surface-card">
+  <div class="surface-card__header">
+    <h2>Medallas y Logros</h2>
+    <span class="surface-link surface-link--static">{{ achievements.length }} registrados</span>
+  </div>
+
+  @if (achievements.length > 0) {
+    <div class="achievement-grid">
+      @for (achievement of achievements.slice(0, 4); track achievement.userAchievement.id; let index = $index) {
+        <article class="achievement-card" [attr.data-tone]="getAchievementTone(index)">
+          <div class="achievement-card__badge">★</div>
+          <h3>{{ achievement.achievement.name }}</h3>
+          <p>{{ achievement.achievement.description }}</p>
+          <span>{{ formatRelativeDate(achievement.userAchievement.date) }}</span>
+        </article>
+      }
+    </div>
+  } @else {
+    <p class="empty-copy">{{ emptyAchievementsText }}</p>
+  }
+</article>

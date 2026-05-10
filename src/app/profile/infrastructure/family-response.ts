@@ -7,4 +7,5 @@ export interface FamilyResponse extends BaseResponse {
 export interface FamilyResource extends BaseResource {
   id: number;
   name: string;
+  commitment?: string | null;
 }

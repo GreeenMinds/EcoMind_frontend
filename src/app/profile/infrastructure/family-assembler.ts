@@ -11,6 +11,7 @@ export class FamilyAssembler implements BaseAssembler<Family, FamilyResource, Fa
     const family = new Family();
     family.id = resource.id;
     family.name = resource.name;
+    family.commitment = resource.commitment ?? null;
     return family;
   }
 
@@ -18,6 +19,7 @@ export class FamilyAssembler implements BaseAssembler<Family, FamilyResource, Fa
     return {
       id: entity.id,
       name: entity.name,
+      commitment: entity.commitment,
     };
   }
 }

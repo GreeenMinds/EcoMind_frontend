@@ -7,7 +7,7 @@ import {QuestDetailContent} from './quests/presentation/components/quest-detail-
 import {QuestListContent} from './quests/presentation/components/quest-list-content/quest-list-content';
 import {QuestStartedContent} from './quests/presentation/components/quest-started-content/quest-started-content';
 import {QuestSearchContent} from './quests/presentation/components/quest-search-content/quest-search-content';
-import {ProfileContent} from './profile/presentation/components/profile-content/profile-content';
+import { ProfileContent } from './profile/presentation/components/profile-content';
 import {StoreContentComponent} from './monetization/presentation/components/store-content/store-content';
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
 import {RankingContent} from './ranking/presentation/components/ranking-content/ranking-content';
