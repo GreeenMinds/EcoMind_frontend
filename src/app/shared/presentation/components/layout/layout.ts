@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { ProfileService } from '../../../../profile/application/profile.service';
 import { Sidebar } from '../sidebar/sidebar';
@@ -13,5 +13,9 @@ import { Sidebar } from '../sidebar/sidebar';
 export class Layout {
   private readonly profileService = inject(ProfileService);
 
-  readonly currentUser = toSignal(this.profileService.getCurrentUser());
+  readonly currentUser = this.profileService.currentUserProfile;
+
+  constructor() {
+    this.profileService.refreshCurrentUser().pipe(takeUntilDestroyed()).subscribe();
+  }
 }

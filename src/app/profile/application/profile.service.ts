@@ -1,5 +1,5 @@
-import { computed, inject, Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { map, Observable, switchMap, tap } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
 import { User } from '../domain/model/user.entity';
 import { Family } from '../domain/model/family.entity';
@@ -13,11 +13,25 @@ import { ProfileApi } from '../infrastructure/profile-api';
 export class ProfileService {
   private readonly profileApi = inject(ProfileApi);
   private readonly currentUser = inject(CurrentUser);
+  private readonly currentUserSignal = signal<User | null>(null);
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
+  readonly currentUserProfile = this.currentUserSignal.asReadonly();
 
   getCurrentUser(): Observable<User> {
-    return this.profileApi.getUser(this.currentUserId());
+    return this.profileApi
+      .getUser(this.currentUserId())
+      .pipe(tap((user) => this.currentUserSignal.set(user)));
+  }
+
+  refreshCurrentUser(): Observable<User> {
+    return this.getCurrentUser();
+  }
+
+  syncUser(user: User): void {
+    if (user.id === this.currentUserId()) {
+      this.currentUserSignal.set(user);
+    }
   }
 
   getUser(userId: number): Observable<User> {

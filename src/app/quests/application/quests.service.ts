@@ -1,9 +1,10 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, map, of, retry, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of, retry, switchMap } from 'rxjs';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { Friend } from '../../profile/domain/model/friend.entity';
 import { User } from '../../profile/domain/model/user.entity';
+import { ProfileService } from '../../profile/application/profile.service';
 import { CurrentUser } from '../../shared/application/current-user';
 import { ActivityUser } from '../domain/model/activity-user.entity';
 import { CollaborativeQuestMember } from '../domain/model/collaborative-quest-member.entity';
@@ -111,6 +112,7 @@ export class QuestsService {
   constructor(
     private readonly questsApi: QuestsApi,
     private readonly profileApi: ProfileApi,
+    private readonly profileService: ProfileService,
     private readonly currentUser: CurrentUser,
   ) {
     this.loadQuestData();
@@ -556,10 +558,13 @@ export class QuestsService {
       return;
     }
 
+    const quest = this.quests().find((item) => item.id === questId);
+    const rewardUserIds =
+      quest && this.shouldAwardQuestReward(quest, questUser.user_id) ? [questUser.user_id] : [];
     questUser.status = 'completed';
     questUser.progress = 100;
     questUser.end_date = this.getTodayDate();
-    this.updateQuestUser(questUser, 'Failed to complete quest');
+    this.updateQuestUser(questUser, 'Failed to complete quest', quest, rewardUserIds);
   }
 
   deleteActiveQuest(questId: number): void {
@@ -664,6 +669,7 @@ export class QuestsService {
   }
 
   recordMinigameAttempt(questId: number, score: number, metadata: Record<string, unknown>): void {
+    const quest = this.quests().find((item) => item.id === questId);
     const minigameAttempt = new MinigameAttempt({
       id: 0,
       user_id: this.currentUserId(),
@@ -686,6 +692,16 @@ export class QuestsService {
             ...minigameAttempts,
             createdMinigameAttempt,
           ]);
+          if (quest?.type === 'minigame') {
+            this.awardQuestRewards(quest, [this.currentUserId()])
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe({
+                next: (users) => this.mergeRewardedUsers(users),
+                error: (error) => {
+                  this.errorSignal.set(this.formatError(error, 'Failed to award quest rewards'));
+                },
+              });
+          }
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -916,7 +932,12 @@ export class QuestsService {
       });
   }
 
-  private updateQuestUser(questUser: QuestUser, fallbackMessage: string): void {
+  private updateQuestUser(
+    questUser: QuestUser,
+    fallbackMessage: string,
+    rewardQuest?: Quest,
+    rewardUserIds: number[] = [],
+  ): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.questsApi
@@ -927,7 +948,23 @@ export class QuestsService {
           this.questsUserSignal.update((questsUser) =>
             questsUser.map((item) => (item.id === updatedQuestUser.id ? updatedQuestUser : item)),
           );
-          this.loadingSignal.set(false);
+          if (!rewardQuest || rewardUserIds.length === 0) {
+            this.loadingSignal.set(false);
+            return;
+          }
+
+          this.awardQuestRewards(rewardQuest, rewardUserIds)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: (users) => {
+                this.mergeRewardedUsers(users);
+                this.loadingSignal.set(false);
+              },
+              error: (error) => {
+                this.errorSignal.set(this.formatError(error, 'Failed to award quest rewards'));
+                this.loadingSignal.set(false);
+              },
+            });
         },
         error: (error) => {
           this.errorSignal.set(this.formatError(error, fallbackMessage));
@@ -938,13 +975,17 @@ export class QuestsService {
 
   private completeCollaborativeQuest(questId: number, sessionId: number): void {
     const session = this.collaborativeSessions().find((item) => item.id === sessionId);
-    if (!session) {
+    const quest = this.quests().find((item) => item.id === questId);
+    if (!session || !quest) {
       return;
     }
 
     const acceptedUserIds = this.collaborativeMembers()
       .filter((member) => member.session_id === sessionId && member.status === 'accepted')
       .map((member) => member.user_id);
+    const rewardUserIds = acceptedUserIds.filter((userId) =>
+      this.shouldAwardQuestReward(quest, userId),
+    );
     const questUsers = this.questsUser().filter(
       (questUser) =>
         questUser.quest_id === questId &&
@@ -965,14 +1006,17 @@ export class QuestsService {
     forkJoin({
       session: this.questsApi.updateCollaborativeQuestSession(session),
       questUsers: questUsers.length > 0 ? forkJoin(questUsers.map((questUser) => this.questsApi.updateQuestUser(questUser))) : of([]),
+      rewardedUsers:
+        rewardUserIds.length > 0 ? this.awardQuestRewards(quest, rewardUserIds) : of([]),
     })
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ({ session: updatedSession, questUsers: updatedQuestUsers }) => {
+        next: ({ session: updatedSession, questUsers: updatedQuestUsers, rewardedUsers }) => {
           this.collaborativeSessionsSignal.update((sessions) =>
             sessions.map((item) => (item.id === updatedSession.id ? updatedSession : item)),
           );
           this.questsUserSignal.update((existing) => this.mergeById(existing, updatedQuestUsers));
+          this.mergeRewardedUsers(rewardedUsers);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -1519,6 +1563,47 @@ export class QuestsService {
   private getCurrentActivitySessionId(activityId: number): number | null {
     const activity = this.activities().find((item) => item.id === activityId);
     return activity ? this.getCurrentProgressSessionId(activity.quest_id) : null;
+  }
+
+  private shouldAwardQuestReward(quest: Quest, userId: number): boolean {
+    if (quest.type === 'minigame') {
+      return true;
+    }
+
+    return !this.questsUser().some(
+      (questUser) =>
+        questUser.quest_id === quest.id &&
+        questUser.user_id === userId &&
+        questUser.status === 'completed',
+    );
+  }
+
+  private awardQuestRewards(quest: Quest, userIds: number[]): Observable<User[]> {
+    const uniqueUserIds = [...new Set(userIds)];
+    if (uniqueUserIds.length === 0 || (quest.reward_gems === 0 && quest.reward_ecopoints === 0)) {
+      return of([]);
+    }
+
+    return forkJoin(
+      uniqueUserIds.map((userId) =>
+        this.profileApi.getUser(userId).pipe(
+          switchMap((user) => {
+            user.gem_balance += quest.reward_gems;
+            user.ecopoints += quest.reward_ecopoints;
+            return this.profileApi.updateUser(user);
+          }),
+        ),
+      ),
+    );
+  }
+
+  private mergeRewardedUsers(users: User[]): void {
+    if (users.length === 0) {
+      return;
+    }
+
+    this.usersSignal.update((existing) => this.mergeById(existing, users));
+    users.forEach((user) => this.profileService.syncUser(user));
   }
 
   private isExpired(expirationDate: string | null): boolean {
