@@ -10,8 +10,7 @@ import {QuestSearchContent} from './quests/presentation/components/quest-search-
 import { ProfileContent } from './profile/presentation/components/profile-content';
 import {StoreContentComponent} from './monetization/presentation/components/store-content/store-content';
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
-import {RankingContent} from './ranking/presentation/components/ranking-content/ranking-content';
-
+import { RankingContent } from './ranking/presentation/components/ranking-content';
 export const routes: Routes = [
   {
     path: 'profile',
