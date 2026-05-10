@@ -6,8 +6,10 @@
 
     <div class="app-header-profile" aria-label="User summary">
       <div class="header-stat gem-stat">
-        <span class="gem-icon" aria-hidden="true"></span>
-        <span>{{ currentUser()?.gem_balance ?? 0 }}</span>
+        <span class="gem-icon" aria-hidden="true">💎</span>
+        <span>
+          {{ monetizationStore.gemBalance() > 0 ? monetizationStore.gemBalance() : (currentUser()?.gem_balance ?? 0) }}
+        </span>
       </div>
 
       <div class="header-stat streak-stat">

@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { ProfileService } from '../../../../profile/application/profile.service';
 import { Sidebar } from '../sidebar/sidebar';
+import { MonetizationStoreService } from '../../../../monetization/application/monetization-store.service';
 
 @Component({
   selector: 'app-layout',
@@ -13,7 +14,7 @@ import { Sidebar } from '../sidebar/sidebar';
 })
 export class Layout {
   private readonly profileService = inject(ProfileService);
-
+  readonly monetizationStore = inject(MonetizationStoreService);
   readonly currentUser = this.profileService.currentUserProfile;
 
   constructor() {

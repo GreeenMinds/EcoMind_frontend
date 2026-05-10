@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, map, Observable, of, retry, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of, retry, switchMap, tap } from 'rxjs';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { Friend } from '../../profile/domain/model/friend.entity';
 import { User } from '../../profile/domain/model/user.entity';
@@ -15,6 +15,7 @@ import { Minigame } from '../domain/model/minigame.entity';
 import { QuestUser } from '../domain/model/quest-user.entity';
 import { Quest } from '../domain/model/quest.entity';
 import { QuestsApi } from '../infrastructure/quests-api';
+import { MonetizationStoreService } from '../../monetization/application/monetization-store.service';
 
 export interface ActivityProgress {
   activity: Activity;
@@ -89,7 +90,6 @@ export class QuestsService {
   private readonly friendsSignal = signal<Friend[]>([]);
   private readonly selectedListCategorySignal = signal('energy');
   private readonly selectedListPageSignal = signal(0);
-
   readonly quests = this.questsSignal.asReadonly();
   readonly questsUser = this.questsUserSignal.asReadonly();
   readonly minigames = this.minigamesSignal.asReadonly();
@@ -118,6 +118,7 @@ export class QuestsService {
     private readonly profileApi: ProfileApi,
     private readonly profileService: ProfileService,
     private readonly currentUser: CurrentUser,
+    private readonly monetizationStoreService: MonetizationStoreService,
   ) {
     this.loadQuestData();
   }
@@ -1241,8 +1242,8 @@ export class QuestsService {
     const session = ownedOpenSession ?? acceptedSession ?? this.findSessionForMember(pendingInvitation);
     const currentMember = session
       ? this.collaborativeMembers().find(
-          (member) => member.session_id === session.id && member.user_id === currentUserId,
-        )
+        (member) => member.session_id === session.id && member.user_id === currentUserId,
+      )
       : undefined;
     const participants = session ? this.buildParticipants(session.id) : [];
     const inviteOptions = this.buildInviteOptions(questId, session?.id);
@@ -1253,11 +1254,11 @@ export class QuestsService {
     ).length;
     const pendingInvites = session
       ? this.collaborativeMembers().filter(
-          (member) =>
-            member.session_id === session.id &&
-            member.role !== 'owner' &&
-            ['accepted', 'pending'].includes(member.status),
-        ).length
+        (member) =>
+          member.session_id === session.id &&
+          member.role !== 'owner' &&
+          ['accepted', 'pending'].includes(member.status),
+      ).length
       : 0;
 
     return {
@@ -1272,8 +1273,8 @@ export class QuestsService {
       canStart: isOwner && (!session || session.status === 'pending'),
       canAcceptInvitation: Boolean(
         pendingInvitation &&
-          this.findSessionForMember(pendingInvitation)?.status === 'pending' &&
-          !this.isUserBusyInQuest(currentUserId, questId),
+        this.findSessionForMember(pendingInvitation)?.status === 'pending' &&
+        !this.isUserBusyInQuest(currentUserId, questId),
       ),
       canLeave: isAcceptedParticipant && acceptedInvites >= 0,
     };
@@ -1301,11 +1302,11 @@ export class QuestsService {
       .map((user) => {
         const alreadyInvited = sessionId
           ? this.collaborativeMembers().some(
-              (member) =>
-                member.session_id === sessionId &&
-                member.user_id === user.id &&
-                ['accepted', 'pending'].includes(member.status),
-            )
+            (member) =>
+              member.session_id === sessionId &&
+              member.user_id === user.id &&
+              ['accepted', 'pending'].includes(member.status),
+          )
           : false;
         const isBusy = this.isUserBusyInQuest(user.id, questId);
         return {
@@ -1599,16 +1600,33 @@ export class QuestsService {
       return of([]);
     }
 
+    const currentUserId = this.currentUserId();
+    // El multiplicador aplica SOLO a ecopoints, no a gemas
+    const multiplierFactor = this.monetizationStoreService.activeMultiplierFactor();
+
     return forkJoin(
-      uniqueUserIds.map((userId) =>
-        this.profileApi.getUser(userId).pipe(
+      uniqueUserIds.map((userId) => {
+        const ecopointsAmount = Math.round(
+          quest.reward_ecopoints * (userId === currentUserId ? multiplierFactor : 1),
+        );
+        const gemAmount = quest.reward_gems; // las gemas no se multiplican
+        return this.profileApi.getUser(userId).pipe(
           switchMap((user) => {
-            user.gem_balance += quest.reward_gems;
-            user.ecopoints += quest.reward_ecopoints;
-            return this.profileApi.updateUser(user);
+            user.gem_balance += gemAmount;
+            user.ecopoints  += ecopointsAmount;
+            return this.profileApi.updateUser(user).pipe(
+              tap((updatedUser) => {
+                // Registrar gem_movement en db.json y sincronizar balance en monetización
+                if (gemAmount > 0) {
+                  this.monetizationStoreService.onQuestGemsAwarded(
+                    userId, gemAmount, quest.id, updatedUser.gem_balance,
+                  );
+                }
+              }),
+            );
           }),
-        ),
-      ),
+        );
+      }),
     );
   }
 

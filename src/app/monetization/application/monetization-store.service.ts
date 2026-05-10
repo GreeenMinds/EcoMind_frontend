@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, retry } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
 import { MonetizationApi } from '../infrastructure/monetization-api';
+import { ProfileService } from '../../profile/application/profile.service';
 import { CosmeticEntity }       from '../domain/cosmetic.entity';
 import { MultiplierEntity }     from '../domain/multiplier.entity';
 import { GemPackageEntity }     from '../domain/gem-package.entity';
@@ -11,7 +12,7 @@ import { UserMultiplierEntity } from '../domain/user-multiplier.entity';
 import { GemPurchaseEntity }    from '../domain/gem.purchase.entity';
 import { GemMovementEntity }    from '../domain/gem.movement.entity';
 
-// ─── Interfaces de dominio ────────────────────────────────────────────────────
+// ─── Interfaces────────────────────────────────────────────────────
 
 export interface CosmeticSummary {
   cosmetic: CosmeticEntity;
@@ -26,7 +27,7 @@ export interface MultiplierSummary {
   userRecord?: UserMultiplierEntity;
 }
 
-// ─── Servicio ─────────────────────────────────────────────────────────────────
+// ─── Services ─────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
 export class MonetizationStoreService {
@@ -34,8 +35,9 @@ export class MonetizationStoreService {
   private readonly destroyRef       = inject(DestroyRef);
   private readonly monetizationApi  = inject(MonetizationApi);
   private readonly currentUser      = inject(CurrentUser);
+  private readonly profileService   = inject(ProfileService);
 
-  // ─── Signals privados ────────────────────────────────────────────────────
+  // ─── Signals privates ────────────────────────────────────────────────────
 
   private readonly cosmeticsSignal        = signal<CosmeticEntity[]>([]);
   private readonly multipliersSignal      = signal<MultiplierEntity[]>([]);
@@ -46,7 +48,7 @@ export class MonetizationStoreService {
   private readonly loadingSignal          = signal<boolean>(false);
   private readonly errorSignal            = signal<string | null>(null);
 
-  /** Timer para auto-limpiar el error */
+  /** Timer*/
   private errorClearTimer: ReturnType<typeof setTimeout> | null = null;
 
   // ─── Signals públicos (readonly) ─────────────────────────────────────────
@@ -76,9 +78,27 @@ export class MonetizationStoreService {
     ),
   );
 
-  readonly activeMultiplierIds = computed(() =>
-    new Set(this.userMultipliers().map((um) => um.multiplierId)),
-  );
+  /** Solo cuenta los multipliers cuyo endDate aún no ha pasado */
+  readonly activeMultiplierIds = computed(() => {
+    const now = new Date();
+    return new Set(
+      this.userMultipliers()
+        .filter((um) => new Date(um.endDate) > now)
+        .map((um) => um.multiplierId),
+    );
+  });
+
+  /**
+   * Highest active multiplier factor for the current user.
+   * Returns 1 if there are no active multipliers.
+   */
+  readonly activeMultiplierFactor = computed(() => {
+    const now = new Date();
+    const activeFactors = this.userMultipliers()
+      .filter((um) => new Date(um.endDate) > now)
+      .map((um) => this.multipliers().find((m) => m.id === um.multiplierId)?.multiplierFactor ?? 1);
+    return activeFactors.length > 0 ? Math.max(...activeFactors) : 1;
+  });
 
   readonly cosmeticSummaries: Signal<CosmeticSummary[]> = computed(() =>
     this.cosmetics().map((cosmetic) => ({
@@ -135,28 +155,57 @@ export class MonetizationStoreService {
           this.userMultipliersSignal.set(
             data.userMultipliers.filter((um) => um.userId === this.currentUserId()),
           );
+
           this.gemBalanceSignal.set(data.gemBalance);
+          this.profileService.syncGemBalance(data.gemBalance);
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al cargar la tienda'));
+          this.setError(this.formatError(err, 'Error loading store'));
           this.loadingSignal.set(false);
         },
       });
   }
 
-  // ─── COMPRAR COSMÉTICO ────────────────────────────────────────────────────
+  /**
+   * Called by QuestsService when a challenge/activity is completed.
+   * Registers the gem_movement in db.json and immediately syncs
+   * the balance signal without waiting for a full refresh.
+   */
+  onQuestGemsAwarded(userId: number, amount: number, questId: number, newBalance: number): void {
+    if (amount <= 0) return;
+
+    // 1. Registrar movimiento en gem_movement (db.json)
+    const movement = new GemMovementEntity();
+    movement.userId   = userId;
+    movement.type     = 'quest_reward';
+    movement.amount   = amount;
+    movement.origin   = 'quest';
+    movement.originId = questId;
+    this.monetizationApi
+      .registerGemMovement(movement)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+
+    // 2.Synchronize balance immediately if you are the current user
+    if (userId === this.currentUserId()) {
+      this.gemBalanceSignal.set(newBalance);
+      this.profileService.syncGemBalance(newBalance);
+    }
+  }
+
+  // ─── Buy cosmetic ────────────────────────────────────────────────────
 
   purchaseCosmetic(cosmetic: CosmeticEntity): void {
 
     if (this.ownedCosmeticIds().has(cosmetic.id)) {
-      this.setError('Este artículo ya está en tu inventario.');
+      this.setError('This item is already in your inventory.');
       return;
     }
 
     if (this.gemBalance() < cosmetic.price) {
       this.setError(
-        `Gemas insuficientes. Necesitas ${cosmetic.price} 💎 pero tienes ${this.gemBalance()} 💎.`,
+        `Insufficient gems. You need ${cosmetic.price} 💎 but you have ${this.gemBalance()} 💎.`,
       );
       return;
     }
@@ -182,7 +231,7 @@ export class MonetizationStoreService {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al procesar la compra'));
+          this.setError(this.formatError(err, 'Error processing purchase'));
           this.loadingSignal.set(false);
         },
       });
@@ -193,7 +242,7 @@ export class MonetizationStoreService {
   toggleEquip(summary: CosmeticSummary): void {
 
     if (!summary.owned || !summary.userRecord) {
-      this.setError('Debes obtener este artículo primero.');
+      this.setError('You must get this item first.');
       return;
     }
 
@@ -228,7 +277,7 @@ export class MonetizationStoreService {
             );
           },
           error: (err) => {
-            this.setError(this.formatError(err, 'Error al desequipar el artículo anterior'));
+            this.setError(this.formatError(err, 'Error removing the previous item'));
           },
         });
     }
@@ -245,7 +294,7 @@ export class MonetizationStoreService {
           this.errorSignal.set(null);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al equipar el artículo'));
+          this.setError(this.formatError(err, 'Error equipping the item'));
         },
       });
   }
@@ -256,7 +305,7 @@ export class MonetizationStoreService {
 
     if (this.gemBalance() < multiplier.gemCost) {
       this.setError(
-        `Gemas insuficientes. Necesitas ${multiplier.gemCost} 💎 pero tienes ${this.gemBalance()} 💎.`,
+        `Insufficient gems. You need ${multiplier.gemCost} 💎 but you have ${this.gemBalance()} 💎.`,
       );
       return;
     }
@@ -284,7 +333,7 @@ export class MonetizationStoreService {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al activar el multiplicador'));
+          this.setError(this.formatError(err, 'Error activating the multiplier'));
           this.loadingSignal.set(false);
         },
       });
@@ -320,17 +369,15 @@ export class MonetizationStoreService {
           this.errorSignal.set(null);
         },
         error: (err) => {
-          this.setError(this.formatError(err, 'Error al procesar el pago'));
+          this.setError(this.formatError(err, 'Payment processing error'));
           this.loadingSignal.set(false);
         },
       });
   }
 
-  // ─── HELPERS PRIVADOS ─────────────────────────────────────────────────────
-
   /**
-   * Setea el error y lo limpia automáticamente después de 4 segundos.
-   * Cancela cualquier timer previo para evitar limpiezas anticipadas.
+   * Sets the error and automatically clears it after 4 seconds.
+   * Cancels any previous timer to prevent premature clearing.
    */
   private setError(message: string): void {
     // Cancelar timer anterior si existe
@@ -346,7 +393,10 @@ export class MonetizationStoreService {
   }
 
   private updateBalance(newBalance: number): void {
+    // NUEVO: Actualizar ProfileService cuando cambian las gemas
     this.gemBalanceSignal.set(newBalance);
+    this.profileService.syncGemBalance(newBalance);
+
     this.monetizationApi
       .updateUserGemBalance(this.currentUserId(), newBalance)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -376,7 +426,7 @@ export class MonetizationStoreService {
   private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
-        ? `${fallback}: No encontrado`
+        ? `${fallback}: Not found`
         : error.message;
     }
     return fallback;
@@ -410,7 +460,7 @@ export class MonetizationStoreService {
       .subscribe({
         next: () => {
           this.loadData();
-          console.log('¡Paquete especial entregado!');
+          console.log('¡Special package delivered!');
         },
         complete: () => this.loadingSignal.set(false),
       });

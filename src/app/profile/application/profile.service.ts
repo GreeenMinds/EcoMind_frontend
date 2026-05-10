@@ -18,6 +18,21 @@ export class ProfileService {
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
   readonly currentUserProfile = this.currentUserSignal.asReadonly();
 
+
+  /**
+   * Sincroniza el balance de gemas del usuario actual.
+   */
+  syncGemBalance(newBalance: number): void {
+    if (this.currentUserSignal()) {
+      this.currentUserSignal.update((user) => {
+        if (user) {
+          user.gem_balance = newBalance;
+        }
+        return user;
+      });
+    }
+  }
+
   getCurrentUser(): Observable<User> {
     return this.profileApi
       .getUser(this.currentUserId())
