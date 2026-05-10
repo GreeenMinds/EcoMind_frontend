@@ -269,7 +269,7 @@
       "latitude": -12.0464,
       "longitude": -77.0428,
       "capacity": 50,
-      "image_url": "/assets/images/community/trash-collection.png"
+      "image_url": "https://i.imgur.com/nCIRKcQ.jpeg"
     },
     {
       "id": 2,
@@ -284,7 +284,7 @@
       "latitude": -12.0553,
       "longitude": -77.0452,
       "capacity": 35,
-      "image_url": "/assets/images/community/community-harvest.png"
+      "image_url": "https://i.imgur.com/zURCX3c.jpeg"
     },
     {
       "id": 3,
@@ -299,7 +299,7 @@
       "latitude": -12.0816,
       "longitude": -77.0822,
       "capacity": 60,
-      "image_url": "/assets/images/community/beach-cleanup.png"
+      "image_url": "https://i.imgur.com/uG9lzC5.jpeg"
     },
     {
       "id": 4,
@@ -314,7 +314,7 @@
       "latitude": -12.0321,
       "longitude": -77.0304,
       "capacity": 45,
-      "image_url": "/assets/images/community/river-cleanup.png"
+      "image_url": "https://i.imgur.com/ZFDEJ5p.jpeg"
     },
     {
       "id": 5,
@@ -329,7 +329,7 @@
       "latitude": -12.0508,
       "longitude": -77.0375,
       "capacity": 40,
-      "image_url": "/assets/images/community/urban-planting.png"
+      "image_url": "https://i.imgur.com/YOaOIev.jpeg"
     },
     {
       "id": 6,
@@ -344,7 +344,22 @@
       "latitude": -12.0602,
       "longitude": -77.0418,
       "capacity": 30,
-      "image_url": "/assets/images/community/recycling-workshop.png"
+      "image_url": "https://i.imgur.com/WTGj7uU.jpeg"
+    },
+    {
+      "id": 7,
+      "community_id": 1,
+      "author_id": 1,
+      "name": "Creative Recycling Crafts Workshop",
+      "description": "Join us for a fun outdoor workshop where we will transform recyclable materials such as plastic bottles, cardboard, cans, and old fabric into creative handmade decorations and useful crafts. This family-friendly event promotes sustainability, creativity, and teamwork while helping reduce waste in our community. All basic materials and tools will be provided, but participants are encouraged to bring clean reusable items from home.",
+      "date": "2026-05-18",
+      "start_time": "2026-05-18T03:30:00",
+      "end_time": "2026-05-18T03:30:00",
+      "location": "Main Entrance, Magic Water Circuit Park",
+      "latitude": -12.0691,
+      "longitude": -77.0376,
+      "capacity": 30,
+      "image_url": "https://i.imgur.com/RooGZI4.jpeg"
     }
   ],
   "preference": [
@@ -1155,7 +1170,52 @@
       "family_id": 1,
       "registration_type": "family",
       "registered_at": "2026-10-20T10:00:00",
-      "status": "active"
+      "status": "cancelled"
+    },
+    {
+      "id": 2,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:34:28.911Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 3,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:34:31.000Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 4,
+      "event_id": 1,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T07:41:37.031Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 5,
+      "event_id": 3,
+      "user_id": 1,
+      "family_id": 1,
+      "registration_type": "family",
+      "registered_at": "2026-05-09T07:41:39.879Z",
+      "status": "cancelled"
+    },
+    {
+      "id": 6,
+      "event_id": 7,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-05-09T23:44:17.135Z",
+      "status": "cancelled"
     }
   ],
   "community_post": [
@@ -1166,7 +1226,7 @@
       "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
       "points": 50,
       "likes": 70,
-      "image_url": "/assets/images/community/clean-energy.png",
+      "image_url": "https://i.imgur.com/nscRbEZ.jpeg",
       "created_at": "2026-05-09T09:00:00"
     },
     {
@@ -1176,7 +1236,7 @@
       "content": "I completed 7 days without using single-use plastic at home.",
       "points": 35,
       "likes": 70,
-      "image_url": "/assets/images/community/no-plastic-bag.png",
+      "image_url": "https://i.imgur.com/E6n0Z8m.jpeg",
       "created_at": "2026-05-09T08:15:00"
     },
     {
@@ -1186,7 +1246,7 @@
       "content": "I completed the plastic reduction challenge for 30 days. I removed almost all plastic from my home.",
       "points": 45,
       "likes": 70,
-      "image_url": "/assets/images/community/no-plastic-bottle.png",
+      "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
     }
   ],

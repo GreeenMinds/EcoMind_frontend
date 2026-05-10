@@ -1,0 +1,62 @@
+.event-card {
+  display: grid;
+  grid-template-columns: 1fr 112px;
+  gap: 14px;
+  padding: 18px 18px 16px;
+  border: 3px solid #dedede;
+  border-radius: 36px;
+  background: white;
+}
+
+h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+p {
+  margin: 0;
+  color: #8b8b8b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+img {
+  width: 112px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  gap: 12px;
+}
+
+button {
+  height: 28px;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.join {
+  background: #68a94f;
+}
+
+.join.joined {
+  background: #bfbfbf;
+}
+
+.cancel {
+  border-radius: 50%;
+  background: #bfbfbf;
+  font-size: 22px;
+}
+
+.cancel:hover {
+  background: #ef5350;
+}

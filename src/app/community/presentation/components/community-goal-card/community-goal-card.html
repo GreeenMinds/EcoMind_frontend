@@ -1,0 +1,22 @@
+@if (goal) {
+  <section class="goal-card">
+    <h3>Community Goal: {{ goal.title }}</h3>
+    <p>{{ goal.title }}</p>
+
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="progressPercent"></div>
+    </div>
+
+    <div class="markers">
+      <span>25%</span>
+      <span>50%</span>
+      <span>75%</span>
+      <span>100%</span>
+    </div>
+
+    <footer>
+      <strong>{{ goal.progress }} of {{ goal.target }} {{ goal.unit }}</strong>
+      <span>{{ goal.participants }} participants</span>
+    </footer>
+  </section>
+}

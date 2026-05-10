@@ -1,1 +1,63 @@
-<p>community-content works!</p>
+<section class="community-page">
+  <div class="community-toolbar">
+    <app-community-search-bar
+      [value]="searchTerm()"
+      (valueChange)="searchTerm.set($event)">
+    </app-community-search-bar>
+
+    <app-community-tabs
+      [activeTab]="activeTab()"
+      (tabChange)="selectTab($event)">
+    </app-community-tabs>
+  </div>
+
+  @if (communityService.loading()) {
+    <p class="state-text">Loading community...</p>
+  } @else if (communityService.error()) {
+    <p class="state-text error">{{ communityService.error() }}</p>
+  } @else {
+    @if (activeTab() === 'all') {
+      <div class="community-overview">
+        <app-community-feed [posts]="filteredPosts()"></app-community-feed>
+
+        <aside class="community-side">
+          <app-community-goal-card [goal]="communityService.activeGoal()"></app-community-goal-card>
+          <app-community-events-map [events]="filteredEvents()"></app-community-events-map>
+        </aside>
+      </div>
+    }
+
+    @if (activeTab() === 'achievements') {
+      <app-community-achievements-list
+        [achievements]="filteredAchievements()"
+        [period]="achievementPeriod()"
+        (periodChange)="selectAchievementPeriod($event)">
+      </app-community-achievements-list>
+    }
+
+    @if (activeTab() === 'events') {
+      <app-community-events-list
+        [events]="filteredEvents()"
+        (createEvent)="openEventForm()"
+        (joinEvent)="openRegistrationModal($event)"
+        (cancelRegistration)="communityService.cancelEventRegistration($event.event.id)">
+      </app-community-events-list>
+    }
+  }
+
+  @if (showEventForm()) {
+    <app-community-event-form-modal
+      (close)="closeEventForm()"
+      (create)="communityService.createEvent($event); closeEventForm()">
+    </app-community-event-form-modal>
+  }
+
+  @if (selectedEvent()) {
+    <app-community-event-registration-modal
+      [summary]="selectedEvent()"
+      (close)="closeRegistrationModal()"
+      (joinIndividual)="joinSelectedEventAsIndividual()"
+      (joinFamily)="joinSelectedEventAsFamily()">
+    </app-community-event-registration-modal>
+  }
+</section>

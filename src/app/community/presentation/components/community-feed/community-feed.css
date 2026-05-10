@@ -1,0 +1,16 @@
+.feed h2 {
+  margin: 0 0 18px;
+  text-align: center;
+  color: #68a94f;
+  font-size: 22px;
+}
+
+.post-list {
+  display: grid;
+  gap: 16px;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+}

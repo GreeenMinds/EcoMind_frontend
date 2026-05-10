@@ -1,0 +1,46 @@
+.community-page {
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  padding: 24px 36px 40px;
+}
+
+.community-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  max-width: 920px;
+  margin: 0 auto 24px;
+}
+
+.community-overview {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) 320px;
+  gap: 28px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.community-side {
+  display: grid;
+  gap: 28px;
+  align-content: start;
+}
+
+.state-text {
+  text-align: center;
+  margin-top: 80px;
+  color: #777;
+  font-weight: 600;
+}
+
+.error {
+  color: #c0392b;
+}
+
+@media (max-width: 900px) {
+  .community-toolbar,
+  .community-overview {
+    grid-template-columns: 1fr;
+  }
+}
