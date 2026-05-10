@@ -1,0 +1,136 @@
+.ranking-container {
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Nunito', sans-serif;
+}
+
+.ranking-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.trophy-img {
+  width: 120px;
+  margin-bottom: 8px;
+}
+
+.ranking-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ranking-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2E7D32;
+  margin: 0;
+}
+
+.nav-arrow {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #2E7D32;
+  font-weight: bold;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background-color: #F5F5F5;
+}
+
+.ranking-item.top3 {
+  background-color: #E8F5E9;
+  border: 1px solid #A5D6A7;
+}
+
+.medal {
+  font-size: 1.4rem;
+  width: 32px;
+  text-align: center;
+}
+
+.position {
+  font-weight: 700;
+  color: #424242;
+  min-width: 32px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4CAF50;
+}
+
+.username {
+  flex: 1;
+  font-weight: 600;
+  color: #424242;
+}
+
+.score {
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+.current-user {
+  margin-top: 16px;
+  background-color: #fff9c4;
+  border: 2px solid #FFC107;
+}
+
+.tu-puesto-label {
+  color: #4CAF50;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.current-user-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.loading-msg {
+  text-align: center;
+  color: #9E9E9E;
+}
+
+.ranking-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ranking-subtitle {
+  font-size: 0.85rem;
+  color: #66BB6A;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.nav-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
