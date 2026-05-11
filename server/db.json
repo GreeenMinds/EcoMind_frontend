@@ -1564,7 +1564,7 @@
       "name": "Observatorio",
       "description": "Galaxy observatory themed avatar.",
       "price": 3000,
-      "type": "cosmetic",
+      "type": "avatar",
       "image_url": "/assets/images/cosmetics/observatorio.png"
     },
     {
@@ -1598,6 +1598,14 @@
       "price": 500,
       "type": "avatar",
       "image_url": "/assets/images/avatars/alex.png"
+    },
+    {
+      "id": 11,
+      "name": "Bun",
+      "description": "Bun fun.",
+      "price": 500,
+      "type": "bun",
+      "image_url": "/assets/images/cosmetics/bun.png"
     }
   ],
   "user_cosmetic": [

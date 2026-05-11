@@ -1,10 +1,39 @@
 @if (user; as currentUser) {
   <section class="profile-hero">
     <div class="profile-hero__identity">
-      <div
-        class="avatar avatar--hero"
-        [style.--avatar-hue]="getAvatarHue(currentUser.id)">
-        {{ getInitials(currentUser.name) }}
+      <!-- Avatar: muestra imagen equipada o iniciales -->
+      <div class="avatar-wrapper">
+        @if (equippedAvatarUrl()) {
+          <img
+            class="avatar avatar--hero avatar--img"
+            [src]="equippedAvatarUrl()"
+            [alt]="currentUser.name"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div
+            class="avatar avatar--hero avatar--fallback"
+            style="display:none"
+            [style.--avatar-hue]="getAvatarHue(currentUser.id)">
+            {{ getInitials(currentUser.name) }}
+          </div>
+        } @else {
+          <div
+            class="avatar avatar--hero"
+            [style.--avatar-hue]="getAvatarHue(currentUser.id)">
+            {{ getInitials(currentUser.name) }}
+          </div>
+        }
+
+        <!-- Overlay cosmetic (hat, badge, etc.) -->
+        @if (equippedOverlayUrl()) {
+          <img
+            class="avatar-overlay"
+            [class.avatar-overlay--hat]="
+             equippedOverlayType() === 'hat' ||
+             equippedOverlayType() === 'bun'"
+            [src]="equippedOverlayUrl()"
+            alt="Cosmetic"
+            onerror="this.style.display='none'">
+        }
       </div>
 
       <div class="profile-hero__copy">
