@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityEventSummary } from '../../../application/community.service';
 
 @Component({
   selector: 'app-community-event-card',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-event-card.html',
   styleUrl: './community-event-card.css',
 })

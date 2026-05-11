@@ -1,7 +1,7 @@
 @if (goal) {
   <section class="goal-card">
-    <h3>Community Goal: {{ goal.title }}</h3>
-    <p>{{ goal.title }}</p>
+    <h3>{{ 'community.title.goal' | translate: { goal: goal.title } }}</h3>
+    <p>{{ 'community.subtitle.goal' | translate }}</p>
 
     <div class="progress-track">
       <div class="progress-fill" [style.width.%]="progressPercent"></div>
@@ -15,8 +15,8 @@
     </div>
 
     <footer>
-      <strong>{{ goal.progress }} of {{ goal.target }} {{ goal.unit }}</strong>
-      <span>{{ goal.participants }} participants</span>
+      <strong>{{ 'community.goalProgress' | translate: { progress: goal.progress, target: goal.target, unit: goal.unit } }}</strong>
+      <span>{{ 'community.participants' | translate: { count: goal.participants } }}</span>
     </footer>
   </section>
 }

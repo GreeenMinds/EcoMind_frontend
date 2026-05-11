@@ -1,39 +1,40 @@
 <div class="modal-backdrop">
   <form class="modal-card" (ngSubmit)="submit()">
     <header>
-      <h2>New Event</h2>
+      <h2>{{ 'community.eventForm.title' | translate }}</h2>
       <button type="button" class="attach">⌕</button>
     </header>
 
     <label>
-      Name
+      {{ 'community.eventForm.name' | translate }}
       <input name="name" [(ngModel)]="name">
     </label>
 
     <div class="two-columns">
       <label>
-        Date
+        {{ 'community.eventForm.date' | translate }}
         <input type="date" name="date" [(ngModel)]="date">
       </label>
 
       <label>
-        Time
+        {{ 'community.eventForm.time' | translate }}
         <input type="time" name="startTime" [(ngModel)]="startTime">
       </label>
     </div>
 
     <label>
-      Meeting point
+      {{ 'community.eventForm.meetingPoint' | translate }}
       <input name="location" [(ngModel)]="location">
     </label>
 
     <label>
-      Description
+      {{ 'community.eventForm.description' | translate }}
       <textarea name="description" [(ngModel)]="description"></textarea>
     </label>
 
     <label>
-      Image URL <span class="optional">(optional)</span>
+      {{ 'community.eventForm.imageUrl' | translate }}
+      <span class="optional">{{ 'community.eventForm.optional' | translate }}</span>
       <input
         type="url"
         name="imageUrl"
@@ -43,7 +44,7 @@
 
     <div class="two-columns">
       <label>
-        Latitud
+        {{ 'community.eventForm.latitude' | translate }}
         <input
           type="number"
           name="latitude"
@@ -53,7 +54,7 @@
       </label>
 
       <label>
-        Longitud
+        {{ 'community.eventForm.longitude' | translate }}
         <input
           type="number"
           name="longitude"
@@ -63,9 +64,11 @@
       </label>
     </div>
 
-    <div #locationMap class="location-map" aria-label="Event location map"></div>
+    <div #locationMap class="location-map" [attr.aria-label]="'community.eventForm.locationMap' | translate"></div>
 
-    <button type="submit" class="primary">Create event</button>
-    <button type="button" class="secondary" (click)="close.emit()">Cancel</button>
+    <button type="submit" class="primary">{{ 'community.eventForm.create' | translate }}</button>
+    <button type="button" class="secondary" (click)="close.emit()">
+      {{ 'community.eventForm.cancel' | translate }}
+    </button>
   </form>
 </div>

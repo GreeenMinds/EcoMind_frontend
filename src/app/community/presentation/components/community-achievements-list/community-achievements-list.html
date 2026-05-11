@@ -1,17 +1,26 @@
 <section class="achievements">
-  <h2>Community Achievements</h2>
+  <header class="section-heading">
+    <h2>{{ 'community.title.achievements' | translate }}</h2>
+    <p>{{ 'community.subtitle.achievements' | translate }}</p>
+  </header>
 
   <div class="filters">
-    <button [class.active]="period === 'all'" (click)="periodChange.emit('all')">All</button>
-    <button [class.active]="period === 'week'" (click)="periodChange.emit('week')">This week</button>
-    <button [class.active]="period === 'month'" (click)="periodChange.emit('month')">This month</button>
+    <button [class.active]="period === 'all'" (click)="periodChange.emit('all')">
+      {{ 'community.filters.all' | translate }}
+    </button>
+    <button [class.active]="period === 'week'" (click)="periodChange.emit('week')">
+      {{ 'community.filters.week' | translate }}
+    </button>
+    <button [class.active]="period === 'month'" (click)="periodChange.emit('month')">
+      {{ 'community.filters.month' | translate }}
+    </button>
   </div>
 
   <div class="list">
     @for (summary of achievements; track summary.achievement.id + '-' + summary.date) {
       <app-community-achievement-card [summary]="summary"></app-community-achievement-card>
     } @empty {
-      <p>No achievements to show.</p>
+      <p>{{ 'community.emptyAchievements' | translate }}</p>
     }
   </div>
 </section>

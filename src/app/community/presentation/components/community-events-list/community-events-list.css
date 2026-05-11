@@ -6,6 +6,22 @@
   margin: 0 auto;
 }
 
+.section-heading {
+  margin: 0 0 18px 18px;
+}
+
+.section-heading h2 {
+  margin: 0 0 6px;
+  color: #68a94f;
+  font-size: 22px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #888;
+  font-size: 12px;
+}
+
 .create-button {
   height: 32px;
   padding: 0 24px;

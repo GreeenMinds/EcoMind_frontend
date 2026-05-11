@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-community-search-bar',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-search-bar.html',
   styleUrl: './community-search-bar.css',
 })

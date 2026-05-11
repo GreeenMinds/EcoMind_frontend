@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityService, CommunityEventSummary } from '../../../application/community.service';
 import { CommunitySearchBar } from '../community-search-bar/community-search-bar';
 import { CommunityTabs } from '../community-tabs/community-tabs';
@@ -25,6 +26,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
     CommunityEventsList,
     CommunityEventFormModal,
     CommunityEventRegistrationModal,
+    TranslatePipe,
   ],
   templateUrl: './community-content.html',
   styleUrl: './community-content.css',

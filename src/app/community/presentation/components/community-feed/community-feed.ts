@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityPostSummary } from '../../../application/community.service';
 import { CommunityPostCard } from '../community-post-card/community-post-card';
 
 @Component({
   selector: 'app-community-feed',
-  imports: [CommunityPostCard],
+  imports: [CommunityPostCard, TranslatePipe],
   templateUrl: './community-feed.html',
   styleUrl: './community-feed.css',
 })

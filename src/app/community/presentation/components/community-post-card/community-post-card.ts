@@ -1,14 +1,17 @@
 import { Component, Input } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommunityPostSummary } from '../../../application/community.service';
 
 @Component({
   selector: 'app-community-post-card',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-post-card.html',
   styleUrl: './community-post-card.css',
 })
 export class CommunityPostCard {
   @Input() summary!: CommunityPostSummary;
+
+  constructor(private readonly translate: TranslateService) {}
 
   get initials(): string {
     return (this.summary.author?.name ?? 'EM')
@@ -20,6 +23,6 @@ export class CommunityPostCard {
   }
 
   get authorName(): string {
-    return this.summary.author?.name ?? 'EcoMind user';
+    return this.summary.author?.name ?? this.translate.instant('community.post.defaultAuthor');
   }
 }

@@ -127,5 +127,74 @@
     },
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
+  },
+  "community": {
+    "title": {
+      "feed": "Community Feed",
+      "achievements": "Community Achievements",
+      "events": "Community Events",
+      "goal": "Community Goal: {{ goal }}",
+      "nearbyEvents": "Nearby Events"
+    },
+    "subtitle": {
+      "feed": "Share progress and celebrate sustainable actions with your community.",
+      "achievements": "Review the milestones your community has reached.",
+      "events": "Find nearby activities and join with your family or community.",
+      "goal": "Track the progress of the current shared goal.",
+      "nearbyEvents": "Activities available near your community."
+    },
+    "tabs": {
+      "all": "All",
+      "achievements": "Achievements",
+      "events": "Events"
+    },
+    "filters": {
+      "all": "All",
+      "week": "This week",
+      "month": "This month"
+    },
+    "actions": {
+      "createEvent": "+ Create event"
+    },
+    "post": {
+      "justNow": "Just now",
+      "defaultAuthor": "EcoMind user"
+    },
+    "eventCard": {
+      "joinNow": "Join now",
+      "alreadyJoined": "Already joined"
+    },
+    "eventForm": {
+      "title": "New Event",
+      "name": "Name",
+      "date": "Date",
+      "time": "Time",
+      "meetingPoint": "Meeting point",
+      "description": "Description",
+      "imageUrl": "Image URL",
+      "optional": "(optional)",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "locationMap": "Event location map",
+      "eventLocation": "Event location",
+      "create": "Create event",
+      "cancel": "Cancel"
+    },
+    "registration": {
+      "title": "How would you like to register for this event?",
+      "event": "Event:",
+      "dateAndTime": "Date and time:",
+      "location": "Location:",
+      "individual": "Individual",
+      "family": "Family"
+    },
+    "loading": "Loading community...",
+    "searchPlaceholder": "Search the community",
+    "emptyPosts": "No posts to show.",
+    "emptyAchievements": "No achievements to show.",
+    "emptyMappedEvents": "No mapped events available.",
+    "mapAriaLabel": "Map of nearby community events",
+    "goalProgress": "{{ progress }} of {{ target }} {{ unit }}",
+    "participants": "{{ count }} participants"
   }
 }

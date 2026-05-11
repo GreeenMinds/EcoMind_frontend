@@ -127,5 +127,74 @@
     },
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
+  },
+  "community": {
+    "title": {
+      "feed": "Muro de la comunidad",
+      "achievements": "Logros de la comunidad",
+      "events": "Eventos de la comunidad",
+      "goal": "Meta comunitaria: {{ goal }}",
+      "nearbyEvents": "Eventos cercanos"
+    },
+    "subtitle": {
+      "feed": "Comparte avances y celebra acciones sostenibles con tu comunidad.",
+      "achievements": "Revisa los hitos que tu comunidad ha alcanzado.",
+      "events": "Encuentra actividades cercanas y participa con tu familia o comunidad.",
+      "goal": "Sigue el progreso del objetivo compartido actual.",
+      "nearbyEvents": "Actividades disponibles cerca de tu comunidad."
+    },
+    "tabs": {
+      "all": "Todo",
+      "achievements": "Logros",
+      "events": "Eventos"
+    },
+    "filters": {
+      "all": "Todos",
+      "week": "Esta semana",
+      "month": "Este mes"
+    },
+    "actions": {
+      "createEvent": "+ Crear evento"
+    },
+    "post": {
+      "justNow": "Ahora mismo",
+      "defaultAuthor": "Usuario EcoMind"
+    },
+    "eventCard": {
+      "joinNow": "Unirse ahora",
+      "alreadyJoined": "Ya te uniste"
+    },
+    "eventForm": {
+      "title": "Nuevo evento",
+      "name": "Nombre",
+      "date": "Fecha",
+      "time": "Hora",
+      "meetingPoint": "Punto de encuentro",
+      "description": "Descripción",
+      "imageUrl": "URL de imagen",
+      "optional": "(opcional)",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "locationMap": "Mapa de ubicación del evento",
+      "eventLocation": "Ubicación del evento",
+      "create": "Crear evento",
+      "cancel": "Cancelar"
+    },
+    "registration": {
+      "title": "¿Cómo quieres registrarte a este evento?",
+      "event": "Evento:",
+      "dateAndTime": "Fecha y hora:",
+      "location": "Ubicación:",
+      "individual": "Individual",
+      "family": "Familia"
+    },
+    "loading": "Cargando comunidad...",
+    "searchPlaceholder": "Buscar en la comunidad",
+    "emptyPosts": "No hay publicaciones para mostrar.",
+    "emptyAchievements": "No hay logros para mostrar.",
+    "emptyMappedEvents": "No hay eventos ubicados disponibles.",
+    "mapAriaLabel": "Mapa de eventos cercanos de la comunidad",
+    "goalProgress": "{{ progress }} de {{ target }} {{ unit }}",
+    "participants": "{{ count }} participantes"
   }
 }

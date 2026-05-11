@@ -1,6 +1,13 @@
 <section class="events-layout">
   <div>
-    <button class="create-button" (click)="createEvent.emit()">+ Create event</button>
+    <header class="section-heading">
+      <h2>{{ 'community.title.events' | translate }}</h2>
+      <p>{{ 'community.subtitle.events' | translate }}</p>
+    </header>
+
+    <button class="create-button" (click)="createEvent.emit()">
+      {{ 'community.actions.createEvent' | translate }}
+    </button>
 
     <div class="events-list">
       @for (summary of events; track summary.event.id) {

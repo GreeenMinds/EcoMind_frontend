@@ -1,17 +1,21 @@
 <div class="modal-backdrop">
   <section class="modal-card">
-    <h2>How would you like to register for this event?</h2>
+    <h2>{{ 'community.registration.title' | translate }}</h2>
 
     @if (summary) {
       <div class="details">
-        <p><strong>Event:</strong> {{ summary.event.name }}</p>
-        <p><strong>Date and time:</strong> {{ summary.event.date }} - {{ summary.event.start_time.slice(11, 16) }}</p>
-        <p><strong>Location:</strong> {{ summary.event.location }}</p>
+        <p><strong>{{ 'community.registration.event' | translate }}</strong> {{ summary.event.name }}</p>
+        <p><strong>{{ 'community.registration.dateAndTime' | translate }}</strong> {{ summary.event.date }} - {{ summary.event.start_time.slice(11, 16) }}</p>
+        <p><strong>{{ 'community.registration.location' | translate }}</strong> {{ summary.event.location }}</p>
       </div>
     }
 
-    <button class="individual" (click)="joinIndividual.emit()">Individual</button>
-    <button class="family" (click)="joinFamily.emit()">Family</button>
+    <button class="individual" (click)="joinIndividual.emit()">
+      {{ 'community.registration.individual' | translate }}
+    </button>
+    <button class="family" (click)="joinFamily.emit()">
+      {{ 'community.registration.family' | translate }}
+    </button>
     <button class="close" (click)="close.emit()">×</button>
   </section>
 </div>

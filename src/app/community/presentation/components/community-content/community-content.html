@@ -12,7 +12,7 @@
   </div>
 
   @if (communityService.loading()) {
-    <p class="state-text">Loading community...</p>
+    <p class="state-text">{{ 'community.loading' | translate }}</p>
   } @else if (communityService.error()) {
     <p class="state-text error">{{ communityService.error() }}</p>
   } @else {
