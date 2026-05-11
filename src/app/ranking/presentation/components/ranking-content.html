@@ -1,70 +1,65 @@
 <div class="ranking-container">
 
-  <!-- Header con trofeo e imagen tal como en la captura -->
   <div class="ranking-header">
-  <div class="ranking-title-row">
-    <button class="nav-arrow" (click)="prev()" [disabled]="activeRankingId === 1">&lt;</button>
-    <div class="ranking-title-block">
-      <h2 class="ranking-title">Ranking {{ getActiveRankingName() }}</h2>
-      <span class="ranking-subtitle">{{ getActiveRankingSubtitle() }}</span>
+    <div class="ranking-title-row">
+      <button class="nav-arrow" (click)="prev()" [disabled]="activeRankingId === 1">&lt;</button>
+      <div class="ranking-title-block">
+        <h2 class="ranking-title">{{ TITLE_KEYS[activeRankingId] | translate }}</h2>
+        <span class="ranking-subtitle">{{ SUBTITLE_KEYS[activeRankingId] | translate }}</span>
+      </div>
+      <button class="nav-arrow" (click)="next()" [disabled]="activeRankingId === 3">&gt;</button>
     </div>
-    <button class="nav-arrow" (click)="next()" [disabled]="activeRankingId === 3">&gt;</button>
   </div>
-</div>
 
-  <!-- Lista del ranking -->
   <div class="ranking-list" *ngIf="ranking().length > 0; else loading">
 
-    <!-- Top 3 con medallas -->
     <div
       *ngFor="let entry of getTop3(ranking())"
       class="ranking-item top3"
       [class.highlight]="entry.position <= 3">
       <span class="medal">{{ getMedalIcon(entry.position) }}</span>
       <img
-        [src]="entry.avatarUrl || 'assets/images/default-avatar.png'"
+        [src]="entry.avatarUrl || 'assets/images/cosmetics/eco-hat.png'"
         [alt]="entry.username"
         class="avatar"
       />
       <span class="username">{{ entry.username }}</span>
-      <span class="score">{{ entry.score }}</span>
+      <span class="score">{{ entry.score }} pts</span>
     </div>
 
-    <!-- Posiciones 4 en adelante -->
     <div
       *ngFor="let entry of getRestEntries(ranking())"
       class="ranking-item">
       <span class="position">{{ entry.position }}.</span>
       <img
-        [src]="entry.avatarUrl || 'assets/images/default-avatar.png'"
+        [src]="entry.avatarUrl || 'assets/images/cosmetics/eco-hat.png'"
         [alt]="entry.username"
         class="avatar"
       />
       <span class="username">{{ entry.username }}</span>
-      <span class="score">{{ entry.score }}</span>
+      <span class="score">{{ entry.score }} pts</span>
     </div>
 
-    <!-- Posición del usuario actual (separada) -->
     <div
       *ngIf="getCurrentUser(ranking()) as currentUser"
       class="ranking-item current-user">
-      <span class="tu-puesto-label">Tu puesto</span>
+      <span class="your-position-label">{{ 'ranking.yourPosition' | translate }}</span>
       <div class="current-user-row">
         <span class="position">{{ currentUser.position }}.</span>
         <img
-          [src]="currentUser.avatarUrl || 'assets/images/default-avatar.png'"
+          [src]="currentUser.avatarUrl || 'assets/images/cosmetics/eco-hat.png'"
           [alt]="currentUser.username"
           class="avatar"
         />
         <span class="username">{{ currentUser.username }}</span>
-        <span class="score">{{ currentUser.score }}</span>
+        <span class="score">{{ currentUser.score }} pts</span>
       </div>
     </div>
 
   </div>
 
   <ng-template #loading>
-    <p class="loading-msg">Cargando ranking...</p>
+    <p class="loading-msg">{{ 'ranking.loading' | translate }}</p>
   </ng-template>
 
 </div>

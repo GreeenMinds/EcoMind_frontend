@@ -2,40 +2,36 @@ import { Component, OnInit, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { RankingService } from '../../application/ranking';
 import { RankingEntry }   from '../../domain/model/ranking-entry.entity';
 
-/**
- * @summary Presentation component that displays the global ranking leaderboard.
- * @author Victor Jhosuef Laura Acosta
- */
 @Component({
   selector: 'app-ranking-content',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, TranslateModule],
   templateUrl: './ranking-content.html',
   styleUrl: './ranking-content.css'
 })
 export class RankingContent implements OnInit {
-  private rankingService: RankingService = inject(RankingService);
+  private rankingService = inject(RankingService);
 
   readonly ranking: Signal<RankingEntry[]> = this.rankingService.ranking;
   readonly rankingTypes: Signal<any[]>     = this.rankingService.rankings;
 
-  readonly RANKING_NAMES: Record<number, string> = {
-    1: 'Global',
-    2: 'Mensual',
-    3: 'Semanal'
-  };
-
-  readonly RANKING_SUBTITLES: Record<number, string> = {
-    1: 'Todos los tiempos',
-    3: '1 – 7 mayo 2026',
-    2: 'Mayo 2026'
-  };
-
   activeRankingId = 1;
 
+  readonly TITLE_KEYS: Record<number, string> = {
+    1: 'ranking.title.global',
+    2: 'ranking.title.monthly',
+    3: 'ranking.title.weekly'
+  };
+
+  readonly SUBTITLE_KEYS: Record<number, string> = {
+    1: 'ranking.subtitle.global',
+    2: 'ranking.subtitle.monthly',
+    3: 'ranking.subtitle.weekly'
+  };
 
   ngOnInit(): void {
     this.rankingService.loadRankingTypes();
@@ -56,13 +52,6 @@ export class RankingContent implements OnInit {
     }
   }
 
- getActiveRankingName(): string {
-  return this.RANKING_NAMES[this.activeRankingId] ?? 'Ranking';
-}
-
-getActiveRankingSubtitle(): string {
-  return this.RANKING_SUBTITLES[this.activeRankingId] ?? '';
-}
   getMedalIcon(position: number): string {
     if (position === 1) return '🥇';
     if (position === 2) return '🥈';
@@ -70,15 +59,7 @@ getActiveRankingSubtitle(): string {
     return '';
   }
 
-  getTop3(entries: RankingEntry[]): RankingEntry[] {
-    return entries.filter(e => e.position <= 3);
-  }
-
-  getRestEntries(entries: RankingEntry[]): RankingEntry[] {
-    return entries.filter(e => e.position > 3 && !e.isCurrentUser);
-  }
-
-  getCurrentUser(entries: RankingEntry[]): RankingEntry | undefined {
-    return entries.find(e => e.isCurrentUser);
-  }
+  getTop3(entries: RankingEntry[])        { return entries.filter(e => e.position <= 3); }
+  getRestEntries(entries: RankingEntry[]) { return entries.filter(e => e.position > 3 && !e.isCurrentUser); }
+  getCurrentUser(entries: RankingEntry[]) { return entries.find(e => e.isCurrentUser); }
 }
