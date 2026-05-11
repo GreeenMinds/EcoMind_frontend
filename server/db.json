@@ -17,7 +17,7 @@
       "streak": 7,
       "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 400,
+      "gem_balance": 0,
       "ecopoints": 420
     },
     {
@@ -573,45 +573,117 @@
     }
   ],
   "ranking": [
-  {
-    "id": 1,
-    "name": "Global ranking",
-    "type": "global",
-    "start_date": "2026-05-01T00:00:00",
-    "end_date": null,
-    "status": true
-  },
-  {
-    "id": 2,
-    "name": "Weekly ranking",
-    "type": "weekly",
-    "start_date": "2026-05-01T00:00:00",
-    "end_date": "2026-05-07T23:59:59",
-    "status": true
-  },
-  {
-    "id": 3,
-    "name": "Monthly ranking",
-    "type": "monthly",
-    "start_date": "2026-05-01T00:00:00",
-    "end_date": "2026-05-31T23:59:59",
-    "status": true
-  }
-],
+    {
+      "id": 1,
+      "name": "Global ranking",
+      "type": "global",
+      "start_date": "2026-05-01T00:00:00",
+      "end_date": null,
+      "status": true
+    },
+    {
+      "id": 2,
+      "name": "Weekly ranking",
+      "type": "weekly",
+      "start_date": "2026-05-01T00:00:00",
+      "end_date": "2026-05-07T23:59:59",
+      "status": true
+    },
+    {
+      "id": 3,
+      "name": "Monthly ranking",
+      "type": "monthly",
+      "start_date": "2026-05-01T00:00:00",
+      "end_date": "2026-05-31T23:59:59",
+      "status": true
+    }
+  ],
   "user_ranking": [
-  { "id": 1,  "user_id": 3, "ranking_id": 1, "rank": 1, "score": 740 },
-  { "id": 2,  "user_id": 1, "ranking_id": 1, "rank": 2, "score": 630 },
-  { "id": 3,  "user_id": 4, "ranking_id": 1, "rank": 3, "score": 390 },
-  { "id": 4,  "user_id": 2, "ranking_id": 1, "rank": 4, "score": 210 },
-  { "id": 5,  "user_id": 1, "ranking_id": 2, "rank": 1, "score": 420 },
-  { "id": 6,  "user_id": 3, "ranking_id": 2, "rank": 2, "score": 280 },
-  { "id": 7,  "user_id": 2, "ranking_id": 2, "rank": 3, "score": 160 },
-  { "id": 8,  "user_id": 4, "ranking_id": 2, "rank": 4, "score": 95  },
-  { "id": 9,  "user_id": 1, "ranking_id": 3, "rank": 1, "score": 120 },
-  { "id": 10, "user_id": 3, "ranking_id": 3, "rank": 2, "score": 90  },
-  { "id": 11, "user_id": 2, "ranking_id": 3, "rank": 3, "score": 65  },
-  { "id": 12, "user_id": 4, "ranking_id": 3, "rank": 4, "score": 30  }
-],
+    {
+      "id": 1,
+      "user_id": 3,
+      "ranking_id": 1,
+      "rank": 1,
+      "score": 740
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "ranking_id": 1,
+      "rank": 2,
+      "score": 630
+    },
+    {
+      "id": 3,
+      "user_id": 4,
+      "ranking_id": 1,
+      "rank": 3,
+      "score": 390
+    },
+    {
+      "id": 4,
+      "user_id": 2,
+      "ranking_id": 1,
+      "rank": 4,
+      "score": 210
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "ranking_id": 2,
+      "rank": 1,
+      "score": 420
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "ranking_id": 2,
+      "rank": 2,
+      "score": 280
+    },
+    {
+      "id": 7,
+      "user_id": 2,
+      "ranking_id": 2,
+      "rank": 3,
+      "score": 160
+    },
+    {
+      "id": 8,
+      "user_id": 4,
+      "ranking_id": 2,
+      "rank": 4,
+      "score": 95
+    },
+    {
+      "id": 9,
+      "user_id": 1,
+      "ranking_id": 3,
+      "rank": 1,
+      "score": 120
+    },
+    {
+      "id": 10,
+      "user_id": 3,
+      "ranking_id": 3,
+      "rank": 2,
+      "score": 90
+    },
+    {
+      "id": 11,
+      "user_id": 2,
+      "ranking_id": 3,
+      "rank": 3,
+      "score": 65
+    },
+    {
+      "id": 12,
+      "user_id": 4,
+      "ranking_id": 3,
+      "rank": 4,
+      "score": 30
+    }
+  ],
   "minigame": [
     {
       "id": 1,
@@ -1555,7 +1627,7 @@
       "user_id": 3,
       "cosmetic_id": 2,
       "acquired_at": "2026-05-04",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 5,
@@ -1563,6 +1635,20 @@
       "cosmetic_id": 8,
       "acquired_at": "2026-05-05",
       "equipped": true
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "cosmetic_id": 5,
+      "acquired_at": "2026-05-11",
+      "equipped": true
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "cosmetic_id": 2,
+      "acquired_at": "2026-05-11",
+      "equipped": false
     }
   ],
   "multiplier": [
@@ -1668,6 +1754,14 @@
       "amount_paid": 4.99,
       "payment_status": "approved",
       "payment_reference": "PAY-004"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "purchase_date": "2026-05-11",
+      "amount_paid": 65.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-1778463717219"
     }
   ],
   "gem_movement": [
@@ -1742,6 +1836,29 @@
       "amount": -200,
       "origin": "cosmetic",
       "origin_id": 8
+    },
+    {
+      "user_id": 1,
+      "type": "purchase",
+      "amount": 5000,
+      "origin": "gem_package",
+      "id": 10
+    },
+    {
+      "user_id": 1,
+      "type": "spend",
+      "amount": -5000,
+      "origin": "cosmetic",
+      "origin_id": 5,
+      "id": 11
+    },
+    {
+      "user_id": 1,
+      "type": "spend",
+      "amount": -400,
+      "origin": "cosmetic",
+      "origin_id": 2,
+      "id": 12
     }
   ],
   "collaborative_quest_session": [
