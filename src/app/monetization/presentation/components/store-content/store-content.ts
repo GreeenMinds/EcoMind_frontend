@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { MonetizationStoreService } from '../../../application/monetization-store.service';
 import { CosmeticsTabComponent }   from '../cosmetics-tab/cosmetics-tab';
@@ -13,6 +14,7 @@ type StoreTab = 'cosmetics' | 'multipliers' | 'gems';
   standalone: true,
   imports: [
     CommonModule,
+    TranslatePipe,
     CosmeticsTabComponent,
     MultipliersTabComponent,
     GemsTabComponent,
