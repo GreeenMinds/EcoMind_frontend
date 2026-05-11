@@ -196,5 +196,46 @@
     "mapAriaLabel": "Map of nearby community events",
     "goalProgress": "{{ progress }} of {{ target }} {{ unit }}",
     "participants": "{{ count }} participants"
+  },
+  "store": {
+    "title": "Ecomind Store",
+    "subtitle": "Customize your eco-experience",
+    "tabs": {
+      "cosmetics": "Avatars & Cosmetics",
+      "multipliers": "XP Multiplier",
+      "gems": "Gems"
+    },
+    "cosmetics": {
+      "storeTab": "Store",
+      "inventoryTab": "My Inventory",
+      "storeTitle": "Avatars and Cosmetics",
+      "inventoryTitle": "My Inventory",
+      "equipped": "⚡ Equipped",
+      "inInventory": "✓ In Inventory",
+      "buy": "Buy",
+      "equip": "Equip",
+      "unequip": "Unequip",
+      "emptyStore": "No cosmetics available.",
+      "emptyInventory": "Your inventory is empty.",
+      "emptyInventorySub": "Buy cosmetics in the Store!",
+      "goToStore": "Go to Store"
+    },
+    "multipliers": {
+      "title": "XP Multiplier",
+      "label": "Multiplier ×{{ factor }}",
+      "description": "Receive {{ factor }}× more ecoPoints for {{ minutes }} minutes",
+      "active": "✓ Active",
+      "buy": "Buy",
+      "empty": "No multipliers available."
+    },
+    "gems": {
+      "title": "Gems",
+      "buy": "Buy",
+      "empty": "No bundles currently available.",
+      "megaBundle": "Mega Bundle!",
+      "megaBundleGems": "10,000 Gems",
+      "megaBundleAvatars": "3 Exclusive Avatars",
+      "megaBundleMultiplier": "3x Multiplier for one week"
+    }
   }
 }

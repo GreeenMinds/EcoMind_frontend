@@ -196,5 +196,46 @@
     "mapAriaLabel": "Mapa de eventos cercanos de la comunidad",
     "goalProgress": "{{ progress }} de {{ target }} {{ unit }}",
     "participants": "{{ count }} participantes"
+  },
+  "store": {
+    "title": "Tienda EcoMind",
+    "subtitle": "Personaliza tu experiencia eco",
+    "tabs": {
+      "cosmetics": "Avatares y Cosméticos",
+      "multipliers": "Multiplicador XP",
+      "gems": "Gemas"
+    },
+    "cosmetics": {
+      "storeTab": "Tienda",
+      "inventoryTab": "Mi Inventario",
+      "storeTitle": "Avatares y Cosméticos",
+      "inventoryTitle": "Mi Inventario",
+      "equipped": "⚡ Equipado",
+      "inInventory": "✓ En Inventario",
+      "buy": "Comprar",
+      "equip": "Equipar",
+      "unequip": "Desequipar",
+      "emptyStore": "No hay cosméticos disponibles.",
+      "emptyInventory": "Tu inventario está vacío.",
+      "emptyInventorySub": "¡Compra cosméticos en la Tienda!",
+      "goToStore": "Ir a la Tienda"
+    },
+    "multipliers": {
+      "title": "Multiplicador XP",
+      "label": "Multiplicador ×{{ factor }}",
+      "description": "Recibe {{ factor }}× más ecoPoints durante {{ minutes }} minutos",
+      "active": "✓ Activo",
+      "buy": "Comprar",
+      "empty": "No hay multiplicadores disponibles."
+    },
+    "gems": {
+      "title": "Gemas",
+      "buy": "Comprar",
+      "empty": "No hay paquetes disponibles.",
+      "megaBundle": "¡Mega Paquete!",
+      "megaBundleGems": "10,000 Gemas",
+      "megaBundleAvatars": "3 Avatares Exclusivos",
+      "megaBundleMultiplier": "Multiplicador 3x por una semana"
+    }
   }
 }
