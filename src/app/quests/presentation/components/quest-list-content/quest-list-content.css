@@ -1,0 +1,5 @@
+.quest-list {
+  position: relative;
+  display: grid;
+  gap: 20px;
+}

@@ -1,0 +1,81 @@
+<section class="progress-card" [attr.aria-label]="'quests.progress' | translate">
+  <h2>{{ 'quests.progress' | translate }}</h2>
+
+  @if (progressItems().length > 0) {
+    <div class="progress-list">
+      @for (item of progressItems(); track item.questId) {
+        <div class="progress-item">
+          <div class="progress-item__head">
+            <a [routerLink]="item.route">{{ item.label }}</a>
+            <button
+              type="button"
+              class="abandon-quest"
+              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+              (click)="requestAbandon(item, $event)"
+            >
+              X
+            </button>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-value" [style.width.%]="item.progress"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="empty-progress">{{ 'quests.activeEmpty' | translate }}</p>
+  }
+
+  @if (hasMoreProgressItems()) {
+    <button type="button" class="progress-more" (click)="openModal()">{{ 'quests.seeMore' | translate }}</button>
+  }
+</section>
+
+@if (modalOpen()) {
+  <div class="progress-modal-backdrop" role="presentation" (click)="closeModal()"></div>
+
+  <section class="progress-modal" role="dialog" aria-modal="true" [attr.aria-label]="'quests.allActive' | translate">
+    <h3>{{ 'quests.activeQuests' | translate }}</h3>
+
+    <div class="modal-progress-list">
+      @for (item of allProgressItems(); track item.questId) {
+        <div class="modal-progress-item">
+          <div class="progress-item__head">
+            <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
+            <button
+              type="button"
+              class="abandon-quest"
+              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+              (click)="requestAbandon(item, $event)"
+            >
+              X
+            </button>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-value" [style.width.%]="item.progress"></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button type="button" class="modal-close" (click)="closeModal()">{{ 'common.back' | translate }}</button>
+  </section>
+}
+
+@if (abandonConfirmation(); as item) {
+  <div class="confirm-backdrop" role="presentation" (click)="closeAbandonConfirmation()"></div>
+
+  <section class="confirm-modal" role="dialog" aria-modal="true" [attr.aria-label]="'quests.confirmAbandonTitle' | translate">
+    <h3>{{ 'quests.confirmAbandonTitle' | translate }}</h3>
+    <p>{{ 'quests.confirmAbandonMessage' | translate: { quest: item.label } }}</p>
+
+    <div class="confirm-actions">
+      <button type="button" class="confirm-secondary" (click)="closeAbandonConfirmation()">
+        {{ 'quests.confirmAbandonNo' | translate }}
+      </button>
+      <button type="button" class="confirm-danger" (click)="confirmAbandon()">
+        {{ 'quests.confirmAbandonYes' | translate }}
+      </button>
+    </div>
+  </section>
+}

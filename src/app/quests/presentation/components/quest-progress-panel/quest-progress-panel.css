@@ -1,0 +1,315 @@
+:host {
+  display: block;
+  width: min(100%, 360px);
+  justify-self: center;
+}
+
+.progress-card {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  padding: 52px 36px 34px;
+  border-radius: 34px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.progress-card h2 {
+  position: absolute;
+  top: -19px;
+  left: 12px;
+  min-width: 150px;
+  margin: 0;
+  padding: 7px 28px 8px;
+  border-radius: 999px;
+  background: #5ca64e;
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.26),
+    0 3px 0 #427d3a,
+    0 4px 8px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.progress-list {
+  display: grid;
+  gap: 20px;
+}
+
+.progress-item {
+  display: grid;
+  gap: 5px;
+}
+
+.progress-item__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-item a,
+.modal-progress-item a {
+  color: #5f5f5f;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.progress-item a {
+  font-size: 13px;
+}
+
+.progress-item a:hover,
+.modal-progress-item a:hover {
+  color: #4b9b3f;
+  text-decoration: underline;
+}
+
+.abandon-quest {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f3f3f3;
+  color: #9b2f2f;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  opacity: 0;
+  transition: opacity 160ms ease, background 160ms ease;
+}
+
+.progress-item:hover .abandon-quest,
+.progress-item:focus-within .abandon-quest,
+.modal-progress-item:hover .abandon-quest,
+.modal-progress-item:focus-within .abandon-quest {
+  opacity: 1;
+}
+
+.abandon-quest:hover,
+.abandon-quest:focus-visible {
+  background: #ffe0dc;
+  color: #c43324;
+}
+
+.progress-track {
+  height: 15px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7e7e7;
+}
+
+.progress-value {
+  height: 100%;
+  min-width: 8px;
+  border-radius: inherit;
+  background: #6baa54;
+  transition: width 260ms ease;
+}
+
+.empty-progress {
+  margin: 8px 0 2px;
+  color: #818181;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.progress-more {
+  justify-self: start;
+  min-width: 90px;
+  min-height: 28px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 8px;
+  background: #d9f4cf;
+  color: #5ca64e;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.progress-modal-backdrop,
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+}
+
+.progress-modal-backdrop {
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.36);
+}
+
+.progress-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 60;
+  display: grid;
+  gap: 22px;
+  width: min(420px, calc(100vw - 48px));
+  max-height: min(620px, calc(100vh - 96px));
+  overflow: auto;
+  padding: 34px 42px 34px;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+  transform: translate(-50%, -50%);
+}
+
+.progress-modal h3,
+.confirm-modal h3 {
+  margin: 0;
+  color: #202020;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.progress-modal h3 {
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.modal-progress-list {
+  display: grid;
+  gap: 18px;
+}
+
+.modal-progress-item {
+  display: grid;
+  gap: 6px;
+}
+
+.modal-progress-item a {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.modal-close,
+.confirm-actions button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.modal-close {
+  justify-self: center;
+  width: min(220px, 100%);
+  min-height: 42px;
+  border-radius: 12px;
+  background: #5ca64e;
+  color: #ffffff;
+}
+
+.confirm-backdrop {
+  z-index: 70;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 80;
+  display: grid;
+  gap: 18px;
+  width: min(380px, calc(100vw - 48px));
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+.confirm-modal h3 {
+  font-size: 1.15rem;
+}
+
+.confirm-modal p {
+  margin: 0;
+  color: #646464;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-actions button {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+}
+
+.confirm-secondary {
+  background: #edf3ea;
+  color: #4f7f43;
+}
+
+.confirm-danger {
+  background: #d84b3f;
+  color: #ffffff;
+}
+
+@media (max-width: 1180px) {
+  :host {
+    width: min(100%, 320px);
+  }
+
+  .progress-card {
+    padding: 46px 30px 32px;
+  }
+
+  .progress-card h2 {
+    min-width: 132px;
+    font-size: 15px;
+  }
+
+  .progress-list {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 680px) {
+  :host {
+    width: min(100%, 360px);
+  }
+
+  .progress-card {
+    min-height: 0;
+    padding: 44px 24px 28px;
+    border-radius: 28px;
+  }
+
+  .progress-card h2 {
+    left: 10px;
+    min-width: 120px;
+    padding: 6px 20px 7px;
+    font-size: 14px;
+  }
+
+  .progress-item a {
+    font-size: 12px;
+  }
+
+  .progress-modal {
+    padding: 32px 24px 28px;
+  }
+
+  .confirm-actions {
+    display: grid;
+  }
+}

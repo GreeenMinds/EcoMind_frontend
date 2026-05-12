@@ -1,0 +1,244 @@
+{
+  "sidebar": {
+    "profile": "Perfil",
+    "quests": "Misiones",
+    "community": "Comunidad",
+    "ranking": "Ranking",
+    "store": "Tienda",
+    "settings": "Ajustes"
+  },
+  "common": {
+    "back": "Volver",
+    "continue": "Continuar",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "general": "General",
+    "minutes": "{{ count }} min",
+    "yearsPlus": "{{ count }}+ años",
+    "ecoPoints": "{{ count }} ecoPoints",
+    "gems": "+{{ count }} gemas"
+  },
+  "quests": {
+    "singular": "Misión",
+    "searchTitle": "Buscar misiones",
+    "filters": "Filtros de misiones",
+    "searchPlaceholder": "Buscar misiones por nombre",
+    "category": "Categoría",
+    "questType": "Tipo de misión",
+    "activityType": "Tipo de actividad",
+    "minimumAge": "Edad mínima",
+    "loading": "Cargando misiones...",
+    "noneFound": "No se encontraron misiones",
+    "notFound": "Misión no encontrada",
+    "backToQuests": "Volver a misiones",
+    "progress": "Progreso",
+    "progressCount": "Progreso: {{ completed }} / {{ total }}",
+    "emptyActivities": "Esta misión no tiene actividades registradas.",
+    "completeActivity": "Completar actividad",
+    "activityCompleted": "Actividad completada",
+    "startedActivity": "¡Iniciaste una actividad!",
+    "completedActivity": "¡Completaste la actividad!",
+    "activeEmpty": "Aún no hay misiones activas",
+    "seeMore": "Ver más",
+    "allActive": "Todas las misiones activas",
+    "activeQuests": "Misiones activas",
+    "abandonAria": "Abandonar {{ quest }}",
+    "confirmAbandonTitle": "Abandonar misión",
+    "confirmAbandonMessage": "¿Seguro que quieres abandonar \"{{ quest }}\"? Se borrará tu progreso y aparecerá como no iniciada.",
+    "confirmAbandonYes": "Sí, abandonar",
+    "confirmAbandonNo": "Cancelar",
+    "progressSummary": "Resumen de progreso",
+    "streakAndRanking": "Racha y ranking",
+    "streak": "Racha",
+    "rank": "Puesto {{ rank }}",
+    "rankPlaceholder": "Puesto",
+    "categoryMenuClose": "Cerrar categorías",
+    "categories": {
+      "all": "Todas las categorías",
+      "energy": "Energía",
+      "water": "Agua",
+      "recycle": "Reciclaje",
+      "daily_quest": "Misión diaria"
+    },
+    "types": {
+      "all": "Todos los tipos",
+      "activities": "Actividades",
+      "collaborative": "Colaborativa",
+      "minigame": "Minijuego"
+    },
+    "activityTypes": {
+      "all": "Todos los tipos de actividad",
+      "checkbox": "Casilla",
+      "minigame": "Minijuego"
+    },
+    "statuses": {
+      "pending": "Pendiente",
+      "in_progress": "En progreso",
+      "ready_to_complete": "Lista para completar",
+      "completed": "Completada"
+    },
+    "pagination": {
+      "pages": "Páginas de misiones",
+      "page": "Página {{ page }}"
+    },
+    "actions": {
+      "start": "Iniciar",
+      "startActivity": "Iniciar actividad",
+      "viewActivity": "Ver actividad",
+      "viewQuest": "Ver misión",
+      "startAgain": "Reiniciar",
+      "play": "Jugar",
+      "playAgain": "Jugar de nuevo"
+    },
+    "collaboration": {
+      "panel": "Misión colaborativa",
+      "inviteFriends": "Invitar amigos",
+      "participants": "Participantes",
+      "joinRequest": "Solicitud de unión",
+      "joinCopy": "Fuiste invitado a unirte a esta misión colaborativa.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "invite": "Invitar",
+      "invited": "Invitado",
+      "busy": "Ocupado",
+      "leave": "Abandonar misión",
+      "remove": "Eliminar participante",
+      "organizer": "Organizador",
+      "unknownUser": "Usuario desconocido",
+      "statuses": {
+        "accepted": "Participante",
+        "pending": "Esperando confirmación",
+        "declined": "Rechazado",
+        "left": "Abandonó",
+        "removed": "Eliminado"
+      }
+    },
+    "alt": {
+      "search": "Buscar",
+      "activityStarted": "Actividad iniciada",
+      "activityCompleted": "Actividad completada"
+    }
+  },
+  "ranking": {
+    "title": {
+      "global": "Ranking Global",
+      "monthly": "Ranking Mensual",
+      "weekly": "Ranking Semanal"
+    },
+    "subtitle": {
+      "global": "Todo el tiempo"
+    },
+    "yourPosition": "Tu puesto",
+    "loading": "Cargando ranking..."
+  },
+  "community": {
+    "title": {
+      "feed": "Muro de la comunidad",
+      "achievements": "Logros de la comunidad",
+      "events": "Eventos de la comunidad",
+      "goal": "Meta comunitaria: {{ goal }}",
+      "nearbyEvents": "Eventos cercanos"
+    },
+    "subtitle": {
+      "feed": "Comparte avances y celebra acciones sostenibles con tu comunidad.",
+      "achievements": "Revisa los hitos que tu comunidad ha alcanzado.",
+      "events": "Encuentra actividades cercanas y participa con tu familia o comunidad.",
+      "goal": "Sigue el progreso del objetivo compartido actual.",
+      "nearbyEvents": "Actividades disponibles cerca de tu comunidad."
+    },
+    "tabs": {
+      "all": "Todo",
+      "achievements": "Logros",
+      "events": "Eventos"
+    },
+    "filters": {
+      "all": "Todos",
+      "week": "Esta semana",
+      "month": "Este mes"
+    },
+    "actions": {
+      "createEvent": "+ Crear evento"
+    },
+    "post": {
+      "justNow": "Ahora mismo",
+      "defaultAuthor": "Usuario EcoMind"
+    },
+    "eventCard": {
+      "joinNow": "Unirse ahora",
+      "alreadyJoined": "Ya te uniste"
+    },
+    "eventForm": {
+      "title": "Nuevo evento",
+      "name": "Nombre",
+      "date": "Fecha",
+      "time": "Hora",
+      "meetingPoint": "Punto de encuentro",
+      "description": "Descripción",
+      "imageUrl": "URL de imagen",
+      "optional": "(opcional)",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "locationMap": "Mapa de ubicación del evento",
+      "eventLocation": "Ubicación del evento",
+      "create": "Crear evento",
+      "cancel": "Cancelar"
+    },
+    "registration": {
+      "title": "¿Cómo quieres registrarte a este evento?",
+      "event": "Evento:",
+      "dateAndTime": "Fecha y hora:",
+      "location": "Ubicación:",
+      "individual": "Individual",
+      "family": "Familia"
+    },
+    "loading": "Cargando comunidad...",
+    "searchPlaceholder": "Buscar en la comunidad",
+    "emptyPosts": "No hay publicaciones para mostrar.",
+    "emptyAchievements": "No hay logros para mostrar.",
+    "emptyMappedEvents": "No hay eventos ubicados disponibles.",
+    "mapAriaLabel": "Mapa de eventos cercanos de la comunidad",
+    "goalProgress": "{{ progress }} de {{ target }} {{ unit }}",
+    "participants": "{{ count }} participantes"
+  },
+  "store": {
+    "title": "Tienda EcoMind",
+    "subtitle": "Personaliza tu experiencia eco",
+    "tabs": {
+      "cosmetics": "Avatares y Cosméticos",
+      "multipliers": "Multiplicador XP",
+      "gems": "Gemas"
+    },
+    "cosmetics": {
+      "storeTab": "Tienda",
+      "inventoryTab": "Mi Inventario",
+      "storeTitle": "Avatares y Cosméticos",
+      "inventoryTitle": "Mi Inventario",
+      "equipped": "⚡ Equipado",
+      "inInventory": "✓ En Inventario",
+      "buy": "Comprar",
+      "equip": "Equipar",
+      "unequip": "Desequipar",
+      "emptyStore": "No hay cosméticos disponibles.",
+      "emptyInventory": "Tu inventario está vacío.",
+      "emptyInventorySub": "¡Compra cosméticos en la Tienda!",
+      "goToStore": "Ir a la Tienda"
+    },
+    "multipliers": {
+      "title": "Multiplicador XP",
+      "label": "Multiplicador ×{{ factor }}",
+      "description": "Recibe {{ factor }}× más ecoPoints durante {{ minutes }} minutos",
+      "active": "✓ Activo",
+      "buy": "Comprar",
+      "empty": "No hay multiplicadores disponibles."
+    },
+    "gems": {
+      "title": "Gemas",
+      "buy": "Comprar",
+      "empty": "No hay paquetes disponibles.",
+      "megaBundle": "¡Mega Paquete!",
+      "megaBundleGems": "10,000 Gemas",
+      "megaBundleAvatars": "3 Avatares Exclusivos",
+      "megaBundleMultiplier": "Multiplicador 3x por una semana"
+    }
+  }
+}

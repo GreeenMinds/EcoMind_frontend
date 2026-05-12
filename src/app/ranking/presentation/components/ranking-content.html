@@ -1,0 +1,146 @@
+<div class="ranking-container">
+
+  <div class="ranking-header">
+    <div class="ranking-title-row">
+      <button class="nav-arrow" (click)="prev()" [disabled]="activeRankingId() === 1">&lt;</button>
+      <div class="ranking-title-block">
+        <h2 class="ranking-title">{{ TITLE_KEYS[activeRankingId()] | translate }}</h2>
+        @if (activeRankingId() !== 1) {
+          <span class="ranking-subtitle">{{ dateRangeText() }}</span>
+        } @else {
+          <span class="ranking-subtitle">{{ 'ranking.subtitle.global' | translate }}</span>
+        }
+      </div>
+      <button class="nav-arrow" (click)="next()" [disabled]="activeRankingId() === 3">&gt;</button>
+    </div>
+  </div>
+
+  <div class="ranking-list" *ngIf="entries().length > 0 && !loading(); else loadingMsg">
+
+    <div
+      *ngFor="let entry of getTop3(entries()); trackBy: trackByUserId"
+      class="ranking-item top3">
+      <span class="medal">{{ getMedalIcon(entry.position) }}</span>
+
+      <div class="avatar-wrapper">
+        @if (entry.equippedAvatarUrl) {
+          <img
+            class="avatar avatar--img"
+            [src]="entry.equippedAvatarUrl"
+            [alt]="entry.username"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div
+            class="avatar avatar--fallback"
+            style="display:none"
+            [style.--avatar-hue]="getAvatarHue(entry.userId)">
+            {{ getInitials(entry.username) }}
+          </div>
+        } @else {
+          <div
+            class="avatar"
+            [style.--avatar-hue]="getAvatarHue(entry.userId)">
+            {{ getInitials(entry.username) }}
+          </div>
+        }
+        @if (entry.equippedOverlayUrl) {
+          <img
+            class="avatar-overlay"
+            [class.avatar-overlay--hat]="entry.equippedOverlayType === 'hat' || entry.equippedOverlayType === 'bun'"
+            [src]="entry.equippedOverlayUrl"
+            alt="Cosmetic"
+            onerror="this.style.display='none'">
+        }
+      </div>
+
+      <span class="username">{{ entry.username }}</span>
+      <span class="score">{{ entry.score }} pts</span>
+    </div>
+
+    <div
+      *ngFor="let entry of getRestEntries(entries()); trackBy: trackByUserId"
+      class="ranking-item">
+      <span class="position">{{ entry.position }}.</span>
+
+      <div class="avatar-wrapper">
+        @if (entry.equippedAvatarUrl) {
+          <img
+            class="avatar avatar--img"
+            [src]="entry.equippedAvatarUrl"
+            [alt]="entry.username"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div
+            class="avatar avatar--fallback"
+            style="display:none"
+            [style.--avatar-hue]="getAvatarHue(entry.userId)">
+            {{ getInitials(entry.username) }}
+          </div>
+        } @else {
+          <div
+            class="avatar"
+            [style.--avatar-hue]="getAvatarHue(entry.userId)">
+            {{ getInitials(entry.username) }}
+          </div>
+        }
+        @if (entry.equippedOverlayUrl) {
+          <img
+            class="avatar-overlay"
+            [class.avatar-overlay--hat]="entry.equippedOverlayType === 'hat' || entry.equippedOverlayType === 'bun'"
+            [src]="entry.equippedOverlayUrl"
+            alt="Cosmetic"
+            onerror="this.style.display='none'">
+        }
+      </div>
+
+      <span class="username">{{ entry.username }}</span>
+      <span class="score">{{ entry.score }} pts</span>
+    </div>
+
+    <div
+      *ngIf="getCurrentUser(entries()) as currentUser"
+      class="ranking-item current-user">
+      <span class="your-position-label">{{ 'ranking.yourPosition' | translate }}</span>
+      <div class="current-user-row">
+        <span class="position">{{ currentUser.position }}.</span>
+
+        <div class="avatar-wrapper">
+          @if (currentUser.equippedAvatarUrl) {
+            <img
+              class="avatar avatar--img"
+              [src]="currentUser.equippedAvatarUrl"
+              [alt]="currentUser.username"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div
+              class="avatar avatar--fallback"
+              style="display:none"
+              [style.--avatar-hue]="getAvatarHue(currentUser.userId)">
+              {{ getInitials(currentUser.username) }}
+            </div>
+          } @else {
+            <div
+              class="avatar"
+              [style.--avatar-hue]="getAvatarHue(currentUser.userId)">
+              {{ getInitials(currentUser.username) }}
+            </div>
+          }
+          @if (currentUser.equippedOverlayUrl) {
+            <img
+              class="avatar-overlay"
+              [class.avatar-overlay--hat]="currentUser.equippedOverlayType === 'hat' || currentUser.equippedOverlayType === 'bun'"
+              [src]="currentUser.equippedOverlayUrl"
+              alt="Cosmetic"
+              onerror="this.style.display='none'">
+          }
+        </div>
+
+        <span class="username">{{ currentUser.username }}</span>
+        <span class="score">{{ currentUser.score }} pts</span>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #loadingMsg>
+    <p class="loading-msg">{{ 'ranking.loading' | translate }}</p>
+  </ng-template>
+
+</div>

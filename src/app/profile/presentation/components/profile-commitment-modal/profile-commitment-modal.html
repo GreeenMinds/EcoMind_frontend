@@ -1,0 +1,31 @@
+<div class="profile-modal-backdrop" (click)="close.emit()"></div>
+
+<section class="profile-modal" aria-label="Editar compromiso">
+  <div class="profile-modal__header">
+    <h2>{{ title }}</h2>
+  </div>
+
+  <textarea
+    class="profile-modal__textarea"
+    rows="6"
+    [value]="commitmentDraft"
+    [placeholder]="placeholder"
+    (input)="draftChange.emit($any($event.target).value)"></textarea>
+
+  <div class="profile-modal__actions">
+    <button
+      class="profile-action profile-action--solid"
+      type="button"
+      [disabled]="saving"
+      (click)="save.emit()">
+      Guardar Compromiso
+    </button>
+    <button
+      class="profile-action profile-action--muted"
+      type="button"
+      [disabled]="saving"
+      (click)="clear.emit()">
+      Eliminar compromiso
+    </button>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+<article class="event-card">
+  <div class="event-copy">
+    <h3>{{ summary.event.name }}</h3>
+    <p>{{ summary.event.description }}</p>
+  </div>
+
+  @if (summary.event.image_url) {
+    <img [src]="summary.event.image_url" [alt]="summary.event.name">
+  }
+
+  <div class="actions">
+    <button
+      class="join"
+      [class.joined]="summary.joined"
+      [disabled]="summary.joined"
+      (click)="join.emit(summary)">
+      {{ (summary.joined ? 'community.eventCard.alreadyJoined' : 'community.eventCard.joinNow') | translate }}
+    </button>
+
+    <button class="cancel" (click)="cancel.emit(summary)">×</button>
+  </div>
+</article>

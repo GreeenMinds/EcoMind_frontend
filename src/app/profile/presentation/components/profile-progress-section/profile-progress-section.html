@@ -1,0 +1,73 @@
+<section class="progress-grid">
+  <article class="progress-panel">
+    <div class="progress-panel__label">Pendientes</div>
+    <div class="progress-panel__head">
+      <h2>Retos por completar</h2>
+      <span>{{ pending.length }} retos</span>
+    </div>
+
+    @if (visiblePending.length > 0) {
+      <div class="progress-list">
+        @for (item of visiblePending; track item.quest.id) {
+          <article class="progress-item">
+            <div class="progress-item__copy">
+              <h3>{{ item.quest.title }}</h3>
+              <p>{{ item.dateLabel }}</p>
+            </div>
+            <div class="progress-bar">
+              <span [style.width]="getProgressPercent(item.progress)"></span>
+            </div>
+            <div class="progress-item__meta">
+              <span>{{ item.quest.reward_ecopoints }} ecoPoints</span>
+              <span>{{ item.activityCount }} actividades</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (pending.length > 4) {
+        <button class="progress-toggle" type="button" (click)="togglePending()">
+          {{ showAllPending() ? 'Ver menos' : 'Ver mas' }}
+        </button>
+      }
+    } @else {
+      <p class="empty-copy">No hay misiones activas.</p>
+    }
+  </article>
+
+  <article class="progress-panel">
+    <div class="progress-panel__label">Completadas</div>
+    <div class="progress-panel__head">
+      <h2>Retos finalizados</h2>
+      <span>{{ completed.length }} retos</span>
+    </div>
+
+    @if (visibleCompleted.length > 0) {
+      <div class="progress-list">
+        @for (item of visibleCompleted; track item.quest.id) {
+          <article class="progress-item">
+            <div class="progress-item__copy">
+              <h3>{{ item.quest.title }}</h3>
+              <p>{{ item.dateLabel }}</p>
+            </div>
+            <div class="progress-bar progress-bar--complete">
+              <span [style.width]="getProgressPercent(item.progress)"></span>
+            </div>
+            <div class="progress-item__meta">
+              <span>{{ item.quest.reward_ecopoints }} ecoPoints</span>
+              <span>{{ item.activityCount }} actividades</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (completed.length > 4) {
+        <button class="progress-toggle" type="button" (click)="toggleCompleted()">
+          {{ showAllCompleted() ? 'Ver menos' : 'Ver mas' }}
+        </button>
+      }
+    } @else {
+      <p class="empty-copy">Aun no se registran retos completados.</p>
+    }
+  </article>
+</section>

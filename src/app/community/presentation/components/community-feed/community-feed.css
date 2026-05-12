@@ -1,0 +1,26 @@
+.section-heading {
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+.feed h2 {
+  margin: 0 0 6px;
+  color: #68a94f;
+  font-size: 22px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.post-list {
+  display: grid;
+  gap: 16px;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+}

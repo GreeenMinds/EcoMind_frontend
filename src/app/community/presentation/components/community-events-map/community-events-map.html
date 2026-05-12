@@ -1,0 +1,17 @@
+<section class="map-card">
+  <h3>{{ 'community.title.nearbyEvents' | translate }}</h3>
+  <p>{{ 'community.subtitle.nearbyEvents' | translate }}</p>
+
+  <div #map class="map-canvas" [attr.aria-label]="'community.mapAriaLabel' | translate"></div>
+
+  <ul>
+    @for (summary of previewEvents; track summary.event.id) {
+      <li>
+        <span class="dot"></span>
+        {{ summary.event.name }} - {{ summary.event.date }}, {{ summary.event.start_time.slice(11, 16) }}
+      </li>
+    } @empty {
+      <li>{{ 'community.emptyMappedEvents' | translate }}</li>
+    }
+  </ul>
+</section>

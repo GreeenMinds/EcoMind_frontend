@@ -1,0 +1,21 @@
+<article class="post-card">
+  <div class="avatar">{{ initials }}</div>
+
+  <div class="post-content">
+    <div class="post-header">
+      <div>
+        <h3>{{ authorName }}</h3>
+        <span>{{ 'community.post.justNow' | translate }}</span>
+      </div>
+
+      <strong class="points">+{{ summary.post.points }} pts</strong>
+    </div>
+
+    <p>{{ summary.post.content }}</p>
+
+  </div>
+
+  @if (summary.post.image_url) {
+    <img [src]="summary.post.image_url" [alt]="summary.post.content">
+  }
+</article>

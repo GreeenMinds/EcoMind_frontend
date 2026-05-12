@@ -1,0 +1,11 @@
+<div class="tabs">
+  <button [class.active]="activeTab === 'all'" (click)="tabChange.emit('all')">
+    {{ 'community.tabs.all' | translate }}
+  </button>
+  <button [class.active]="activeTab === 'achievements'" (click)="tabChange.emit('achievements')">
+    {{ 'community.tabs.achievements' | translate }}
+  </button>
+  <button [class.active]="activeTab === 'events'" (click)="tabChange.emit('events')">
+    {{ 'community.tabs.events' | translate }}
+  </button>
+</div>

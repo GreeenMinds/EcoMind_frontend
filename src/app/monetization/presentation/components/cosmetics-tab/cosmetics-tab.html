@@ -1,0 +1,122 @@
+<!-- Sub-navegación Tienda / Mi Inventario (HU-029 E6) -->
+<div class="sub-tabs">
+  <button class="sub-tab" [class.active]="view === 'store'" (click)="view = 'store'">
+     Store
+  </button>
+  <button class="sub-tab" [class.active]="view === 'inventory'" (click)="view = 'inventory'">
+     My Inventory
+    <span class="count-badge" *ngIf="ownedCount() > 0">{{ ownedCount() }}</span>
+  </button>
+</div>
+
+<!-- Error inline -->
+<div class="inline-error" *ngIf="error()">{{ error() }}</div>
+
+
+<ng-container *ngIf="view === 'store'">
+
+  <h2 class="section-title">Avatars and Cosmetics</h2>
+
+  <div class="cosmetics-grid" *ngIf="summaries().length > 0; else emptyStore">
+    <div
+      class="cosmetic-card"
+      *ngFor="let s of summaries()"
+      [class.card-owned]="s.owned"
+      [class.card-equipped]="s.equipped">
+
+      <!-- Estado badge -->
+      <span class="badge equipped-badge" *ngIf="s.equipped">⚡ Equipped</span>
+      <span class="badge owned-badge"   *ngIf="s.owned && !s.equipped">✓ In Inventory</span>
+
+      <!-- Imagen del avatar (HU-029 E6) -->
+      <div class="cosmetic-img-wrap">
+        <img
+          class="cosmetic-img"
+          [src]="s.cosmetic.imageUrl"
+          [alt]="s.cosmetic.name"
+          onerror="this.src='https://placehold.co/130x130/e8f5e9/6cab4f?text=Avatar'">
+      </div>
+
+      <!-- Info -->
+      <p class="cosmetic-name">{{ s.cosmetic.name }}</p>
+      <p class="cosmetic-type">{{ s.cosmetic.type }}</p>
+
+      <!-- Precio (solo si no lo posee) -->
+      <div class="cosmetic-price" *ngIf="!s.owned">
+        <span class="gem-icon">💎</span>
+        <span>{{ s.cosmetic.price | number }}</span>
+      </div>
+
+      <!-- Botón: Buy (E1, E3, E7) -->
+      <button
+        *ngIf="!s.owned"
+        class="action-btn buy-btn"
+        [disabled]="loading()"
+        (click)="buy(s)">
+        Buy
+      </button>
+
+      <!-- Botón: Equip / Unequip (E4) -->
+      <button
+        *ngIf="s.owned"
+        class="action-btn"
+        [class.equip-btn]="!s.equipped"
+        [class.unequip-btn]="s.equipped"
+        (click)="toggleEquip(s)">
+        {{ s.equipped ? 'Unequip' : 'Equip' }}
+      </button>
+
+    </div>
+  </div>
+
+  <ng-template #emptyStore>
+    <p class="empty-state" *ngIf="!loading()">No cosmetics available.</p>
+  </ng-template>
+
+</ng-container>
+
+<!-- ══════════ VISTA INVENTARIO (HU-029 E6) ══════════ -->
+<ng-container *ngIf="view === 'inventory'">
+
+  <h2 class="section-title">My inventory</h2>
+
+  <div class="cosmetics-grid" *ngIf="inventory().length > 0; else emptyInventory">
+    <div
+      class="cosmetic-card"
+      *ngFor="let s of inventory()"
+      [class.card-equipped]="s.equipped">
+
+      <span class="badge equipped-badge" *ngIf="s.equipped">⚡ Equipado</span>
+
+      <div class="cosmetic-img-wrap">
+        <img
+          class="cosmetic-img"
+          [src]="s.cosmetic.imageUrl"
+          [alt]="s.cosmetic.name"
+          onerror="this.src='https://placehold.co/130x130/e8f5e9/6cab4f?text=Avatar'">
+      </div>
+
+      <p class="cosmetic-name">{{ s.cosmetic.name }}</p>
+      <p class="cosmetic-type">{{ s.cosmetic.type }}</p>
+
+      <button
+        class="action-btn"
+        [class.equip-btn]="!s.equipped"
+        [class.unequip-btn]="s.equipped"
+        (click)="toggleEquip(s)">
+        {{ s.equipped ? 'Unequip' : 'Equip' }}
+      </button>
+
+    </div>
+  </div>
+
+  <ng-template #emptyInventory>
+    <div class="empty-inventory">
+      <span class="empty-icon">🎒</span>
+      <p>Your inventory is empty.</p>
+      <p class="empty-sub">Buy cosmetics in the Store!!</p>
+      <button class="action-btn buy-btn" (click)="view = 'store'">Go to Store</button>
+    </div>
+  </ng-template>
+
+</ng-container>

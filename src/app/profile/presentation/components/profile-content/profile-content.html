@@ -1,0 +1,188 @@
+<section class="profile-page">
+  @if (loading()) {
+    <div class="profile-state-card">
+      <p>Cargando perfil...</p>
+    </div>
+  } @else if (error()) {
+    <div class="profile-state-card profile-state-card--error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (viewedUser(); as user) {
+    @if (activeTab() === 'family' && selectedFamilyMemberId() !== null) {
+      <button class="profile-breadcrumb" type="button" (click)="closeFamilyMemberProfile()">
+        Familia / {{ user.name }}
+      </button>
+    }
+
+    <app-profile-hero
+      [user]="user"
+      [handle]="viewedUserHandle()"
+      [friendCount]="viewedFriendCount()"
+      [isViewingOwnProfile]="isViewingOwnProfile()"
+      [saving]="savingProfile()"
+      [equippedAvatarUrl]="viewedUserAvatar().equippedAvatarUrl"
+      [equippedOverlayUrl]="viewedUserAvatar().equippedOverlayUrl"
+      [equippedOverlayType]="viewedUserAvatar().equippedOverlayType"
+      [removeActionLabel]="heroRemoveActionLabel()"
+      (editProfile)="ignoreEditProfile()"
+      (shareProfile)="shareProfile()"
+      (removeMember)="handleViewedUserRemoval()">
+    </app-profile-hero>
+
+    <app-profile-tabs
+      [activeTab]="activeTab()"
+      (tabChange)="selectTab($event)">
+    </app-profile-tabs>
+
+    @if (activeTab() === 'summary') {
+      <div class="profile-layout">
+        <div class="profile-layout__main">
+          <app-profile-summary-section
+            [title]="'Mi compromiso'"
+            [commitment]="user.commitment"
+            [dateLabel]="getCommitmentDateLabel()"
+            [canEdit]="true"
+            [achievements]="viewedAchievements()"
+            (editCommitment)="openUserCommitmentEditor()">
+          </app-profile-summary-section>
+        </div>
+
+        <aside class="profile-layout__side">
+          <article class="streak-card">
+            <p class="streak-card__title">Racha Actual</p>
+            <div class="streak-card__value">
+              <img src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
+              <strong>{{ user.streak }}</strong>
+            </div>
+            <span>{{ currentCommunity()?.name || 'EcoMind community' }}</span>
+          </article>
+        </aside>
+      </div>
+    }
+
+    @if (activeTab() === 'family') {
+      @if (selectedFamilyMemberId() !== null) {
+        <div class="profile-layout">
+          <div class="profile-layout__main">
+            <app-profile-summary-section
+              [title]="getCommitmentTitle()"
+              [commitment]="user.commitment"
+              [dateLabel]="getCommitmentDateLabel()"
+              [canEdit]="false"
+              [achievements]="viewedAchievements()"
+              [emptyCommitmentText]="'Este miembro todavia no registra un compromiso en EcoMind.'"
+              [emptyAchievementsText]="'Este perfil todavia no tiene medallas registradas.'">
+            </app-profile-summary-section>
+          </div>
+
+          <aside class="profile-layout__side">
+            <article class="streak-card">
+              <p class="streak-card__title">Rol en la familia</p>
+              <div class="streak-card__role-chip">
+                {{ getRoleLabel(viewedMembership()?.membership?.family_role || '') }}
+              </div>
+              <span>{{ getViewedMembershipCaption() }}</span>
+            </article>
+          </aside>
+        </div>
+      } @else {
+        <app-profile-family-section
+          [family]="primaryFamily()"
+          [familySummary]="getFamilySummary()"
+          [familyCommitment]="primaryFamily()?.commitment || null"
+          [members]="familyMembers()"
+          [canManageFamily]="canManageFamily()"
+          [canCreateFamily]="canCreateFamily()"
+          [canLeaveFamily]="canLeaveFamily()"
+          [inviteCandidates]="familyInviteCandidates()"
+          [noFamilyMessage]="'No estas inscrito o incluido en una familia.'"
+          [incomingInvitations]="incomingInvitations()"
+          [outgoingInvitations]="outgoingInvitations()"
+          (editCommitment)="openFamilyCommitmentEditor()"
+          (createFamily)="createFamily($event)"
+          (inviteMember)="inviteFamilyMember($event)"
+          (acceptInvitation)="acceptFamilyInvitation($event)"
+          (rejectInvitation)="rejectFamilyInvitation($event)"
+          (leaveFamily)="leaveCurrentFamily()"
+          (openMember)="openFamilyMember($event)">
+        </app-profile-family-section>
+      }
+    }
+
+    @if (activeTab() === 'progress') {
+      <app-profile-progress-section
+        [pending]="pendingQuestProgress()"
+        [completed]="completedQuestProgress()">
+      </app-profile-progress-section>
+    }
+
+    @if (activeTab() === 'friends') {
+      @if (selectedFriendProfile(); as selectedFriend) {
+        <button class="profile-breadcrumb" type="button" (click)="closeFriendProfile()">
+          Amigos / {{ selectedFriend.user.name }}
+        </button>
+
+        <div class="profile-layout">
+          <div class="profile-layout__main">
+            <app-profile-summary-section
+              [title]="'Compromiso de ' + selectedFriend.user.name.split(' ')[0]"
+              [commitment]="selectedFriend.user.commitment"
+              [dateLabel]="getFriendCommitmentDateLabel(selectedFriend.user)"
+              [canEdit]="false"
+              [achievements]="selectedFriendAchievements()"
+              [emptyCommitmentText]="'Este amigo aun no registro un compromiso.'"
+              [emptyAchievementsText]="'Este amigo aun no tiene medallas registradas.'">
+            </app-profile-summary-section>
+          </div>
+
+          <aside class="profile-layout__side">
+            <article class="streak-card">
+              <p class="streak-card__title">Relacion de amistad</p>
+              <div class="streak-card__role-chip">{{ selectedFriend.statusLabel }}</div>
+              <span>{{ selectedFriend.mutualCount }} en comun</span>
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                [disabled]="savingProfile()"
+                (click)="removeFriend(selectedFriend)">
+                Eliminar amigo
+              </button>
+            </article>
+          </aside>
+        </div>
+      } @else {
+        <app-profile-friends-section
+          [friends]="friendProfiles()"
+          [inviteCandidates]="friendInviteCandidates()"
+          [incomingRequests]="incomingFriendRequests()"
+          (openFriend)="openFriendProfile($event)"
+          (removeFriend)="removeFriend($event)"
+          (sendFriendRequest)="sendFriendRequest($event)"
+          (acceptFriendRequest)="acceptFriendRequest($event)"
+          (rejectFriendRequest)="rejectFriendRequest($event)">
+        </app-profile-friends-section>
+      }
+    }
+  }
+
+  @if (showCommitmentModal()) {
+    <app-profile-commitment-modal
+      [title]="commitmentEditorTarget() === 'family' ? 'Compromiso de la familia' : 'Mi Compromiso'"
+      [placeholder]="
+        commitmentEditorTarget() === 'family'
+          ? 'Escribe aqui el compromiso sostenible que representara a toda la familia'
+          : 'Escribe aqui el compromiso sostenible que quieres mostrar en tu perfil'
+      "
+      [commitmentDraft]="commitmentDraft()"
+      [saving]="savingProfile()"
+      (draftChange)="updateCommitmentDraft($event)"
+      (save)="saveCommitment()"
+      (clear)="clearCommitment()"
+      (close)="closeCommitmentEditor()">
+    </app-profile-commitment-modal>
+  }
+
+  @if (feedbackMessage()) {
+    <p class="profile-toast">{{ feedbackMessage() }}</p>
+  }
+</section>

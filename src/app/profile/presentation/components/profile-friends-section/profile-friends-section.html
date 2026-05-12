@@ -1,0 +1,156 @@
+<section class="friends-shell">
+  <article class="friends-banner">
+    <div>
+      <p class="profile-eyebrow">Comunidad</p>
+      <h2>Red de amigos</h2>
+      <p>
+        Contactos registrados.
+      </p>
+    </div>
+  </article>
+
+  @if (incomingRequests.length > 0) {
+    <article class="friends-requests">
+      <h3>Solicitudes recibidas</h3>
+
+      <div class="friends-requests__list">
+        @for (request of incomingRequests; track request.relationship.id) {
+          <div class="friends-requests__item">
+            <div class="friends-requests__identity">
+              <app-profile-avatar
+                [name]="request.user.name"
+                [userId]="request.user.id"
+                [avatarUrl]="request.equippedAvatarUrl"
+                [overlayUrl]="request.equippedOverlayUrl"
+                [overlayType]="request.equippedOverlayType">
+              </app-profile-avatar>
+
+              <div>
+                <strong>{{ request.user.name }}</strong>
+                <p>{{ request.statusLabel }}</p>
+              </div>
+            </div>
+
+            <div class="friends-requests__actions">
+              <button
+                class="profile-action profile-action--solid"
+                type="button"
+                (click)="emitAcceptFriendRequest(request)">
+                Aceptar
+              </button>
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                (click)="emitRejectFriendRequest(request)">
+                Rechazar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  }
+
+  <article class="friends-invite">
+    <h3>Enviar solicitud de amistad</h3>
+
+    @if (inviteCandidates.length > 0) {
+      <input
+        class="friends-input"
+        type="text"
+        [value]="friendInviteSearch"
+        placeholder="Busca un usuario por nombre"
+        (input)="updateFriendInviteSearch($any($event.target).value)" />
+
+      @if (friendInviteSearch.trim().length > 0) {
+        @if (filteredInviteCandidates.length > 0) {
+          <div class="friends-invite__results">
+            @for (candidate of filteredInviteCandidates; track candidate.user.id) {
+              <div class="friends-invite__result">
+                <div class="friends-invite__identity">
+                  <app-profile-avatar
+                    [name]="candidate.user.name"
+                    [userId]="candidate.user.id"
+                    [avatarUrl]="candidate.equippedAvatarUrl"
+                    [overlayUrl]="candidate.equippedOverlayUrl"
+                    [overlayType]="candidate.equippedOverlayType">
+                  </app-profile-avatar>
+
+                  <div>
+                    <strong>{{ candidate.user.name }}</strong>
+                    <p>
+                      {{
+                        candidate.disabledReason
+                          ? candidate.disabledReason
+                          : 'Disponible para solicitud de amistad'
+                      }}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  class="profile-action"
+                  type="button"
+                  [disabled]="!!candidate.disabledReason"
+                  (click)="emitFriendRequest(candidate)">
+                  Enviar solicitud
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-copy">No se encontraron coincidencias para esa busqueda.</p>
+        }
+      } @else {
+        <p class="empty-copy">Escribe un nombre para ver coincidencias en tiempo real.</p>
+      }
+    } @else {
+      <p class="empty-copy">No hay usuarios disponibles para enviar solicitud.</p>
+    }
+  </article>
+
+  <section class="friends-list">
+    <div class="friends-list__header">
+      <h2>Amigos ({{ friends.length }})</h2>
+    </div>
+
+    @if (friends.length > 0) {
+      <div class="friends-grid">
+        @for (item of friends; track item.relationship.id) {
+          <article class="friend-card">
+            <app-profile-avatar
+              [name]="item.user.name"
+              [userId]="item.user.id"
+              [avatarUrl]="item.equippedAvatarUrl"
+              [overlayUrl]="item.equippedOverlayUrl"
+              [overlayType]="item.equippedOverlayType">
+            </app-profile-avatar>
+
+            <h3>{{ item.user.name }}</h3>
+            <p class="friend-card__handle">{{ buildHandle(item.user) }}</p>
+            <span class="friend-status-chip">{{ item.statusLabel }}</span>
+
+            <div class="friend-card__meta">
+              <span>{{ item.user.ecopoints }} ecoPoints</span>
+              <span>{{ item.mutualCount }} en comun</span>
+            </div>
+
+            <div class="friend-card__actions">
+              <button class="profile-action" type="button" (click)="emitOpenFriend(item)">
+                Ver perfil
+              </button>
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                (click)="emitRemoveFriend(item)">
+                Eliminar
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="empty-copy">Aun no tienes amistades aceptadas.</p>
+    }
+  </section>
+</section>

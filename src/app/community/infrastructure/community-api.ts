@@ -1,0 +1,110 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { BaseApi } from '../../shared/infrastructure/base-api';
+import { Achievement } from '../domain/model/achievement.entity';
+import { CommunityAchievement } from '../domain/model/community-achievement.entity';
+import { CommunityGoal } from '../domain/model/community-goal.entity';
+import { CommunityMember } from '../domain/model/community-member.entity';
+import { CommunityPost } from '../domain/model/community-post.entity';
+import { Community } from '../domain/model/community.entity';
+import { EventRegistration } from '../domain/model/event-registration.entity';
+import { Event } from '../domain/model/event.entity';
+import { UserAchievement } from '../domain/model/user-achievement.entity';
+import { AchievementsApiEndpoint } from './achievements-api-endpoint';
+import { CommunitiesApiEndpoint } from './communities-api-endpoint';
+import { CommunityAchievementsApiEndpoint } from './community-achievements-api-endpoint';
+import { CommunityGoalsApiEndpoint } from './community-goals-api-endpoint';
+import { CommunityMembersApiEndpoint } from './community-members-api-endpoint';
+import { CommunityPostsApiEndpoint } from './community-posts-api-endpoint';
+import { EventRegistrationsApiEndpoint } from './event-registrations-api-endpoint';
+import { EventsApiEndpoint } from './events-api-endpoint';
+import { UserAchievementsApiEndpoint } from './user-achievements-api-endpoint';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CommunityApi extends BaseApi {
+  private readonly communitiesEndpoint: CommunitiesApiEndpoint;
+  private readonly membersEndpoint: CommunityMembersApiEndpoint;
+  private readonly postsEndpoint: CommunityPostsApiEndpoint;
+  private readonly goalsEndpoint: CommunityGoalsApiEndpoint;
+  private readonly achievementsEndpoint: AchievementsApiEndpoint;
+  private readonly communityAchievementsEndpoint: CommunityAchievementsApiEndpoint;
+  private readonly userAchievementsEndpoint: UserAchievementsApiEndpoint;
+  private readonly eventsEndpoint: EventsApiEndpoint;
+  private readonly eventRegistrationsEndpoint: EventRegistrationsApiEndpoint;
+
+  constructor(http: HttpClient) {
+    super();
+    this.communitiesEndpoint = new CommunitiesApiEndpoint(http);
+    this.membersEndpoint = new CommunityMembersApiEndpoint(http);
+    this.postsEndpoint = new CommunityPostsApiEndpoint(http);
+    this.goalsEndpoint = new CommunityGoalsApiEndpoint(http);
+    this.achievementsEndpoint = new AchievementsApiEndpoint(http);
+    this.communityAchievementsEndpoint = new CommunityAchievementsApiEndpoint(http);
+    this.userAchievementsEndpoint = new UserAchievementsApiEndpoint(http);
+    this.eventsEndpoint = new EventsApiEndpoint(http);
+    this.eventRegistrationsEndpoint = new EventRegistrationsApiEndpoint(http);
+  }
+
+  getCommunities(): Observable<Community[]> {
+    return this.communitiesEndpoint.getAll();
+  }
+
+  getCommunityMembers(): Observable<CommunityMember[]> {
+    return this.membersEndpoint.getAll();
+  }
+
+  getCommunityPosts(): Observable<CommunityPost[]> {
+    return this.postsEndpoint.getAll();
+  }
+
+  getCommunityGoals(): Observable<CommunityGoal[]> {
+    return this.goalsEndpoint.getAll();
+  }
+
+  getAchievements(): Observable<Achievement[]> {
+    return this.achievementsEndpoint.getAll();
+  }
+
+  getCommunityAchievements(): Observable<CommunityAchievement[]> {
+    return this.communityAchievementsEndpoint.getAll();
+  }
+
+  getUserAchievements(): Observable<UserAchievement[]> {
+    return this.userAchievementsEndpoint.getAll();
+  }
+
+  getEvents(): Observable<Event[]> {
+    return this.eventsEndpoint.getAll();
+  }
+
+  createEvent(event: Event): Observable<Event> {
+    return this.eventsEndpoint.create(event);
+  }
+
+  updateEvent(event: Event): Observable<Event> {
+    return this.eventsEndpoint.update(event, event.id);
+  }
+
+  deleteEvent(id: number): Observable<void> {
+    return this.eventsEndpoint.delete(id);
+  }
+
+  getEventRegistrations(): Observable<EventRegistration[]> {
+    return this.eventRegistrationsEndpoint.getAll();
+  }
+
+  createEventRegistration(registration: EventRegistration): Observable<EventRegistration> {
+    return this.eventRegistrationsEndpoint.create(registration);
+  }
+
+  updateEventRegistration(registration: EventRegistration): Observable<EventRegistration> {
+    return this.eventRegistrationsEndpoint.update(registration, registration.id);
+  }
+
+  deleteEventRegistration(id: number): Observable<void> {
+    return this.eventRegistrationsEndpoint.delete(id);
+  }
+}
