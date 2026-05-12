@@ -4,6 +4,7 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {map} from 'rxjs';
 import {QuestsService} from '../../../application/quests.service';
+import {MonetizationStoreService} from '../../../../monetization/application/monetization-store.service';
 
 @Component({
   selector: 'app-quest-detail-content',
@@ -16,6 +17,7 @@ export class QuestDetailContent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  private readonly monetizationSvc = inject(MonetizationStoreService);
 
   readonly questId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
@@ -58,9 +60,9 @@ export class QuestDetailContent {
     const context = this.collaborativeContext();
     return Boolean(
       detail?.quest.type === 'collaborative' &&
-        context?.isAcceptedParticipant &&
-        !context.isOwner &&
-        !detail.started,
+      context?.isAcceptedParticipant &&
+      !context.isOwner &&
+      !detail.started,
     );
   });
 
@@ -145,6 +147,26 @@ export class QuestDetailContent {
       .map((part) => part[0])
       .join('')
       .toUpperCase();
+  }
+
+  getEquippedAvatarUrl(userId: number | undefined): string | null {
+    if (!userId) return null;
+    return this.monetizationSvc.getEquippedAvatarUrlForUser(userId);
+  }
+
+  getEquippedOverlayUrl(userId: number | undefined): string | null {
+    if (!userId) return null;
+    return this.monetizationSvc.getEquippedOverlayUrlForUser(userId);
+  }
+
+  getEquippedOverlayType(userId: number | undefined): string | null {
+    if (!userId) return null;
+    return this.monetizationSvc.getEquippedOverlayTypeForUser(userId);
+  }
+
+  getAvatarHue(userId: number | undefined): string {
+    const safeId = userId ?? 1;
+    return `${(safeId * 67) % 360}`;
   }
 
 }
