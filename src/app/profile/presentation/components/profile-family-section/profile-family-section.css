@@ -112,8 +112,41 @@
 
 .family-invite__controls {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   gap: 10px;
+}
+
+.family-invite__results {
+  display: grid;
+  gap: 10px;
+}
+
+.family-invite__result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(122, 151, 104, 0.18);
+}
+
+.family-invite__identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.family-invite__identity strong {
+  display: block;
+}
+
+.family-invite__identity p {
+  margin: 4px 0 0;
+  color: #57634f;
+  font-size: 0.9rem;
 }
 
 .family-input {
@@ -219,30 +252,6 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.avatar {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.95), transparent 35%),
-    linear-gradient(
-      150deg,
-      hsl(var(--avatar-hue) 78% 94%) 0%,
-      hsl(var(--avatar-hue) 66% 82%) 100%
-    );
-  color: hsl(var(--avatar-hue) 40% 30%);
-  box-shadow: 0 16px 30px rgba(81, 109, 69, 0.22);
-  font-weight: 800;
-}
-
-.avatar--member {
-  width: 84px;
-  height: 84px;
-  margin: 0 auto 18px;
-  font-size: 1.35rem;
-}
-
 .empty-copy {
   margin: 0;
   color: #74806f;
@@ -265,6 +274,10 @@
   }
 
   .family-invitations__item {
+    grid-template-columns: 1fr;
+  }
+
+  .family-invite__result {
     grid-template-columns: 1fr;
   }
 }

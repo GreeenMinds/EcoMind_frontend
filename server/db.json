@@ -242,6 +242,12 @@
       "user_id": 1,
       "friend_id": 8,
       "status": "accepted"
+    },
+    {
+      "id": 11,
+      "user_id": 1,
+      "friend_id": 2,
+      "status": "pending"
     }
   ],
   "achievement": [
@@ -1668,7 +1674,7 @@
       "user_id": 1,
       "cosmetic_id": 1,
       "acquired_at": "2026-05-02",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 2,

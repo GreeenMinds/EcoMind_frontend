@@ -20,9 +20,13 @@
       [friendCount]="viewedFriendCount()"
       [isViewingOwnProfile]="isViewingOwnProfile()"
       [saving]="savingProfile()"
+      [equippedAvatarUrl]="viewedUserAvatar().equippedAvatarUrl"
+      [equippedOverlayUrl]="viewedUserAvatar().equippedOverlayUrl"
+      [equippedOverlayType]="viewedUserAvatar().equippedOverlayType"
+      [removeActionLabel]="heroRemoveActionLabel()"
       (editProfile)="ignoreEditProfile()"
       (shareProfile)="shareProfile()"
-      (removeMember)="removeSelectedFamilyMember()">
+      (removeMember)="handleViewedUserRemoval()">
     </app-profile-hero>
 
     <app-profile-tabs
@@ -150,8 +154,10 @@
         <app-profile-friends-section
           [friends]="friendProfiles()"
           [acceptedCount]="acceptedFriendProfilesCount()"
+          [inviteCandidates]="friendInviteCandidates()"
           (openFriend)="openFriendProfile($event)"
-          (removeFriend)="removeFriend($event)">
+          (removeFriend)="removeFriend($event)"
+          (sendFriendRequest)="sendFriendRequest($event)">
         </app-profile-friends-section>
       }
     }

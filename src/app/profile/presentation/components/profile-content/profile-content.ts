@@ -2,6 +2,9 @@ import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, switchMap } from 'rxjs';
 import { CommunityService } from '../../../../community/application/community.service';
+import { MonetizationApi } from '../../../../monetization/infrastructure/monetization-api';
+import { CosmeticEntity } from '../../../../monetization/domain/cosmetic.entity';
+import { UserCosmeticEntity } from '../../../../monetization/domain/user-cosmetic.entity';
 import { ProfileService } from '../../../application/profile.service';
 import {
   FamilyInvitation,
@@ -16,6 +19,7 @@ import { Quest } from '../../../../quests/domain/model/quest.entity';
 import { QuestUser } from '../../../../quests/domain/model/quest-user.entity';
 import { ProfileCommitmentModal } from '../profile-commitment-modal/profile-commitment-modal';
 import {
+  FamilyInviteCandidateView,
   FamilyInvitationInboxView,
   FamilyInvitationOutboxView,
   FamilyInvitePayload,
@@ -23,6 +27,7 @@ import {
   ProfileFamilySection,
 } from '../profile-family-section/profile-family-section';
 import {
+  FriendInviteCandidateView,
   FriendProfileView,
   ProfileFriendsSection,
 } from '../profile-friends-section/profile-friends-section';
@@ -56,6 +61,7 @@ export class ProfileContent {
   private readonly profileService = inject(ProfileService);
   private readonly questsService = inject(QuestsService);
   private readonly communityService = inject(CommunityService);
+  private readonly monetizationApi = inject(MonetizationApi);
 
   readonly currentUser = this.profileService.currentUserProfile;
   readonly activeTab = signal<ProfileTab>('summary');
@@ -74,6 +80,8 @@ export class ProfileContent {
   private readonly familyUsers = signal<FamilyUser[]>([]);
   private readonly familyInvitations = signal<FamilyInvitation[]>([]);
   private readonly friends = signal<Friend[]>([]);
+  private readonly cosmetics = signal<CosmeticEntity[]>([]);
+  private readonly userCosmetics = signal<UserCosmeticEntity[]>([]);
 
   readonly loading = computed(
     () =>
@@ -118,7 +126,13 @@ export class ProfileContent {
         membership,
         user: this.users().find((user) => user.id === membership.user_id),
       }))
-      .filter((member): member is FamilyMemberView => Boolean(member.user))
+      .filter(
+        (member): member is { membership: FamilyUser; user: User } => Boolean(member.user),
+      )
+      .map((member) => ({
+        ...member,
+        ...this.getUserAvatarVisual(member.user.id),
+      }))
       .sort((left, right) => {
         const roleOrder =
           this.getRoleOrder(left.membership.family_role) -
@@ -138,32 +152,22 @@ export class ProfileContent {
     return true;
   });
 
-  readonly familyInviteCandidates = computed(() => {
+  readonly familyInviteCandidates = computed<FamilyInviteCandidateView[]>(() => {
     const currentUserId = this.currentUser()?.id;
-    const memberIds = new Set(this.familyMembers().map((member) => member.user.id));
-    const pendingInvitedIds = new Set(
-      this.familyInvitations()
-        .filter(
-          (invitation) =>
-            invitation.family_id === this.primaryFamily()?.id && invitation.status === 'pending',
-        )
-        .map((invitation) => invitation.invited_user_id),
-    );
-
     return this.users()
       .filter((user) => user.id !== currentUserId)
-      .filter((user) => !memberIds.has(user.id))
-      .filter((user) => !pendingInvitedIds.has(user.id))
-      .sort((left, right) => left.name.localeCompare(right.name));
+      .map((user) => ({
+        user,
+        disabledReason: this.getFamilyInviteDisabledReason(user.id),
+        ...this.getUserAvatarVisual(user.id),
+      }))
+      .sort((left, right) => left.user.name.localeCompare(right.user.name));
   });
 
   readonly viewedUser = computed(() => {
-    const selectedUserId = this.selectedFamilyMemberId();
+    const selectedUserId = this.selectedFriendId() ?? this.selectedFamilyMemberId();
     if (selectedUserId !== null) {
-      return (
-        this.familyMembers().find((member) => member.user.id === selectedUserId)?.user ??
-        this.currentUser()
-      );
+      return this.users().find((user) => user.id === selectedUserId) ?? this.currentUser();
     }
 
     return this.currentUser();
@@ -182,6 +186,7 @@ export class ProfileContent {
   readonly viewedFriendCount = computed(() =>
     this.countAcceptedFriends(this.viewedUser()?.id ?? 0),
   );
+  readonly viewedUserAvatar = computed(() => this.getUserAvatarVisual(this.viewedUser()?.id));
   readonly currentCommunity = computed(() =>
     this.communityService
       .communities()
@@ -189,8 +194,8 @@ export class ProfileContent {
   );
 
   readonly friendProfiles = computed<FriendProfileView[]>(() => {
-    const viewedUserId = this.viewedUser()?.id;
-    if (!viewedUserId) {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
       return [];
     }
 
@@ -198,11 +203,11 @@ export class ProfileContent {
     this.friends()
       .filter(
         (relationship) =>
-          relationship.user_id === viewedUserId || relationship.friend_id === viewedUserId,
+          relationship.user_id === currentUserId || relationship.friend_id === currentUserId,
       )
       .forEach((relationship) => {
         const relatedUserId =
-          relationship.user_id === viewedUserId ? relationship.friend_id : relationship.user_id;
+          relationship.user_id === currentUserId ? relationship.friend_id : relationship.user_id;
 
         const existing = uniqueRelationships.get(relatedUserId);
         if (!existing || (existing.status !== 'accepted' && relationship.status === 'accepted')) {
@@ -221,7 +226,8 @@ export class ProfileContent {
           relationship,
           user: relatedUser,
           statusLabel: this.getFriendStatusLabel(relationship.status),
-          mutualCount: this.countMutualFriends(viewedUserId, relatedUserId),
+          mutualCount: this.countMutualFriends(currentUserId, relatedUserId),
+          ...this.getUserAvatarVisual(relatedUserId),
         };
       })
       .filter((item): item is FriendProfileView => Boolean(item))
@@ -243,7 +249,65 @@ export class ProfileContent {
       return null;
     }
 
-    return this.friendProfiles().find((friend) => friend.user.id === friendId) ?? null;
+    const currentUserId = this.currentUser()?.id;
+    const relatedUser = this.users().find((user) => user.id === friendId);
+    if (!currentUserId || !relatedUser) {
+      return null;
+    }
+
+    const relationship =
+      this.friends()
+        .filter(
+          (friend) =>
+            (friend.user_id === currentUserId && friend.friend_id === friendId) ||
+            (friend.user_id === friendId && friend.friend_id === currentUserId),
+        )
+        .sort((left, right) => {
+          if (left.status === right.status) {
+            return right.id - left.id;
+          }
+          return left.status === 'accepted' ? -1 : 1;
+        })[0] ?? null;
+
+    if (!relationship) {
+      return null;
+    }
+
+    return {
+      relationship,
+      user: relatedUser,
+      statusLabel: this.getFriendStatusLabel(relationship.status),
+      mutualCount: this.countMutualFriends(currentUserId, friendId),
+      ...this.getUserAvatarVisual(friendId),
+    };
+  });
+
+  readonly friendInviteCandidates = computed<FriendInviteCandidateView[]>(() => {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return [];
+    }
+
+    return this.users()
+      .filter((user) => user.id !== currentUserId)
+      .map((user) => ({
+        user,
+        disabledReason: this.getFriendInviteDisabledReason(user.id),
+        ...this.getUserAvatarVisual(user.id),
+      }))
+      .sort((left, right) => left.user.name.localeCompare(right.user.name));
+  });
+
+  readonly heroRemoveActionLabel = computed(() => {
+    if (this.activeTab() === 'friends' && this.selectedFriendId() !== null) {
+      return 'Eliminar amigo';
+    }
+
+    if (this.activeTab() === 'family' && this.selectedFamilyMemberId() !== null) {
+      return 'Eliminar miembro';
+    }
+
+    return 'Eliminar';
   });
 
   readonly selectedFriendAchievements = computed<AchievementView[]>(() => {
@@ -374,6 +438,18 @@ export class ProfileContent {
 
   closeFriendProfile(): void {
     this.selectedFriendId.set(null);
+  }
+
+  handleViewedUserRemoval(): void {
+    if (this.activeTab() === 'friends') {
+      const selectedFriend = this.selectedFriendProfile();
+      if (selectedFriend) {
+        this.removeFriend(selectedFriend);
+      }
+      return;
+    }
+
+    this.removeSelectedFamilyMember();
   }
 
   ignoreEditProfile(): void {}
@@ -549,6 +625,16 @@ export class ProfileContent {
       return;
     }
 
+    const alreadyAssignedToFamily = this.familyUsers().some(
+      (membership) => membership.user_id === payload.userId,
+    );
+    if (alreadyAssignedToFamily) {
+      this.showFeedback(
+        'No se puede invitar al usuario porque ya tiene una familia asignada',
+      );
+      return;
+    }
+
     const hasPendingInvitation = this.familyInvitations().some(
       (invitation) =>
         invitation.family_id === family.id &&
@@ -582,6 +668,45 @@ export class ProfileContent {
         error: (error: Error) => {
           this.savingProfile.set(false);
           this.showFeedback(error.message || 'No se pudo enviar la invitacion');
+        },
+      });
+  }
+
+  sendFriendRequest(userId: number): void {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return;
+    }
+
+    if (userId === currentUserId) {
+      this.showFeedback('No puedes enviarte una solicitud de amistad a ti mismo');
+      return;
+    }
+
+    const disabledReason = this.getFriendInviteDisabledReason(userId);
+    if (disabledReason) {
+      this.showFeedback(disabledReason);
+      return;
+    }
+
+    const request = new Friend();
+    request.user_id = currentUserId;
+    request.friend_id = userId;
+    request.status = 'pending';
+
+    this.savingProfile.set(true);
+    this.profileService
+      .createFriend(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Solicitud de amistad enviada');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo enviar la solicitud de amistad');
         },
       });
   }
@@ -827,15 +952,27 @@ export class ProfileContent {
       familyUsers: this.profileService.getFamilyUsers(),
       familyInvitations: this.profileService.getFamilyInvitations(),
       friends: this.profileService.getFriends(),
+      cosmetics: this.monetizationApi.getCosmetics(),
+      userCosmetics: this.monetizationApi.getUserCosmetics(),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ({ users, families, familyUsers, familyInvitations, friends }) => {
+        next: ({
+          users,
+          families,
+          familyUsers,
+          familyInvitations,
+          friends,
+          cosmetics,
+          userCosmetics,
+        }) => {
           this.users.set(users);
           this.families.set(families);
           this.familyUsers.set(familyUsers);
           this.familyInvitations.set(familyInvitations);
           this.friends.set(friends);
+          this.cosmetics.set(cosmetics);
+          this.userCosmetics.set(userCosmetics);
           this.profileLoading.set(false);
         },
         error: (error: Error) => {
@@ -968,17 +1105,21 @@ export class ProfileContent {
         return;
       }
 
+      if (record?.status !== 'in_progress') {
+        return;
+      }
+
       if (this.isQuestExpired(quest)) {
         return;
       }
 
       pending.push({
         quest,
-        progress: record?.progress ?? 0,
-        status: record ? 'in_progress' : 'pending',
-        dateLabel: record?.start_date
+        progress: record.progress ?? 0,
+        status: 'in_progress',
+        dateLabel: record.start_date
           ? `Iniciado ${this.formatRelativeDate(record.start_date)}`
-          : 'Aun no iniciado',
+          : 'En progreso',
         activityCount,
       });
     });
@@ -1157,6 +1298,98 @@ export class ProfileContent {
       });
 
     return acceptedFriendIds;
+  }
+
+  private getUserAvatarVisual(userId: number | null | undefined): {
+    equippedAvatarUrl: string | null;
+    equippedOverlayUrl: string | null;
+    equippedOverlayType: string | null;
+  } {
+    if (!userId) {
+      return {
+        equippedAvatarUrl: null,
+        equippedOverlayUrl: null,
+        equippedOverlayType: null,
+      };
+    }
+
+    const cosmeticsById = new Map(this.cosmetics().map((cosmetic) => [cosmetic.id, cosmetic]));
+    const equippedItems = this.userCosmetics().filter(
+      (userCosmetic) => userCosmetic.userId === userId && userCosmetic.equipped,
+    );
+
+    const avatarCosmetic = equippedItems
+      .map((userCosmetic) => cosmeticsById.get(userCosmetic.cosmeticId))
+      .find((cosmetic) => cosmetic?.type === 'avatar');
+    const overlayCosmetic = equippedItems
+      .map((userCosmetic) => cosmeticsById.get(userCosmetic.cosmeticId))
+      .find((cosmetic) => cosmetic && cosmetic.type !== 'avatar');
+
+    return {
+      equippedAvatarUrl: avatarCosmetic?.imageUrl ?? null,
+      equippedOverlayUrl: overlayCosmetic?.imageUrl ?? null,
+      equippedOverlayType: overlayCosmetic?.type ?? null,
+    };
+  }
+
+  private getFamilyInviteDisabledReason(userId: number): string | null {
+    const familyId = this.primaryFamily()?.id;
+    if (!familyId) {
+      return 'No tienes una familia activa para invitar';
+    }
+
+    const isCurrentFamilyMember = this.familyUsers().some(
+      (membership) => membership.family_id === familyId && membership.user_id === userId,
+    );
+    if (isCurrentFamilyMember) {
+      return 'Ese usuario ya forma parte de la familia';
+    }
+
+    const alreadyAssignedToFamily = this.familyUsers().some(
+      (membership) => membership.user_id === userId,
+    );
+    if (alreadyAssignedToFamily) {
+      return 'Ya tiene una familia asignada';
+    }
+
+    const hasPendingInvitation = this.familyInvitations().some(
+      (invitation) =>
+        invitation.family_id === familyId &&
+        invitation.invited_user_id === userId &&
+        invitation.status === 'pending',
+    );
+    if (hasPendingInvitation) {
+      return 'Ya existe una invitacion pendiente';
+    }
+
+    return null;
+  }
+
+  private getFriendInviteDisabledReason(userId: number): string | null {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return 'No se pudo identificar al usuario actual';
+    }
+
+    const relationships = this.friends().filter(
+      (friend) =>
+        (friend.user_id === currentUserId && friend.friend_id === userId) ||
+        (friend.user_id === userId && friend.friend_id === currentUserId),
+    );
+
+    if (relationships.length === 0) {
+      return null;
+    }
+
+    if (relationships.some((relationship) => relationship.status === 'accepted')) {
+      return 'Ya son amigos';
+    }
+
+    if (relationships.some((relationship) => relationship.status === 'pending')) {
+      return 'Ya existe una solicitud de amistad pendiente';
+    }
+
+    return 'No se puede enviar la solicitud de amistad';
   }
 }
 

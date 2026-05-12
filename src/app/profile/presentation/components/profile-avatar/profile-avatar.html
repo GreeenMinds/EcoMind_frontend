@@ -1,0 +1,29 @@
+<div class="avatar-shell" [class.avatar-shell--hero]="size === 'hero'">
+  @if (avatarUrl && showAvatarImage()) {
+    <img
+      class="avatar avatar--image"
+      [class.avatar--hero]="size === 'hero'"
+      [src]="avatarUrl"
+      [alt]="name"
+      (error)="hideAvatarImage()">
+  }
+
+  @if (!avatarUrl || !showAvatarImage()) {
+    <div
+      class="avatar"
+      [class.avatar--hero]="size === 'hero'"
+      [style.--avatar-hue]="getAvatarHue(userId)">
+      {{ getInitials(name) }}
+    </div>
+  }
+
+  @if (overlayUrl && showOverlayImage()) {
+    <img
+      class="avatar-overlay"
+      [class.avatar-overlay--hero]="size === 'hero'"
+      [class.avatar-overlay--hat]="overlayType === 'hat' || overlayType === 'bun'"
+      [src]="overlayUrl"
+      alt="Accesorio"
+      (error)="hideOverlayImage()">
+  }
+</div>

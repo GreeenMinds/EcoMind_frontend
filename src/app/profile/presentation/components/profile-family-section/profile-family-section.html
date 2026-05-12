@@ -89,24 +89,66 @@
 
         @if (inviteCandidates.length > 0) {
           <div class="family-invite__controls">
-            <select #candidateSelect class="family-input">
-              @for (candidate of inviteCandidates; track candidate.id) {
-                <option [value]="candidate.id">{{ candidate.name }}</option>
-              }
-            </select>
+            <input
+              class="family-input"
+              type="text"
+              [value]="familyInviteSearch"
+              placeholder="Busca un usuario por nombre"
+              (input)="updateFamilyInviteSearch($any($event.target).value)" />
 
-            <select #roleSelect class="family-input">
+            <select
+              class="family-input"
+              [value]="inviteRole"
+              (change)="updateInviteRole($any($event.target).value)">
               <option value="child">Hijo/Hija</option>
               <option value="parent">Padre/Madre</option>
             </select>
-
-            <button
-              class="profile-action profile-action--invite"
-              type="button"
-              (click)="emitInvite(candidateSelect.value, roleSelect.value)">
-              Enviar invitacion
-            </button>
           </div>
+
+          @if (familyInviteSearch.trim().length > 0) {
+            @if (filteredInviteCandidates.length > 0) {
+              <div class="family-invite__results">
+                @for (candidate of filteredInviteCandidates; track candidate.user.id) {
+                  <div class="family-invite__result">
+                    <div class="family-invite__identity">
+                      <app-profile-avatar
+                        [name]="candidate.user.name"
+                        [userId]="candidate.user.id"
+                        [avatarUrl]="candidate.equippedAvatarUrl"
+                        [overlayUrl]="candidate.equippedOverlayUrl"
+                        [overlayType]="candidate.equippedOverlayType">
+                      </app-profile-avatar>
+
+                      <div>
+                        <strong>{{ candidate.user.name }}</strong>
+                        <p>
+                          {{
+                            candidate.disabledReason
+                              ? candidate.disabledReason
+                              : 'Disponible para invitacion familiar'
+                          }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      class="profile-action profile-action--invite"
+                      type="button"
+                      [disabled]="!!candidate.disabledReason"
+                      (click)="emitInvite(candidate)">
+                      Invitar
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="empty-copy">No se encontraron coincidencias para esa busqueda.</p>
+            }
+          } @else {
+            <p class="empty-copy">
+              Escribe un nombre para ver coincidencias y enviar una invitacion.
+            </p>
+          }
         } @else {
           <p class="empty-copy">No hay usuarios disponibles para invitar.</p>
         }
@@ -141,11 +183,13 @@
         <div class="family-grid">
           @for (member of members; track member.membership.id) {
             <article class="family-member-card">
-              <div
-                class="avatar avatar--member"
-                [style.--avatar-hue]="getAvatarHue(member.user.id)">
-                {{ getInitials(member.user.name) }}
-              </div>
+              <app-profile-avatar
+                [name]="member.user.name"
+                [userId]="member.user.id"
+                [avatarUrl]="member.equippedAvatarUrl"
+                [overlayUrl]="member.equippedOverlayUrl"
+                [overlayType]="member.equippedOverlayType">
+              </app-profile-avatar>
               <h3>{{ member.user.name }}</h3>
               <span class="family-role-chip">{{ getRoleLabel(member.membership.family_role) }}</span>
               <button class="profile-action" type="button" (click)="openMember.emit(member)">
