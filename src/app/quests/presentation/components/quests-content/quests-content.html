@@ -13,7 +13,7 @@
       </div>
       <div class="ranking-line" [attr.aria-label]="'quests.rankPlaceholder' | translate">
         <img class="ranking-icon" src="/assets/images/quests/throphy.png" alt="" aria-hidden="true">
-        <span>{{ 'quests.rank' | translate: {rank: rankingPlaceholder} }}</span>
+        <span>{{ 'quests.rank' | translate: {rank: weeklyRankingPosition()} }}</span>
       </div>
     </section>
 

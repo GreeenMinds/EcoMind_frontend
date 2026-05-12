@@ -77,6 +77,7 @@ export interface CollaborativeQuestContext {
 })
 export class QuestsService {
   private readonly destroyRef = inject(DestroyRef);
+  private dailyQuestTimerId: ReturnType<typeof setTimeout> | null = null;
 
   private readonly questsSignal = signal<Quest[]>([]);
   private readonly questsUserSignal = signal<QuestUser[]>([]);
@@ -121,6 +122,12 @@ export class QuestsService {
     private readonly monetizationStoreService: MonetizationStoreService,
   ) {
     this.loadQuestData();
+    this.scheduleNextDailyQuestSync();
+    this.destroyRef.onDestroy(() => {
+      if (this.dailyQuestTimerId) {
+        clearTimeout(this.dailyQuestTimerId);
+      }
+    });
   }
 
   refresh(): void {
@@ -150,10 +157,13 @@ export class QuestsService {
   }
 
   getDailyQuest(): Signal<QuestSummary | undefined> {
-    // TODO: When the real API supports daily quest scheduling, match the quest by the current date.
-    // The fake API only exposes daily quests through the category and expiration date.
     return computed(() =>
-      this.getQuestSummaries()().find((summary) => summary.quest.category === 'daily_quest'),
+      this.getQuestSummaries()().find(
+        (summary) =>
+          summary.quest.category === 'daily_quest' &&
+          summary.questUser?.user_id === this.currentUserId() &&
+          summary.questUser.status !== 'completed',
+      ),
     );
   }
 
@@ -801,12 +811,197 @@ export class QuestsService {
           this.usersSignal.set(data.users);
           this.friendsSignal.set(data.friends);
           this.loadingSignal.set(false);
+          this.syncDailyQuestAssignment();
         },
         error: (error) => {
           this.errorSignal.set(this.formatError(error, 'Failed to load quests'));
           this.loadingSignal.set(false);
         },
       });
+  }
+
+  private scheduleNextDailyQuestSync(): void {
+    if (this.dailyQuestTimerId) {
+      clearTimeout(this.dailyQuestTimerId);
+    }
+
+    const now = new Date();
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(0, 0, 0, 0);
+    if (now >= nextMidnight) {
+      nextMidnight.setDate(nextMidnight.getDate() + 1);
+    }
+
+    this.dailyQuestTimerId = setTimeout(() => {
+      this.syncDailyQuestAssignment(true);
+      this.scheduleNextDailyQuestSync();
+    }, nextMidnight.getTime() - now.getTime());
+  }
+
+  private syncDailyQuestAssignment(_force = false): void {
+    const today = this.getTodayDate();
+    const currentUserId = this.currentUserId();
+    const dailyQuestIds = new Set(
+      this.quests()
+        .filter((quest) => quest.category === 'daily_quest')
+        .map((quest) => quest.id),
+    );
+    const userDailyQuestUsers = this.questsUser().filter(
+      (questUser) => questUser.user_id === currentUserId && dailyQuestIds.has(questUser.quest_id),
+    );
+
+    if (
+      userDailyQuestUsers.some(
+        (questUser) => questUser.start_date === today || questUser.end_date === today,
+      )
+    ) {
+      return;
+    }
+
+    const staleQuestUsers = userDailyQuestUsers.filter(
+      (questUser) => questUser.status !== 'completed',
+    );
+    const dailyQuest = this.pickDailyQuestForDate(today);
+    if (!dailyQuest) {
+      return;
+    }
+
+    const createDailyQuest = () => this.createDailyQuestAssignment(dailyQuest);
+    if (staleQuestUsers.length === 0) {
+      createDailyQuest();
+      return;
+    }
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    forkJoin(this.buildDailyQuestDeletionRequests(staleQuestUsers))
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          const staleQuestUserIds = new Set(staleQuestUsers.map((questUser) => questUser.id));
+          const staleActivityUserIds = new Set(
+            this.activitiesUser()
+              .filter((activityUser) =>
+                staleQuestUsers.some((questUser) =>
+                  this.activities().some(
+                    (activity) =>
+                      activity.id === activityUser.activity_id &&
+                      activity.quest_id === questUser.quest_id,
+                  ),
+                ),
+              )
+              .map((activityUser) => activityUser.id),
+          );
+          this.questsUserSignal.update((questsUser) =>
+            questsUser.filter((questUser) => !staleQuestUserIds.has(questUser.id)),
+          );
+          this.activitiesUserSignal.update((activitiesUser) =>
+            activitiesUser.filter((activityUser) => !staleActivityUserIds.has(activityUser.id)),
+          );
+          this.loadingSignal.set(false);
+          createDailyQuest();
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Failed to refresh daily quest'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
+  private buildDailyQuestDeletionRequests(staleQuestUsers: QuestUser[]): Observable<unknown>[] {
+    const staleQuestIds = new Set(staleQuestUsers.map((questUser) => questUser.quest_id));
+    const staleActivityIds = new Set(
+      this.activities()
+        .filter((activity) => staleQuestIds.has(activity.quest_id))
+        .map((activity) => activity.id),
+    );
+    const activityUsersToDelete = this.activitiesUser().filter(
+      (activityUser) =>
+        activityUser.user_id === this.currentUserId() && staleActivityIds.has(activityUser.activity_id),
+    );
+
+    return [
+      ...staleQuestUsers.map((questUser) => this.questsApi.deleteQuestUser(questUser.id)),
+      ...activityUsersToDelete.map((activityUser) =>
+        this.questsApi.deleteActivityUser(activityUser.id),
+      ),
+    ];
+  }
+
+  private createDailyQuestAssignment(quest: Quest): void {
+    const questUser = new QuestUser({
+      id: 0,
+      user_id: this.currentUserId(),
+      quest_id: quest.id,
+      status: 'in_progress',
+      progress: 0,
+      start_date: this.getTodayDate(),
+      end_date: null,
+      collaborative_session_id: null,
+    });
+    const activitiesToStart = this.activities().filter((activity) => activity.quest_id === quest.id);
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.questsApi
+      .createQuestUser(questUser)
+      .pipe(
+        switchMap((createdQuestUser) => {
+          if (activitiesToStart.length === 0) {
+            return of({ createdQuestUser, createdActivitiesUser: [] as ActivityUser[] });
+          }
+
+          return forkJoin(
+            activitiesToStart.map((activity) =>
+              this.questsApi.createActivityUser(
+                new ActivityUser({
+                  id: 0,
+                  user_id: this.currentUserId(),
+                  activity_id: activity.id,
+                  progress: 0,
+                  end_date: null,
+                  collaborative_session_id: null,
+                }),
+              ),
+            ),
+          ).pipe(map((createdActivitiesUser) => ({ createdQuestUser, createdActivitiesUser })));
+        }),
+        retry(2),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: ({ createdQuestUser, createdActivitiesUser }) => {
+          this.questsUserSignal.update((questsUser) => [...questsUser, createdQuestUser]);
+          this.activitiesUserSignal.update((activitiesUser) => [
+            ...activitiesUser,
+            ...createdActivitiesUser,
+          ]);
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Failed to assign daily quest'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
+  private pickDailyQuestForDate(date: string): Quest | undefined {
+    const dailyQuests = this.quests().filter((quest) => quest.category === 'daily_quest');
+    const scheduledQuest = dailyQuests.find((quest) => this.getQuestScheduleDate(quest) === date);
+    if (scheduledQuest) {
+      return scheduledQuest;
+    }
+
+    const pastQuests = dailyQuests.filter((quest) => {
+      const scheduleDate = this.getQuestScheduleDate(quest);
+      return scheduleDate !== null && scheduleDate < date;
+    });
+    const fallbackPool = pastQuests.length > 0 ? pastQuests : dailyQuests;
+    return fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+  }
+
+  private getQuestScheduleDate(quest: Quest): string | null {
+    return quest.expiration_date?.slice(0, 10) ?? null;
   }
 
   private buildQuestSummaryById(questId: number): QuestSummary | undefined {
@@ -1658,6 +1853,10 @@ export class QuestsService {
           switchMap((user) => {
             user.gem_balance += gemAmount;
             user.ecopoints  += ecopointsAmount;
+            if (user.last_streak_date !== this.getTodayDate()) {
+              user.streak += 1;
+              user.last_streak_date = this.getTodayDate();
+            }
             return this.profileApi.updateUser(user).pipe(
               tap((updatedUser) => {
                 // Registrar gem_movement en db.json y sincronizar balance en monetización

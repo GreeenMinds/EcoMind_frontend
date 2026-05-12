@@ -11,6 +11,7 @@ export class User implements BaseEntity {
   registered_at: string;
   gem_balance: number;
   ecopoints: number;
+  last_streak_date: string | null;
 
   constructor() {
     this.id = 0;
@@ -23,5 +24,6 @@ export class User implements BaseEntity {
     this.registered_at = '';
     this.gem_balance = 0;
     this.ecopoints = 0;
+    this.last_streak_date = null;
   }
 }

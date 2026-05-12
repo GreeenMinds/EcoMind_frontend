@@ -1389,6 +1389,16 @@
       "start_date": "2026-05-12",
       "end_date": "2026-05-12",
       "collaborative_session_id": null
+    },
+    {
+      "id": 16,
+      "user_id": 1,
+      "quest_id": 15,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-05-12",
+      "end_date": null,
+      "collaborative_session_id": null
     }
   ],
   "activity_user": [
@@ -1526,6 +1536,14 @@
       "activity_id": 5,
       "progress": 100,
       "end_date": "2026-05-12",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 22,
+      "user_id": 1,
+      "activity_id": 15,
+      "progress": 0,
+      "end_date": null,
       "collaborative_session_id": null
     }
   ],
