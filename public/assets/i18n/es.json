@@ -121,9 +121,7 @@
       "weekly": "Ranking Semanal"
     },
     "subtitle": {
-      "global": "Todo el tiempo",
-      "monthly": "Mayo 2026",
-      "weekly": "1 – 7 de mayo, 2026"
+      "global": "Todo el tiempo"
     },
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
