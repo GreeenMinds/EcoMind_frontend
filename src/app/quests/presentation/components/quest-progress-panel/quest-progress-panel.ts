@@ -22,6 +22,7 @@ export class QuestProgressPanel {
 
   readonly maxProgressItems = 4;
   readonly modalOpen = signal(false);
+  readonly abandonConfirmation = signal<ProgressPanelItem | null>(null);
 
   private readonly activeProgressSummaries = computed(() =>
     this.pickProgressSummaries(
@@ -48,6 +49,26 @@ export class QuestProgressPanel {
 
   closeModal(): void {
     this.modalOpen.set(false);
+  }
+
+  requestAbandon(item: ProgressPanelItem, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.abandonConfirmation.set(item);
+  }
+
+  closeAbandonConfirmation(): void {
+    this.abandonConfirmation.set(null);
+  }
+
+  confirmAbandon(): void {
+    const item = this.abandonConfirmation();
+    if (!item) {
+      return;
+    }
+
+    this.questsService.deleteActiveQuest(item.questId);
+    this.abandonConfirmation.set(null);
   }
 
   private pickProgressSummaries(
