@@ -1,6 +1,6 @@
 <div class="profile-modal-backdrop" (click)="close.emit()"></div>
 
-<section class="profile-modal" aria-label="Editar compromiso">
+<section class="profile-modal" [attr.aria-label]="'profilePage.modal.ariaLabel' | translate">
   <div class="profile-modal__header">
     <h2>{{ title }}</h2>
   </div>
@@ -18,14 +18,14 @@
       type="button"
       [disabled]="saving"
       (click)="save.emit()">
-      Guardar Compromiso
+      {{ 'profilePage.modal.saveCommitment' | translate }}
     </button>
     <button
       class="profile-action profile-action--muted"
       type="button"
       [disabled]="saving"
       (click)="clear.emit()">
-      Eliminar compromiso
+      {{ 'profilePage.modal.deleteCommitment' | translate }}
     </button>
   </div>
 </section>

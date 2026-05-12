@@ -1,17 +1,15 @@
 <section class="friends-shell">
   <article class="friends-banner">
     <div>
-      <p class="profile-eyebrow">Comunidad</p>
-      <h2>Red de amigos</h2>
-      <p>
-        Contactos registrados.
-      </p>
+      <p class="profile-eyebrow">{{ 'profilePage.friends.eyebrow' | translate }}</p>
+      <h2>{{ 'profilePage.friends.title' | translate }}</h2>
+      <p>{{ 'profilePage.friends.subtitle' | translate }}</p>
     </div>
   </article>
 
   @if (incomingRequests.length > 0) {
     <article class="friends-requests">
-      <h3>Solicitudes recibidas</h3>
+      <h3>{{ 'profilePage.friends.receivedRequests' | translate }}</h3>
 
       <div class="friends-requests__list">
         @for (request of incomingRequests; track request.relationship.id) {
@@ -36,13 +34,13 @@
                 class="profile-action profile-action--solid"
                 type="button"
                 (click)="emitAcceptFriendRequest(request)">
-                Aceptar
+                {{ 'profilePage.common.accept' | translate }}
               </button>
               <button
                 class="profile-action profile-action--danger"
                 type="button"
                 (click)="emitRejectFriendRequest(request)">
-                Rechazar
+                {{ 'profilePage.common.reject' | translate }}
               </button>
             </div>
           </div>
@@ -52,14 +50,14 @@
   }
 
   <article class="friends-invite">
-    <h3>Enviar solicitud de amistad</h3>
+    <h3>{{ 'profilePage.friends.sendRequestTitle' | translate }}</h3>
 
     @if (inviteCandidates.length > 0) {
       <input
         class="friends-input"
         type="text"
         [value]="friendInviteSearch"
-        placeholder="Busca un usuario por nombre"
+        [placeholder]="'profilePage.friends.searchUserPlaceholder' | translate"
         (input)="updateFriendInviteSearch($any($event.target).value)" />
 
       @if (friendInviteSearch.trim().length > 0) {
@@ -93,25 +91,25 @@
                   type="button"
                   [disabled]="!!candidate.disabledReason"
                   (click)="emitFriendRequest(candidate)">
-                  Enviar solicitud
+                  {{ 'profilePage.friends.sendRequest' | translate }}
                 </button>
               </div>
             }
           </div>
         } @else {
-          <p class="empty-copy">No se encontraron coincidencias para esa busqueda.</p>
+          <p class="empty-copy">{{ 'profilePage.friends.noMatches' | translate }}</p>
         }
       } @else {
-        <p class="empty-copy">Escribe un nombre para ver coincidencias en tiempo real.</p>
+        <p class="empty-copy">{{ 'profilePage.friends.searchHint' | translate }}</p>
       }
     } @else {
-      <p class="empty-copy">No hay usuarios disponibles para enviar solicitud.</p>
+      <p class="empty-copy">{{ 'profilePage.friends.noUsersToInvite' | translate }}</p>
     }
   </article>
 
   <section class="friends-list">
     <div class="friends-list__header">
-      <h2>Amigos ({{ friends.length }})</h2>
+      <h2>{{ 'profilePage.friends.listTitle' | translate: { count: friends.length } }}</h2>
     </div>
 
     @if (friends.length > 0) {
@@ -137,20 +135,20 @@
 
             <div class="friend-card__actions">
               <button class="profile-action" type="button" (click)="emitOpenFriend(item)">
-                Ver perfil
+                {{ 'profilePage.common.viewProfile' | translate }}
               </button>
               <button
                 class="profile-action profile-action--danger"
                 type="button"
                 (click)="emitRemoveFriend(item)">
-                Eliminar
+                {{ 'profilePage.common.remove' | translate }}
               </button>
             </div>
           </article>
         }
       </div>
     } @else {
-      <p class="empty-copy">Aun no tienes amistades aceptadas.</p>
+      <p class="empty-copy">{{ 'profilePage.friends.noFriends' | translate }}</p>
     }
   </section>
 </section>

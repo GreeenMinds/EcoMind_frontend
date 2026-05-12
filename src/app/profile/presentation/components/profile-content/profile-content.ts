@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin, switchMap } from 'rxjs';
 import { CommunityService } from '../../../../community/application/community.service';
 import { MonetizationApi } from '../../../../monetization/infrastructure/monetization-api';
@@ -53,6 +54,7 @@ import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
     ProfileProgressSection,
     ProfileFriendsSection,
     ProfileCommitmentModal,
+    TranslatePipe,
   ],
   templateUrl: './profile-content.html',
   styleUrl: './profile-content.css',
@@ -63,6 +65,7 @@ export class ProfileContent {
   private readonly questsService = inject(QuestsService);
   private readonly communityService = inject(CommunityService);
   private readonly monetizationApi = inject(MonetizationApi);
+  private readonly translate = inject(TranslateService);
 
   readonly currentUser = this.profileService.currentUserProfile;
   readonly activeTab = signal<ProfileTab>('summary');
@@ -978,8 +981,10 @@ export class ProfileContent {
 
   getCommitmentTitle(): string {
     return this.isViewingOwnProfile()
-      ? 'Mi compromiso'
-      : `Compromiso de ${this.getFirstName(this.viewedUser()?.name ?? '')}`;
+      ? this.translate.instant('profilePage.summary.selfCommitment')
+      : this.translate.instant('profilePage.summary.memberCommitment', {
+          name: this.getFirstName(this.viewedUser()?.name ?? ''),
+        });
   }
 
   getCommitmentDateLabel(): string {
@@ -988,11 +993,15 @@ export class ProfileContent {
       return '';
     }
 
-    return `Actualizado ${this.formatRelativeDate(user.registered_at)}`;
+    return this.translate.instant('profilePage.summary.updated', {
+      relative: this.formatRelativeDate(user.registered_at),
+    });
   }
 
   getFriendCommitmentDateLabel(user: User): string {
-    return `Actualizado ${this.formatRelativeDate(user.registered_at)}`;
+    return this.translate.instant('profilePage.summary.updated', {
+      relative: this.formatRelativeDate(user.registered_at),
+    });
   }
 
   getFamilySummary(): string {
@@ -1015,10 +1024,10 @@ export class ProfileContent {
   getRoleLabel(role: string): string {
     const normalizedRole = this.normalizeFamilyRole(role);
     if (normalizedRole === 'parent') {
-      return 'Padre/Madre';
+      return this.translate.instant('profilePage.role.parent');
     }
     if (normalizedRole === 'child') {
-      return 'Hijo/Hija';
+      return this.translate.instant('profilePage.role.child');
     }
     return role;
   }
@@ -1026,10 +1035,12 @@ export class ProfileContent {
   getViewedMembershipCaption(): string {
     const joinedAt = this.viewedMembership()?.membership.joined_at;
     if (!joinedAt) {
-      return 'Sin fecha de ingreso';
+      return this.translate.instant('profilePage.summary.noJoinDate');
     }
 
-    return `Se unio ${this.formatRelativeDate(joinedAt)}`;
+    return this.translate.instant('profilePage.summary.joined', {
+      relative: this.formatRelativeDate(joinedAt),
+    });
   }
 
   private loadProfileContext(): void {
@@ -1270,7 +1281,7 @@ export class ProfileContent {
 
   private formatRelativeDate(dateValue: string | null | undefined): string {
     if (!dateValue) {
-      return 'hace poco';
+      return this.translate.instant('profilePage.relative.justNow');
     }
 
     const now = new Date();
@@ -1281,21 +1292,21 @@ export class ProfileContent {
     );
 
     if (diffInDays === 0) {
-      return 'hoy';
+      return this.translate.instant('profilePage.relative.today');
     }
     if (diffInDays === 1) {
-      return 'hace 1 dia';
+      return this.translate.instant('profilePage.relative.dayAgo');
     }
     if (diffInDays < 30) {
-      return `hace ${diffInDays} dias`;
+      return this.translate.instant('profilePage.relative.daysAgo', { count: diffInDays });
     }
 
     const diffInMonths = Math.floor(diffInDays / 30);
     if (diffInMonths === 1) {
-      return 'hace 1 mes';
+      return this.translate.instant('profilePage.relative.monthAgo');
     }
 
-    return `hace ${diffInMonths} meses`;
+    return this.translate.instant('profilePage.relative.monthsAgo', { count: diffInMonths });
   }
 
   private normalizeFamilyRole(role: string | null | undefined): 'parent' | 'child' | 'unknown' {

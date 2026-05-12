@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile-commitment-modal',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './profile-commitment-modal.html',
   styleUrl: './profile-commitment-modal.css',
 })

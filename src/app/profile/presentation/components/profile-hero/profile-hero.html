@@ -11,7 +11,7 @@
       </app-profile-avatar>
 
       <div class="profile-hero__copy">
-        <p class="profile-eyebrow">EcoMind profile</p>
+        <p class="profile-eyebrow">{{ 'profilePage.hero.eyebrow' | translate }}</p>
         <h1>{{ currentUser.name }}</h1>
         <p class="profile-handle">{{ handle }}</p>
       </div>
@@ -20,26 +20,26 @@
     <div class="profile-hero__stats">
       <article class="profile-stat">
         <strong>{{ currentUser.ecopoints }}</strong>
-        <span>Puntos Totales</span>
+        <span>{{ 'profilePage.hero.totalPoints' | translate }}</span>
       </article>
 
       <article class="profile-stat">
         <strong>{{ friendCount }}</strong>
-        <span>Amigos</span>
+        <span>{{ 'profilePage.hero.friends' | translate }}</span>
       </article>
     </div>
 
     <div class="profile-hero__actions">
       @if (isViewingOwnProfile) {
         <button class="profile-action" type="button" (click)="editProfile.emit()">
-          Editar Perfil
+          {{ 'profilePage.hero.editProfile' | translate }}
         </button>
         <button class="profile-action profile-action--solid" type="button" (click)="shareProfile.emit()">
-          Compartir Perfil
+          {{ 'profilePage.hero.shareProfile' | translate }}
         </button>
       } @else {
         <button class="profile-action" type="button" (click)="shareProfile.emit()">
-          Compartir Perfil
+          {{ 'profilePage.hero.shareProfile' | translate }}
         </button>
         <button
           class="profile-action profile-action--danger"
