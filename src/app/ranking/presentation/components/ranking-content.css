@@ -89,13 +89,69 @@
   min-width: 36px;
 }
 
-.avatar {
+.avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
   width: 52px;
   height: 52px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #4CAF50;
   flex-shrink: 0;
+  border: 2px solid #4CAF50;
+  background:
+    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.95), transparent 35%),
+    linear-gradient(
+      150deg,
+      hsl(var(--avatar-hue) 78% 94%) 0%,
+      hsl(var(--avatar-hue) 66% 82%) 100%
+    );
+  color: hsl(var(--avatar-hue) 40% 30%);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.avatar--img {
+  object-fit: cover;
+  background: none;
+  border: 2px solid #4CAF50;
+}
+
+.avatar--fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  border: 2px solid #e8f5e9;
+  z-index: 2;
+}
+
+.avatar-overlay--hat {
+  top: -18px;
+  bottom: auto;
+  right: 50%;
+  transform: translateX(50%);
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .username {
@@ -157,9 +213,28 @@
     font-size: 0.9rem;
   }
 
+  .avatar-wrapper {
+    width: 44px;
+    height: 44px;
+  }
+
   .avatar {
     width: 44px;
     height: 44px;
+    font-size: 0.85rem;
+  }
+
+  .avatar-overlay {
+    width: 18px;
+    height: 18px;
+    bottom: -6px;
+    right: -6px;
+  }
+
+  .avatar-overlay--hat {
+    width: 30px;
+    height: 30px;
+    top: -14px;
   }
 
   .username {
@@ -195,9 +270,28 @@
     padding: 4px 6px;
   }
 
+  .avatar-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
   .avatar {
     width: 38px;
     height: 38px;
+    font-size: 0.7rem;
+  }
+
+  .avatar-overlay {
+    width: 16px;
+    height: 16px;
+    bottom: -5px;
+    right: -5px;
+  }
+
+  .avatar-overlay--hat {
+    width: 26px;
+    height: 26px;
+    top: -12px;
   }
 
   .medal {
