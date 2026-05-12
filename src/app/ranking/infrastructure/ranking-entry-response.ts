@@ -1,11 +1,10 @@
-/**
- * @summary Represents the raw ranking entry object from the API response.
- * @author Victor Jhosef Laura Acosta
- */
 export interface RankingEntryResponse {
+  userId: number;
   position: number;
   username: string;
   score: number;
-  avatarUrl: string;
+  equippedAvatarUrl: string | null;
+  equippedOverlayUrl: string | null;
+  equippedOverlayType: string | null;
   isCurrentUser: boolean;
 }

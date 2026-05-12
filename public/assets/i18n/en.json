@@ -121,9 +121,7 @@
       "weekly": "Ranking Weekly"
     },
     "subtitle": {
-      "global": "All time",
-      "monthly": "May 2026",
-      "weekly": "May 1 – 7, 2026"
+      "global": "All time"
     },
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
