@@ -1,22 +1,14 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TimeApiService {
-  private http = inject(HttpClient);
-
   getCurrentTime(): Observable<Date> {
-    return this.http.get<any>('https://worldtimeapi.org/api/timezone/America/Lima').pipe(
-      map(response => new Date(response.datetime)),
-      catchError(() => {
-        const now = new Date();
-        const limaOffset = -5 * 60;
-        const localOffset = now.getTimezoneOffset();
-        const limaTime = new Date(now.getTime() + (localOffset - limaOffset) * 60000);
-        return of(limaTime);
-      })
-    );
+    const now = new Date();
+    const limaOffset = -5 * 60;
+    const localOffset = now.getTimezoneOffset();
+    const limaTime = new Date(now.getTime() + (localOffset - limaOffset) * 60000);
+    return of(limaTime);
   }
 
   calculateDateRange(now: Date, rankingId: number): { start: Date; end: Date } {
