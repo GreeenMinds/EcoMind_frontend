@@ -36,7 +36,7 @@ export class RankingService {
       if (current !== undefined) {
         lastEcopoints = current;
       }
-    }, 3000);
+    }, 15000);
   }
 
   loadRanking(_rankingId: number = 1): void {
