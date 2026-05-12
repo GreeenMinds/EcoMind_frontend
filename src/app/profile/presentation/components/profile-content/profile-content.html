@@ -20,9 +20,13 @@
       [friendCount]="viewedFriendCount()"
       [isViewingOwnProfile]="isViewingOwnProfile()"
       [saving]="savingProfile()"
+      [equippedAvatarUrl]="viewedUserAvatar().equippedAvatarUrl"
+      [equippedOverlayUrl]="viewedUserAvatar().equippedOverlayUrl"
+      [equippedOverlayType]="viewedUserAvatar().equippedOverlayType"
+      [removeActionLabel]="heroRemoveActionLabel()"
       (editProfile)="ignoreEditProfile()"
       (shareProfile)="shareProfile()"
-      (removeMember)="removeSelectedFamilyMember()">
+      (removeMember)="handleViewedUserRemoval()">
     </app-profile-hero>
 
     <app-profile-tabs
@@ -85,12 +89,21 @@
         <app-profile-family-section
           [family]="primaryFamily()"
           [familySummary]="getFamilySummary()"
-          [familyCommitment]="primaryFamily().commitment || null"
+          [familyCommitment]="primaryFamily()?.commitment || null"
           [members]="familyMembers()"
           [canManageFamily]="canManageFamily()"
+          [canCreateFamily]="canCreateFamily()"
+          [canLeaveFamily]="canLeaveFamily()"
           [inviteCandidates]="familyInviteCandidates()"
+          [noFamilyMessage]="'No estas inscrito o incluido en una familia.'"
+          [incomingInvitations]="incomingInvitations()"
+          [outgoingInvitations]="outgoingInvitations()"
           (editCommitment)="openFamilyCommitmentEditor()"
+          (createFamily)="createFamily($event)"
           (inviteMember)="inviteFamilyMember($event)"
+          (acceptInvitation)="acceptFamilyInvitation($event)"
+          (rejectInvitation)="rejectFamilyInvitation($event)"
+          (leaveFamily)="leaveCurrentFamily()"
           (openMember)="openFamilyMember($event)">
         </app-profile-family-section>
       }
@@ -101,10 +114,6 @@
         [pending]="pendingQuestProgress()"
         [completed]="completedQuestProgress()">
       </app-profile-progress-section>
-    }
-
-    @if (activeTab() === 'favorites') {
-      <app-profile-favorites-section [items]="favoriteItems()"></app-profile-favorites-section>
     }
 
     @if (activeTab() === 'friends') {
@@ -144,9 +153,13 @@
       } @else {
         <app-profile-friends-section
           [friends]="friendProfiles()"
-          [acceptedCount]="acceptedFriendProfilesCount()"
+          [inviteCandidates]="friendInviteCandidates()"
+          [incomingRequests]="incomingFriendRequests()"
           (openFriend)="openFriendProfile($event)"
-          (removeFriend)="removeFriend($event)">
+          (removeFriend)="removeFriend($event)"
+          (sendFriendRequest)="sendFriendRequest($event)"
+          (acceptFriendRequest)="acceptFriendRequest($event)"
+          (rejectFriendRequest)="rejectFriendRequest($event)">
         </app-profile-friends-section>
       }
     }

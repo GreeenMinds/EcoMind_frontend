@@ -8,12 +8,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { CommunityEventSummary } from '../../../application/community.service';
 
 @Component({
   selector: 'app-community-events-map',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-events-map.html',
   styleUrl: './community-events-map.css',
 })

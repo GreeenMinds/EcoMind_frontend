@@ -226,6 +226,64 @@ h2 {
   font-weight: 800;
 }
 
+.avatar--sm {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.avatar--img {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar--fallback {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.9), transparent 35%),
+    linear-gradient(
+      150deg,
+      hsl(var(--avatar-hue, 30) 78% 88%) 0%,
+      hsl(var(--avatar-hue, 30) 66% 76%) 100%
+    );
+  color: hsl(var(--avatar-hue, 30) 40% 30%);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.avatar-wrapper--sm {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.avatar-overlay--sm {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  border: 1px solid #e8f5e9;
+}
+
+.avatar-overlay--sm.avatar-overlay--hat {
+  top: -14px;
+  bottom: auto;
+  right: 50%;
+  transform: translateX(50%);
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 .friend-name,
 .participant-copy strong {
   min-width: 0;

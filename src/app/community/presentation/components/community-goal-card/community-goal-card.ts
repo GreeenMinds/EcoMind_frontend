@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityGoal } from '../../../domain/model/community-goal.entity';
 
 @Component({
   selector: 'app-community-goal-card',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-goal-card.html',
   styleUrl: './community-goal-card.css',
 })

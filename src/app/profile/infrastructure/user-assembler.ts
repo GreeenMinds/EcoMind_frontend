@@ -19,6 +19,7 @@ export class UserAssembler implements BaseAssembler<User, UserResource, UserResp
     user.registered_at = resource.registered_at;
     user.gem_balance = resource.gem_balance;
     user.ecopoints = resource.ecopoints;
+    user.last_streak_date = resource.last_streak_date ?? null;
     return user;
   }
 
@@ -34,6 +35,7 @@ export class UserAssembler implements BaseAssembler<User, UserResource, UserResp
       registered_at: entity.registered_at,
       gem_balance: entity.gem_balance,
       ecopoints: entity.ecopoints,
+      last_streak_date: entity.last_streak_date,
     };
   }
 }

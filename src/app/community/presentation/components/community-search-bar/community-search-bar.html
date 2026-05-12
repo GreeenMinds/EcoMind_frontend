@@ -4,6 +4,6 @@
     type="search"
     [value]="value"
     (input)="onInput($event)"
-    placeholder="Hinted search text">
+    [placeholder]="'community.searchPlaceholder' | translate">
   <span class="search-icon">⌕</span>
 </label>

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityEventSummary } from '../../../application/community.service';
 
 @Component({
   selector: 'app-community-event-registration-modal',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './community-event-registration-modal.html',
   styleUrl: './community-event-registration-modal.css',
 })

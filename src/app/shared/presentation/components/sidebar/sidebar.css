@@ -40,3 +40,49 @@
   background: #eefae9;
   color: #2f8f25;
 }
+
+@media (max-width: 900px) {
+  :host {
+    width: 100%;
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid #e3e5e8;
+  }
+
+  .dash-menu {
+    flex-direction: row;
+    gap: 10px;
+    min-height: auto;
+    padding: 12px 16px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dash-item {
+    flex: 0 0 auto;
+    min-width: 126px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .dash-menu {
+    flex-wrap: wrap;
+    gap: 8px;
+    overflow-x: visible;
+    padding: 10px 12px;
+  }
+
+  .dash-item {
+    flex: 1 1 calc(33.333% - 8px);
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 8px;
+    font-size: 0.82rem;
+  }
+}

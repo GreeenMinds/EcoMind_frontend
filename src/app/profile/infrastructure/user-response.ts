@@ -15,4 +15,5 @@ export interface UserResource extends BaseResource {
   registered_at: string;
   gem_balance: number;
   ecopoints: number;
+  last_streak_date?: string | null;
 }

@@ -15,8 +15,8 @@
     <div class="store-header">
 
       <div class="store-title-block">
-        <h1 class="store-title">Ecomind Store</h1>
-        <p class="store-subtitle">Customize your eco-experience</p>
+        <h1 class="store-title">{{ 'store.title' | translate }}</h1>
+        <p class="store-subtitle">{{ 'store.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -28,7 +28,7 @@
         class="tab-btn"
         [class.active-green]="activeTab === 'cosmetics'"
         (click)="setTab('cosmetics')">
-        Avatars & Cosmetics
+        {{ 'store.tabs.cosmetics' | translate }}
       </button>
 
       <button
@@ -36,7 +36,7 @@
         class="tab-btn"
         [class.active-green]="activeTab === 'multipliers'"
         (click)="setTab('multipliers')">
-        XP Multiplier
+        {{ 'store.tabs.multipliers' | translate }}
       </button>
 
       <button
@@ -44,7 +44,7 @@
         class="tab-btn"
         [class.active-blue]="activeTab === 'gems'"
         (click)="setTab('gems')">
-        Gems
+        {{ 'store.tabs.gems' | translate }}
       </button>
 
     </div>

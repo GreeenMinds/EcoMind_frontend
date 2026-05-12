@@ -79,30 +79,6 @@
   display: grid;
   gap: 12px;
 }
-
-.avatar {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.95), transparent 35%),
-    linear-gradient(
-      150deg,
-      hsl(var(--avatar-hue) 78% 94%) 0%,
-      hsl(var(--avatar-hue) 66% 82%) 100%
-    );
-  color: hsl(var(--avatar-hue) 40% 30%);
-  box-shadow: 0 16px 30px rgba(81, 109, 69, 0.22);
-  font-weight: 800;
-}
-
-.avatar--hero {
-  width: 110px;
-  height: 110px;
-  font-size: 2rem;
-}
-
 .profile-action {
   min-height: 52px;
   padding: 0 20px;
@@ -164,12 +140,6 @@
 
   .profile-hero__identity {
     align-items: flex-start;
-  }
-
-  .avatar--hero {
-    width: 82px;
-    height: 82px;
-    font-size: 1.45rem;
   }
 
   .profile-hero__copy h1 {

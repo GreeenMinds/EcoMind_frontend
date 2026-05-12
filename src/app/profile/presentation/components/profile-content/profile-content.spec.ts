@@ -7,7 +7,11 @@ import { Community } from '../../../../community/domain/model/community.entity';
 import { CommunityPost } from '../../../../community/domain/model/community-post.entity';
 import { Event } from '../../../../community/domain/model/event.entity';
 import { UserAchievement } from '../../../../community/domain/model/user-achievement.entity';
+import { MonetizationApi } from '../../../../monetization/infrastructure/monetization-api';
+import { CosmeticEntity } from '../../../../monetization/domain/cosmetic.entity';
+import { UserCosmeticEntity } from '../../../../monetization/domain/user-cosmetic.entity';
 import { ProfileService } from '../../../application/profile.service';
+import { FamilyInvitation } from '../../../domain/model/family-invitation.entity';
 import { Family } from '../../../domain/model/family.entity';
 import { FamilyUser } from '../../../domain/model/family-user.entity';
 import { Friend } from '../../../domain/model/friend.entity';
@@ -22,6 +26,8 @@ const createUser = (overrides: Partial<User>): User => Object.assign(new User(),
 const createFamily = (overrides: Partial<Family>): Family => Object.assign(new Family(), overrides);
 const createFamilyUser = (overrides: Partial<FamilyUser>): FamilyUser =>
   Object.assign(new FamilyUser(), overrides);
+const createFamilyInvitation = (overrides: Partial<FamilyInvitation>): FamilyInvitation =>
+  Object.assign(new FamilyInvitation(), overrides);
 const createFriend = (overrides: Partial<Friend>): Friend => Object.assign(new Friend(), overrides);
 const createAchievement = (overrides: Partial<Achievement>): Achievement =>
   Object.assign(new Achievement(), overrides);
@@ -32,8 +38,17 @@ const createCommunityPost = (overrides: Partial<CommunityPost>): CommunityPost =
 const createEvent = (overrides: Partial<Event>): Event => Object.assign(new Event(), overrides);
 const createUserAchievement = (overrides: Partial<UserAchievement>): UserAchievement =>
   Object.assign(new UserAchievement(), overrides);
+const createCosmetic = (overrides: Partial<CosmeticEntity>): CosmeticEntity =>
+  Object.assign(new CosmeticEntity(), overrides);
+const createUserCosmetic = (overrides: Partial<UserCosmeticEntity>): UserCosmeticEntity =>
+  Object.assign(new UserCosmeticEntity(), overrides);
 
 class ProfileServiceStub {
+  readonly createFriendCalls: Friend[] = [];
+  readonly createFamilyInvitationCalls: FamilyInvitation[] = [];
+  readonly updateFriendCalls: Friend[] = [];
+  readonly removeFriendCalls: number[] = [];
+
   private readonly currentUserSignal = signal(
     createUser({
       id: 1,
@@ -66,6 +81,30 @@ class ProfileServiceStub {
       gem_balance: 350,
       ecopoints: 160,
     }),
+    createUser({
+      id: 3,
+      community_id: 1,
+      email: 'lucia@ecomind.test',
+      birth_date: '1992-06-17',
+      name: 'Lucia Perez',
+      streak: 5,
+      commitment: 'I will recycle more.',
+      registered_at: '2026-05-03',
+      gem_balance: 280,
+      ecopoints: 210,
+    }),
+    createUser({
+      id: 4,
+      community_id: 1,
+      email: 'andrea@ecomind.test',
+      birth_date: '1998-02-11',
+      name: 'Andrea Paredes',
+      streak: 4,
+      commitment: 'I will save water.',
+      registered_at: '2026-05-04',
+      gem_balance: 300,
+      ecopoints: 190,
+    }),
   ];
 
   refreshCurrentUser() {
@@ -78,6 +117,13 @@ class ProfileServiceStub {
 
   getCurrentUserFamilies() {
     return of([createFamily({ id: 1, name: 'Mendoza Family' })]);
+  }
+
+  getFamilies() {
+    return of([
+      createFamily({ id: 1, name: 'Mendoza Family' }),
+      createFamily({ id: 2, name: 'Perez Family' }),
+    ]);
   }
 
   getFamilyUsers() {
@@ -96,6 +142,13 @@ class ProfileServiceStub {
         family_role: 'child',
         joined_at: '2026-05-01',
       }),
+      createFamilyUser({
+        id: 3,
+        family_id: 2,
+        user_id: 3,
+        family_role: 'parent',
+        joined_at: '2026-05-02',
+      }),
     ]);
   }
 
@@ -103,6 +156,22 @@ class ProfileServiceStub {
     return of([
       createFriend({ id: 1, user_id: 1, friend_id: 2, status: 'accepted' }),
       createFriend({ id: 2, user_id: 2, friend_id: 1, status: 'accepted' }),
+      createFriend({ id: 3, user_id: 4, friend_id: 1, status: 'pending' }),
+    ]);
+  }
+
+  getFamilyInvitations() {
+    return of([
+      createFamilyInvitation({
+        id: 1,
+        family_id: 1,
+        inviter_user_id: 1,
+        invited_user_id: 2,
+        invited_role: 'child',
+        status: 'accepted',
+        created_at: '2026-05-01T10:00:00.000Z',
+        responded_at: '2026-05-01T11:00:00.000Z',
+      }),
     ]);
   }
 
@@ -117,6 +186,53 @@ class ProfileServiceStub {
 
   removeFamilyMember() {
     return of(void 0);
+  }
+
+  createFriend(friend: Friend) {
+    this.createFriendCalls.push(friend);
+    return of(friend);
+  }
+
+  updateFriend(friend: Friend) {
+    this.updateFriendCalls.push(friend);
+    return of(friend);
+  }
+
+  removeFriend(friendId: number) {
+    this.removeFriendCalls.push(friendId);
+    return of(void 0);
+  }
+
+  createFamilyInvitation(invitation: FamilyInvitation) {
+    this.createFamilyInvitationCalls.push(invitation);
+    return of(invitation);
+  }
+}
+
+class MonetizationApiStub {
+  getCosmetics() {
+    return of([
+      createCosmetic({
+        id: 1,
+        name: 'Eco Hat',
+        description: 'Hat',
+        price: 100,
+        type: 'hat',
+        imageUrl: '/assets/images/cosmetics/eco-hat.png',
+      }),
+    ]);
+  }
+
+  getUserCosmetics() {
+    return of([
+      createUserCosmetic({
+        id: 1,
+        userId: 1,
+        cosmeticId: 1,
+        acquiredAt: '2026-05-01',
+        equipped: true,
+      }),
+    ]);
   }
 }
 
@@ -224,6 +340,7 @@ class CommunityServiceStub {
 describe('ProfileContent', () => {
   let component: ProfileContent;
   let fixture: ComponentFixture<ProfileContent>;
+  let profileService: ProfileServiceStub;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -232,16 +349,53 @@ describe('ProfileContent', () => {
         { provide: ProfileService, useClass: ProfileServiceStub },
         { provide: QuestsService, useClass: QuestsServiceStub },
         { provide: CommunityService, useClass: CommunityServiceStub },
+        { provide: MonetizationApi, useClass: MonetizationApiStub },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileContent);
     component = fixture.componentInstance;
+    profileService = TestBed.inject(ProfileService) as unknown as ProfileServiceStub;
     fixture.detectChanges();
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('blocks family invitations when the target user already belongs to another family', () => {
+    component.inviteFamilyMember({ userId: 3, role: 'child' });
+
+    expect(profileService.createFamilyInvitationCalls).toHaveLength(0);
+    expect(component.feedbackMessage()).toBe(
+      'No se puede invitar al usuario porque ya tiene una familia asignada',
+    );
+  });
+
+  it('creates a pending friend request for an eligible user', () => {
+    component.sendFriendRequest(3);
+
+    expect(profileService.createFriendCalls).toHaveLength(1);
+    expect(profileService.createFriendCalls[0].user_id).toBe(1);
+    expect(profileService.createFriendCalls[0].friend_id).toBe(3);
+    expect(profileService.createFriendCalls[0].status).toBe('pending');
+  });
+
+  it('keeps pending received requests out of the friends list and exposes them separately', () => {
+    expect(component.friendProfiles().map((friend) => friend.user.id)).toEqual([2]);
+    expect(component.incomingFriendRequests().map((request) => request.user.id)).toEqual([4]);
+  });
+
+  it('accepts an incoming friend request', () => {
+    component.acceptFriendRequest(3);
+
+    expect(profileService.updateFriendCalls).toHaveLength(1);
+    expect(profileService.updateFriendCalls[0].id).toBe(3);
+    expect(profileService.updateFriendCalls[0].status).toBe('accepted');
+  });
+
+  it('shows no pending quests when there are no missions in progress', () => {
+    expect(component.pendingQuestProgress()).toEqual([]);
   });
 });

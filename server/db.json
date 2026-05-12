@@ -17,8 +17,8 @@
       "streak": 7,
       "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 1650,
-      "ecopoints": 685
+      "gem_balance": 40,
+      "ecopoints": 460
     },
     {
       "id": 2,
@@ -42,7 +42,7 @@
       "commitment": "I will sort my waste before throwing it away.",
       "registered_at": "2026-05-02",
       "gem_balance": 1600,
-      "ecopoints": 330
+      "ecopoints": 280
     },
     {
       "id": 4,
@@ -65,7 +65,7 @@
       "streak": 6,
       "commitment": "I will reduce food waste and compost organic leftovers.",
       "registered_at": "2026-05-04",
-      "gem_balance": 520,
+      "gem_balance": 4520,
       "ecopoints": 310
     },
     {
@@ -121,7 +121,12 @@
     {
       "id": 1,
       "name": "Mendoza Family",
-      "commitment": "Como familia, reduciremos residuos y ahorraremos agua cada semana."
+      "commitment": "si o no marino?"
+    },
+    {
+      "id": 2,
+      "name": "Silva",
+      "commitment": null
     }
   ],
   "family_user": [
@@ -133,11 +138,94 @@
       "joined_at": "2026-05-01"
     },
     {
-      "id": 7,
-      "user_id": 4,
+      "id": 8,
+      "user_id": 2,
       "family_id": 1,
       "family_role": "child",
-      "joined_at": "2026-05-10"
+      "joined_at": "2026-05-12"
+    },
+    {
+      "id": 9,
+      "user_id": 4,
+      "family_id": 2,
+      "family_role": "parent",
+      "joined_at": "2026-05-12"
+    },
+    {
+      "id": 10,
+      "user_id": 3,
+      "family_id": 1,
+      "family_role": "child",
+      "joined_at": "2026-05-12"
+    },
+    {
+      "id": 11,
+      "user_id": 5,
+      "family_id": 1,
+      "family_role": "parent",
+      "joined_at": "2026-05-12"
+    }
+  ],
+  "family_invitation": [
+    {
+      "id": 1,
+      "family_id": 1,
+      "inviter_user_id": 1,
+      "invited_user_id": 2,
+      "invited_role": "child",
+      "status": "accepted",
+      "created_at": "2026-05-11T09:40:00.000Z",
+      "responded_at": "2026-05-12T05:43:38.965Z"
+    },
+    {
+      "id": 2,
+      "family_id": 1,
+      "inviter_user_id": 1,
+      "invited_user_id": 5,
+      "invited_role": "parent",
+      "status": "accepted",
+      "created_at": "2026-05-11T10:05:00.000Z",
+      "responded_at": "2026-05-12T06:46:50.811Z"
+    },
+    {
+      "id": 3,
+      "family_id": 1,
+      "inviter_user_id": 1,
+      "invited_user_id": 3,
+      "invited_role": "parent",
+      "status": "rejected",
+      "created_at": "2026-05-10T18:15:00.000Z",
+      "responded_at": "2026-05-10T20:04:00.000Z"
+    },
+    {
+      "id": 4,
+      "family_id": 2,
+      "inviter_user_id": 4,
+      "invited_user_id": 1,
+      "invited_role": "child",
+      "status": "rejected",
+      "created_at": "2026-05-12T05:45:28.142Z",
+      "responded_at": "2026-05-12T05:45:57.981Z"
+    },
+    {
+      "id": 5,
+      "family_id": 1,
+      "inviter_user_id": 1,
+      "invited_user_id": 3,
+      "invited_role": "child",
+      "status": "accepted",
+      "created_at": "2026-05-12T06:41:38.657Z",
+      "responded_at": "2026-05-12T06:41:52.680Z"
+    },
+    {
+      "id": 6,
+      "family_id": 1,
+      "inviter_user_id": 5,
+      "invited_user_id": 9,
+      "invited_role": "child",
+      "status": "pending",
+      "created_at": "2026-05-12T06:58:52.355Z",
+      "responded_at": null
     }
   ],
   "friend": [
@@ -166,12 +254,6 @@
       "status": "accepted"
     },
     {
-      "id": 6,
-      "user_id": 4,
-      "friend_id": 1,
-      "status": "pending"
-    },
-    {
       "id": 8,
       "user_id": 1,
       "friend_id": 6,
@@ -187,6 +269,18 @@
       "id": 10,
       "user_id": 1,
       "friend_id": 8,
+      "status": "accepted"
+    },
+    {
+      "id": 11,
+      "user_id": 1,
+      "friend_id": 2,
+      "status": "pending"
+    },
+    {
+      "id": 13,
+      "user_id": 1,
+      "friend_id": 5,
       "status": "accepted"
     }
   ],
@@ -1289,7 +1383,7 @@
     {
       "id": 15,
       "user_id": 1,
-      "quest_id": 17,
+      "quest_id": 3,
       "status": "completed",
       "progress": 100,
       "start_date": "2026-05-12",
@@ -1299,151 +1393,11 @@
     {
       "id": 16,
       "user_id": 1,
-      "quest_id": 3,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 17,
-      "user_id": 1,
-      "quest_id": 1,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 18,
-      "user_id": 1,
-      "quest_id": 2,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 19,
-      "user_id": 1,
-      "quest_id": 18,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 20,
-      "user_id": 3,
-      "quest_id": 18,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 21,
-      "user_id": 1,
-      "quest_id": 20,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 4
-    },
-    {
-      "id": 22,
-      "user_id": 1,
-      "quest_id": 7,
-      "status": "in_progress",
-      "progress": 0,
-      "start_date": "2026-05-12",
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 23,
-      "user_id": 1,
-      "quest_id": 20,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 5
-    },
-    {
-      "id": 24,
-      "user_id": 1,
-      "quest_id": 20,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 6
-    },
-    {
-      "id": 25,
-      "user_id": 1,
-      "quest_id": 18,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 7
-    },
-    {
-      "id": 26,
-      "user_id": 1,
-      "quest_id": 11,
-      "status": "in_progress",
-      "progress": 0,
-      "start_date": "2026-05-12",
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 27,
-      "user_id": 1,
-      "quest_id": 16,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 28,
-      "user_id": 1,
       "quest_id": 15,
-      "status": "completed",
-      "progress": 100,
+      "status": "in_progress",
+      "progress": 0,
       "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 29,
-      "user_id": 1,
-      "quest_id": 14,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 30,
-      "user_id": 1,
-      "quest_id": 13,
-      "status": "completed",
-      "progress": 100,
-      "start_date": "2026-05-12",
-      "end_date": "2026-05-12",
+      "end_date": null,
       "collaborative_session_id": null
     }
   ],
@@ -1579,7 +1533,7 @@
     {
       "id": 21,
       "user_id": 1,
-      "activity_id": 17,
+      "activity_id": 5,
       "progress": 100,
       "end_date": "2026-05-12",
       "collaborative_session_id": null
@@ -1587,177 +1541,9 @@
     {
       "id": 22,
       "user_id": 1,
-      "activity_id": 5,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 23,
-      "user_id": 1,
-      "activity_id": 1,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 24,
-      "user_id": 1,
-      "activity_id": 2,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 25,
-      "user_id": 1,
-      "activity_id": 3,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 26,
-      "user_id": 1,
-      "activity_id": 4,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": null
-    },
-    {
-      "id": 27,
-      "user_id": 1,
-      "activity_id": 18,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 28,
-      "user_id": 1,
-      "activity_id": 19,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 29,
-      "user_id": 3,
-      "activity_id": 18,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 30,
-      "user_id": 3,
-      "activity_id": 19,
-      "progress": 0,
-      "end_date": null,
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 31,
-      "user_id": 3,
-      "activity_id": 19,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 1
-    },
-    {
-      "id": 32,
-      "user_id": 1,
-      "activity_id": 22,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 4
-    },
-    {
-      "id": 33,
-      "user_id": 1,
-      "activity_id": 23,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 4
-    },
-    {
-      "id": 34,
-      "user_id": 1,
-      "activity_id": 22,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 5
-    },
-    {
-      "id": 35,
-      "user_id": 1,
-      "activity_id": 23,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 5
-    },
-    {
-      "id": 36,
-      "user_id": 1,
-      "activity_id": 22,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 6
-    },
-    {
-      "id": 37,
-      "user_id": 1,
-      "activity_id": 23,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 6
-    },
-    {
-      "id": 38,
-      "user_id": 1,
-      "activity_id": 18,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 7
-    },
-    {
-      "id": 39,
-      "user_id": 1,
-      "activity_id": 19,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": 7
-    },
-    {
-      "id": 40,
-      "user_id": 1,
-      "activity_id": 16,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 41,
-      "user_id": 1,
       "activity_id": 15,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 42,
-      "user_id": 1,
-      "activity_id": 14,
-      "progress": 100,
-      "end_date": "2026-05-12",
-      "collaborative_session_id": null
-    },
-    {
-      "id": 43,
-      "user_id": 1,
-      "activity_id": 13,
-      "progress": 100,
-      "end_date": "2026-05-12",
+      "progress": 0,
+      "end_date": null,
       "collaborative_session_id": null
     }
   ],
@@ -1934,7 +1720,7 @@
       "name": "Observatorio",
       "description": "Galaxy observatory themed avatar.",
       "price": 3000,
-      "type": "cosmetic",
+      "type": "avatar",
       "image_url": "/assets/images/cosmetics/observatorio.png"
     },
     {
@@ -1968,6 +1754,14 @@
       "price": 500,
       "type": "avatar",
       "image_url": "/assets/images/avatars/alex.png"
+    },
+    {
+      "id": 11,
+      "name": "Bun",
+      "description": "Bun fun.",
+      "price": 500,
+      "type": "bun",
+      "image_url": "/assets/images/cosmetics/bun.png"
     }
   ],
   "user_cosmetic": [
@@ -1976,7 +1770,7 @@
       "user_id": 1,
       "cosmetic_id": 1,
       "acquired_at": "2026-05-02",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 2,
@@ -2018,19 +1812,26 @@
       "user_id": 1,
       "cosmetic_id": 2,
       "acquired_at": "2026-05-11",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 8,
-      "user_id": 1,
+      "user_id": 5,
+      "cosmetic_id": 1,
+      "acquired_at": "2026-05-12",
+      "equipped": false
+    },
+    {
+      "id": 9,
+      "user_id": 5,
       "cosmetic_id": 11,
       "acquired_at": "2026-05-12",
       "equipped": true
     },
     {
-      "id": 9,
-      "user_id": 1,
-      "cosmetic_id": 6,
+      "id": 10,
+      "user_id": 5,
+      "cosmetic_id": 9,
       "acquired_at": "2026-05-12",
       "equipped": true
     }
@@ -2149,11 +1950,11 @@
     },
     {
       "id": 6,
-      "user_id": 1,
+      "user_id": 5,
       "purchase_date": "2026-05-12",
       "amount_paid": 65.99,
       "payment_status": "approved",
-      "payment_reference": "PAY-1778558233274"
+      "payment_reference": "PAY-1778568242386"
     }
   ],
   "gem_movement": [
@@ -2253,27 +2054,35 @@
       "id": 12
     },
     {
-      "user_id": 1,
+      "user_id": 5,
       "type": "purchase",
       "amount": 5000,
       "origin": "gem_package",
       "id": 13
     },
     {
-      "user_id": 1,
+      "user_id": 5,
+      "type": "spend",
+      "amount": -150,
+      "origin": "cosmetic",
+      "origin_id": 1,
+      "id": 14
+    },
+    {
+      "user_id": 5,
       "type": "spend",
       "amount": -500,
       "origin": "cosmetic",
       "origin_id": 11,
-      "id": 14
+      "id": 15
     },
     {
-      "user_id": 1,
+      "user_id": 5,
       "type": "spend",
-      "amount": -3000,
+      "amount": -350,
       "origin": "cosmetic",
-      "origin_id": 6,
-      "id": 15
+      "origin_id": 9,
+      "id": 16
     },
     {
       "user_id": 1,
@@ -2281,14 +2090,6 @@
       "amount": 25,
       "origin": "quest",
       "origin_id": 2,
-      "id": 16
-    },
-    {
-      "user_id": 1,
-      "type": "quest_reward",
-      "amount": 20,
-      "origin": "quest",
-      "origin_id": 17,
       "id": 17
     },
     {
@@ -2298,38 +2099,6 @@
       "origin": "quest",
       "origin_id": 3,
       "id": 18
-    },
-    {
-      "user_id": 1,
-      "type": "quest_reward",
-      "amount": 30,
-      "origin": "quest",
-      "origin_id": 16,
-      "id": 19
-    },
-    {
-      "user_id": 1,
-      "type": "quest_reward",
-      "amount": 20,
-      "origin": "quest",
-      "origin_id": 15,
-      "id": 20
-    },
-    {
-      "user_id": 1,
-      "type": "quest_reward",
-      "amount": 25,
-      "origin": "quest",
-      "origin_id": 14,
-      "id": 21
-    },
-    {
-      "user_id": 1,
-      "type": "quest_reward",
-      "amount": 15,
-      "origin": "quest",
-      "origin_id": 13,
-      "id": 22
     }
   ],
   "collaborative_quest_session": [
@@ -2337,10 +2106,10 @@
       "id": 1,
       "quest_id": 18,
       "owner_user_id": 1,
-      "status": "completed",
+      "status": "pending",
       "created_at": "2026-05-09",
-      "started_at": "2026-05-12",
-      "completed_at": "2026-05-12"
+      "started_at": null,
+      "completed_at": null
     },
     {
       "id": 2,
@@ -2359,42 +2128,6 @@
       "created_at": "2026-05-08",
       "started_at": "2026-05-09",
       "completed_at": null
-    },
-    {
-      "id": 4,
-      "quest_id": 20,
-      "owner_user_id": 1,
-      "status": "completed",
-      "created_at": "2026-05-12",
-      "started_at": "2026-05-12",
-      "completed_at": "2026-05-12"
-    },
-    {
-      "id": 5,
-      "quest_id": 20,
-      "owner_user_id": 1,
-      "status": "completed",
-      "created_at": "2026-05-12",
-      "started_at": "2026-05-12",
-      "completed_at": "2026-05-12"
-    },
-    {
-      "id": 6,
-      "quest_id": 20,
-      "owner_user_id": 1,
-      "status": "completed",
-      "created_at": "2026-05-12",
-      "started_at": "2026-05-12",
-      "completed_at": "2026-05-12"
-    },
-    {
-      "id": 7,
-      "quest_id": 18,
-      "owner_user_id": 1,
-      "status": "completed",
-      "created_at": "2026-05-12",
-      "started_at": "2026-05-12",
-      "completed_at": "2026-05-12"
     }
   ],
   "collaborative_quest_member": [
@@ -2428,9 +2161,9 @@
       "user_id": 4,
       "invited_by_user_id": 1,
       "role": "participant",
-      "status": "declined",
+      "status": "pending",
       "invited_at": "2026-05-09",
-      "responded_at": "2026-05-12",
+      "responded_at": null,
       "left_at": null,
       "removed_at": null
     },
@@ -2452,9 +2185,9 @@
       "user_id": 1,
       "invited_by_user_id": 3,
       "role": "participant",
-      "status": "accepted",
+      "status": "pending",
       "invited_at": "2026-05-09",
-      "responded_at": "2026-05-12",
+      "responded_at": null,
       "left_at": null,
       "removed_at": null
     },
@@ -2491,54 +2224,6 @@
       "status": "declined",
       "invited_at": "2026-05-08",
       "responded_at": "2026-05-09",
-      "left_at": null,
-      "removed_at": null
-    },
-    {
-      "id": 9,
-      "session_id": 4,
-      "user_id": 1,
-      "invited_by_user_id": null,
-      "role": "owner",
-      "status": "accepted",
-      "invited_at": null,
-      "responded_at": "2026-05-12",
-      "left_at": null,
-      "removed_at": null
-    },
-    {
-      "id": 10,
-      "session_id": 5,
-      "user_id": 1,
-      "invited_by_user_id": null,
-      "role": "owner",
-      "status": "accepted",
-      "invited_at": null,
-      "responded_at": "2026-05-12",
-      "left_at": null,
-      "removed_at": null
-    },
-    {
-      "id": 11,
-      "session_id": 6,
-      "user_id": 1,
-      "invited_by_user_id": null,
-      "role": "owner",
-      "status": "accepted",
-      "invited_at": null,
-      "responded_at": "2026-05-12",
-      "left_at": null,
-      "removed_at": null
-    },
-    {
-      "id": 12,
-      "session_id": 7,
-      "user_id": 1,
-      "invited_by_user_id": null,
-      "role": "owner",
-      "status": "accepted",
-      "invited_at": null,
-      "responded_at": "2026-05-12",
       "left_at": null,
       "removed_at": null
     }

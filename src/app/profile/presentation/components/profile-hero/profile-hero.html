@@ -1,11 +1,14 @@
 @if (user; as currentUser) {
   <section class="profile-hero">
     <div class="profile-hero__identity">
-      <div
-        class="avatar avatar--hero"
-        [style.--avatar-hue]="getAvatarHue(currentUser.id)">
-        {{ getInitials(currentUser.name) }}
-      </div>
+      <app-profile-avatar
+        [name]="currentUser.name"
+        [userId]="currentUser.id"
+        [size]="'hero'"
+        [avatarUrl]="equippedAvatarUrl"
+        [overlayUrl]="equippedOverlayUrl"
+        [overlayType]="equippedOverlayType">
+      </app-profile-avatar>
 
       <div class="profile-hero__copy">
         <p class="profile-eyebrow">EcoMind profile</p>
@@ -43,7 +46,7 @@
           type="button"
           [disabled]="saving"
           (click)="removeMember.emit()">
-          Eliminar
+          {{ removeActionLabel }}
         </button>
       }
     </div>

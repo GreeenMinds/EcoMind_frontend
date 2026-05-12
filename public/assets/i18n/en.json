@@ -42,6 +42,11 @@
     "seeMore": "See more",
     "allActive": "All active quests",
     "activeQuests": "Active quests",
+    "abandonAria": "Abandon {{ quest }}",
+    "confirmAbandonTitle": "Abandon quest",
+    "confirmAbandonMessage": "Are you sure you want to abandon \"{{ quest }}\"? Your progress will be deleted and it will appear as not started.",
+    "confirmAbandonYes": "Yes, abandon",
+    "confirmAbandonNo": "Cancel",
     "progressSummary": "Progress summary",
     "streakAndRanking": "Streak and ranking",
     "streak": "Streak",
@@ -125,5 +130,115 @@
     },
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
+  },
+  "community": {
+    "title": {
+      "feed": "Community Feed",
+      "achievements": "Community Achievements",
+      "events": "Community Events",
+      "goal": "Community Goal: {{ goal }}",
+      "nearbyEvents": "Nearby Events"
+    },
+    "subtitle": {
+      "feed": "Share progress and celebrate sustainable actions with your community.",
+      "achievements": "Review the milestones your community has reached.",
+      "events": "Find nearby activities and join with your family or community.",
+      "goal": "Track the progress of the current shared goal.",
+      "nearbyEvents": "Activities available near your community."
+    },
+    "tabs": {
+      "all": "All",
+      "achievements": "Achievements",
+      "events": "Events"
+    },
+    "filters": {
+      "all": "All",
+      "week": "This week",
+      "month": "This month"
+    },
+    "actions": {
+      "createEvent": "+ Create event"
+    },
+    "post": {
+      "justNow": "Just now",
+      "defaultAuthor": "EcoMind user"
+    },
+    "eventCard": {
+      "joinNow": "Join now",
+      "alreadyJoined": "Already joined"
+    },
+    "eventForm": {
+      "title": "New Event",
+      "name": "Name",
+      "date": "Date",
+      "time": "Time",
+      "meetingPoint": "Meeting point",
+      "description": "Description",
+      "imageUrl": "Image URL",
+      "optional": "(optional)",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "locationMap": "Event location map",
+      "eventLocation": "Event location",
+      "create": "Create event",
+      "cancel": "Cancel"
+    },
+    "registration": {
+      "title": "How would you like to register for this event?",
+      "event": "Event:",
+      "dateAndTime": "Date and time:",
+      "location": "Location:",
+      "individual": "Individual",
+      "family": "Family"
+    },
+    "loading": "Loading community...",
+    "searchPlaceholder": "Search the community",
+    "emptyPosts": "No posts to show.",
+    "emptyAchievements": "No achievements to show.",
+    "emptyMappedEvents": "No mapped events available.",
+    "mapAriaLabel": "Map of nearby community events",
+    "goalProgress": "{{ progress }} of {{ target }} {{ unit }}",
+    "participants": "{{ count }} participants"
+  },
+  "store": {
+    "title": "Ecomind Store",
+    "subtitle": "Customize your eco-experience",
+    "tabs": {
+      "cosmetics": "Avatars & Cosmetics",
+      "multipliers": "XP Multiplier",
+      "gems": "Gems"
+    },
+    "cosmetics": {
+      "storeTab": "Store",
+      "inventoryTab": "My Inventory",
+      "storeTitle": "Avatars and Cosmetics",
+      "inventoryTitle": "My Inventory",
+      "equipped": "⚡ Equipped",
+      "inInventory": "✓ In Inventory",
+      "buy": "Buy",
+      "equip": "Equip",
+      "unequip": "Unequip",
+      "emptyStore": "No cosmetics available.",
+      "emptyInventory": "Your inventory is empty.",
+      "emptyInventorySub": "Buy cosmetics in the Store!",
+      "goToStore": "Go to Store"
+    },
+    "multipliers": {
+      "title": "XP Multiplier",
+      "label": "Multiplier ×{{ factor }}",
+      "description": "Receive {{ factor }}× more ecoPoints for {{ minutes }} minutes",
+      "active": "✓ Active",
+      "buy": "Buy",
+      "empty": "No multipliers available."
+    },
+    "gems": {
+      "title": "Gems",
+      "buy": "Buy",
+      "empty": "No bundles currently available.",
+      "megaBundle": "Mega Bundle!",
+      "megaBundleGems": "10,000 Gems",
+      "megaBundleAvatars": "3 Exclusive Avatars",
+      "megaBundleMultiplier": "3x Multiplier for one week"
+    }
   }
 }

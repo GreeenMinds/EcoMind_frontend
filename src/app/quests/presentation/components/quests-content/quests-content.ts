@@ -1,8 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, computed, inject, OnInit} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Router, RouterOutlet} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
 import {ProfileService} from '../../../../profile/application/profile.service';
+import {RankingService} from '../../../../ranking/application/ranking';
 import {QuestProgressPanel} from '../quest-progress-panel/quest-progress-panel';
 
 @Component({
@@ -11,12 +12,22 @@ import {QuestProgressPanel} from '../quest-progress-panel/quest-progress-panel';
   templateUrl: './quests-content.html',
   styleUrl: './quests-content.css',
 })
-export class QuestsContent {
+export class QuestsContent implements OnInit {
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly rankingService = inject(RankingService);
 
-  readonly userStreak = toSignal(this.profileService.getUserStreak(), {initialValue: 0});
-  readonly rankingPlaceholder = 220;
+  private readonly persistedUserStreak = toSignal(this.profileService.getUserStreak(), {initialValue: 0});
+  readonly userStreak = computed(
+    () => this.profileService.currentUserProfile()?.streak ?? this.persistedUserStreak(),
+  );
+  readonly weeklyRankingPosition = computed(
+    () => this.rankingService.rankingData().get(3)?.find((entry) => entry.isCurrentUser)?.position ?? '-',
+  );
+
+  ngOnInit(): void {
+    this.rankingService.loadAllRankings();
+  }
 
   showQuestSummaryPanel(): boolean {
     const currentPath = this.router.url.split(/[?#]/)[0];

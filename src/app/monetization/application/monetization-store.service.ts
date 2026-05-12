@@ -43,6 +43,7 @@ export class MonetizationStoreService {
   private readonly multipliersSignal      = signal<MultiplierEntity[]>([]);
   private readonly gemPackagesSignal      = signal<GemPackageEntity[]>([]);
   private readonly userCosmeticsSignal    = signal<UserCosmeticEntity[]>([]);
+  private readonly allUserCosmeticsSignal = signal<UserCosmeticEntity[]>([]);
   private readonly userMultipliersSignal  = signal<UserMultiplierEntity[]>([]);
   private readonly gemBalanceSignal       = signal<number>(0);
   private readonly loadingSignal          = signal<boolean>(false);
@@ -57,6 +58,7 @@ export class MonetizationStoreService {
   readonly multipliers      = this.multipliersSignal.asReadonly();
   readonly gemPackages      = this.gemPackagesSignal.asReadonly();
   readonly userCosmetics    = this.userCosmeticsSignal.asReadonly();
+  readonly allUserCosmetics = this.allUserCosmeticsSignal.asReadonly();
   readonly userMultipliers  = this.userMultipliersSignal.asReadonly();
   readonly gemBalance       = this.gemBalanceSignal.asReadonly();
   readonly loading          = this.loadingSignal.asReadonly();
@@ -149,6 +151,7 @@ export class MonetizationStoreService {
           this.cosmeticsSignal.set(data.cosmetics);
           this.multipliersSignal.set(data.multipliers);
           this.gemPackagesSignal.set(data.gemPackages);
+          this.allUserCosmeticsSignal.set(data.userCosmetics);
           this.userCosmeticsSignal.set(
             data.userCosmetics.filter((uc) => uc.userId === this.currentUserId()),
           );
@@ -225,6 +228,7 @@ export class MonetizationStoreService {
       .subscribe({
         next: (created) => {
           this.userCosmeticsSignal.update((list) => [...list, created]);
+          this.allUserCosmeticsSignal.update((list) => [...list, created]);
           this.updateBalance(newBalance);
           this.recordMovement('spend', -cosmetic.price, 'cosmetic', cosmetic.id);
           this.errorSignal.set(null);
@@ -239,6 +243,40 @@ export class MonetizationStoreService {
 
   // ─── EQUIPAR / DESEQUIPAR ─────────────────────────────────────────────────
 
+  /**
+   * Devuelve la URL del avatar equipado de cualquier usuario.
+   * Útil para mostrar el avatar de amigos/familia sin exponer toda la lógica.
+   */
+  getEquippedAvatarUrlForUser(userId: number): string | null {
+    const equippedIds = this.allUserCosmeticsSignal()
+      .filter((uc) => uc.userId === userId && uc.equipped)
+      .map((uc) => uc.cosmeticId);
+    const avatar = this.cosmetics().find(
+      (c) => equippedIds.includes(c.id) && c.type === 'avatar'
+    );
+    return avatar?.imageUrl ?? null;
+  }
+
+  getEquippedOverlayUrlForUser(userId: number): string | null {
+    const equippedIds = this.allUserCosmeticsSignal()
+      .filter((uc) => uc.userId === userId && uc.equipped)
+      .map((uc) => uc.cosmeticId);
+    const overlay = this.cosmetics().find(
+      (c) => equippedIds.includes(c.id) && c.type !== 'avatar'
+    );
+    return overlay?.imageUrl ?? null;
+  }
+
+  getEquippedOverlayTypeForUser(userId: number): string | null {
+    const equippedIds = this.allUserCosmeticsSignal()
+      .filter((uc) => uc.userId === userId && uc.equipped)
+      .map((uc) => uc.cosmeticId);
+    const overlay = this.cosmetics().find(
+      (c) => equippedIds.includes(c.id) && c.type !== 'avatar'
+    );
+    return overlay?.type ?? null;
+  }
+
   toggleEquip(summary: CosmeticSummary): void {
 
     if (!summary.owned || !summary.userRecord) {
@@ -246,14 +284,19 @@ export class MonetizationStoreService {
       return;
     }
 
-    const isEquipping  = !summary.userRecord.equipped;
-    const cosmeticType = summary.cosmetic.type; // 'avatar', 'hat', etc.
+    const isEquipping = !summary.userRecord.equipped;
+    const isAvatar = summary.cosmetic.type === 'avatar';
 
-    // Si va a equipar, buscar el que ya esté equipado del mismo tipo
+    // Regla de slots:
+    //   - Slot 1 (avatar): solo 1 avatar equipado a la vez
+    //   - Slot 2 (cosmético): solo 1 cosmético no-avatar equipado a la vez (hat, bun, etc.)
+    //   → Se puede tener un avatar + un cosmético simultáneamente, pero no dos avatares ni dos cosméticos
     const currentlyEquipped = isEquipping
-      ? this.cosmeticSummaries().find(
-        (s) => s.equipped && s.cosmetic.type === cosmeticType && s.userRecord
-      )
+      ? this.cosmeticSummaries().find((s) => {
+        if (!s.equipped || !s.userRecord || s.cosmetic.id === summary.cosmetic.id) return false;
+        const sIsAvatar = s.cosmetic.type === 'avatar';
+        return isAvatar ? sIsAvatar : !sIsAvatar;
+      })
       : null;
 
     const updated: UserCosmeticEntity = {
@@ -262,6 +305,7 @@ export class MonetizationStoreService {
     };
 
     // Primero desequipamos el anterior del mismo tipo (si existe)
+    // Regla: no 2 avatares ni 2 cosméticos, pero sí avatar + cosmético simultáneamente
     if (currentlyEquipped?.userRecord) {
       const toUnequip: UserCosmeticEntity = {
         ...currentlyEquipped.userRecord,
@@ -274,6 +318,9 @@ export class MonetizationStoreService {
           next: (res) => {
             this.userCosmeticsSignal.update((list) =>
               list.map((uc) => (uc.cosmeticId === res.cosmeticId ? res : uc)),
+            );
+            this.allUserCosmeticsSignal.update((list) =>
+              list.map((uc) => (uc.cosmeticId === res.cosmeticId && uc.userId === res.userId ? res : uc)),
             );
           },
           error: (err) => {
@@ -290,6 +337,9 @@ export class MonetizationStoreService {
         next: (res) => {
           this.userCosmeticsSignal.update((list) =>
             list.map((uc) => (uc.cosmeticId === res.cosmeticId ? res : uc)),
+          );
+          this.allUserCosmeticsSignal.update((list) =>
+            list.map((uc) => (uc.cosmeticId === res.cosmeticId && uc.userId === res.userId ? res : uc)),
           );
           this.errorSignal.set(null);
         },

@@ -23,13 +23,6 @@
   <button
     class="profile-tab"
     type="button"
-    [class.is-active]="activeTab === 'favorites'"
-    (click)="tabChange.emit('favorites')">
-    Favoritos
-  </button>
-  <button
-    class="profile-tab"
-    type="button"
     [class.is-active]="activeTab === 'friends'"
     (click)="tabChange.emit('friends')">
     Amigos

@@ -21,7 +21,8 @@ export class QuestListContent {
   readonly filteredQuests = computed(() =>
     this.questsService
       .getQuestSummaries()()
-      .filter((summary) => summary.quest.category === this.selectedCategory()),
+      .filter((summary) => summary.quest.category === this.selectedCategory())
+      .filter((summary) => this.selectedCategory() !== 'daily_quest' || !this.isFutureDailyQuest(summary.quest.expiration_date)),
   );
 
   selectCategory(category: string): void {
@@ -34,5 +35,9 @@ export class QuestListContent {
 
   selectQuest(questId: number): void {
     void this.router.navigate(['/quests', questId]);
+  }
+
+  private isFutureDailyQuest(expirationDate: string | null): boolean {
+    return expirationDate !== null && expirationDate.slice(0, 10) > new Date().toISOString().slice(0, 10);
   }
 }

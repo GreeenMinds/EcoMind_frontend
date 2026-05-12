@@ -56,7 +56,7 @@ export class RankingService {
       error: (err) => {
         console.error('Error loading rankings:', err);
         this.loadingSignal.set(false);
-      }
+      },
     });
   }
 
@@ -70,7 +70,7 @@ export class RankingService {
   loadRankingTypes(): void {
     this.api.getRankings().subscribe({
       next: (data) => this.rankingsSignal.set(data),
-      error: (err) => console.error('Error loading ranking types:', err)
+      error: (err) => console.error('Error loading ranking types:', err),
     });
   }
 }

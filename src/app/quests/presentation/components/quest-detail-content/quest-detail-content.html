@@ -79,7 +79,35 @@
             <div class="friend-list">
               @for (option of context.inviteOptions; track option.user.id) {
                 <div class="friend-row">
-                  <span class="avatar">{{ getUserInitials(option.user.name) }}</span>
+                  <div class="avatar-wrapper avatar-wrapper--sm">
+                    @if (getEquippedAvatarUrl(option.user.id); as avatarUrl) {
+                      <img
+                        class="avatar avatar--sm avatar--img"
+                        [src]="avatarUrl"
+                        [alt]="option.user.name"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                      <span
+                        class="avatar avatar--sm avatar--fallback"
+                        style="display:none"
+                        [style.--avatar-hue]="getAvatarHue(option.user.id)">
+                        {{ getUserInitials(option.user.name) }}
+                      </span>
+                    } @else {
+                      <span
+                        class="avatar avatar--sm"
+                        [style.--avatar-hue]="getAvatarHue(option.user.id)">
+                        {{ getUserInitials(option.user.name) }}
+                      </span>
+                    }
+                    @if (getEquippedOverlayUrl(option.user.id); as overlayUrl) {
+                      <img
+                        class="avatar-overlay avatar-overlay--sm"
+                        [class.avatar-overlay--hat]="getEquippedOverlayType(option.user.id) === 'hat' || getEquippedOverlayType(option.user.id) === 'bun'"
+                        [src]="overlayUrl"
+                        alt="Cosmetic"
+                        onerror="this.style.display='none'">
+                    }
+                  </div>
                   <span class="friend-name">{{ option.user.name }}</span>
                   <button
                     type="button"
@@ -107,7 +135,35 @@
             <div class="participant-list">
               @for (participant of context.participants; track participant.member.id) {
                 <div class="participant-row" [class.pending]="participant.member.status === 'pending'">
-                  <span class="avatar">{{ getUserInitials(participant.user?.name) }}</span>
+                  <div class="avatar-wrapper avatar-wrapper--sm">
+                    @if (getEquippedAvatarUrl(participant.user?.id); as avatarUrl) {
+                      <img
+                        class="avatar avatar--sm avatar--img"
+                        [src]="avatarUrl"
+                        [alt]="participant.user?.name"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                      <span
+                        class="avatar avatar--sm avatar--fallback"
+                        style="display:none"
+                        [style.--avatar-hue]="getAvatarHue(participant.user?.id)">
+                        {{ getUserInitials(participant.user?.name) }}
+                      </span>
+                    } @else {
+                      <span
+                        class="avatar avatar--sm"
+                        [style.--avatar-hue]="getAvatarHue(participant.user?.id)">
+                        {{ getUserInitials(participant.user?.name) }}
+                      </span>
+                    }
+                    @if (getEquippedOverlayUrl(participant.user?.id); as overlayUrl) {
+                      <img
+                        class="avatar-overlay avatar-overlay--sm"
+                        [class.avatar-overlay--hat]="getEquippedOverlayType(participant.user?.id) === 'hat' || getEquippedOverlayType(participant.user?.id) === 'bun'"
+                        [src]="overlayUrl"
+                        alt="Cosmetic"
+                        onerror="this.style.display='none'">
+                    }
+                  </div>
                   <div class="participant-copy">
                     <strong>{{ participant.user?.name || ('quests.collaboration.unknownUser' | translate) }}</strong>
                     <small>

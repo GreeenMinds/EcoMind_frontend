@@ -5,7 +5,17 @@
     <div class="progress-list">
       @for (item of progressItems(); track item.questId) {
         <div class="progress-item">
-          <a [routerLink]="item.route">{{ item.label }}</a>
+          <div class="progress-item__head">
+            <a [routerLink]="item.route">{{ item.label }}</a>
+            <button
+              type="button"
+              class="abandon-quest"
+              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+              (click)="requestAbandon(item, $event)"
+            >
+              X
+            </button>
+          </div>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-value" [style.width.%]="item.progress"></div>
           </div>
@@ -30,7 +40,17 @@
     <div class="modal-progress-list">
       @for (item of allProgressItems(); track item.questId) {
         <div class="modal-progress-item">
-          <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
+          <div class="progress-item__head">
+            <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
+            <button
+              type="button"
+              class="abandon-quest"
+              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+              (click)="requestAbandon(item, $event)"
+            >
+              X
+            </button>
+          </div>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-value" [style.width.%]="item.progress"></div>
           </div>
@@ -39,5 +59,23 @@
     </div>
 
     <button type="button" class="modal-close" (click)="closeModal()">{{ 'common.back' | translate }}</button>
+  </section>
+}
+
+@if (abandonConfirmation(); as item) {
+  <div class="confirm-backdrop" role="presentation" (click)="closeAbandonConfirmation()"></div>
+
+  <section class="confirm-modal" role="dialog" aria-modal="true" [attr.aria-label]="'quests.confirmAbandonTitle' | translate">
+    <h3>{{ 'quests.confirmAbandonTitle' | translate }}</h3>
+    <p>{{ 'quests.confirmAbandonMessage' | translate: { quest: item.label } }}</p>
+
+    <div class="confirm-actions">
+      <button type="button" class="confirm-secondary" (click)="closeAbandonConfirmation()">
+        {{ 'quests.confirmAbandonNo' | translate }}
+      </button>
+      <button type="button" class="confirm-danger" (click)="confirmAbandon()">
+        {{ 'quests.confirmAbandonYes' | translate }}
+      </button>
+    </div>
   </section>
 }

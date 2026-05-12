@@ -14,7 +14,7 @@
       [class.joined]="summary.joined"
       [disabled]="summary.joined"
       (click)="join.emit(summary)">
-      {{ summary.joined ? 'Already joined' : 'Join event' }}
+      {{ (summary.joined ? 'community.eventCard.alreadyJoined' : 'community.eventCard.joinNow') | translate }}
     </button>
 
     <button class="cancel" (click)="cancel.emit(summary)">×</button>

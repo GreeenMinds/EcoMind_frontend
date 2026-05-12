@@ -84,21 +84,51 @@
   object-fit: contain;
 }
 
-.profile-photo {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.95), transparent 35%),
-    linear-gradient(
-      150deg,
-      hsl(var(--avatar-hue) 78% 94%) 0%,
-      hsl(var(--avatar-hue) 66% 82%) 100%
-    );
-  color: hsl(var(--avatar-hue) 40% 30%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-  font-size: 0.9rem;
-  font-weight: 800;
+@media (max-width: 900px) {
+  .app-layout {
+    flex-direction: column;
+    min-height: calc(100vh - 65px);
+  }
+
+  .app-content {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-header-inner {
+    padding: 0.65rem 1rem;
+  }
+
+  .app-logo {
+    height: 34px;
+  }
+
+  .app-header-profile {
+    gap: 12px;
+  }
+
+  .header-stat {
+    min-width: auto;
+    gap: 5px;
+  }
+
+  .gem-stat,
+  .streak-stat {
+    font-size: 17px;
+  }
+
+  .gem-icon {
+    width: 21px;
+    height: 21px;
+  }
+
+  .streak-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .app-content {
+    padding: 18px 14px 24px;
+  }
 }

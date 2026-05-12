@@ -1,11 +1,14 @@
 <section class="feed">
-  <h2>Community Feed</h2>
+  <header class="section-heading">
+    <h2>{{ 'community.title.feed' | translate }}</h2>
+    <p>{{ 'community.subtitle.feed' | translate }}</p>
+  </header>
 
   <div class="post-list">
     @for (summary of posts; track summary.post.id) {
       <app-community-post-card [summary]="summary"></app-community-post-card>
     } @empty {
-      <p class="empty">No posts to show.</p>
+      <p class="empty">{{ 'community.emptyPosts' | translate }}</p>
     }
   </div>
 </section>

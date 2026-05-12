@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
 
 export interface EventFormValue {
@@ -27,7 +28,7 @@ export interface EventFormValue {
 
 @Component({
   selector: 'app-community-event-form-modal',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './community-event-form-modal.html',
   styleUrl: './community-event-form-modal.css',
 })
@@ -59,6 +60,7 @@ export class CommunityEventFormModal implements AfterViewInit, OnDestroy {
   constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly ngZone: NgZone,
+    private readonly translate: TranslateService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -117,7 +119,7 @@ export class CommunityEventFormModal implements AfterViewInit, OnDestroy {
     this.locationMarker = L.marker(initialPosition, {
       draggable: true,
       icon: this.locationMarkerIcon,
-      title: 'Event location',
+      title: this.translate.instant('community.eventForm.eventLocation'),
     }).addTo(this.locationMap);
 
     this.locationMap.on('click', (event: L.LeafletMouseEvent) => {

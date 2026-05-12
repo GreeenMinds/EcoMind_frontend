@@ -42,6 +42,11 @@
     "seeMore": "Ver más",
     "allActive": "Todas las misiones activas",
     "activeQuests": "Misiones activas",
+    "abandonAria": "Abandonar {{ quest }}",
+    "confirmAbandonTitle": "Abandonar misión",
+    "confirmAbandonMessage": "¿Seguro que quieres abandonar \"{{ quest }}\"? Se borrará tu progreso y aparecerá como no iniciada.",
+    "confirmAbandonYes": "Sí, abandonar",
+    "confirmAbandonNo": "Cancelar",
     "progressSummary": "Resumen de progreso",
     "streakAndRanking": "Racha y ranking",
     "streak": "Racha",
@@ -125,5 +130,115 @@
     },
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
+  },
+  "community": {
+    "title": {
+      "feed": "Muro de la comunidad",
+      "achievements": "Logros de la comunidad",
+      "events": "Eventos de la comunidad",
+      "goal": "Meta comunitaria: {{ goal }}",
+      "nearbyEvents": "Eventos cercanos"
+    },
+    "subtitle": {
+      "feed": "Comparte avances y celebra acciones sostenibles con tu comunidad.",
+      "achievements": "Revisa los hitos que tu comunidad ha alcanzado.",
+      "events": "Encuentra actividades cercanas y participa con tu familia o comunidad.",
+      "goal": "Sigue el progreso del objetivo compartido actual.",
+      "nearbyEvents": "Actividades disponibles cerca de tu comunidad."
+    },
+    "tabs": {
+      "all": "Todo",
+      "achievements": "Logros",
+      "events": "Eventos"
+    },
+    "filters": {
+      "all": "Todos",
+      "week": "Esta semana",
+      "month": "Este mes"
+    },
+    "actions": {
+      "createEvent": "+ Crear evento"
+    },
+    "post": {
+      "justNow": "Ahora mismo",
+      "defaultAuthor": "Usuario EcoMind"
+    },
+    "eventCard": {
+      "joinNow": "Unirse ahora",
+      "alreadyJoined": "Ya te uniste"
+    },
+    "eventForm": {
+      "title": "Nuevo evento",
+      "name": "Nombre",
+      "date": "Fecha",
+      "time": "Hora",
+      "meetingPoint": "Punto de encuentro",
+      "description": "Descripción",
+      "imageUrl": "URL de imagen",
+      "optional": "(opcional)",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "locationMap": "Mapa de ubicación del evento",
+      "eventLocation": "Ubicación del evento",
+      "create": "Crear evento",
+      "cancel": "Cancelar"
+    },
+    "registration": {
+      "title": "¿Cómo quieres registrarte a este evento?",
+      "event": "Evento:",
+      "dateAndTime": "Fecha y hora:",
+      "location": "Ubicación:",
+      "individual": "Individual",
+      "family": "Familia"
+    },
+    "loading": "Cargando comunidad...",
+    "searchPlaceholder": "Buscar en la comunidad",
+    "emptyPosts": "No hay publicaciones para mostrar.",
+    "emptyAchievements": "No hay logros para mostrar.",
+    "emptyMappedEvents": "No hay eventos ubicados disponibles.",
+    "mapAriaLabel": "Mapa de eventos cercanos de la comunidad",
+    "goalProgress": "{{ progress }} de {{ target }} {{ unit }}",
+    "participants": "{{ count }} participantes"
+  },
+  "store": {
+    "title": "Tienda EcoMind",
+    "subtitle": "Personaliza tu experiencia eco",
+    "tabs": {
+      "cosmetics": "Avatares y Cosméticos",
+      "multipliers": "Multiplicador XP",
+      "gems": "Gemas"
+    },
+    "cosmetics": {
+      "storeTab": "Tienda",
+      "inventoryTab": "Mi Inventario",
+      "storeTitle": "Avatares y Cosméticos",
+      "inventoryTitle": "Mi Inventario",
+      "equipped": "⚡ Equipado",
+      "inInventory": "✓ En Inventario",
+      "buy": "Comprar",
+      "equip": "Equipar",
+      "unequip": "Desequipar",
+      "emptyStore": "No hay cosméticos disponibles.",
+      "emptyInventory": "Tu inventario está vacío.",
+      "emptyInventorySub": "¡Compra cosméticos en la Tienda!",
+      "goToStore": "Ir a la Tienda"
+    },
+    "multipliers": {
+      "title": "Multiplicador XP",
+      "label": "Multiplicador ×{{ factor }}",
+      "description": "Recibe {{ factor }}× más ecoPoints durante {{ minutes }} minutos",
+      "active": "✓ Activo",
+      "buy": "Comprar",
+      "empty": "No hay multiplicadores disponibles."
+    },
+    "gems": {
+      "title": "Gemas",
+      "buy": "Comprar",
+      "empty": "No hay paquetes disponibles.",
+      "megaBundle": "¡Mega Paquete!",
+      "megaBundleGems": "10,000 Gemas",
+      "megaBundleAvatars": "3 Avatares Exclusivos",
+      "megaBundleMultiplier": "Multiplicador 3x por una semana"
+    }
   }
 }
