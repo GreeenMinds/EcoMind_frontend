@@ -1668,7 +1668,7 @@
       "user_id": 1,
       "cosmetic_id": 1,
       "acquired_at": "2026-05-02",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 2,
@@ -2048,6 +2048,350 @@
       "responded_at": "2026-05-09",
       "left_at": null,
       "removed_at": null
+    }
+  ],
+  "ecopoint_transaction": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "ecopoints": 148,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "ecopoints": 89,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "ecopoints": 148,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "ecopoints": 89,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "ecopoints": 71,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "ecopoints": 47,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 7,
+      "user_id": 2,
+      "ecopoints": 40,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 8,
+      "user_id": 2,
+      "ecopoints": 24,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 9,
+      "user_id": 2,
+      "ecopoints": 40,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 10,
+      "user_id": 2,
+      "ecopoints": 24,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 11,
+      "user_id": 2,
+      "ecopoints": 19,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 12,
+      "user_id": 2,
+      "ecopoints": 13,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 13,
+      "user_id": 3,
+      "ecopoints": 83,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 14,
+      "user_id": 3,
+      "ecopoints": 50,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 15,
+      "user_id": 3,
+      "ecopoints": 83,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 16,
+      "user_id": 3,
+      "ecopoints": 50,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 17,
+      "user_id": 3,
+      "ecopoints": 40,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 18,
+      "user_id": 3,
+      "ecopoints": 26,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 19,
+      "user_id": 4,
+      "ecopoints": 24,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 20,
+      "user_id": 4,
+      "ecopoints": 14,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 21,
+      "user_id": 4,
+      "ecopoints": 24,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 22,
+      "user_id": 4,
+      "ecopoints": 14,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 23,
+      "user_id": 4,
+      "ecopoints": 11,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 24,
+      "user_id": 4,
+      "ecopoints": 8,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 25,
+      "user_id": 5,
+      "ecopoints": 78,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 26,
+      "user_id": 5,
+      "ecopoints": 47,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 27,
+      "user_id": 5,
+      "ecopoints": 78,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 28,
+      "user_id": 5,
+      "ecopoints": 47,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 29,
+      "user_id": 5,
+      "ecopoints": 37,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 30,
+      "user_id": 5,
+      "ecopoints": 25,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 31,
+      "user_id": 6,
+      "ecopoints": 61,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 32,
+      "user_id": 6,
+      "ecopoints": 37,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 33,
+      "user_id": 6,
+      "ecopoints": 61,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 34,
+      "user_id": 6,
+      "ecopoints": 37,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 35,
+      "user_id": 6,
+      "ecopoints": 29,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 36,
+      "user_id": 6,
+      "ecopoints": 20,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 37,
+      "user_id": 7,
+      "ecopoints": 98,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 38,
+      "user_id": 7,
+      "ecopoints": 59,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 39,
+      "user_id": 7,
+      "ecopoints": 98,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 40,
+      "user_id": 7,
+      "ecopoints": 59,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 41,
+      "user_id": 7,
+      "ecopoints": 47,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 42,
+      "user_id": 7,
+      "ecopoints": 31,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 43,
+      "user_id": 8,
+      "ecopoints": 45,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 44,
+      "user_id": 8,
+      "ecopoints": 27,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 45,
+      "user_id": 8,
+      "ecopoints": 45,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 46,
+      "user_id": 8,
+      "ecopoints": 27,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 47,
+      "user_id": 8,
+      "ecopoints": 22,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 48,
+      "user_id": 8,
+      "ecopoints": 14,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "id": 49,
+      "user_id": 9,
+      "ecopoints": 89,
+      "created_at": "2026-05-10T05:08:31.947Z"
+    },
+    {
+      "id": 50,
+      "user_id": 9,
+      "ecopoints": 53,
+      "created_at": "2026-05-07T05:08:31.947Z"
+    },
+    {
+      "id": 51,
+      "user_id": 9,
+      "ecopoints": 89,
+      "created_at": "2026-05-04T05:08:31.947Z"
+    },
+    {
+      "id": 52,
+      "user_id": 9,
+      "ecopoints": 53,
+      "created_at": "2026-05-02T05:08:31.947Z"
+    },
+    {
+      "id": 53,
+      "user_id": 9,
+      "ecopoints": 43,
+      "created_at": "2026-03-28T05:08:31.947Z"
+    },
+    {
+      "id": 54,
+      "user_id": 9,
+      "ecopoints": 28,
+      "created_at": "2026-03-03T05:08:31.947Z"
+    },
+    {
+      "user_id": 1,
+      "ecopoints": 43,
+      "created_at": "2026-05-12T15:09:26.551Z",
+      "id": 55
+    },
+    {
+      "user_id": 1,
+      "ecopoints": 30,
+      "created_at": "2026-05-12T15:09:50.435Z",
+      "id": 56
+    },
+    {
+      "user_id": 1,
+      "ecopoints": 20,
+      "created_at": "2026-05-12T15:10:02.468Z",
+      "id": 57
     }
   ]
 }

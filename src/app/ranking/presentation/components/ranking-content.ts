@@ -12,7 +12,7 @@ import { TimeApiService } from '../../infrastructure/time-api';
   standalone: true,
   imports: [CommonModule, MatCardModule, MatIconModule, TranslateModule],
   templateUrl: './ranking-content.html',
-  styleUrl: './ranking-content.css'
+  styleUrl: './ranking-content.css',
 })
 export class RankingContent implements OnInit {
   private rankingService = inject(RankingService);
@@ -31,7 +31,7 @@ export class RankingContent implements OnInit {
   readonly TITLE_KEYS: Record<number, string> = {
     1: 'ranking.title.global',
     2: 'ranking.title.monthly',
-    3: 'ranking.title.weekly'
+    3: 'ranking.title.weekly',
   };
 
   readonly dateRangeText = computed(() => {
@@ -47,11 +47,11 @@ export class RankingContent implements OnInit {
   }
 
   prev(): void {
-    this.activeRankingId.update(id => Math.max(1, id - 1));
+    this.activeRankingId.update((id) => Math.max(1, id - 1));
   }
 
   next(): void {
-    this.activeRankingId.update(id => Math.min(3, id + 1));
+    this.activeRankingId.update((id) => Math.min(3, id + 1));
   }
 
   getMedalIcon(position: number): string {
@@ -61,9 +61,15 @@ export class RankingContent implements OnInit {
     return '';
   }
 
-  getTop3(entries: RankingEntry[]) { return entries.filter(e => e.position <= 3); }
-  getRestEntries(entries: RankingEntry[]) { return entries.filter(e => e.position > 3 && !e.isCurrentUser); }
-  getCurrentUser(entries: RankingEntry[]) { return entries.find(e => e.isCurrentUser); }
+  getTop3(entries: RankingEntry[]) {
+    return entries.filter((e) => e.position <= 3);
+  }
+  getRestEntries(entries: RankingEntry[]) {
+    return entries.filter((e) => e.position > 3 && !e.isCurrentUser);
+  }
+  getCurrentUser(entries: RankingEntry[]) {
+    return entries.find((e) => e.isCurrentUser);
+  }
 
   getInitials(name: string): string {
     if (!name) return 'EM';
@@ -71,7 +77,7 @@ export class RankingContent implements OnInit {
       .split(' ')
       .filter(Boolean)
       .slice(0, 2)
-      .map(part => part.charAt(0).toUpperCase())
+      .map((part) => part.charAt(0).toUpperCase())
       .join('');
   }
 
