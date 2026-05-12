@@ -69,6 +69,7 @@
   color: rgba(37, 85, 28, 0.72);
   font-size: 0.82rem;
   font-weight: 700;
+  line-height: 1.35;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -76,19 +77,41 @@
 .family-banner h2 {
   margin: 0 0 10px;
   font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.12;
 }
 
 .family-banner p {
   margin: 0;
   max-width: 720px;
   font-size: 1.05rem;
-  line-height: 1.5;
+  line-height: 1.65;
 }
 
 .family-banner__commitment {
-  margin-top: 10px;
-  font-size: 0.98rem;
-  font-weight: 600;
+  display: grid;
+  gap: 8px;
+  max-width: 640px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #36592e;
+  box-shadow: 0 12px 24px rgba(39, 69, 32, 0.12);
+}
+
+.family-banner__commitment-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a7f4e;
+}
+
+.family-banner__commitment p {
+  max-width: none;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
 }
 
 .family-banner__actions {

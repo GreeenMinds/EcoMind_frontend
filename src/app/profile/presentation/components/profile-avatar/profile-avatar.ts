@@ -9,7 +9,7 @@ import { Component, Input, OnChanges, signal } from '@angular/core';
 export class ProfileAvatar implements OnChanges {
   @Input() name = '';
   @Input() userId: number | null = null;
-  @Input() size: 'hero' | 'member' = 'member';
+  @Input() size: 'hero' | 'member' | 'header' = 'member';
   @Input() avatarUrl: string | null = null;
   @Input() overlayUrl: string | null = null;
   @Input() overlayType: string | null = null;

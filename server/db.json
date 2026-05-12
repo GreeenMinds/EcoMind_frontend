@@ -17,8 +17,8 @@
       "streak": 7,
       "commitment": "I will reduce my energy consumption by turning off equipment I do not use.",
       "registered_at": "2026-05-01",
-      "gem_balance": 0,
-      "ecopoints": 420
+      "gem_balance": 40,
+      "ecopoints": 460
     },
     {
       "id": 2,
@@ -65,7 +65,7 @@
       "streak": 6,
       "commitment": "I will reduce food waste and compost organic leftovers.",
       "registered_at": "2026-05-04",
-      "gem_balance": 520,
+      "gem_balance": 4520,
       "ecopoints": 310
     },
     {
@@ -121,7 +121,7 @@
     {
       "id": 1,
       "name": "Mendoza Family",
-      "commitment": "Como familia, reduciremos residuos y ahorraremos agua cada semana."
+      "commitment": "si o no marino?"
     },
     {
       "id": 2,
@@ -150,6 +150,20 @@
       "family_id": 2,
       "family_role": "parent",
       "joined_at": "2026-05-12"
+    },
+    {
+      "id": 10,
+      "user_id": 3,
+      "family_id": 1,
+      "family_role": "child",
+      "joined_at": "2026-05-12"
+    },
+    {
+      "id": 11,
+      "user_id": 5,
+      "family_id": 1,
+      "family_role": "parent",
+      "joined_at": "2026-05-12"
     }
   ],
   "family_invitation": [
@@ -169,9 +183,9 @@
       "inviter_user_id": 1,
       "invited_user_id": 5,
       "invited_role": "parent",
-      "status": "pending",
+      "status": "accepted",
       "created_at": "2026-05-11T10:05:00.000Z",
-      "responded_at": null
+      "responded_at": "2026-05-12T06:46:50.811Z"
     },
     {
       "id": 3,
@@ -192,6 +206,26 @@
       "status": "rejected",
       "created_at": "2026-05-12T05:45:28.142Z",
       "responded_at": "2026-05-12T05:45:57.981Z"
+    },
+    {
+      "id": 5,
+      "family_id": 1,
+      "inviter_user_id": 1,
+      "invited_user_id": 3,
+      "invited_role": "child",
+      "status": "accepted",
+      "created_at": "2026-05-12T06:41:38.657Z",
+      "responded_at": "2026-05-12T06:41:52.680Z"
+    },
+    {
+      "id": 6,
+      "family_id": 1,
+      "inviter_user_id": 5,
+      "invited_user_id": 9,
+      "invited_role": "child",
+      "status": "pending",
+      "created_at": "2026-05-12T06:58:52.355Z",
+      "responded_at": null
     }
   ],
   "friend": [
@@ -220,12 +254,6 @@
       "status": "accepted"
     },
     {
-      "id": 6,
-      "user_id": 4,
-      "friend_id": 1,
-      "status": "pending"
-    },
-    {
       "id": 8,
       "user_id": 1,
       "friend_id": 6,
@@ -248,6 +276,12 @@
       "user_id": 1,
       "friend_id": 2,
       "status": "pending"
+    },
+    {
+      "id": 13,
+      "user_id": 1,
+      "friend_id": 5,
+      "status": "accepted"
     }
   ],
   "achievement": [
@@ -1335,6 +1369,26 @@
       "start_date": "2026-05-09",
       "end_date": null,
       "collaborative_session_id": 3
+    },
+    {
+      "id": 14,
+      "user_id": 1,
+      "quest_id": 2,
+      "status": "completed",
+      "progress": 100,
+      "start_date": "2026-05-12",
+      "end_date": "2026-05-12",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 15,
+      "user_id": 1,
+      "quest_id": 3,
+      "status": "completed",
+      "progress": 100,
+      "start_date": "2026-05-12",
+      "end_date": "2026-05-12",
+      "collaborative_session_id": null
     }
   ],
   "activity_user": [
@@ -1449,6 +1503,30 @@
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": 3
+    },
+    {
+      "id": 19,
+      "user_id": 1,
+      "activity_id": 3,
+      "progress": 100,
+      "end_date": "2026-05-12",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 20,
+      "user_id": 1,
+      "activity_id": 4,
+      "progress": 100,
+      "end_date": "2026-05-12",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 21,
+      "user_id": 1,
+      "activity_id": 5,
+      "progress": 100,
+      "end_date": "2026-05-12",
+      "collaborative_session_id": null
     }
   ],
   "minigame_attempt": [
@@ -1717,6 +1795,27 @@
       "cosmetic_id": 2,
       "acquired_at": "2026-05-11",
       "equipped": false
+    },
+    {
+      "id": 8,
+      "user_id": 5,
+      "cosmetic_id": 1,
+      "acquired_at": "2026-05-12",
+      "equipped": false
+    },
+    {
+      "id": 9,
+      "user_id": 5,
+      "cosmetic_id": 11,
+      "acquired_at": "2026-05-12",
+      "equipped": true
+    },
+    {
+      "id": 10,
+      "user_id": 5,
+      "cosmetic_id": 9,
+      "acquired_at": "2026-05-12",
+      "equipped": true
     }
   ],
   "multiplier": [
@@ -1830,6 +1929,14 @@
       "amount_paid": 65.99,
       "payment_status": "approved",
       "payment_reference": "PAY-1778463717219"
+    },
+    {
+      "id": 6,
+      "user_id": 5,
+      "purchase_date": "2026-05-12",
+      "amount_paid": 65.99,
+      "payment_status": "approved",
+      "payment_reference": "PAY-1778568242386"
     }
   ],
   "gem_movement": [
@@ -1927,6 +2034,53 @@
       "origin": "cosmetic",
       "origin_id": 2,
       "id": 12
+    },
+    {
+      "user_id": 5,
+      "type": "purchase",
+      "amount": 5000,
+      "origin": "gem_package",
+      "id": 13
+    },
+    {
+      "user_id": 5,
+      "type": "spend",
+      "amount": -150,
+      "origin": "cosmetic",
+      "origin_id": 1,
+      "id": 14
+    },
+    {
+      "user_id": 5,
+      "type": "spend",
+      "amount": -500,
+      "origin": "cosmetic",
+      "origin_id": 11,
+      "id": 15
+    },
+    {
+      "user_id": 5,
+      "type": "spend",
+      "amount": -350,
+      "origin": "cosmetic",
+      "origin_id": 9,
+      "id": 16
+    },
+    {
+      "user_id": 1,
+      "type": "quest_reward",
+      "amount": 25,
+      "origin": "quest",
+      "origin_id": 2,
+      "id": 17
+    },
+    {
+      "user_id": 1,
+      "type": "quest_reward",
+      "amount": 15,
+      "origin": "quest",
+      "origin_id": 3,
+      "id": 18
     }
   ],
   "collaborative_quest_session": [

@@ -57,13 +57,14 @@
     </article>
   } @else {
     <article class="family-banner">
-      <div>
+      <div class="family-banner__copy">
         <p class="profile-eyebrow">Grupo principal</p>
         <h2>{{ family.name }}</h2>
         <p>{{ familySummary }}</p>
-        <p class="family-banner__commitment">
-          {{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}
-        </p>
+        <div class="family-banner__commitment">
+          <span class="family-banner__commitment-label">Compromiso familiar</span>
+          <p>{{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}</p>
+        </div>
       </div>
 
       <div class="family-banner__actions">

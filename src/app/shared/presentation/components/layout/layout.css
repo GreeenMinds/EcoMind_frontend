@@ -84,25 +84,6 @@
   object-fit: contain;
 }
 
-.profile-photo {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 24% 22%, rgba(255, 255, 255, 0.95), transparent 35%),
-    linear-gradient(
-      150deg,
-      hsl(var(--avatar-hue) 78% 94%) 0%,
-      hsl(var(--avatar-hue) 66% 82%) 100%
-    );
-  color: hsl(var(--avatar-hue) 40% 30%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
 @media (max-width: 900px) {
   .app-layout {
     flex-direction: column;
@@ -145,12 +126,6 @@
   .streak-icon {
     width: 24px;
     height: 24px;
-  }
-
-  .profile-photo {
-    width: 36px;
-    height: 36px;
-    font-size: 0.8rem;
   }
 
   .app-content {

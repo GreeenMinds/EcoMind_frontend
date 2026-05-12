@@ -17,29 +17,14 @@
         <span>{{ currentUser()?.streak ?? 0 }}</span>
       </div>
 
-      <div class="profile-photo-wrapper">
-        @if (equippedAvatarUrl()) {
-          <img
-            class="profile-photo profile-photo--img"
-            [src]="equippedAvatarUrl()"
-            [alt]="currentUser()?.name ?? 'Avatar'"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-          <div
-            class="profile-photo"
-            style="display:none"
-            [style.--avatar-hue]="getAvatarHue(currentUser()?.id)"
-            aria-label="Current user">
-            {{ getInitials(currentUser()?.name) }}
-          </div>
-        } @else {
-          <div
-            class="profile-photo"
-            [style.--avatar-hue]="getAvatarHue(currentUser()?.id)"
-            aria-label="Current user">
-            {{ getInitials(currentUser()?.name) }}
-          </div>
-        }
-      </div>
+      <app-profile-avatar
+        [name]="currentUser()?.name ?? ''"
+        [userId]="currentUser()?.id ?? null"
+        [size]="'header'"
+        [avatarUrl]="equippedAvatarUrl()"
+        [overlayUrl]="equippedOverlayUrl()"
+        [overlayType]="equippedOverlayType()">
+      </app-profile-avatar>
     </div>
   </div>
 </header>

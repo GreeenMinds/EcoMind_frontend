@@ -46,6 +46,8 @@ const createUserCosmetic = (overrides: Partial<UserCosmeticEntity>): UserCosmeti
 class ProfileServiceStub {
   readonly createFriendCalls: Friend[] = [];
   readonly createFamilyInvitationCalls: FamilyInvitation[] = [];
+  readonly updateFriendCalls: Friend[] = [];
+  readonly removeFriendCalls: number[] = [];
 
   private readonly currentUserSignal = signal(
     createUser({
@@ -90,6 +92,18 @@ class ProfileServiceStub {
       registered_at: '2026-05-03',
       gem_balance: 280,
       ecopoints: 210,
+    }),
+    createUser({
+      id: 4,
+      community_id: 1,
+      email: 'andrea@ecomind.test',
+      birth_date: '1998-02-11',
+      name: 'Andrea Paredes',
+      streak: 4,
+      commitment: 'I will save water.',
+      registered_at: '2026-05-04',
+      gem_balance: 300,
+      ecopoints: 190,
     }),
   ];
 
@@ -142,6 +156,7 @@ class ProfileServiceStub {
     return of([
       createFriend({ id: 1, user_id: 1, friend_id: 2, status: 'accepted' }),
       createFriend({ id: 2, user_id: 2, friend_id: 1, status: 'accepted' }),
+      createFriend({ id: 3, user_id: 4, friend_id: 1, status: 'pending' }),
     ]);
   }
 
@@ -176,6 +191,16 @@ class ProfileServiceStub {
   createFriend(friend: Friend) {
     this.createFriendCalls.push(friend);
     return of(friend);
+  }
+
+  updateFriend(friend: Friend) {
+    this.updateFriendCalls.push(friend);
+    return of(friend);
+  }
+
+  removeFriend(friendId: number) {
+    this.removeFriendCalls.push(friendId);
+    return of(void 0);
   }
 
   createFamilyInvitation(invitation: FamilyInvitation) {
@@ -355,6 +380,19 @@ describe('ProfileContent', () => {
     expect(profileService.createFriendCalls[0].user_id).toBe(1);
     expect(profileService.createFriendCalls[0].friend_id).toBe(3);
     expect(profileService.createFriendCalls[0].status).toBe('pending');
+  });
+
+  it('keeps pending received requests out of the friends list and exposes them separately', () => {
+    expect(component.friendProfiles().map((friend) => friend.user.id)).toEqual([2]);
+    expect(component.incomingFriendRequests().map((request) => request.user.id)).toEqual([4]);
+  });
+
+  it('accepts an incoming friend request', () => {
+    component.acceptFriendRequest(3);
+
+    expect(profileService.updateFriendCalls).toHaveLength(1);
+    expect(profileService.updateFriendCalls[0].id).toBe(3);
+    expect(profileService.updateFriendCalls[0].status).toBe('accepted');
   });
 
   it('shows no pending quests when there are no missions in progress', () => {

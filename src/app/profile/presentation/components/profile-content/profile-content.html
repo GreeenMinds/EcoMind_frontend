@@ -153,11 +153,13 @@
       } @else {
         <app-profile-friends-section
           [friends]="friendProfiles()"
-          [acceptedCount]="acceptedFriendProfilesCount()"
           [inviteCandidates]="friendInviteCandidates()"
+          [incomingRequests]="incomingFriendRequests()"
           (openFriend)="openFriendProfile($event)"
           (removeFriend)="removeFriend($event)"
-          (sendFriendRequest)="sendFriendRequest($event)">
+          (sendFriendRequest)="sendFriendRequest($event)"
+          (acceptFriendRequest)="acceptFriendRequest($event)"
+          (rejectFriendRequest)="rejectFriendRequest($event)">
         </app-profile-friends-section>
       }
     }

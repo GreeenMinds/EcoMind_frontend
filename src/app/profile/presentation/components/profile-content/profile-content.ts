@@ -29,6 +29,7 @@ import {
 import {
   FriendInviteCandidateView,
   FriendProfileView,
+  FriendRequestView,
   ProfileFriendsSection,
 } from '../profile-friends-section/profile-friends-section';
 import { ProfileHero } from '../profile-hero/profile-hero';
@@ -217,6 +218,10 @@ export class ProfileContent {
 
     return Array.from(uniqueRelationships.entries())
       .map(([relatedUserId, relationship]) => {
+        if (relationship.status !== 'accepted') {
+          return null;
+        }
+
         const relatedUser = this.users().find((user) => user.id === relatedUserId);
         if (!relatedUser) {
           return null;
@@ -239,9 +244,33 @@ export class ProfileContent {
       });
   });
 
-  readonly acceptedFriendProfilesCount = computed(
-    () => this.friendProfiles().filter((item) => item.relationship.status === 'accepted').length,
-  );
+  readonly incomingFriendRequests = computed<FriendRequestView[]>(() => {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return [];
+    }
+
+    return this.friends()
+      .filter(
+        (relationship) =>
+          relationship.status === 'pending' && relationship.friend_id === currentUserId,
+      )
+      .map((relationship) => {
+        const relatedUser = this.users().find((user) => user.id === relationship.user_id);
+        if (!relatedUser) {
+          return null;
+        }
+
+        return {
+          relationship,
+          user: relatedUser,
+          statusLabel: 'Quiere agregarte como amigo',
+          ...this.getUserAvatarVisual(relatedUser.id),
+        };
+      })
+      .filter((item): item is FriendRequestView => Boolean(item))
+      .sort((left, right) => right.relationship.id - left.relationship.id);
+  });
 
   readonly selectedFriendProfile = computed(() => {
     const friendId = this.selectedFriendId();
@@ -707,6 +736,68 @@ export class ProfileContent {
         error: (error: Error) => {
           this.savingProfile.set(false);
           this.showFeedback(error.message || 'No se pudo enviar la solicitud de amistad');
+        },
+      });
+  }
+
+  acceptFriendRequest(friendshipId: number): void {
+    const currentUserId = this.currentUser()?.id;
+    const relationship = this.friends().find((friend) => friend.id === friendshipId);
+    if (!currentUserId || !relationship) {
+      return;
+    }
+
+    if (relationship.status !== 'pending' || relationship.friend_id !== currentUserId) {
+      this.showFeedback('La solicitud de amistad ya no esta disponible');
+      return;
+    }
+
+    const updatedFriendship = new Friend();
+    Object.assign(updatedFriendship, relationship);
+    updatedFriendship.status = 'accepted';
+
+    this.savingProfile.set(true);
+    this.profileService
+      .updateFriend(updatedFriendship)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Solicitud de amistad aceptada');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo aceptar la solicitud');
+        },
+      });
+  }
+
+  rejectFriendRequest(friendshipId: number): void {
+    const currentUserId = this.currentUser()?.id;
+    const relationship = this.friends().find((friend) => friend.id === friendshipId);
+    if (!currentUserId || !relationship) {
+      return;
+    }
+
+    if (relationship.status !== 'pending' || relationship.friend_id !== currentUserId) {
+      this.showFeedback('La solicitud de amistad ya no esta disponible');
+      return;
+    }
+
+    this.savingProfile.set(true);
+    this.profileService
+      .removeFriend(friendshipId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Solicitud de amistad rechazada');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo rechazar la solicitud');
         },
       });
   }
@@ -1385,8 +1476,19 @@ export class ProfileContent {
       return 'Ya son amigos';
     }
 
-    if (relationships.some((relationship) => relationship.status === 'pending')) {
-      return 'Ya existe una solicitud de amistad pendiente';
+    const outgoingPending = relationships.some(
+      (relationship) => relationship.status === 'pending' && relationship.user_id === currentUserId,
+    );
+    if (outgoingPending) {
+      return 'Ya enviaste una solicitud pendiente';
+    }
+
+    const incomingPending = relationships.some(
+      (relationship) =>
+        relationship.status === 'pending' && relationship.friend_id === currentUserId,
+    );
+    if (incomingPending) {
+      return 'Tienes una solicitud pendiente por responder';
     }
 
     return 'No se puede enviar la solicitud de amistad';

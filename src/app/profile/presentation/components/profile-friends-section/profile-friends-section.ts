@@ -21,6 +21,15 @@ export interface FriendInviteCandidateView {
   equippedOverlayType: string | null;
 }
 
+export interface FriendRequestView {
+  relationship: Friend;
+  user: User;
+  statusLabel: string;
+  equippedAvatarUrl: string | null;
+  equippedOverlayUrl: string | null;
+  equippedOverlayType: string | null;
+}
+
 @Component({
   selector: 'app-profile-friends-section',
   imports: [ProfileAvatar],
@@ -29,11 +38,13 @@ export interface FriendInviteCandidateView {
 })
 export class ProfileFriendsSection {
   @Input() friends: FriendProfileView[] = [];
-  @Input() acceptedCount = 0;
   @Input() inviteCandidates: FriendInviteCandidateView[] = [];
+  @Input() incomingRequests: FriendRequestView[] = [];
   @Output() openFriend = new EventEmitter<FriendProfileView>();
   @Output() removeFriend = new EventEmitter<FriendProfileView>();
   @Output() sendFriendRequest = new EventEmitter<number>();
+  @Output() acceptFriendRequest = new EventEmitter<number>();
+  @Output() rejectFriendRequest = new EventEmitter<number>();
 
   friendInviteSearch = '';
 
@@ -64,6 +75,14 @@ export class ProfileFriendsSection {
     }
 
     this.sendFriendRequest.emit(candidate.user.id);
+  }
+
+  emitAcceptFriendRequest(request: FriendRequestView): void {
+    this.acceptFriendRequest.emit(request.relationship.id);
+  }
+
+  emitRejectFriendRequest(request: FriendRequestView): void {
+    this.rejectFriendRequest.emit(request.relationship.id);
   }
 
   get filteredInviteCandidates(): FriendInviteCandidateView[] {

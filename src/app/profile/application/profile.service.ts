@@ -184,6 +184,10 @@ export class ProfileService {
     return this.profileApi.createFriend(friend);
   }
 
+  updateFriend(friend: Friend): Observable<Friend> {
+    return this.profileApi.updateFriend(friend);
+  }
+
   removeFamilyMember(familyUserId: number): Observable<void> {
     return this.profileApi.deleteFamilyUser(familyUserId);
   }

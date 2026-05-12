@@ -15,6 +15,11 @@
   height: 110px;
 }
 
+.avatar-shell--header {
+  width: 42px;
+  height: 42px;
+}
+
 .avatar {
   display: grid;
   place-items: center;
@@ -36,6 +41,10 @@
 
 .avatar--hero {
   font-size: 2rem;
+}
+
+.avatar--header {
+  font-size: 0.9rem;
 }
 
 .avatar--image {
@@ -61,12 +70,19 @@
   height: 44px;
 }
 
+.avatar-overlay--header {
+  width: 16px;
+  height: 16px;
+  right: -3px;
+  bottom: -3px;
+}
+
 .avatar-overlay--hat {
-  top: -18px;
+  top: -10px;
   right: 50%;
   bottom: auto;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -74,9 +90,15 @@
 }
 
 .avatar-overlay--hat.avatar-overlay--hero {
-  top: -28px;
-  width: 72px;
-  height: 72px;
+  top: -18px;
+  width: 52px;
+  height: 52px;
+}
+
+.avatar-overlay--hat.avatar-overlay--header {
+  top: -7px;
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 760px) {
@@ -95,8 +117,8 @@
   }
 
   .avatar-overlay--hat.avatar-overlay--hero {
-    top: -22px;
-    width: 56px;
-    height: 56px;
+    top: -14px;
+    width: 42px;
+    height: 42px;
   }
 }
