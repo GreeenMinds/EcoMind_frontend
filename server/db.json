@@ -1787,14 +1787,14 @@
       "user_id": 1,
       "cosmetic_id": 5,
       "acquired_at": "2026-05-11",
-      "equipped": true
+      "equipped": false
     },
     {
       "id": 7,
       "user_id": 1,
       "cosmetic_id": 2,
       "acquired_at": "2026-05-11",
-      "equipped": false
+      "equipped": true
     },
     {
       "id": 8,
