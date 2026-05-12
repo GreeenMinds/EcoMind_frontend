@@ -6,10 +6,12 @@ import { User } from '../domain/model/user.entity';
 import { Family } from '../domain/model/family.entity';
 import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
+import { FamilyInvitation } from '../domain/model/family-invitation.entity';
 import { UsersApiEndpoint } from './users-api-endpoint';
 import { FamiliesApiEndpoint } from './families-api-endpoint';
 import { FamilyUsersApiEndpoint } from './family-users-api-endpoint';
 import { FriendsApiEndpoint } from './friends-api-endpoint';
+import { FamilyInvitationsApiEndpoint } from './family-invitations-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,7 @@ export class ProfileApi extends BaseApi {
   private readonly familiesEndpoint: FamiliesApiEndpoint;
   private readonly familyUsersEndpoint: FamilyUsersApiEndpoint;
   private readonly friendsEndpoint: FriendsApiEndpoint;
+  private readonly familyInvitationsEndpoint: FamilyInvitationsApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -26,6 +29,7 @@ export class ProfileApi extends BaseApi {
     this.familiesEndpoint = new FamiliesApiEndpoint(http);
     this.familyUsersEndpoint = new FamilyUsersApiEndpoint(http);
     this.friendsEndpoint = new FriendsApiEndpoint(http);
+    this.familyInvitationsEndpoint = new FamilyInvitationsApiEndpoint(http);
   }
 
   getUsers(): Observable<User[]> {
@@ -94,6 +98,22 @@ export class ProfileApi extends BaseApi {
 
   deleteFamilyUser(id: number): Observable<void> {
     return this.familyUsersEndpoint.delete(id);
+  }
+
+  getFamilyInvitations(): Observable<FamilyInvitation[]> {
+    return this.familyInvitationsEndpoint.getAll();
+  }
+
+  createFamilyInvitation(invitation: FamilyInvitation): Observable<FamilyInvitation> {
+    return this.familyInvitationsEndpoint.create(invitation);
+  }
+
+  updateFamilyInvitation(invitation: FamilyInvitation): Observable<FamilyInvitation> {
+    return this.familyInvitationsEndpoint.update(invitation, invitation.id);
+  }
+
+  deleteFamilyInvitation(id: number): Observable<void> {
+    return this.familyInvitationsEndpoint.delete(id);
   }
 
   getFriends(): Observable<Friend[]> {

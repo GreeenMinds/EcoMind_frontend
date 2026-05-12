@@ -8,9 +8,27 @@ export interface FamilyMemberView {
   membership: FamilyUser;
 }
 
+export type FamilyRole = 'parent' | 'child';
+
 export interface FamilyInvitePayload {
   userId: number;
-  role: string;
+  role: FamilyRole;
+}
+
+export interface FamilyInvitationInboxView {
+  id: number;
+  familyName: string;
+  inviterName: string;
+  role: FamilyRole;
+  createdAtLabel: string;
+}
+
+export interface FamilyInvitationOutboxView {
+  id: number;
+  familyName: string;
+  invitedName: string;
+  role: FamilyRole;
+  createdAtLabel: string;
 }
 
 @Component({
@@ -25,11 +43,20 @@ export class ProfileFamilySection {
   @Input() familyCommitment: string | null = null;
   @Input() members: FamilyMemberView[] = [];
   @Input() canManageFamily = false;
+  @Input() canCreateFamily = false;
+  @Input() canLeaveFamily = false;
   @Input() inviteCandidates: User[] = [];
+  @Input() noFamilyMessage = 'No estas inscrito o incluido en una familia.';
+  @Input() incomingInvitations: FamilyInvitationInboxView[] = [];
+  @Input() outgoingInvitations: FamilyInvitationOutboxView[] = [];
 
   @Output() editCommitment = new EventEmitter<void>();
   @Output() openMember = new EventEmitter<FamilyMemberView>();
   @Output() inviteMember = new EventEmitter<FamilyInvitePayload>();
+  @Output() createFamily = new EventEmitter<string>();
+  @Output() acceptInvitation = new EventEmitter<number>();
+  @Output() rejectInvitation = new EventEmitter<number>();
+  @Output() leaveFamily = new EventEmitter<void>();
 
   getInitials(name: string | undefined): string {
     if (!name) {
@@ -50,23 +77,34 @@ export class ProfileFamilySection {
   }
 
   getRoleLabel(role: string): string {
-    const roleMap: Record<string, string> = {
-      parent: 'Padre/Madre',
-      child: 'Hijo/Hija',
-    };
-
-    return roleMap[role] ?? role;
+    const normalizedRole = role.trim().toLowerCase();
+    if (normalizedRole === 'parent' || normalizedRole === 'padre/madre') {
+      return 'Padre/Madre';
+    }
+    if (normalizedRole === 'child' || normalizedRole === 'hijo/hija') {
+      return 'Hijo/Hija';
+    }
+    return role;
   }
 
   emitInvite(userId: string, role: string): void {
     const parsedUserId = Number(userId);
-    if (!parsedUserId || !role) {
+    if (!parsedUserId || (role !== 'parent' && role !== 'child')) {
       return;
     }
 
     this.inviteMember.emit({
       userId: parsedUserId,
-      role,
+      role: role as FamilyRole,
     });
+  }
+
+  emitCreateFamily(familyName: string): void {
+    const trimmedName = familyName.trim();
+    if (!trimmedName) {
+      return;
+    }
+
+    this.createFamily.emit(trimmedName);
   }
 }

@@ -1,8 +1,12 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { CommunityService } from '../../../../community/application/community.service';
 import { ProfileService } from '../../../application/profile.service';
+import {
+  FamilyInvitation,
+  FamilyInvitationRole,
+} from '../../../domain/model/family-invitation.entity';
 import { Family } from '../../../domain/model/family.entity';
 import { FamilyUser } from '../../../domain/model/family-user.entity';
 import { Friend } from '../../../domain/model/friend.entity';
@@ -12,10 +16,8 @@ import { Quest } from '../../../../quests/domain/model/quest.entity';
 import { QuestUser } from '../../../../quests/domain/model/quest-user.entity';
 import { ProfileCommitmentModal } from '../profile-commitment-modal/profile-commitment-modal';
 import {
-  FavoriteItemView,
-  ProfileFavoritesSection,
-} from '../profile-favorites-section/profile-favorites-section';
-import {
+  FamilyInvitationInboxView,
+  FamilyInvitationOutboxView,
   FamilyInvitePayload,
   FamilyMemberView,
   ProfileFamilySection,
@@ -43,7 +45,6 @@ import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
     ProfileSummarySection,
     ProfileFamilySection,
     ProfileProgressSection,
-    ProfileFavoritesSection,
     ProfileFriendsSection,
     ProfileCommitmentModal,
   ],
@@ -71,6 +72,7 @@ export class ProfileContent {
   private readonly users = signal<User[]>([]);
   private readonly families = signal<Family[]>([]);
   private readonly familyUsers = signal<FamilyUser[]>([]);
+  private readonly familyInvitations = signal<FamilyInvitation[]>([]);
   private readonly friends = signal<Friend[]>([]);
 
   readonly loading = computed(
@@ -82,7 +84,27 @@ export class ProfileContent {
       this.profileError() ?? this.questsService.error() ?? this.communityService.error() ?? null,
   );
 
-  readonly primaryFamily = computed(() => this.families()[0] ?? null);
+  readonly currentUserFamilyMembership = computed(() => {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return null;
+    }
+
+    return this.familyUsers().find((membership) => membership.user_id === currentUserId) ?? null;
+  });
+  readonly primaryFamily = computed(() => {
+    const membership = this.currentUserFamilyMembership();
+    if (!membership) {
+      return null;
+    }
+
+    return this.findFamilyById(membership.family_id);
+  });
+  readonly isCurrentUserAdult = computed(() => this.isAdult(this.currentUser() ?? null));
+  readonly canCreateFamily = computed(
+    () => this.isCurrentUserAdult() && this.currentUserFamilyMembership() === null,
+  );
+  readonly canLeaveFamily = computed(() => this.currentUserFamilyMembership() !== null);
 
   readonly familyMembers = computed<FamilyMemberView[]>(() => {
     const familyId = this.primaryFamily()?.id;
@@ -109,21 +131,29 @@ export class ProfileContent {
   });
 
   readonly canManageFamily = computed(() => {
-    const currentUserId = this.currentUser()?.id;
-    if (!currentUserId) {
+    const currentMembership = this.currentUserFamilyMembership();
+    if (!currentMembership || !this.isCurrentUserAdult()) {
       return false;
     }
-
-    const currentMembership = this.familyMembers().find(
-      (member) => member.user.id === currentUserId,
-    );
-    return currentMembership?.membership.family_role === 'parent';
+    return true;
   });
 
   readonly familyInviteCandidates = computed(() => {
+    const currentUserId = this.currentUser()?.id;
     const memberIds = new Set(this.familyMembers().map((member) => member.user.id));
+    const pendingInvitedIds = new Set(
+      this.familyInvitations()
+        .filter(
+          (invitation) =>
+            invitation.family_id === this.primaryFamily()?.id && invitation.status === 'pending',
+        )
+        .map((invitation) => invitation.invited_user_id),
+    );
+
     return this.users()
+      .filter((user) => user.id !== currentUserId)
       .filter((user) => !memberIds.has(user.id))
+      .filter((user) => !pendingInvitedIds.has(user.id))
       .sort((left, right) => left.name.localeCompare(right.name));
   });
 
@@ -265,55 +295,53 @@ export class ProfileContent {
   readonly pendingQuestProgress = computed(() => this.buildQuestProgressBuckets().pending);
   readonly completedQuestProgress = computed(() => this.buildQuestProgressBuckets().completed);
 
-  readonly favoriteItems = computed<FavoriteItemView[]>(() => {
+  readonly incomingInvitations = computed<FamilyInvitationInboxView[]>(() => {
     const currentUserId = this.currentUser()?.id;
     if (!currentUserId) {
       return [];
     }
 
-    const eventItems = this.communityService
-      .events()
-      .filter((event) => event.author_id === currentUserId)
-      .map<FavoriteItemView>((event) => ({
-        id: `event-${event.id}`,
-        category: 'event',
-        title: event.name,
-        description: event.description,
-        imageUrl: event.image_url,
-        eyebrow: 'Evento',
-        meta: this.formatAbsoluteDate(event.date),
-      }));
+    return this.familyInvitations()
+      .filter(
+        (invitation) =>
+          invitation.invited_user_id === currentUserId && invitation.status === 'pending',
+      )
+      .map((invitation) => {
+        const inviter = this.users().find((user) => user.id === invitation.inviter_user_id);
+        const family = this.findFamilyById(invitation.family_id);
+        return {
+          id: invitation.id,
+          familyName: family?.name ?? `Familia #${invitation.family_id}`,
+          inviterName: inviter?.name ?? `Usuario #${invitation.inviter_user_id}`,
+          role: invitation.invited_role,
+          createdAtLabel: this.formatRelativeDate(invitation.created_at),
+        };
+      })
+      .sort((left, right) => left.createdAtLabel.localeCompare(right.createdAtLabel));
+  });
 
-    const postItems = this.communityService
-      .posts()
-      .filter((post) => post.user_id === currentUserId)
-      .map<FavoriteItemView>((post) => ({
-        id: `post-${post.id}`,
-        category: 'post',
-        title: 'Publicacion destacada',
-        description: post.content,
-        imageUrl: post.image_url,
-        eyebrow: 'Comunidad',
-        meta: `${post.likes} likes · ${post.points} puntos`,
-      }));
+  readonly outgoingInvitations = computed<FamilyInvitationOutboxView[]>(() => {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return [];
+    }
 
-    const latestRecords = this.getLatestQuestRecords(currentUserId);
-    const questItems = this.questsService
-      .quests()
-      .filter((quest) => latestRecords.has(quest.id))
-      .map<FavoriteItemView>((quest) => ({
-        id: `quest-${quest.id}`,
-        category: 'quest',
-        title: quest.title,
-        description: quest.description,
-        imageUrl: quest.image_url,
-        eyebrow: this.formatQuestCategory(quest.category),
-        meta: `${quest.reward_ecopoints} ecoPoints · ${quest.time} min`,
-      }));
-
-    return [...eventItems, ...postItems, ...questItems].sort((left, right) =>
-      left.category.localeCompare(right.category),
-    );
+    return this.familyInvitations()
+      .filter(
+        (invitation) =>
+          invitation.inviter_user_id === currentUserId && invitation.status === 'pending',
+      )
+      .map((invitation) => {
+        const invitedUser = this.users().find((user) => user.id === invitation.invited_user_id);
+        const family = this.findFamilyById(invitation.family_id);
+        return {
+          id: invitation.id,
+          familyName: family?.name ?? `Familia #${invitation.family_id}`,
+          invitedName: invitedUser?.name ?? `Usuario #${invitation.invited_user_id}`,
+          role: invitation.invited_role,
+          createdAtLabel: this.formatRelativeDate(invitation.created_at),
+        };
+      });
   });
 
   constructor() {
@@ -359,7 +387,7 @@ export class ProfileContent {
 
   openFamilyCommitmentEditor(): void {
     if (!this.canManageFamily()) {
-      this.showFeedback('Solo Padre/Madre puede editar el compromiso de la familia');
+      this.showFeedback('Solo un usuario mayor de edad puede editar el compromiso familiar');
       return;
     }
 
@@ -501,7 +529,11 @@ export class ProfileContent {
 
   inviteFamilyMember(payload: FamilyInvitePayload): void {
     if (!this.canManageFamily()) {
-      this.showFeedback('Solo Padre/Madre puede invitar miembros a la familia');
+      this.showFeedback('Solo un usuario mayor de edad puede invitar miembros a la familia');
+      return;
+    }
+    if (!this.isCurrentUserAdult()) {
+      this.showFeedback('Solo un usuario mayor de edad puede enviar invitaciones familiares');
       return;
     }
 
@@ -517,25 +549,209 @@ export class ProfileContent {
       return;
     }
 
-    const familyUser = new FamilyUser();
-    familyUser.user_id = payload.userId;
-    familyUser.family_id = family.id;
-    familyUser.family_role = payload.role;
-    familyUser.joined_at = new Date().toISOString().slice(0, 10);
+    const hasPendingInvitation = this.familyInvitations().some(
+      (invitation) =>
+        invitation.family_id === family.id &&
+        invitation.invited_user_id === payload.userId &&
+        invitation.status === 'pending',
+    );
+    if (hasPendingInvitation) {
+      this.showFeedback('Ya existe una invitacion pendiente para ese usuario');
+      return;
+    }
+
+    const invitation = new FamilyInvitation();
+    invitation.family_id = family.id;
+    invitation.inviter_user_id = this.currentUser()?.id ?? 0;
+    invitation.invited_user_id = payload.userId;
+    invitation.invited_role = payload.role;
+    invitation.status = 'pending';
+    invitation.created_at = new Date().toISOString();
+    invitation.responded_at = null;
 
     this.savingProfile.set(true);
     this.profileService
-      .addFamilyMember(familyUser)
+      .createFamilyInvitation(invitation)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.savingProfile.set(false);
-          this.showFeedback('Miembro agregado a la familia');
+          this.showFeedback('Invitacion enviada correctamente');
           this.loadProfileContext();
         },
         error: (error: Error) => {
           this.savingProfile.set(false);
-          this.showFeedback(error.message || 'No se pudo agregar el miembro a la familia');
+          this.showFeedback(error.message || 'No se pudo enviar la invitacion');
+        },
+      });
+  }
+
+  createFamily(familyName: string): void {
+    if (!this.isCurrentUserAdult()) {
+      this.showFeedback('Solo un usuario mayor de edad puede crear una familia');
+      return;
+    }
+    if (this.primaryFamily()) {
+      this.showFeedback('Ya perteneces a una familia. Debes salir primero.');
+      return;
+    }
+
+    const newFamily = new Family();
+    newFamily.name = familyName.trim();
+    newFamily.commitment = null;
+    if (!newFamily.name) {
+      this.showFeedback('Debes ingresar un nombre de familia');
+      return;
+    }
+
+    this.savingProfile.set(true);
+    this.profileService
+      .createFamily(newFamily)
+      .pipe(
+        switchMap((createdFamily) => {
+          const familyUser = new FamilyUser();
+          familyUser.user_id = this.currentUser()?.id ?? 0;
+          familyUser.family_id = createdFamily.id;
+          familyUser.family_role = 'parent';
+          familyUser.joined_at = new Date().toISOString().slice(0, 10);
+          return this.profileService.addFamilyMember(familyUser);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Familia creada correctamente');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo crear la familia');
+        },
+      });
+  }
+
+  acceptFamilyInvitation(invitationId: number): void {
+    const invitation = this.familyInvitations().find((item) => item.id === invitationId);
+    const currentUser = this.currentUser();
+    if (!invitation || !currentUser) {
+      return;
+    }
+    if (invitation.status !== 'pending') {
+      this.showFeedback('La invitacion ya no esta disponible');
+      return;
+    }
+    if (invitation.invited_user_id !== currentUser.id) {
+      this.showFeedback('No puedes responder una invitacion de otro usuario');
+      return;
+    }
+    if (this.currentUserFamilyMembership()) {
+      this.showFeedback('Ya perteneces a una familia. Debes salir primero para aceptar otra.');
+      return;
+    }
+
+    const inviter = this.users().find((user) => user.id === invitation.inviter_user_id) ?? null;
+    if (!this.isAdult(inviter)) {
+      this.showFeedback('La invitacion no es valida porque el emisor no es mayor de edad');
+      return;
+    }
+
+    const acceptedRole: FamilyInvitationRole =
+      this.isAdult(currentUser) && invitation.invited_role === 'parent' ? 'parent' : 'child';
+
+    const membership = new FamilyUser();
+    membership.user_id = currentUser.id;
+    membership.family_id = invitation.family_id;
+    membership.family_role = acceptedRole;
+    membership.joined_at = new Date().toISOString().slice(0, 10);
+
+    const updatedInvitation = new FamilyInvitation();
+    Object.assign(updatedInvitation, invitation);
+    updatedInvitation.status = 'accepted';
+    updatedInvitation.responded_at = new Date().toISOString();
+
+    this.savingProfile.set(true);
+    this.profileService
+      .addFamilyMember(membership)
+      .pipe(
+        switchMap(() => this.profileService.updateFamilyInvitation(updatedInvitation)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Te uniste a la familia correctamente');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo aceptar la invitacion');
+        },
+      });
+  }
+
+  rejectFamilyInvitation(invitationId: number): void {
+    const invitation = this.familyInvitations().find((item) => item.id === invitationId);
+    const currentUser = this.currentUser();
+    if (!invitation || !currentUser || invitation.invited_user_id !== currentUser.id) {
+      return;
+    }
+    if (invitation.status !== 'pending') {
+      this.showFeedback('La invitacion ya no esta disponible');
+      return;
+    }
+
+    const updatedInvitation = new FamilyInvitation();
+    Object.assign(updatedInvitation, invitation);
+    updatedInvitation.status = 'rejected';
+    updatedInvitation.responded_at = new Date().toISOString();
+
+    this.savingProfile.set(true);
+    this.profileService
+      .updateFamilyInvitation(updatedInvitation)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Invitacion rechazada');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo rechazar la invitacion');
+        },
+      });
+  }
+
+  leaveCurrentFamily(): void {
+    const currentMembership = this.currentUserFamilyMembership();
+    if (!currentMembership) {
+      this.showFeedback('No estas inscrito o incluido en una familia.');
+      return;
+    }
+
+    const shouldLeave =
+      typeof window === 'undefined'
+        ? true
+        : window.confirm('Quieres salir de tu familia actual?');
+    if (!shouldLeave) {
+      return;
+    }
+
+    this.savingProfile.set(true);
+    this.profileService
+      .removeFamilyMember(currentMembership.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.selectedFamilyMemberId.set(null);
+          this.showFeedback('Saliste de la familia actual');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo salir de la familia');
         },
       });
   }
@@ -566,7 +782,7 @@ export class ProfileContent {
   getFamilySummary(): string {
     const family = this.primaryFamily();
     if (!family) {
-      return 'Aun no tienes una familia registrada.';
+      return 'No estas inscrito o incluido en una familia.';
     }
 
     const community = this.communityService
@@ -581,12 +797,14 @@ export class ProfileContent {
   }
 
   getRoleLabel(role: string): string {
-    const roleMap: Record<string, string> = {
-      parent: 'Padre/Madre',
-      child: 'Hijo/Hija',
-    };
-
-    return roleMap[role] ?? role;
+    const normalizedRole = this.normalizeFamilyRole(role);
+    if (normalizedRole === 'parent') {
+      return 'Padre/Madre';
+    }
+    if (normalizedRole === 'child') {
+      return 'Hijo/Hija';
+    }
+    return role;
   }
 
   getViewedMembershipCaption(): string {
@@ -605,20 +823,18 @@ export class ProfileContent {
     forkJoin({
       currentUser: this.profileService.refreshCurrentUser(),
       users: this.profileService.getUsers(),
-      families: this.profileService.getCurrentUserFamilies(),
+      families: this.profileService.getFamilies(),
       familyUsers: this.profileService.getFamilyUsers(),
+      familyInvitations: this.profileService.getFamilyInvitations(),
       friends: this.profileService.getFriends(),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ({ users, families, familyUsers, friends }) => {
-          const familyIds = new Set(families.map((family) => family.id));
-
+        next: ({ users, families, familyUsers, familyInvitations, friends }) => {
           this.users.set(users);
           this.families.set(families);
-          this.familyUsers.set(
-            familyUsers.filter((membership) => familyIds.has(membership.family_id)),
-          );
+          this.familyUsers.set(familyUsers);
+          this.familyInvitations.set(familyInvitations);
           this.friends.set(friends);
           this.profileLoading.set(false);
         },
@@ -810,24 +1026,14 @@ export class ProfileContent {
   }
 
   private getRoleOrder(role: string): number {
-    if (role === 'parent') {
+    const normalizedRole = this.normalizeFamilyRole(role);
+    if (normalizedRole === 'parent') {
       return 0;
     }
-    if (role === 'child') {
+    if (normalizedRole === 'child') {
       return 1;
     }
     return 2;
-  }
-
-  private formatQuestCategory(category: string): string {
-    const categoryMap: Record<string, string> = {
-      energy: 'Energia',
-      water: 'Agua',
-      recycle: 'Reciclaje',
-      daily_quest: 'Reto diario',
-    };
-
-    return categoryMap[category] ?? category;
   }
 
   private formatRelativeDate(dateValue: string | null | undefined): string {
@@ -860,12 +1066,50 @@ export class ProfileContent {
     return `hace ${diffInMonths} meses`;
   }
 
-  private formatAbsoluteDate(dateValue: string): string {
-    return new Intl.DateTimeFormat('es-PE', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }).format(new Date(dateValue));
+  private normalizeFamilyRole(role: string | null | undefined): 'parent' | 'child' | 'unknown' {
+    const normalizedRole = (role ?? '').trim().toLowerCase();
+    if (
+      normalizedRole === 'parent' ||
+      normalizedRole === 'padre' ||
+      normalizedRole === 'madre' ||
+      normalizedRole === 'padre/madre'
+    ) {
+      return 'parent';
+    }
+    if (
+      normalizedRole === 'child' ||
+      normalizedRole === 'hijo' ||
+      normalizedRole === 'hija' ||
+      normalizedRole === 'hijo/hija'
+    ) {
+      return 'child';
+    }
+    return 'unknown';
+  }
+
+  private isAdult(user: User | null): boolean {
+    if (!user?.birth_date) {
+      return false;
+    }
+
+    const birthDate = new Date(user.birth_date);
+    if (Number.isNaN(birthDate.getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    let age = now.getFullYear() - birthDate.getFullYear();
+    const monthDiff = now.getMonth() - birthDate.getMonth();
+    const dayDiff = now.getDate() - birthDate.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age -= 1;
+    }
+
+    return age >= 18;
+  }
+
+  private findFamilyById(familyId: number): Family | null {
+    return this.families().find((family) => family.id === familyId) ?? null;
   }
 
   private getFirstName(name: string): string {
@@ -915,3 +1159,4 @@ export class ProfileContent {
     return acceptedFriendIds;
   }
 }
+

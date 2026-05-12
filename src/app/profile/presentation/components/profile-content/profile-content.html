@@ -85,12 +85,21 @@
         <app-profile-family-section
           [family]="primaryFamily()"
           [familySummary]="getFamilySummary()"
-          [familyCommitment]="primaryFamily().commitment || null"
+          [familyCommitment]="primaryFamily()?.commitment || null"
           [members]="familyMembers()"
           [canManageFamily]="canManageFamily()"
+          [canCreateFamily]="canCreateFamily()"
+          [canLeaveFamily]="canLeaveFamily()"
           [inviteCandidates]="familyInviteCandidates()"
+          [noFamilyMessage]="'No estas inscrito o incluido en una familia.'"
+          [incomingInvitations]="incomingInvitations()"
+          [outgoingInvitations]="outgoingInvitations()"
           (editCommitment)="openFamilyCommitmentEditor()"
+          (createFamily)="createFamily($event)"
           (inviteMember)="inviteFamilyMember($event)"
+          (acceptInvitation)="acceptFamilyInvitation($event)"
+          (rejectInvitation)="rejectFamilyInvitation($event)"
+          (leaveFamily)="leaveCurrentFamily()"
           (openMember)="openFamilyMember($event)">
         </app-profile-family-section>
       }
@@ -101,10 +110,6 @@
         [pending]="pendingQuestProgress()"
         [completed]="completedQuestProgress()">
       </app-profile-progress-section>
-    }
-
-    @if (activeTab() === 'favorites') {
-      <app-profile-favorites-section [items]="favoriteItems()"></app-profile-favorites-section>
     }
 
     @if (activeTab() === 'friends') {

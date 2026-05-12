@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-export type ProfileTab = 'summary' | 'family' | 'progress' | 'favorites' | 'friends';
+export type ProfileTab = 'summary' | 'family' | 'progress' | 'friends';
 
 @Component({
   selector: 'app-profile-tabs',

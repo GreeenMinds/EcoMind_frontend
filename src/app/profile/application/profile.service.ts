@@ -5,6 +5,7 @@ import { User } from '../domain/model/user.entity';
 import { Family } from '../domain/model/family.entity';
 import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
+import { FamilyInvitation } from '../domain/model/family-invitation.entity';
 import { ProfileApi } from '../infrastructure/profile-api';
 
 @Injectable({
@@ -155,12 +156,20 @@ export class ProfileService {
     );
   }
 
+  getFamilies(): Observable<Family[]> {
+    return this.profileApi.getFamilies();
+  }
+
   getCurrentUserFriends(): Observable<Friend[]> {
     return this.profileApi.getFriendsByUserId(this.currentUserId());
   }
 
   updateFamily(family: Family): Observable<Family> {
     return this.profileApi.updateFamily(family);
+  }
+
+  createFamily(family: Family): Observable<Family> {
+    return this.profileApi.createFamily(family);
   }
 
   addFamilyMember(familyUser: FamilyUser): Observable<FamilyUser> {
@@ -173,6 +182,18 @@ export class ProfileService {
 
   removeFamilyMember(familyUserId: number): Observable<void> {
     return this.profileApi.deleteFamilyUser(familyUserId);
+  }
+
+  getFamilyInvitations(): Observable<FamilyInvitation[]> {
+    return this.profileApi.getFamilyInvitations();
+  }
+
+  createFamilyInvitation(invitation: FamilyInvitation): Observable<FamilyInvitation> {
+    return this.profileApi.createFamilyInvitation(invitation);
+  }
+
+  updateFamilyInvitation(invitation: FamilyInvitation): Observable<FamilyInvitation> {
+    return this.profileApi.updateFamilyInvitation(invitation);
   }
 
   removeFriend(friendId: number): Observable<void> {

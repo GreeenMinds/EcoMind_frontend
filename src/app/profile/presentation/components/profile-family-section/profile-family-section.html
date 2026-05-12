@@ -1,75 +1,162 @@
 <section class="family-shell">
-  <article class="family-banner">
-    <div>
-      <p class="profile-eyebrow">Grupo principal</p>
-      <h2>{{ family?.name || 'Sin familia' }}</h2>
-      <p>{{ familySummary }}</p>
-      <p class="family-banner__commitment">
-        {{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}
-      </p>
-    </div>
-
-    @if (canManageFamily) {
-      <button class="family-banner__cta" type="button" (click)="editCommitment.emit()">
-        Editar compromiso
-      </button>
-    }
-  </article>
-
-  @if (canManageFamily) {
-    <article class="family-invite">
-      <h3>Invitar a la familia</h3>
-
-      @if (inviteCandidates.length > 0) {
-        <div class="family-invite__controls">
-          <select #candidateSelect class="family-input">
-            @for (candidate of inviteCandidates; track candidate.id) {
-              <option [value]="candidate.id">{{ candidate.name }}</option>
-            }
-          </select>
-
-          <select #roleSelect class="family-input">
-            <option value="child">Hijo/Hija</option>
-            <option value="parent">Padre/Madre</option>
-          </select>
-
-          <button
-            class="profile-action profile-action--invite"
-            type="button"
-            (click)="emitInvite(candidateSelect.value, roleSelect.value)">
-            Agregar a la familia
-          </button>
-        </div>
-      } @else {
-        <p class="empty-copy">No hay usuarios disponibles para invitar.</p>
-      }
+  @if (incomingInvitations.length > 0) {
+    <article class="family-invitations">
+      <h3>Invitaciones recibidas</h3>
+      <div class="family-invitations__list">
+        @for (invitation of incomingInvitations; track invitation.id) {
+          <div class="family-invitations__item">
+            <div>
+              <strong>{{ invitation.familyName }}</strong>
+              <p>
+                {{ invitation.inviterName }} te invita como
+                {{ getRoleLabel(invitation.role) }} · {{ invitation.createdAtLabel }}
+              </p>
+            </div>
+            <div class="family-invitations__actions">
+              <button
+                class="profile-action profile-action--solid"
+                type="button"
+                (click)="acceptInvitation.emit(invitation.id)">
+                Aceptar
+              </button>
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                (click)="rejectInvitation.emit(invitation.id)">
+                Rechazar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     </article>
   }
 
-  <section class="family-members">
-    <div class="family-members__header">
-      <h2>Miembros de la Familia ({{ members.length }})</h2>
-    </div>
+  @if (!family) {
+    <article class="family-empty">
+      <h2>Sin familia registrada</h2>
+      <p>{{ noFamilyMessage }}</p>
 
-    @if (members.length > 0) {
-      <div class="family-grid">
-        @for (member of members; track member.membership.id) {
-          <article class="family-member-card">
-            <div
-              class="avatar avatar--member"
-              [style.--avatar-hue]="getAvatarHue(member.user.id)">
-              {{ getInitials(member.user.name) }}
-            </div>
-            <h3>{{ member.user.name }}</h3>
-            <span class="family-role-chip">{{ getRoleLabel(member.membership.family_role) }}</span>
-            <button class="profile-action" type="button" (click)="openMember.emit(member)">
-              Ver perfil
-            </button>
-          </article>
+      @if (canCreateFamily) {
+        <div class="family-create">
+          <input
+            #familyNameInput
+            class="family-input"
+            type="text"
+            placeholder="Escribe el nombre de tu familia" />
+          <button
+            class="profile-action profile-action--invite"
+            type="button"
+            (click)="emitCreateFamily(familyNameInput.value)">
+            Crear familia
+          </button>
+        </div>
+      } @else {
+        <p class="empty-copy">Solo un usuario mayor de edad puede crear una familia.</p>
+      }
+    </article>
+  } @else {
+    <article class="family-banner">
+      <div>
+        <p class="profile-eyebrow">Grupo principal</p>
+        <h2>{{ family.name }}</h2>
+        <p>{{ familySummary }}</p>
+        <p class="family-banner__commitment">
+          {{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}
+        </p>
+      </div>
+
+      <div class="family-banner__actions">
+        @if (canManageFamily) {
+          <button class="family-banner__cta" type="button" (click)="editCommitment.emit()">
+            Editar compromiso
+          </button>
+        }
+        @if (canLeaveFamily) {
+          <button
+            class="family-banner__cta family-banner__cta--ghost"
+            type="button"
+            (click)="leaveFamily.emit()">
+            Salir de la familia
+          </button>
         }
       </div>
-    } @else {
-      <p class="empty-copy">No hay miembros de familia asociados a este perfil.</p>
+    </article>
+
+    @if (canManageFamily) {
+      <article class="family-invite">
+        <h3>Invitar a la familia</h3>
+
+        @if (inviteCandidates.length > 0) {
+          <div class="family-invite__controls">
+            <select #candidateSelect class="family-input">
+              @for (candidate of inviteCandidates; track candidate.id) {
+                <option [value]="candidate.id">{{ candidate.name }}</option>
+              }
+            </select>
+
+            <select #roleSelect class="family-input">
+              <option value="child">Hijo/Hija</option>
+              <option value="parent">Padre/Madre</option>
+            </select>
+
+            <button
+              class="profile-action profile-action--invite"
+              type="button"
+              (click)="emitInvite(candidateSelect.value, roleSelect.value)">
+              Enviar invitacion
+            </button>
+          </div>
+        } @else {
+          <p class="empty-copy">No hay usuarios disponibles para invitar.</p>
+        }
+      </article>
     }
-  </section>
+
+    @if (outgoingInvitations.length > 0) {
+      <article class="family-invitations family-invitations--sent">
+        <h3>Invitaciones enviadas</h3>
+        <div class="family-invitations__list">
+          @for (invitation of outgoingInvitations; track invitation.id) {
+            <div class="family-invitations__item">
+              <div>
+                <strong>{{ invitation.invitedName }}</strong>
+                <p>
+                  {{ invitation.familyName }} · {{ getRoleLabel(invitation.role) }} ·
+                  {{ invitation.createdAtLabel }}
+                </p>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+    }
+
+    <section class="family-members">
+      <div class="family-members__header">
+        <h2>Miembros de la Familia ({{ members.length }})</h2>
+      </div>
+
+      @if (members.length > 0) {
+        <div class="family-grid">
+          @for (member of members; track member.membership.id) {
+            <article class="family-member-card">
+              <div
+                class="avatar avatar--member"
+                [style.--avatar-hue]="getAvatarHue(member.user.id)">
+                {{ getInitials(member.user.name) }}
+              </div>
+              <h3>{{ member.user.name }}</h3>
+              <span class="family-role-chip">{{ getRoleLabel(member.membership.family_role) }}</span>
+              <button class="profile-action" type="button" (click)="openMember.emit(member)">
+                Ver perfil
+              </button>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="empty-copy">No hay miembros de familia asociados a este perfil.</p>
+      }
+    </section>
+  }
 </section>
