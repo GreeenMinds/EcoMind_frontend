@@ -584,20 +584,64 @@ export class QuestsService {
   }
 
   deleteActiveQuest(questId: number): void {
-    const questUser = this.findCurrentUserActiveQuest(questId, this.getCurrentProgressSessionId(questId));
+    const sessionId = this.getCurrentProgressSessionId(questId);
+    if (sessionId !== null) {
+      const currentMember = this.collaborativeMembers().find(
+        (member) =>
+          member.session_id === sessionId &&
+          member.user_id === this.currentUserId() &&
+          member.status === 'accepted',
+      );
+      if (currentMember) {
+        this.leaveCollaborativeQuest(currentMember.id);
+        return;
+      }
+    }
+
+    const questUser = this.findCurrentUserActiveQuest(questId, sessionId);
     if (!questUser) {
       return;
     }
 
+    const activityIds = this.activities()
+      .filter((activity) => activity.quest_id === questId)
+      .map((activity) => activity.id);
+    const activityUsersToDelete = this.activitiesUser().filter(
+      (activityUser) =>
+        activityUser.user_id === this.currentUserId() &&
+        activityUser.collaborative_session_id === sessionId &&
+        activityIds.includes(activityUser.activity_id),
+    );
+    const minigameAttemptsToDelete = this.minigameAttempts().filter(
+      (attempt) =>
+        attempt.user_id === this.currentUserId() &&
+        attempt.quest_id === questId &&
+        questUser.status !== 'completed',
+    );
+
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.questsApi
-      .deleteQuestUser(questUser.id)
+
+    forkJoin([
+      this.questsApi.deleteQuestUser(questUser.id),
+      ...activityUsersToDelete.map((activityUser) => this.questsApi.deleteActivityUser(activityUser.id)),
+      ...minigameAttemptsToDelete.map((attempt) => this.questsApi.deleteMinigameAttempt(attempt.id)),
+    ])
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.questsUserSignal.update((questsUser) =>
             questsUser.filter((item) => item.id !== questUser.id),
+          );
+          this.activitiesUserSignal.update((activitiesUser) =>
+            activitiesUser.filter(
+              (item) => !activityUsersToDelete.some((deleted) => deleted.id === item.id),
+            ),
+          );
+          this.minigameAttemptsSignal.update((attempts) =>
+            attempts.filter(
+              (item) => !minigameAttemptsToDelete.some((deleted) => deleted.id === item.id),
+            ),
           );
           this.loadingSignal.set(false);
         },
