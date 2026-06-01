@@ -1,7 +1,7 @@
-import {NgStyle} from '@angular/common';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {TranslatePipe} from '@ngx-translate/core';
-import {QuestSummary} from '../../../application/quests.service';
+import { NgStyle } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { QuestSummary } from '../../../application/quest-view-models';
 
 @Component({
   selector: 'app-quest-card',
@@ -10,7 +10,7 @@ import {QuestSummary} from '../../../application/quests.service';
   styleUrl: './quest-card.css',
 })
 export class QuestCard {
-  @Input({required: true}) summary!: QuestSummary;
+  @Input({ required: true }) summary!: QuestSummary;
   @Output() questSelected = new EventEmitter<number>();
 
   selectQuest(): void {
@@ -40,11 +40,13 @@ export class QuestCard {
       },
     };
 
-    return themes[type] ?? {
-      '--quest-bg': '#9aa3ad',
-      '--quest-shadow': '#707984',
-      '--quest-top-light': '#c8ced6',
-    };
+    return (
+      themes[type] ?? {
+        '--quest-bg': '#9aa3ad',
+        '--quest-shadow': '#707984',
+        '--quest-top-light': '#c8ced6',
+      }
+    );
   }
 
   getQuestTypeIcon(type: string): string {

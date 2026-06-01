@@ -1,7 +1,16 @@
-import {Component, computed, effect, EventEmitter, input, Output, signal, untracked} from '@angular/core';
-import {TranslatePipe} from '@ngx-translate/core';
-import {QuestSummary} from '../../../application/quests.service';
-import {QuestCard} from '../quest-card/quest-card';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  input,
+  Output,
+  signal,
+  untracked,
+} from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { QuestSummary } from '../../../application/quest-view-models';
+import { QuestCard } from '../quest-card/quest-card';
 
 @Component({
   selector: 'app-quest-card-grid',
@@ -26,7 +35,9 @@ export class QuestCardGrid {
     }),
   );
 
-  readonly pageCount = computed(() => Math.max(1, Math.ceil(this.sortedQuests().length / this.pageSize)));
+  readonly pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.sortedQuests().length / this.pageSize)),
+  );
 
   readonly questPages = computed(() => {
     const quests = this.sortedQuests();
@@ -36,8 +47,11 @@ export class QuestCardGrid {
     });
   });
 
-  readonly pages = computed(() => Array.from({length: this.pageCount()}, (_, index) => index));
-  readonly trackTransform = computed(() => `translateX(calc(-${this.currentPage() * 100}% - ${this.currentPage()} * var(--page-gap)))`);
+  readonly pages = computed(() => Array.from({ length: this.pageCount() }, (_, index) => index));
+  readonly trackTransform = computed(
+    () =>
+      `translateX(calc(-${this.currentPage() * 100}% - ${this.currentPage()} * var(--page-gap)))`,
+  );
 
   private dragStartX: number | null = null;
   private readonly dragThreshold = 48;

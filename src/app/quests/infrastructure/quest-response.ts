@@ -1,10 +1,10 @@
-import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
+import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
-export interface QuestResponse extends BaseResponse {
+export type QuestResponse = BaseResponse & {
   quests: QuestResource[];
-}
+};
 
-export interface QuestResource extends BaseResource {
+export type QuestResource = BaseResource & {
   id: number;
   minigame_id: number | null;
   category: string;
@@ -17,4 +17,4 @@ export interface QuestResource extends BaseResource {
   reward_ecopoints: number;
   expiration_date: string | null;
   time: number;
-}
+};

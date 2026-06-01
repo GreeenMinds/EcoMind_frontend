@@ -1,7 +1,8 @@
-import {Component, computed, inject, signal} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {QuestSummary, QuestsService} from '../../../application/quests.service';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { QuestsService } from '../../../application/quests.service';
+import { QuestSummary } from '../../../application/quest-view-models';
 
 @Component({
   selector: 'app-quest-search-content',
@@ -55,13 +56,17 @@ export class QuestSearchContent {
         summary.quest.category,
         summary.quest.type,
         summary.themeType,
-      ].join(' ').toLowerCase();
+      ]
+        .join(' ')
+        .toLowerCase();
 
       return (
         (!term || searchableText.includes(term)) &&
         (category === 'all' || summary.quest.category === category) &&
         (questType === 'all' || summary.quest.type === questType) &&
-            (questType === 'minigame' || activityType === 'all' || summary.themeType === activityType) &&
+        (questType === 'minigame' ||
+          activityType === 'all' ||
+          summary.themeType === activityType) &&
         summary.quest.age <= age
       );
     });
@@ -135,7 +140,11 @@ export class QuestSearchContent {
       return this.translate.instant('quests.actions.startAgain');
     }
     if (summary.started) {
-      return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
+      return this.translate.instant(
+        summary.quest.type === 'activities'
+          ? 'quests.actions.viewActivity'
+          : 'quests.actions.viewQuest',
+      );
     }
     return this.translate.instant('quests.actions.start');
   }
@@ -160,15 +169,15 @@ export class QuestSearchContent {
 
   getQuestAgeLabel(summary: QuestSummary): string {
     return summary.quest.age > 0
-      ? this.translate.instant('common.yearsPlus', {count: summary.quest.age})
+      ? this.translate.instant('common.yearsPlus', { count: summary.quest.age })
       : this.translate.instant('common.general');
   }
 
   getRewardLabel(summary: QuestSummary): string {
     if (summary.quest.reward_ecopoints > 0) {
-      return this.translate.instant('common.ecoPoints', {count: summary.quest.reward_ecopoints});
+      return this.translate.instant('common.ecoPoints', { count: summary.quest.reward_ecopoints });
     }
-    return this.translate.instant('common.gems', {count: summary.quest.reward_gems});
+    return this.translate.instant('common.gems', { count: summary.quest.reward_gems });
   }
 
   getQuestDisplayType(summary: QuestSummary): string {
@@ -194,11 +203,13 @@ export class QuestSearchContent {
       },
     };
 
-    return themes[type] ?? {
-      '--quest-bg': '#9aa3ad',
-      '--quest-shadow': '#707984',
-      '--quest-top-light': '#c8ced6',
-    };
+    return (
+      themes[type] ?? {
+        '--quest-bg': '#9aa3ad',
+        '--quest-shadow': '#707984',
+        '--quest-top-light': '#c8ced6',
+      }
+    );
   }
 
   getQuestTypeIcon(type: string): string {

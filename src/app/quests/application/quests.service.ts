@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, map, Observable, of, retry, switchMap, tap } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { Friend } from '../../profile/domain/model/friend.entity';
 import { User } from '../../profile/domain/model/user.entity';
@@ -16,61 +16,14 @@ import { QuestUser } from '../domain/model/quest-user.entity';
 import { Quest } from '../domain/model/quest.entity';
 import { QuestsApi } from '../infrastructure/quests-api';
 import { MonetizationStoreService } from '../../monetization/application/monetization-store.service';
-
-export interface ActivityProgress {
-  activity: Activity;
-  activityUser?: ActivityUser;
-  progress: number;
-  completed: boolean;
-}
-
-export interface QuestSummary {
-  quest: Quest;
-  questUser?: QuestUser;
-  minigame?: Minigame;
-  latestMinigameAttempt?: MinigameAttempt;
-  progress: number;
-  status: string;
-  activitiesCount: number;
-  completedActivitiesCount: number;
-  started: boolean;
-  completed: boolean;
-  hasCompletedAttempt: boolean;
-  expired: boolean;
-  themeType: string;
-}
-
-export interface QuestDetail extends QuestSummary {
-  activities: ActivityProgress[];
-  minigameAttempts: MinigameAttempt[];
-}
-
-export interface CollaborativeParticipant {
-  member: CollaborativeQuestMember;
-  user?: User;
-  isCurrentUser: boolean;
-}
-
-export interface CollaborativeFriendOption {
-  user: User;
-  alreadyInvited: boolean;
-  isBusy: boolean;
-  canInvite: boolean;
-}
-
-export interface CollaborativeQuestContext {
-  session?: CollaborativeQuestSession;
-  currentMember?: CollaborativeQuestMember;
-  pendingInvitation?: CollaborativeQuestMember;
-  participants: CollaborativeParticipant[];
-  inviteOptions: CollaborativeFriendOption[];
-  isOwner: boolean;
-  isAcceptedParticipant: boolean;
-  canInvite: boolean;
-  canStart: boolean;
-  canAcceptInvitation: boolean;
-  canLeave: boolean;
-}
+import {
+  ActivityProgress,
+  CollaborativeFriendOption,
+  CollaborativeParticipant,
+  CollaborativeQuestContext,
+  QuestDetail,
+  QuestSummary,
+} from './quest-view-models';
 
 @Injectable({
   providedIn: 'root',
@@ -109,9 +62,6 @@ export class QuestsService {
   private readonly errorSignal = signal<string | null>(null);
   readonly error = this.errorSignal.asReadonly();
 
-  readonly questCount = computed(() => this.quests().length);
-  readonly activeQuestCount = computed(() => this.getActiveQuests()().length);
-  readonly completedQuestCount = computed(() => this.getCompletedQuests()().length);
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
 
   constructor(
@@ -130,8 +80,62 @@ export class QuestsService {
     });
   }
 
-  refresh(): void {
-    this.loadQuestData();
+  private startLoading(): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+  }
+
+  private stopLoading(): void {
+    this.loadingSignal.set(false);
+  }
+
+  private runRequest<T>(
+    request: Observable<T>,
+    fallbackMessage: string,
+    onSuccess: (result: T) => void,
+  ): void {
+    request.pipe(retry(2), takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        onSuccess(result);
+      },
+      error: (error) => {
+        this.errorSignal.set(this.formatError(error, fallbackMessage));
+        this.stopLoading();
+      },
+    });
+  }
+
+  private runRequests<T>(
+    requests: Observable<T>[],
+    fallbackMessage: string,
+    onSuccess: (results: T[]) => void,
+  ): void {
+    const results: T[] = [];
+
+    const runNext = (index: number) => {
+      if (index >= requests.length) {
+        onSuccess(results);
+        return;
+      }
+
+      requests[index].pipe(retry(2), takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: (result) => {
+          results.push(result);
+          runNext(index + 1);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, fallbackMessage));
+          this.stopLoading();
+        },
+      });
+    };
+
+    if (requests.length === 0) {
+      onSuccess([]);
+      return;
+    }
+
+    runNext(0);
   }
 
   selectListCategory(category: string): void {
@@ -154,119 +158,6 @@ export class QuestsService {
       const quest = this.quests().find((item) => item.id === questId);
       return quest ? this.buildQuestDetail(quest) : undefined;
     });
-  }
-
-  getDailyQuest(): Signal<QuestSummary | undefined> {
-    return computed(() =>
-      this.getQuestSummaries()().find(
-        (summary) =>
-          summary.quest.category === 'daily_quest' &&
-          summary.questUser?.user_id === this.currentUserId() &&
-          summary.questUser.status !== 'completed',
-      ),
-    );
-  }
-
-  getActiveQuests(): Signal<QuestSummary[]> {
-    return computed(() =>
-      this.getQuestSummaries()().filter((summary) => summary.started && !summary.completed),
-    );
-  }
-
-  getCompletedQuests(): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => summary.completed));
-  }
-
-  getPendingQuests(): Signal<QuestSummary[]> {
-    return computed(() => this.getQuestSummaries()().filter((summary) => !summary.started));
-  }
-
-  getQuestsByCategory(category: string): Signal<QuestSummary[]> {
-    return computed(() =>
-      this.getQuestSummaries()().filter((summary) => summary.quest.category === category),
-    );
-  }
-
-  getQuestsByStatus(status: string): Signal<QuestSummary[]> {
-    return computed(() =>
-      this.getQuestSummaries()().filter((summary) => summary.status === status),
-    );
-  }
-
-  getQuestsByType(type: string): Signal<QuestSummary[]> {
-    return computed(() =>
-      this.getQuestSummaries()().filter((summary) => summary.quest.type === type),
-    );
-  }
-
-  searchQuests(searchTerm: string): Signal<QuestSummary[]> {
-    return computed(() => {
-      const normalizedSearchTerm = searchTerm.trim().toLowerCase();
-      if (!normalizedSearchTerm) {
-        return this.getQuestSummaries()();
-      }
-      return this.getQuestSummaries()().filter(
-        (summary) =>
-          summary.quest.title.toLowerCase().includes(normalizedSearchTerm) ||
-          summary.quest.description.toLowerCase().includes(normalizedSearchTerm) ||
-          summary.quest.category.toLowerCase().includes(normalizedSearchTerm) ||
-          summary.quest.type.toLowerCase().includes(normalizedSearchTerm),
-      );
-    });
-  }
-
-  getActivitiesForQuest(questId: number): Signal<ActivityProgress[]> {
-    return computed(() => this.buildActivitiesProgress(questId));
-  }
-
-  getMissingActivitiesForQuest(questId: number): Signal<ActivityProgress[]> {
-    return computed(() =>
-      this.buildActivitiesProgress(questId).filter((activity) => !activity.completed),
-    );
-  }
-
-  getActivityFeedback(activityId: number): Signal<ActivityUser | undefined> {
-    return computed(() => this.findCurrentUserActivity(activityId, this.getCurrentActivitySessionId(activityId)));
-  }
-
-  getLearningHistory(): Signal<QuestSummary[]> {
-    return computed(() =>
-      this.getQuestSummaries()().filter((summary) => summary.started || summary.completed),
-    );
-  }
-
-  getUserQuestProgress(questId: number): Signal<number> {
-    return computed(() => this.buildQuestSummaryById(questId)?.progress ?? 0);
-  }
-
-  getUserQuestStats(): Signal<{
-    total: number;
-    active: number;
-    completed: number;
-    pending: number;
-    expired: number;
-  }> {
-    return computed(() => {
-      const summaries = this.getQuestSummaries()();
-      return {
-        total: summaries.length,
-        active: summaries.filter((summary) => summary.started && !summary.completed).length,
-        completed: summaries.filter((summary) => summary.completed).length,
-        pending: summaries.filter((summary) => !summary.started).length,
-        expired: summaries.filter((summary) => summary.expired).length,
-      };
-    });
-  }
-
-  getQuestRewardPreview(questId: number): Signal<{ gems: number; ecopoints: number } | undefined> {
-    return computed(() => {
-      const quest = this.quests().find((item) => item.id === questId);
-      return quest ? { gems: quest.reward_gems, ecopoints: quest.reward_ecopoints } : undefined;
-    });
-  }
-
-  getMinigameAttemptForQuest(questId: number): Signal<MinigameAttempt | undefined> {
-    return computed(() => this.findLatestMinigameAttempt(questId));
   }
 
   getCollaborativeContext(questId: number): Signal<CollaborativeQuestContext> {
@@ -295,39 +186,37 @@ export class QuestsService {
       completed_at: null,
     });
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createCollaborativeQuestSession(session)
-      .pipe(
-        switchMap((createdSession) =>
-          this.questsApi
-            .createCollaborativeQuestMember(this.createOwnerMember(createdSession.id))
-            .pipe(map((ownerMember) => ({ createdSession, ownerMember }))),
-        ),
-        switchMap(({ createdSession, ownerMember }) =>
-          this.questsApi
-            .createCollaborativeQuestMember(this.createInvitedMember(createdSession.id, friendUserId))
-            .pipe(map((invitedMember) => ({ createdSession, ownerMember, invitedMember }))),
-        ),
-        retry(2),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: ({ createdSession, ownerMember, invitedMember }) => {
-          this.collaborativeSessionsSignal.update((sessions) => [...sessions, createdSession]);
-          this.collaborativeMembersSignal.update((members) => [
-            ...members,
-            ownerMember,
-            invitedMember,
-          ]);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to invite friend'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.createCollaborativeQuestSession(session),
+      'Failed to invite friend',
+      (createdSession) => {
+        this.runRequest(
+          this.questsApi.createCollaborativeQuestMember(this.createOwnerMember(createdSession.id)),
+          'Failed to invite friend',
+          (ownerMember) => {
+            this.runRequest(
+              this.questsApi.createCollaborativeQuestMember(
+                this.createInvitedMember(createdSession.id, friendUserId),
+              ),
+              'Failed to invite friend',
+              (invitedMember) => {
+                this.collaborativeSessionsSignal.update((sessions) => [
+                  ...sessions,
+                  createdSession,
+                ]);
+                this.collaborativeMembersSignal.update((members) => [
+                  ...members,
+                  ownerMember,
+                  invitedMember,
+                ]);
+                this.stopLoading();
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   acceptCollaborativeInvitation(memberId: number): void {
@@ -381,8 +270,7 @@ export class QuestsService {
       ),
       ...this.activitiesUser().filter(
         (item) =>
-          item.user_id === member.user_id &&
-          item.collaborative_session_id === member.session_id,
+          item.user_id === member.user_id && item.collaborative_session_id === member.session_id,
       ),
     ];
 
@@ -392,13 +280,11 @@ export class QuestsService {
         : this.questsApi.deleteActivityUser(progress.id),
     );
 
-    forkJoin([
+    this.runRequest(
       this.questsApi.updateCollaborativeQuestMember(member),
-      ...(deleteRequests.length > 0 ? deleteRequests : [of(undefined)]),
-    ])
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ([updatedMember]) => {
+      'Failed to leave collaborative quest',
+      (updatedMember) => {
+        this.runRequests(deleteRequests, 'Failed to leave collaborative quest', () => {
           this.replaceCollaborativeMember(updatedMember as CollaborativeQuestMember);
           this.questsUserSignal.update((questsUser) =>
             questsUser.filter(
@@ -419,13 +305,10 @@ export class QuestsService {
                 ),
             ),
           );
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to leave collaborative quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+          this.stopLoading();
+        });
+      },
+    );
   }
 
   removeCollaborativeMember(memberId: number): void {
@@ -470,30 +353,22 @@ export class QuestsService {
       completed_at: null,
     });
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createCollaborativeQuestSession(newSession)
-      .pipe(
-        switchMap((createdSession) =>
-          this.questsApi
-            .createCollaborativeQuestMember(this.createOwnerMember(createdSession.id))
-            .pipe(map((ownerMember) => ({ createdSession, ownerMember }))),
-        ),
-        retry(2),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: ({ createdSession, ownerMember }) => {
-          this.collaborativeSessionsSignal.update((sessions) => [...sessions, createdSession]);
-          this.collaborativeMembersSignal.update((members) => [...members, ownerMember]);
-          this.startExistingCollaborativeSession(createdSession);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to start collaborative quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.createCollaborativeQuestSession(newSession),
+      'Failed to start collaborative quest',
+      (createdSession) => {
+        this.runRequest(
+          this.questsApi.createCollaborativeQuestMember(this.createOwnerMember(createdSession.id)),
+          'Failed to start collaborative quest',
+          (ownerMember) => {
+            this.collaborativeSessionsSignal.update((sessions) => [...sessions, createdSession]);
+            this.collaborativeMembersSignal.update((members) => [...members, ownerMember]);
+            this.startExistingCollaborativeSession(createdSession);
+          },
+        );
+      },
+    );
   }
 
   startQuest(questId: number): void {
@@ -523,53 +398,38 @@ export class QuestsService {
       collaborative_session_id: null,
     });
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createQuestUser(questUser)
-      .pipe(
-        retry(2),
-        switchMap((createdQuestUser) => {
-          const activitiesToStart =
-            quest.type === 'activities'
-              ? this.activities().filter((activity) => activity.quest_id === questId)
-              : [];
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.createQuestUser(questUser),
+      'Failed to start quest',
+      (createdQuestUser) => {
+        const activitiesToStart =
+          quest.type === 'activities'
+            ? this.activities().filter((activity) => activity.quest_id === questId)
+            : [];
+        const requests = activitiesToStart.map((activity) =>
+          this.questsApi.createActivityUser(
+            new ActivityUser({
+              id: 0,
+              user_id: this.currentUserId(),
+              activity_id: activity.id,
+              progress: 0,
+              end_date: null,
+              collaborative_session_id: null,
+            }),
+          ),
+        );
 
-          if (activitiesToStart.length === 0) {
-            return of({ createdQuestUser, createdActivitiesUser: [] as ActivityUser[] });
-          }
-
-          return forkJoin(
-            activitiesToStart.map((activity) =>
-              this.questsApi.createActivityUser(
-                new ActivityUser({
-                  id: 0,
-                  user_id: this.currentUserId(),
-                  activity_id: activity.id,
-                  progress: 0,
-                  end_date: null,
-                  collaborative_session_id: null,
-                }),
-              ),
-            ),
-          ).pipe(map((createdActivitiesUser) => ({ createdQuestUser, createdActivitiesUser })));
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: ({ createdQuestUser, createdActivitiesUser }) => {
+        this.runRequests(requests, 'Failed to start quest', (createdActivitiesUser) => {
           this.questsUserSignal.update((questsUser) => [...questsUser, createdQuestUser]);
           this.activitiesUserSignal.update((activitiesUser) => [
             ...activitiesUser,
             ...createdActivitiesUser,
           ]);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to start quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+          this.stopLoading();
+        });
+      },
+    );
   }
 
   completeQuest(questId: number): void {
@@ -629,72 +489,36 @@ export class QuestsService {
         questUser.status !== 'completed',
     );
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
+    this.startLoading();
 
-    forkJoin([
-      this.questsApi.deleteQuestUser(questUser.id),
-      ...activityUsersToDelete.map((activityUser) => this.questsApi.deleteActivityUser(activityUser.id)),
-      ...minigameAttemptsToDelete.map((attempt) => this.questsApi.deleteMinigameAttempt(attempt.id)),
-    ])
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.questsUserSignal.update((questsUser) =>
-            questsUser.filter((item) => item.id !== questUser.id),
-          );
-          this.activitiesUserSignal.update((activitiesUser) =>
-            activitiesUser.filter(
-              (item) => !activityUsersToDelete.some((deleted) => deleted.id === item.id),
-            ),
-          );
-          this.minigameAttemptsSignal.update((attempts) =>
-            attempts.filter(
-              (item) => !minigameAttemptsToDelete.some((deleted) => deleted.id === item.id),
-            ),
-          );
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to delete active quest'));
-          this.loadingSignal.set(false);
-        },
-      });
-  }
-
-  startActivity(activityId: number): void {
-    const sessionId = this.getCurrentActivitySessionId(activityId);
-    if (this.findCurrentUserActivity(activityId, sessionId)) {
-      return;
-    }
-
-    const activityUser = new ActivityUser({
-      id: 0,
-      user_id: this.currentUserId(),
-      activity_id: activityId,
-      progress: 0,
-      end_date: null,
-      collaborative_session_id: sessionId,
-    });
-
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createActivityUser(activityUser)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (createdActivityUser) => {
-          this.activitiesUserSignal.update((activitiesUser) => [
-            ...activitiesUser,
-            createdActivityUser,
-          ]);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to start activity'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.runRequests(
+      [
+        this.questsApi.deleteQuestUser(questUser.id),
+        ...activityUsersToDelete.map((activityUser) =>
+          this.questsApi.deleteActivityUser(activityUser.id),
+        ),
+        ...minigameAttemptsToDelete.map((attempt) =>
+          this.questsApi.deleteMinigameAttempt(attempt.id),
+        ),
+      ],
+      'Failed to delete active quest',
+      () => {
+        this.questsUserSignal.update((questsUser) =>
+          questsUser.filter((item) => item.id !== questUser.id),
+        );
+        this.activitiesUserSignal.update((activitiesUser) =>
+          activitiesUser.filter(
+            (item) => !activityUsersToDelete.some((deleted) => deleted.id === item.id),
+          ),
+        );
+        this.minigameAttemptsSignal.update((attempts) =>
+          attempts.filter(
+            (item) => !minigameAttemptsToDelete.some((deleted) => deleted.id === item.id),
+          ),
+        );
+        this.stopLoading();
+      },
+    );
   }
 
   completeActivity(activityId: number): void {
@@ -704,10 +528,7 @@ export class QuestsService {
       return;
     }
 
-    const activityUser = this.findCurrentUserActivity(
-      activityId,
-      sessionId,
-    );
+    const activityUser = this.findCurrentUserActivity(activityId, sessionId);
     if (!activityUser) {
       this.createCompletedActivity(activityId);
       return;
@@ -725,10 +546,7 @@ export class QuestsService {
       return;
     }
 
-    const activityUser = this.findCurrentUserActivity(
-      activityId,
-      sessionId,
-    );
+    const activityUser = this.findCurrentUserActivity(activityId, sessionId);
     if (!activityUser) {
       return;
     }
@@ -738,86 +556,68 @@ export class QuestsService {
     this.updateActivityUser(activityUser, 'Failed to reset activity', true);
   }
 
-  recordMinigameAttempt(questId: number, score: number, metadata: Record<string, unknown>): void {
-    const quest = this.quests().find((item) => item.id === questId);
-    const minigameAttempt = new MinigameAttempt({
-      id: 0,
-      user_id: this.currentUserId(),
-      quest_id: questId,
-      score,
-      status: 'completed',
-      start_date: new Date().toISOString(),
-      end_date: new Date().toISOString(),
-      metadata,
-    });
-
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createMinigameAttempt(minigameAttempt)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (createdMinigameAttempt) => {
-          this.minigameAttemptsSignal.update((minigameAttempts) => [
-            ...minigameAttempts,
-            createdMinigameAttempt,
-          ]);
-          if (quest?.type === 'minigame') {
-            this.awardQuestRewards(quest, [this.currentUserId()])
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe({
-                next: (users) => this.mergeRewardedUsers(users),
-                error: (error) => {
-                  this.errorSignal.set(this.formatError(error, 'Failed to award quest rewards'));
-                },
-              });
-          }
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to record minigame attempt'));
-          this.loadingSignal.set(false);
-        },
+  private loadQuestData(): void {
+    this.startLoading();
+    this.runRequest(this.questsApi.getQuests(), 'Failed to load quests', (quests) => {
+      this.questsSignal.set(quests);
+      this.runRequest(this.questsApi.getQuestsUser(), 'Failed to load quests', (questsUser) => {
+        this.questsUserSignal.set(questsUser);
+        this.runRequest(this.questsApi.getMinigames(), 'Failed to load quests', (minigames) => {
+          this.minigamesSignal.set(minigames);
+          this.runRequest(
+            this.questsApi.getMinigameAttempts(),
+            'Failed to load quests',
+            (attempts) => {
+              this.minigameAttemptsSignal.set(attempts);
+              this.loadActivityData();
+            },
+          );
+        });
       });
+    });
   }
 
-  private loadQuestData(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
+  private loadActivityData(): void {
+    this.runRequest(this.questsApi.getActivities(), 'Failed to load quests', (activities) => {
+      this.activitiesSignal.set(activities);
+      this.runRequest(
+        this.questsApi.getActivitiesUser(),
+        'Failed to load quests',
+        (activitiesUser) => {
+          this.activitiesUserSignal.set(activitiesUser);
+          this.loadCollaborativeData();
+        },
+      );
+    });
+  }
 
-    forkJoin({
-      quests: this.questsApi.getQuests(),
-      questsUser: this.questsApi.getQuestsUser(),
-      minigames: this.questsApi.getMinigames(),
-      minigameAttempts: this.questsApi.getMinigameAttempts(),
-      activities: this.questsApi.getActivities(),
-      activitiesUser: this.questsApi.getActivitiesUser(),
-      collaborativeSessions: this.questsApi.getCollaborativeQuestSessions(),
-      collaborativeMembers: this.questsApi.getCollaborativeQuestMembers(),
-      users: this.profileApi.getUsers(),
-      friends: this.profileApi.getFriends(),
-    })
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.questsSignal.set(data.quests);
-          this.questsUserSignal.set(data.questsUser);
-          this.minigamesSignal.set(data.minigames);
-          this.minigameAttemptsSignal.set(data.minigameAttempts);
-          this.activitiesSignal.set(data.activities);
-          this.activitiesUserSignal.set(data.activitiesUser);
-          this.collaborativeSessionsSignal.set(data.collaborativeSessions);
-          this.collaborativeMembersSignal.set(data.collaborativeMembers);
-          this.usersSignal.set(data.users);
-          this.friendsSignal.set(data.friends);
-          this.loadingSignal.set(false);
-          this.syncDailyQuestAssignment();
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to load quests'));
-          this.loadingSignal.set(false);
-        },
+  private loadCollaborativeData(): void {
+    this.runRequest(
+      this.questsApi.getCollaborativeQuestSessions(),
+      'Failed to load quests',
+      (sessions) => {
+        this.collaborativeSessionsSignal.set(sessions);
+        this.runRequest(
+          this.questsApi.getCollaborativeQuestMembers(),
+          'Failed to load quests',
+          (members) => {
+            this.collaborativeMembersSignal.set(members);
+            this.loadPeopleData();
+          },
+        );
+      },
+    );
+  }
+
+  private loadPeopleData(): void {
+    this.runRequest(this.profileApi.getUsers(), 'Failed to load quests', (users) => {
+      this.usersSignal.set(users);
+      this.runRequest(this.profileApi.getFriends(), 'Failed to load quests', (friends) => {
+        this.friendsSignal.set(friends);
+        this.stopLoading();
+        this.syncDailyQuestAssignment();
       });
+    });
   }
 
   private scheduleNextDailyQuestSync(): void {
@@ -872,40 +672,35 @@ export class QuestsService {
       return;
     }
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    forkJoin(this.buildDailyQuestDeletionRequests(staleQuestUsers))
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          const staleQuestUserIds = new Set(staleQuestUsers.map((questUser) => questUser.id));
-          const staleActivityUserIds = new Set(
-            this.activitiesUser()
-              .filter((activityUser) =>
-                staleQuestUsers.some((questUser) =>
-                  this.activities().some(
-                    (activity) =>
-                      activity.id === activityUser.activity_id &&
-                      activity.quest_id === questUser.quest_id,
-                  ),
+    this.startLoading();
+    this.runRequests(
+      this.buildDailyQuestDeletionRequests(staleQuestUsers),
+      'Failed to refresh daily quest',
+      () => {
+        const staleQuestUserIds = new Set(staleQuestUsers.map((questUser) => questUser.id));
+        const staleActivityUserIds = new Set(
+          this.activitiesUser()
+            .filter((activityUser) =>
+              staleQuestUsers.some((questUser) =>
+                this.activities().some(
+                  (activity) =>
+                    activity.id === activityUser.activity_id &&
+                    activity.quest_id === questUser.quest_id,
                 ),
-              )
-              .map((activityUser) => activityUser.id),
-          );
-          this.questsUserSignal.update((questsUser) =>
-            questsUser.filter((questUser) => !staleQuestUserIds.has(questUser.id)),
-          );
-          this.activitiesUserSignal.update((activitiesUser) =>
-            activitiesUser.filter((activityUser) => !staleActivityUserIds.has(activityUser.id)),
-          );
-          this.loadingSignal.set(false);
-          createDailyQuest();
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to refresh daily quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+              ),
+            )
+            .map((activityUser) => activityUser.id),
+        );
+        this.questsUserSignal.update((questsUser) =>
+          questsUser.filter((questUser) => !staleQuestUserIds.has(questUser.id)),
+        );
+        this.activitiesUserSignal.update((activitiesUser) =>
+          activitiesUser.filter((activityUser) => !staleActivityUserIds.has(activityUser.id)),
+        );
+        this.stopLoading();
+        createDailyQuest();
+      },
+    );
   }
 
   private buildDailyQuestDeletionRequests(staleQuestUsers: QuestUser[]): Observable<unknown>[] {
@@ -917,7 +712,8 @@ export class QuestsService {
     );
     const activityUsersToDelete = this.activitiesUser().filter(
       (activityUser) =>
-        activityUser.user_id === this.currentUserId() && staleActivityIds.has(activityUser.activity_id),
+        activityUser.user_id === this.currentUserId() &&
+        staleActivityIds.has(activityUser.activity_id),
     );
 
     return [
@@ -939,50 +735,38 @@ export class QuestsService {
       end_date: null,
       collaborative_session_id: null,
     });
-    const activitiesToStart = this.activities().filter((activity) => activity.quest_id === quest.id);
+    const activitiesToStart = this.activities().filter(
+      (activity) => activity.quest_id === quest.id,
+    );
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .createQuestUser(questUser)
-      .pipe(
-        switchMap((createdQuestUser) => {
-          if (activitiesToStart.length === 0) {
-            return of({ createdQuestUser, createdActivitiesUser: [] as ActivityUser[] });
-          }
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.createQuestUser(questUser),
+      'Failed to assign daily quest',
+      (createdQuestUser) => {
+        const requests = activitiesToStart.map((activity) =>
+          this.questsApi.createActivityUser(
+            new ActivityUser({
+              id: 0,
+              user_id: this.currentUserId(),
+              activity_id: activity.id,
+              progress: 0,
+              end_date: null,
+              collaborative_session_id: null,
+            }),
+          ),
+        );
 
-          return forkJoin(
-            activitiesToStart.map((activity) =>
-              this.questsApi.createActivityUser(
-                new ActivityUser({
-                  id: 0,
-                  user_id: this.currentUserId(),
-                  activity_id: activity.id,
-                  progress: 0,
-                  end_date: null,
-                  collaborative_session_id: null,
-                }),
-              ),
-            ),
-          ).pipe(map((createdActivitiesUser) => ({ createdQuestUser, createdActivitiesUser })));
-        }),
-        retry(2),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: ({ createdQuestUser, createdActivitiesUser }) => {
+        this.runRequests(requests, 'Failed to assign daily quest', (createdActivitiesUser) => {
           this.questsUserSignal.update((questsUser) => [...questsUser, createdQuestUser]);
           this.activitiesUserSignal.update((activitiesUser) => [
             ...activitiesUser,
             ...createdActivitiesUser,
           ]);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to assign daily quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+          this.stopLoading();
+        });
+      },
+    );
   }
 
   private pickDailyQuestForDate(date: string): Quest | undefined {
@@ -1004,11 +788,6 @@ export class QuestsService {
     return quest.expiration_date?.slice(0, 10) ?? null;
   }
 
-  private buildQuestSummaryById(questId: number): QuestSummary | undefined {
-    const quest = this.quests().find((item) => item.id === questId);
-    return quest ? this.buildQuestSummary(quest) : undefined;
-  }
-
   private buildQuestDetail(quest: Quest): QuestDetail {
     return {
       ...this.buildQuestSummary(quest),
@@ -1020,7 +799,8 @@ export class QuestsService {
   private buildQuestSummary(quest: Quest): QuestSummary {
     const sessionId = this.getCurrentProgressSessionId(quest.id);
     const questUser =
-      this.findCurrentUserActiveQuest(quest.id, sessionId) ?? this.findLatestCurrentUserQuest(quest.id);
+      this.findCurrentUserActiveQuest(quest.id, sessionId) ??
+      this.findLatestCurrentUserQuest(quest.id);
     const hasCompletedAttempt = this.hasCurrentUserCompletedQuest(quest.id);
     const activities = this.activities().filter((activity) => activity.quest_id === quest.id);
     const completedActivitiesCount = this.buildActivitiesProgress(quest.id).filter(
@@ -1042,7 +822,8 @@ export class QuestsService {
       activitiesCount: activities.length,
       completedActivitiesCount,
       started: Boolean(this.findCurrentUserActiveQuest(quest.id, sessionId)),
-      completed: !this.findCurrentUserActiveQuest(quest.id, sessionId) && questUser?.status === 'completed',
+      completed:
+        !this.findCurrentUserActiveQuest(quest.id, sessionId) && questUser?.status === 'completed',
       hasCompletedAttempt,
       expired: this.isExpired(quest.expiration_date),
       themeType: this.resolveQuestThemeType(quest),
@@ -1058,7 +839,7 @@ export class QuestsService {
         const activityUser = this.findCurrentUserActivity(activity.id, sessionId);
         const progress =
           sessionId === null
-            ? activityUser?.progress ?? 0
+            ? (activityUser?.progress ?? 0)
             : this.getCollaborativeActivityProgress(activity.id, sessionId);
         return {
           activity,
@@ -1118,7 +899,9 @@ export class QuestsService {
 
   private findLatestCurrentUserQuest(questId: number): QuestUser | undefined {
     return this.questsUser()
-      .filter((questUser) => questUser.quest_id === questId && questUser.user_id === this.currentUserId())
+      .filter(
+        (questUser) => questUser.quest_id === questId && questUser.user_id === this.currentUserId(),
+      )
       .sort((a, b) => b.id - a.id)[0];
   }
 
@@ -1208,18 +991,15 @@ export class QuestsService {
             return;
           }
 
-          this.awardQuestRewards(rewardQuest, rewardUserIds)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-              next: (users) => {
-                this.mergeRewardedUsers(users);
-                this.loadingSignal.set(false);
-              },
-              error: (error) => {
-                this.errorSignal.set(this.formatError(error, 'Failed to award quest rewards'));
-                this.loadingSignal.set(false);
-              },
-            });
+          this.giveQuestRewards(
+            rewardQuest,
+            rewardUserIds,
+            'Failed to award quest rewards',
+            (users) => {
+              this.mergeRewardedUsers(users);
+              this.stopLoading();
+            },
+          );
         },
         error: (error) => {
           this.errorSignal.set(this.formatError(error, fallbackMessage));
@@ -1256,29 +1036,37 @@ export class QuestsService {
     session.status = 'completed';
     session.completed_at = this.getTodayDate();
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    forkJoin({
-      session: this.questsApi.updateCollaborativeQuestSession(session),
-      questUsers: questUsers.length > 0 ? forkJoin(questUsers.map((questUser) => this.questsApi.updateQuestUser(questUser))) : of([]),
-      rewardedUsers:
-        rewardUserIds.length > 0 ? this.awardQuestRewards(quest, rewardUserIds) : of([]),
-    })
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ({ session: updatedSession, questUsers: updatedQuestUsers, rewardedUsers }) => {
-          this.collaborativeSessionsSignal.update((sessions) =>
-            sessions.map((item) => (item.id === updatedSession.id ? updatedSession : item)),
-          );
-          this.questsUserSignal.update((existing) => this.mergeById(existing, updatedQuestUsers));
-          this.mergeRewardedUsers(rewardedUsers);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to complete collaborative quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.updateCollaborativeQuestSession(session),
+      'Failed to complete collaborative quest',
+      (updatedSession) => {
+        const questUserRequests = questUsers.map((questUser) =>
+          this.questsApi.updateQuestUser(questUser),
+        );
+        this.runRequests(
+          questUserRequests,
+          'Failed to complete collaborative quest',
+          (updatedQuestUsers) => {
+            this.giveQuestRewards(
+              quest,
+              rewardUserIds,
+              'Failed to complete collaborative quest',
+              (rewardedUsers) => {
+                this.collaborativeSessionsSignal.update((sessions) =>
+                  sessions.map((item) => (item.id === updatedSession.id ? updatedSession : item)),
+                );
+                this.questsUserSignal.update((existing) =>
+                  this.mergeById(existing, updatedQuestUsers),
+                );
+                this.mergeRewardedUsers(rewardedUsers);
+                this.stopLoading();
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   private updateActivityUser(
@@ -1372,28 +1160,18 @@ export class QuestsService {
         return this.questsApi.updateQuestUser(questUser);
       });
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    forkJoin({
-      activityUsers: activityRequests.length > 0 ? forkJoin(activityRequests) : of([]),
-      questUsers: questRequests.length > 0 ? forkJoin(questRequests) : of([]),
-    })
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ({ activityUsers, questUsers }) => {
-          this.activitiesUserSignal.update((existing) =>
-            this.mergeById(existing, activityUsers),
-          );
+    this.startLoading();
+    this.runRequests(
+      activityRequests,
+      'Failed to update collaborative activity',
+      (activityUsers) => {
+        this.runRequests(questRequests, 'Failed to update collaborative activity', (questUsers) => {
+          this.activitiesUserSignal.update((existing) => this.mergeById(existing, activityUsers));
           this.questsUserSignal.update((existing) => this.mergeById(existing, questUsers));
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(
-            this.formatError(error, 'Failed to update collaborative activity'),
-          );
-          this.loadingSignal.set(false);
-        },
-      });
+          this.stopLoading();
+        });
+      },
+    );
   }
 
   private mergeById<T extends { id: number }>(existing: T[], updates: T[]): T[] {
@@ -1429,7 +1207,10 @@ export class QuestsService {
           activityUser.collaborative_session_id === sessionId &&
           acceptedUserIds.includes(activityUser.user_id),
       )
-      .reduce((highestProgress, activityUser) => Math.max(highestProgress, activityUser.progress), 0);
+      .reduce(
+        (highestProgress, activityUser) => Math.max(highestProgress, activityUser.progress),
+        0,
+      );
   }
 
   private syncQuestProgressFromActivity(activityId: number): void {
@@ -1478,26 +1259,28 @@ export class QuestsService {
       ),
     );
     const pendingInvitation = this.findPendingInvitationForCurrentUser(questId);
-    const session = ownedOpenSession ?? acceptedSession ?? this.findSessionForMember(pendingInvitation);
+    const session =
+      ownedOpenSession ?? acceptedSession ?? this.findSessionForMember(pendingInvitation);
     const currentMember = session
       ? this.collaborativeMembers().find(
-        (member) => member.session_id === session.id && member.user_id === currentUserId,
-      )
+          (member) => member.session_id === session.id && member.user_id === currentUserId,
+        )
       : undefined;
     const participants = session ? this.buildParticipants(session.id) : [];
     const inviteOptions = this.buildInviteOptions(questId, session?.id);
     const isOwner = Boolean(session && session.owner_user_id === currentUserId);
     const isAcceptedParticipant = currentMember?.status === 'accepted';
     const acceptedInvites = participants.filter(
-      (participant) => participant.member.role !== 'owner' && participant.member.status === 'accepted',
+      (participant) =>
+        participant.member.role !== 'owner' && participant.member.status === 'accepted',
     ).length;
     const pendingInvites = session
       ? this.collaborativeMembers().filter(
-        (member) =>
-          member.session_id === session.id &&
-          member.role !== 'owner' &&
-          ['accepted', 'pending'].includes(member.status),
-      ).length
+          (member) =>
+            member.session_id === session.id &&
+            member.role !== 'owner' &&
+            ['accepted', 'pending'].includes(member.status),
+        ).length
       : 0;
 
     return {
@@ -1521,7 +1304,10 @@ export class QuestsService {
 
   private buildParticipants(sessionId: number): CollaborativeParticipant[] {
     return this.collaborativeMembers()
-      .filter((member) => member.session_id === sessionId && ['accepted', 'pending'].includes(member.status))
+      .filter(
+        (member) =>
+          member.session_id === sessionId && ['accepted', 'pending'].includes(member.status),
+      )
       .sort((a, b) => this.getMemberOrder(a) - this.getMemberOrder(b))
       .map((member) => ({
         member,
@@ -1541,11 +1327,11 @@ export class QuestsService {
       .map((user) => {
         const alreadyInvited = sessionId
           ? this.collaborativeMembers().some(
-            (member) =>
-              member.session_id === sessionId &&
-              member.user_id === user.id &&
-              ['accepted', 'pending'].includes(member.status),
-          )
+              (member) =>
+                member.session_id === sessionId &&
+                member.user_id === user.id &&
+                ['accepted', 'pending'].includes(member.status),
+            )
           : false;
         const isBusy = this.isUserBusyInQuest(user.id, questId);
         return {
@@ -1567,7 +1353,9 @@ export class QuestsService {
     return 2;
   }
 
-  private findPendingInvitationForCurrentUser(questId: number): CollaborativeQuestMember | undefined {
+  private findPendingInvitationForCurrentUser(
+    questId: number,
+  ): CollaborativeQuestMember | undefined {
     return this.collaborativeMembers().find((member) => {
       const session = this.findSessionForMember(member);
       return (
@@ -1698,7 +1486,10 @@ export class QuestsService {
     });
   }
 
-  private updateCollaborativeMember(member: CollaborativeQuestMember, fallbackMessage: string): void {
+  private updateCollaborativeMember(
+    member: CollaborativeQuestMember,
+    fallbackMessage: string,
+  ): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.questsApi
@@ -1729,7 +1520,9 @@ export class QuestsService {
     const pendingMembers = this.collaborativeMembers().filter(
       (member) => member.session_id === session.id && member.status === 'pending',
     );
-    const activities = this.activities().filter((activity) => activity.quest_id === session.quest_id);
+    const activities = this.activities().filter(
+      (activity) => activity.quest_id === session.quest_id,
+    );
 
     session.status = 'started';
     session.started_at = this.getTodayDate();
@@ -1768,36 +1561,46 @@ export class QuestsService {
       return this.questsApi.updateCollaborativeQuestMember(member);
     });
 
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    forkJoin({
-      updatedSession: this.questsApi.updateCollaborativeQuestSession(session),
-      updatedMembers: pendingUpdates.length > 0 ? forkJoin(pendingUpdates) : of([]),
-      createdQuestUsers: questUserRequests.length > 0 ? forkJoin(questUserRequests) : of([]),
-      createdActivityUsers:
-        activityUserRequests.length > 0 ? forkJoin(activityUserRequests) : of([]),
-    })
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ({ updatedSession, updatedMembers, createdQuestUsers, createdActivityUsers }) => {
-          this.collaborativeSessionsSignal.update((sessions) =>
-            sessions.map((item) =>
-              item.id === updatedSession.id ? updatedSession : item,
-            ),
-          );
-          updatedMembers.forEach((member) => this.replaceCollaborativeMember(member));
-          this.questsUserSignal.update((questsUser) => [...questsUser, ...createdQuestUsers]);
-          this.activitiesUserSignal.update((activitiesUser) => [
-            ...activitiesUser,
-            ...createdActivityUsers,
-          ]);
-          this.loadingSignal.set(false);
-        },
-        error: (error) => {
-          this.errorSignal.set(this.formatError(error, 'Failed to start collaborative quest'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.startLoading();
+    this.runRequest(
+      this.questsApi.updateCollaborativeQuestSession(session),
+      'Failed to start collaborative quest',
+      (updatedSession) => {
+        this.runRequests(
+          pendingUpdates,
+          'Failed to start collaborative quest',
+          (updatedMembers) => {
+            this.runRequests(
+              questUserRequests,
+              'Failed to start collaborative quest',
+              (createdQuestUsers) => {
+                this.runRequests(
+                  activityUserRequests,
+                  'Failed to start collaborative quest',
+                  (createdActivityUsers) => {
+                    this.collaborativeSessionsSignal.update((sessions) =>
+                      sessions.map((item) =>
+                        item.id === updatedSession.id ? updatedSession : item,
+                      ),
+                    );
+                    updatedMembers.forEach((member) => this.replaceCollaborativeMember(member));
+                    this.questsUserSignal.update((questsUser) => [
+                      ...questsUser,
+                      ...createdQuestUsers,
+                    ]);
+                    this.activitiesUserSignal.update((activitiesUser) => [
+                      ...activitiesUser,
+                      ...createdActivityUsers,
+                    ]);
+                    this.stopLoading();
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   private getCurrentProgressSessionId(questId: number): number | null {
@@ -1833,44 +1636,56 @@ export class QuestsService {
     );
   }
 
-  private awardQuestRewards(quest: Quest, userIds: number[]): Observable<User[]> {
+  private giveQuestRewards(
+    quest: Quest,
+    userIds: number[],
+    fallbackMessage: string,
+    onSuccess: (users: User[]) => void,
+  ): void {
     const uniqueUserIds = [...new Set(userIds)];
     if (uniqueUserIds.length === 0 || (quest.reward_gems === 0 && quest.reward_ecopoints === 0)) {
-      return of([]);
+      onSuccess([]);
+      return;
     }
 
     const currentUserId = this.currentUserId();
-    // El multiplicador aplica SOLO a ecopoints, no a gemas
     const multiplierFactor = this.monetizationStoreService.activeMultiplierFactor();
+    const updatedUsers: User[] = [];
 
-    return forkJoin(
-      uniqueUserIds.map((userId) => {
-        const ecopointsAmount = Math.round(
-          quest.reward_ecopoints * (userId === currentUserId ? multiplierFactor : 1),
-        );
-        const gemAmount = quest.reward_gems; // las gemas no se multiplican
-        return this.profileApi.getUser(userId).pipe(
-          switchMap((user) => {
-            user.gem_balance += gemAmount;
-            user.ecopoints  += ecopointsAmount;
-            if (user.last_streak_date !== this.getTodayDate()) {
-              user.streak += 1;
-              user.last_streak_date = this.getTodayDate();
-            }
-            return this.profileApi.updateUser(user).pipe(
-              tap((updatedUser) => {
-                // Registrar gem_movement en db.json y sincronizar balance en monetización
-                if (gemAmount > 0) {
-                  this.monetizationStoreService.onQuestGemsAwarded(
-                    userId, gemAmount, quest.id, updatedUser.gem_balance,
-                  );
-                }
-              }),
+    const updateNextUser = (index: number) => {
+      if (index >= uniqueUserIds.length) {
+        onSuccess(updatedUsers);
+        return;
+      }
+
+      const userId = uniqueUserIds[index];
+      const ecopointsAmount = Math.round(
+        quest.reward_ecopoints * (userId === currentUserId ? multiplierFactor : 1),
+      );
+      const gemAmount = quest.reward_gems;
+      this.runRequest(this.profileApi.getUser(userId), fallbackMessage, (user) => {
+        user.gem_balance += gemAmount;
+        user.ecopoints += ecopointsAmount;
+        if (user.last_streak_date !== this.getTodayDate()) {
+          user.streak += 1;
+          user.last_streak_date = this.getTodayDate();
+        }
+        this.runRequest(this.profileApi.updateUser(user), fallbackMessage, (updatedUser) => {
+          if (gemAmount > 0) {
+            this.monetizationStoreService.onQuestGemsAwarded(
+              userId,
+              gemAmount,
+              quest.id,
+              updatedUser.gem_balance,
             );
-          }),
-        );
-      }),
-    );
+          }
+          updatedUsers.push(updatedUser);
+          updateNextUser(index + 1);
+        });
+      });
+    };
+
+    updateNextUser(0);
   }
 
   private mergeRewardedUsers(users: User[]): void {

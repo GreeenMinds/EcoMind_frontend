@@ -1,14 +1,15 @@
-import {Component, computed, inject, signal} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {TranslatePipe} from '@ngx-translate/core';
-import {QuestSummary, QuestsService} from '../../../application/quests.service';
+import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { QuestsService } from '../../../application/quests.service';
+import { QuestSummary } from '../../../application/quest-view-models';
 
-interface ProgressPanelItem {
+type ProgressPanelItem = {
   questId: number;
   label: string;
   progress: number;
   route: (string | number)[];
-}
+};
 
 @Component({
   selector: 'app-quest-progress-panel',
@@ -41,7 +42,9 @@ export class QuestProgressPanel {
     this.activeProgressSummaries().map((summary) => this.toProgressPanelItem(summary)),
   );
 
-  readonly hasMoreProgressItems = computed(() => this.activeProgressSummaries().length > this.maxProgressItems);
+  readonly hasMoreProgressItems = computed(
+    () => this.activeProgressSummaries().length > this.maxProgressItems,
+  );
 
   openModal(): void {
     this.modalOpen.set(true);
@@ -75,12 +78,11 @@ export class QuestProgressPanel {
     summaries: QuestSummary[],
     predicate: (summary: QuestSummary) => boolean,
   ): QuestSummary[] {
-    return summaries
-      .filter(predicate)
-      .sort((a, b) => {
-        const categoryOrder = this.getCategoryOrder(a.quest.category) - this.getCategoryOrder(b.quest.category);
-        return categoryOrder === 0 ? a.quest.id - b.quest.id : categoryOrder;
-      });
+    return summaries.filter(predicate).sort((a, b) => {
+      const categoryOrder =
+        this.getCategoryOrder(a.quest.category) - this.getCategoryOrder(b.quest.category);
+      return categoryOrder === 0 ? a.quest.id - b.quest.id : categoryOrder;
+    });
   }
 
   private getCategoryOrder(category: string): number {

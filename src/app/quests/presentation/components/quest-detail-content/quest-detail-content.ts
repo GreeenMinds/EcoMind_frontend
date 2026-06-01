@@ -1,10 +1,10 @@
-import {Component, computed, inject} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {map} from 'rxjs';
-import {QuestsService} from '../../../application/quests.service';
-import {MonetizationStoreService} from '../../../../monetization/application/monetization-store.service';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { map } from 'rxjs';
+import { QuestsService } from '../../../application/quests.service';
+import { MonetizationStoreService } from '../../../../monetization/application/monetization-store.service';
 
 @Component({
   selector: 'app-quest-detail-content',
@@ -21,7 +21,7 @@ export class QuestDetailContent {
 
   readonly questId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
-    {initialValue: Number(this.route.snapshot.paramMap.get('questId'))},
+    { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
   );
   readonly detail = computed(() => {
     const id = this.questId();
@@ -39,14 +39,18 @@ export class QuestDetailContent {
     if (!detail) return this.translate.instant('quests.actions.startActivity');
 
     if (detail.quest.type === 'minigame') {
-      return this.translate.instant(detail.latestMinigameAttempt ? 'quests.actions.playAgain' : 'quests.actions.play');
+      return this.translate.instant(
+        detail.latestMinigameAttempt ? 'quests.actions.playAgain' : 'quests.actions.play',
+      );
     }
 
     if (detail.completed) {
       return this.translate.instant('quests.actions.startAgain');
     }
 
-    return this.translate.instant(detail.started ? 'quests.actions.viewActivity' : 'quests.actions.startActivity');
+    return this.translate.instant(
+      detail.started ? 'quests.actions.viewActivity' : 'quests.actions.startActivity',
+    );
   });
 
   readonly showPrimaryAction = computed(() => {
@@ -99,14 +103,6 @@ export class QuestDetailContent {
     }
 
     void this.router.navigate(['/quests', detail.quest.id, 'activities']);
-  }
-
-  getPrimaryReward(detail: NonNullable<ReturnType<typeof this.detail>>): string {
-    if (detail.quest.reward_ecopoints > 0) {
-      return this.translate.instant('common.ecoPoints', {count: detail.quest.reward_ecopoints});
-    }
-
-    return this.translate.instant('common.gems', {count: detail.quest.reward_gems});
   }
 
   formatCategory(category: string): string {
@@ -168,5 +164,4 @@ export class QuestDetailContent {
     const safeId = userId ?? 1;
     return `${(safeId * 67) % 360}`;
   }
-
 }

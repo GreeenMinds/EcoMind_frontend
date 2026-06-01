@@ -1,14 +1,14 @@
-import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
+import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
-export interface ActivityResponse extends BaseResponse{
+export type ActivityResponse = BaseResponse & {
   activities: ActivityResource[];
-}
+};
 
-export interface ActivityResource extends BaseResource {
+export type ActivityResource = BaseResource & {
   id: number;
   quest_id: number;
   description: string;
   order: number;
   type: string;
   image_url: string | null;
-}
+};
