@@ -9,7 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { QuestSummary } from '../../../application/quest-view-models';
+import { Quest } from '../../../domain/model/quest.entity';
 import { QuestCard } from '../quest-card/quest-card';
 
 @Component({
@@ -19,7 +19,7 @@ import { QuestCard } from '../quest-card/quest-card';
   styleUrl: './quest-card-grid.css',
 })
 export class QuestCardGrid {
-  readonly quests = input.required<QuestSummary[]>();
+  readonly quests = input.required<Quest[]>();
   readonly selectedQuestId = input<number | null>(null);
   readonly initialPage = input(0);
   @Output() questSelected = new EventEmitter<number>();
@@ -31,7 +31,7 @@ export class QuestCardGrid {
   readonly sortedQuests = computed(() =>
     [...this.quests()].sort((a, b) => {
       const statusDifference = this.getStatusOrder(a) - this.getStatusOrder(b);
-      return statusDifference === 0 ? a.quest.id - b.quest.id : statusDifference;
+      return statusDifference === 0 ? a.id - b.id : statusDifference;
     }),
   );
 
@@ -126,11 +126,11 @@ export class QuestCardGrid {
     this.dragStartX = null;
   }
 
-  private getStatusOrder(summary: QuestSummary): number {
-    if (summary.started && !summary.completed) {
+  private getStatusOrder(quest: Quest): number {
+    if (quest.started && !quest.completed) {
       return 0;
     }
-    if (summary.completed) {
+    if (quest.completed) {
       return 2;
     }
     return 1;

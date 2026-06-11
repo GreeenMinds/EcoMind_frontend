@@ -1,7 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { QuestSummary } from '../../../application/quest-view-models';
+import { Quest } from '../../../domain/model/quest.entity';
 
 @Component({
   selector: 'app-quest-card',
@@ -10,15 +10,15 @@ import { QuestSummary } from '../../../application/quest-view-models';
   styleUrl: './quest-card.css',
 })
 export class QuestCard {
-  @Input({ required: true }) summary!: QuestSummary;
+  @Input({ required: true }) quest!: Quest;
   @Output() questSelected = new EventEmitter<number>();
 
   selectQuest(): void {
-    this.questSelected.emit(this.summary.quest.id);
+    this.questSelected.emit(this.quest.id);
   }
 
   getDisplayType(): string {
-    return this.summary.quest.type === 'collaborative' ? 'collaborative' : this.summary.themeType;
+    return this.quest.type === 'collaborative' ? 'collaborative' : this.quest.theme_type;
   }
 
   getQuestTypeTheme(type: string): Record<string, string> {

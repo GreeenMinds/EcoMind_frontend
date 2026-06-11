@@ -1,6 +1,6 @@
-import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
-import {Quest} from '../domain/model/quest.entity';
-import {QuestResponse, QuestResource} from './quest-response';
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { Quest } from '../domain/model/quest.entity';
+import { QuestResponse, QuestResource } from './quest-response';
 
 export class QuestAssembler implements BaseAssembler<Quest, QuestResource, QuestResponse> {
   /**
@@ -27,6 +27,7 @@ export class QuestAssembler implements BaseAssembler<Quest, QuestResource, Quest
       image_url: resource.image_url,
       age: resource.age,
       type: resource.type,
+      theme_type: resource.theme_type ?? resource.type,
       reward_gems: resource.reward_gems,
       reward_ecopoints: resource.reward_ecopoints,
       expiration_date: resource.expiration_date,
@@ -49,6 +50,7 @@ export class QuestAssembler implements BaseAssembler<Quest, QuestResource, Quest
       image_url: entity.image_url,
       age: entity.age,
       type: entity.type,
+      theme_type: entity.theme_type,
       reward_gems: entity.reward_gems,
       reward_ecopoints: entity.reward_ecopoints,
       expiration_date: entity.expiration_date,

@@ -13,6 +13,7 @@ export type QuestResource = BaseResource & {
   image_url: string | null;
   age: number;
   type: string;
+  theme_type: string;
   reward_gems: number;
   reward_ecopoints: number;
   expiration_date: string | null;

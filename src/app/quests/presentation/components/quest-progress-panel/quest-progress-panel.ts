@@ -2,7 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QuestsService } from '../../../application/quests.service';
-import { QuestSummary } from '../../../application/quest-view-models';
+import { Quest } from '../../../domain/model/quest.entity';
+import { QuestProgressService } from '../../../application/quest-progress.service';
 
 type ProgressPanelItem = {
   questId: number;
@@ -19,16 +20,16 @@ type ProgressPanelItem = {
 })
 export class QuestProgressPanel {
   private readonly questsService = inject(QuestsService);
-  private readonly questSummaries = this.questsService.getQuestSummaries();
+  private readonly questProgressService = inject(QuestProgressService);
 
   readonly maxProgressItems = 4;
   readonly modalOpen = signal(false);
   readonly abandonConfirmation = signal<ProgressPanelItem | null>(null);
 
   private readonly activeProgressSummaries = computed(() =>
-    this.pickProgressSummaries(
-      this.questSummaries(),
-      (summary) => summary.started && !summary.completed,
+    this.pickProgressQuests(
+      this.questsService.quests(),
+      (quest) => quest.started && !quest.completed,
     ),
   );
 
@@ -70,18 +71,14 @@ export class QuestProgressPanel {
       return;
     }
 
-    this.questsService.deleteActiveQuest(item.questId);
+    this.questProgressService.deleteQuestProgress(item.questId);
     this.abandonConfirmation.set(null);
   }
 
-  private pickProgressSummaries(
-    summaries: QuestSummary[],
-    predicate: (summary: QuestSummary) => boolean,
-  ): QuestSummary[] {
-    return summaries.filter(predicate).sort((a, b) => {
-      const categoryOrder =
-        this.getCategoryOrder(a.quest.category) - this.getCategoryOrder(b.quest.category);
-      return categoryOrder === 0 ? a.quest.id - b.quest.id : categoryOrder;
+  private pickProgressQuests(quests: Quest[], predicate: (quest: Quest) => boolean): Quest[] {
+    return quests.filter(predicate).sort((a, b) => {
+      const categoryOrder = this.getCategoryOrder(a.category) - this.getCategoryOrder(b.category);
+      return categoryOrder === 0 ? a.id - b.id : categoryOrder;
     });
   }
 
@@ -92,20 +89,20 @@ export class QuestProgressPanel {
     return 1;
   }
 
-  private getProgressItemRoute(summary: QuestSummary): (string | number)[] {
-    if (summary.quest.type === 'activities') {
-      return ['/quests', summary.quest.id, 'activities'];
+  private getProgressItemRoute(quest: Quest): (string | number)[] {
+    if (quest.type === 'activities') {
+      return ['/quests', quest.id, 'activities'];
     }
 
-    return ['/quests', summary.quest.id];
+    return ['/quests', quest.id];
   }
 
-  private toProgressPanelItem(summary: QuestSummary): ProgressPanelItem {
+  private toProgressPanelItem(quest: Quest): ProgressPanelItem {
     return {
-      questId: summary.quest.id,
-      label: summary.quest.title,
-      progress: Math.round(summary.progress),
-      route: this.getProgressItemRoute(summary),
+      questId: quest.id,
+      label: quest.title,
+      progress: Math.round(quest.progress),
+      route: this.getProgressItemRoute(quest),
     };
   }
 }
