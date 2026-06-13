@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
 import { ActivityUser } from '../domain/model/activity-user.entity';

@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { retry } from 'rxjs';
-import { User } from '../../profile/domain/model/user.entity';
-import { Activity } from '../domain/model/activity.entity';
 import { ActivityUser } from '../domain/model/activity-user.entity';
 import { CollaborativeQuestMember } from '../domain/model/collaborative-quest-member.entity';
 import { CollaborativeQuestSession } from '../domain/model/collaborative-quest-session.entity';
 import { QuestUser } from '../domain/model/quest-user.entity';
-import { Quest } from '../domain/model/quest.entity';
 import { QuestRewardsService } from './quest-rewards.service';
 import { QuestsService } from './quests.service';
 
@@ -18,40 +15,6 @@ export class CollaborativeQuestsService {
     private readonly store: QuestsService,
     private readonly questRewardsService: QuestRewardsService,
   ) {}
-
-  private get questsApi() {
-    return this.store.questsApi;
-  }
-
-  private formatError(error: unknown, fallback: string): string {
-    return this.store.formatError(error, fallback);
-  }
-  private calculateActivityProgress(
-    activities: Activity[],
-    completedActivitiesCount: number,
-  ): number {
-    return this.store.calculateActivityProgress(activities, completedActivitiesCount);
-  }
-  private getCollaborativeActivityProgress(activityId: number, sessionId: number): number {
-    return this.store.getCollaborativeActivityProgress(activityId, sessionId);
-  }
-  private mergeById<T extends { id: number }>(existing: T[], updates: T[]): T[] {
-    return this.store.mergeById(existing, updates);
-  }
-  private shouldAwardQuestReward(quest: Quest, userId: number): boolean {
-    return this.questRewardsService.shouldAwardQuestReward(quest, userId);
-  }
-  private giveQuestRewards(
-    quest: Quest,
-    userIds: number[],
-    fallbackMessage: string,
-    onSuccess: (users: User[]) => void,
-  ): void {
-    this.questRewardsService.giveQuestRewards(quest, userIds, fallbackMessage, onSuccess);
-  }
-  private mergeRewardedUsers(users: User[]): void {
-    this.questRewardsService.mergeRewardedUsers(users);
-  }
 
   addInvitation(questId: number, friendUserId: number): void {
     const quest = this.store.quests().find((item) => item.id === questId);

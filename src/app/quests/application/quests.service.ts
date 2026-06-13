@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, retry } from 'rxjs';
+import { retry } from 'rxjs';
 import { QuestDailyService } from './quest-daily.service';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { Friend } from '../../profile/domain/model/friend.entity';
