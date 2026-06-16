@@ -1,0 +1,473 @@
+@startuml
+title EcoMind - Stage 2: Bounded Context Class Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "Settings BC" #FFF2A8 {
+  class "Preference" as SettingsPreference {
+    -preferenceId: long
+    -theme: Theme
+    -language: Language
+    +updateTheme(theme: Theme): void
+    +updateLanguage(language: Language): void
+    +enableNotifications(): void
+    +disableNotifications(): void
+  }
+
+  class "Notification" as SettingsNotification {
+    -notificationId: long
+    -name: String
+    -type: NotificationType
+    -active: boolean
+    +send(): void
+    +activate(): void
+    +deactivate(): void
+  }
+
+  enum Theme {
+    ECO_GREEN
+    ECO_DARK
+    ECO_RED
+    ECO_LIGHT
+  }
+
+  enum Language {
+    ENGLISH
+    SPANISH
+  }
+
+  enum NotificationType {
+    EMAIL
+    PUSH
+    IN_APP
+  }
+
+  SettingsPreference "1" --> "0..*" SettingsNotification
+  SettingsPreference ..> Theme
+  SettingsPreference ..> Language
+  SettingsNotification ..> NotificationType
+}
+
+package "Community BC" #DFF5D8 {
+  class "Community" as CommunityRoot {
+    -communityId: long
+    -name: String
+    -memberCount: int
+    -location: String
+    +addMember(): void
+    +createEvent(): void
+    +grantAchievement(): void
+  }
+
+  class CommunityMember {
+    -communityMemberId: long
+    -name: String
+    -ecoPoints: int
+    +showCommunitySummary(): String
+  }
+
+  class "Achievement" as AchievementCatalog {
+    -achievementId: long
+    -name: String
+    -type: String
+    +showDetails(): String
+  }
+
+  class "CommunityAchievement" as CommunityAchievementLink {
+    -communityAchievementId: long
+    -awardedAt: Date
+    +assignToCommunity(): void
+  }
+
+  class CommunityGoal {
+    -communityGoalId: long
+    -title: String
+    -progress: int
+    -target: int
+    +updateProgress(value: int): void
+  }
+
+  class CommunityPost {
+    -communityPostId: long
+    -content: String
+    -likes: int
+    +publish(): void
+  }
+
+  class "Event" as CommunityEvent {
+    -eventId: long
+    -name: String
+    -date: Date
+    -capacity: int
+    +publish(): void
+    +finish(): void
+  }
+
+  class EventRegistration {
+    -eventRegistrationId: long
+    -registrationType: String
+    -status: RegistrationStatus
+    +confirm(): void
+    +cancel(): void
+  }
+
+  class MapLocation {
+    -mapLocationId: long
+    -latitude: double
+    -longitude: double
+    +generateRoute(): String
+  }
+
+  enum RegistrationStatus {
+    REGISTERED
+    CANCELLED
+    WAITING
+  }
+
+  CommunityRoot "1" --> "0..*" CommunityMember
+  CommunityRoot "1" --> "0..*" CommunityAchievementLink
+  CommunityRoot "1" --> "0..*" CommunityGoal
+  CommunityRoot "1" --> "0..*" CommunityPost
+  CommunityRoot "1" --> "0..*" CommunityEvent
+  CommunityAchievementLink --> AchievementCatalog
+  CommunityEvent *-- "1" MapLocation
+  CommunityEvent "1" --> "0..*" EventRegistration
+  EventRegistration ..> RegistrationStatus
+}
+
+package "IAM BC" #DCEBFF {
+  class AccessManager {
+    +signIn(): void
+    +validateCredentials(): void
+    +closeSession(): void
+    +registerAccount(): void
+  }
+
+  class "Session" as IamSession {
+    -sessionId: long
+    -createdAt: DateTime
+    -expiresAt: DateTime
+    +isActive(): boolean
+    +invalidate(): void
+  }
+
+  class SocialAccount {
+    -provider: String
+    -externalAccountId: String
+    +connect(): void
+  }
+
+  class UserRepository {
+    +findByUsername(username: String): Object
+    +saveSession(session: Session): void
+    +invalidateSession(): void
+  }
+
+  AccessManager "1" --> "0..*" IamSession
+  AccessManager ..> UserRepository
+  AccessManager ..> SocialAccount
+}
+
+package "Profile BC" #FFD9D9 {
+  class "Profile" as UserProfile {
+    -profileId: long
+    -displayName: String
+    -registeredAt: Date
+    +showSummary(): String
+    +updateEcoPoints(value: int): void
+  }
+
+  class Streak {
+    -consecutiveDays: int
+    -lastActivityDate: Date
+    -active: boolean
+    +increment(): void
+    +restart(): void
+  }
+
+  interface Alert {
+    +notifyActiveStreak(): void
+    +notifyStreakAtRisk(): void
+  }
+
+  class StreakState {
+    +evaluate(streak: Streak): void
+    +setActive(): void
+    +setLost(): void
+  }
+
+  class "Family" as UserFamily {
+    -familyId: long
+    -name: String
+    -memberCount: int
+    +addMember(): void
+    +removeMember(): void
+  }
+
+  class FamilyMembership {
+    -familyMembershipId: long
+    -role: String
+    -joinedAt: DateTime
+    +assignRole(role: String): void
+  }
+
+  class FamilyInvitation {
+    -familyInvitationId: long
+    -status: InvitationStatus
+    -invitedRole: InvitationRole
+    +accept(): void
+    +reject(): void
+  }
+
+  class Friend {
+    -friendshipId: long
+    -status: FriendshipStatus
+    +acceptRequest(): void
+    +block(): void
+  }
+
+  class "UserAchievement" as ProfileAchievement {
+    -userAchievementId: long
+    -awardedAt: Date
+    +unlock(): void
+  }
+
+  enum FriendshipStatus {
+    PENDING
+    ACCEPTED
+    BLOCKED
+  }
+
+  enum InvitationStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+  }
+
+  enum InvitationRole {
+    PARENT
+    CHILD
+  }
+
+  UserProfile *-- "1" Streak
+  UserProfile *-- "0..*" ProfileAchievement
+  UserProfile --> "0..1" UserFamily
+  UserProfile --> "0..*" Friend
+  Streak o--> Alert
+  StreakState ..> Alert
+  UserFamily "1" --> "0..*" FamilyMembership
+  UserFamily "1" --> "0..*" FamilyInvitation
+  Friend ..> FriendshipStatus
+  FamilyInvitation ..> InvitationStatus
+  FamilyInvitation ..> InvitationRole
+}
+
+package "Ranking BC" #DAD7FF {
+  class Ranking {
+    -rankingId: long
+    -type: RankingType
+    -generatedAt: Date
+    +updateRanking(): void
+  }
+
+  class RankingPosition {
+    -position: int
+    -score: int
+    -updatedOn: Date
+  }
+
+  enum RankingType {
+    LOCAL
+    GLOBAL
+    FAMILY
+  }
+
+  Ranking *-- "1..*" RankingPosition
+  Ranking ..> RankingType
+}
+
+package "Quests BC" #D9D9D9 {
+  class Quest {
+    -questId: long
+    -title: String
+    -category: String
+    -rewardEcoPoints: int
+    +start(): void
+    +complete(): void
+  }
+
+  class QuestProgress {
+    -questProgressId: long
+    -status: String
+    -progress: int
+    +advance(value: int): void
+  }
+
+  class Activity {
+    -activityId: long
+    -description: String
+    -orderNumber: int
+    +showInstructions(): String
+  }
+
+  class ActivityProgress {
+    -activityProgressId: long
+    -progress: int
+    +updateProgress(value: int): void
+  }
+
+  class Minigame {
+    -minigameId: long
+    -name: String
+    -url: String
+    +launch(): void
+  }
+
+  class MinigameAttempt {
+    -minigameAttemptId: long
+    -score: int
+    -status: String
+    +finish(): void
+  }
+
+  class CollaborativeQuestSession {
+    -collaborativeQuestSessionId: long
+    -status: String
+    +startSession(): void
+    +completeSession(): void
+  }
+
+  class CollaborativeQuestMember {
+    -collaborativeQuestMemberId: long
+    -role: String
+    -status: String
+    +acceptInvitation(): void
+  }
+
+  Quest "1" --> "0..*" Activity
+  Quest "1" --> "0..*" QuestProgress
+  Quest --> "0..1" Minigame
+  Activity "1" --> "0..*" ActivityProgress
+  Minigame "1" --> "0..*" MinigameAttempt
+  Quest "1" --> "0..*" CollaborativeQuestSession
+  CollaborativeQuestSession "1" --> "1..*" CollaborativeQuestMember
+}
+
+package "Store BC" #D9F3F0 {
+  class Store {
+    -storeId: long
+    -name: String
+    -address: String
+    +addProduct(product: Product): void
+    +listProducts(): List<Product>
+  }
+
+  class Product {
+    -productId: long
+    -name: String
+    -price: double
+    -stock: int
+    +updateStock(quantity: int): void
+  }
+
+  class Cosmetic {
+    -skinType: String
+    +getSkinType(): String
+  }
+
+  class Multiplier {
+    -multiplierFactor: number
+    -durationMinutes: int
+    +getDuration(): int
+  }
+
+  class PaymentMethod {
+    -type: String
+    -status: String
+    +activate(): void
+    +deactivate(): void
+  }
+
+  class GemWallet {
+    -gemWalletId: long
+    -amount: int
+    +purchaseGems(): void
+    +useGems(): void
+  }
+
+  class PurchaseHistory {
+    -purchaseHistoryId: long
+    -date: Date
+    -total: double
+    +calculateTotal(): double
+  }
+
+  class GemPackage {
+    -gemPackageId: long
+    -name: String
+    -gemAmount: int
+    -realPrice: double
+  }
+
+  class GemPurchase {
+    -gemPurchaseId: long
+    -amountPaid: double
+    -paymentStatus: String
+    +confirmPayment(): void
+  }
+
+  class GemMovement {
+    -gemMovementId: long
+    -type: String
+    -amount: int
+    +registerMovement(): void
+  }
+
+  class UserCosmetic {
+    -userCosmeticId: long
+    -equipped: boolean
+    +equip(): void
+  }
+
+  class UserMultiplier {
+    -userMultiplierId: long
+    -startDate: DateTime
+    -endDate: DateTime
+    +activate(): void
+  }
+
+  Store "1" --> "1..*" Product
+  Store "1" --> "1..*" PaymentMethod
+  Store "1" --> "0..*" GemWallet
+  Store "1" --> "0..*" PurchaseHistory
+  Product <|-- Cosmetic
+  Product <|-- Multiplier
+  PurchaseHistory --> Product
+  GemPurchase --> GemPackage
+  UserCosmetic --> Cosmetic
+  UserMultiplier --> Multiplier
+}
+
+SettingsPreference ..> UserProfile : configures >
+IamSession ..> UserProfile : authenticates >
+CommunityMember ..> UserProfile : references >
+CommunityPost ..> UserProfile : authored by >
+EventRegistration ..> UserProfile : registered by >
+EventRegistration ..> UserFamily : family registration >
+RankingPosition ..> UserProfile : ranks >
+QuestProgress ..> UserProfile : tracks >
+ActivityProgress ..> UserProfile : tracks >
+CollaborativeQuestSession ..> UserProfile : owned by >
+CollaborativeQuestMember ..> UserProfile : participates >
+GemWallet ..> UserProfile : belongs to >
+PurchaseHistory ..> UserProfile : belongs to >
+GemPurchase ..> UserProfile : paid by >
+GemMovement ..> UserProfile : affects >
+UserCosmetic ..> UserProfile : owned by >
+UserMultiplier ..> UserProfile : owned by >
+
+@enduml

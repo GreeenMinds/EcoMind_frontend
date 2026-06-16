@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { User } from '../domain/model/user.entity';
 import { Family } from '../domain/model/family.entity';
@@ -40,24 +40,12 @@ export class ProfileApi extends BaseApi {
     return this.usersEndpoint.getById(id);
   }
 
-  createUser(user: User): Observable<User> {
-    return this.usersEndpoint.create(user);
-  }
-
   updateUser(user: User): Observable<User> {
     return this.usersEndpoint.update(user, user.id);
   }
 
-  deleteUser(id: number): Observable<void> {
-    return this.usersEndpoint.delete(id);
-  }
-
   getFamilies(): Observable<Family[]> {
     return this.familiesEndpoint.getAll();
-  }
-
-  getFamily(id: number): Observable<Family> {
-    return this.familiesEndpoint.getById(id);
   }
 
   createFamily(family: Family): Observable<Family> {
@@ -68,32 +56,12 @@ export class ProfileApi extends BaseApi {
     return this.familiesEndpoint.update(family, family.id);
   }
 
-  deleteFamily(id: number): Observable<void> {
-    return this.familiesEndpoint.delete(id);
-  }
-
   getFamilyUsers(): Observable<FamilyUser[]> {
     return this.familyUsersEndpoint.getAll();
   }
 
-  getFamilyUsersByUserId(userId: number): Observable<FamilyUser[]> {
-    return this.getFamilyUsers().pipe(
-      map((familyUsers) => familyUsers.filter((familyUser) => familyUser.user_id === userId)),
-    );
-  }
-
-  getFamilyUsersByFamilyId(familyId: number): Observable<FamilyUser[]> {
-    return this.getFamilyUsers().pipe(
-      map((familyUsers) => familyUsers.filter((familyUser) => familyUser.family_id === familyId)),
-    );
-  }
-
   createFamilyUser(familyUser: FamilyUser): Observable<FamilyUser> {
     return this.familyUsersEndpoint.create(familyUser);
-  }
-
-  updateFamilyUser(familyUser: FamilyUser): Observable<FamilyUser> {
-    return this.familyUsersEndpoint.update(familyUser, familyUser.id);
   }
 
   deleteFamilyUser(id: number): Observable<void> {
@@ -112,26 +80,8 @@ export class ProfileApi extends BaseApi {
     return this.familyInvitationsEndpoint.update(invitation, invitation.id);
   }
 
-  deleteFamilyInvitation(id: number): Observable<void> {
-    return this.familyInvitationsEndpoint.delete(id);
-  }
-
   getFriends(): Observable<Friend[]> {
     return this.friendsEndpoint.getAll();
-  }
-
-  getFriendsByUserId(userId: number): Observable<Friend[]> {
-    return this.getFriends().pipe(
-      map((friends) =>
-        friends.filter((friend) => friend.user_id === userId || friend.friend_id === userId),
-      ),
-    );
-  }
-
-  getAcceptedFriendsByUserId(userId: number): Observable<Friend[]> {
-    return this.getFriendsByUserId(userId).pipe(
-      map((friends) => friends.filter((friend) => friend.status === 'accepted')),
-    );
   }
 
   createFriend(friend: Friend): Observable<Friend> {
