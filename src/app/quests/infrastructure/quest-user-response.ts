@@ -1,10 +1,10 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
-export interface QuestUserResponse extends BaseResponse{
+export type QuestUserResponse = BaseResponse & {
   questsUser: QuestUserResource[];
-}
+};
 
-export interface QuestUserResource extends BaseResource {
+export type QuestUserResource = BaseResource & {
   id: number;
   user_id: number;
   quest_id: number;
@@ -13,4 +13,4 @@ export interface QuestUserResource extends BaseResource {
   start_date: string;
   end_date: string | null;
   collaborative_session_id: number | null;
-}
+};

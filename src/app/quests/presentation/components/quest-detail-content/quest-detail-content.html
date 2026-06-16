@@ -77,43 +77,43 @@
           <section class="collaboration-card invite-card">
             <h3>{{ 'quests.collaboration.inviteFriends' | translate }}</h3>
             <div class="friend-list">
-              @for (option of context.inviteOptions; track option.user.id) {
+              @for (option of context.inviteOptions; track option.user?.id) {
                 <div class="friend-row">
                   <div class="avatar-wrapper avatar-wrapper--sm">
-                    @if (getEquippedAvatarUrl(option.user.id); as avatarUrl) {
+                    @if (getEquippedAvatarUrl(option.user?.id); as avatarUrl) {
                       <img
                         class="avatar avatar--sm avatar--img"
                         [src]="avatarUrl"
-                        [alt]="option.user.name"
+                        [alt]="option.user?.name"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                       <span
                         class="avatar avatar--sm avatar--fallback"
                         style="display:none"
-                        [style.--avatar-hue]="getAvatarHue(option.user.id)">
-                        {{ getUserInitials(option.user.name) }}
+                        [style.--avatar-hue]="getAvatarHue(option.user?.id)">
+                        {{ getUserInitials(option.user?.name) }}
                       </span>
                     } @else {
                       <span
                         class="avatar avatar--sm"
-                        [style.--avatar-hue]="getAvatarHue(option.user.id)">
-                        {{ getUserInitials(option.user.name) }}
+                        [style.--avatar-hue]="getAvatarHue(option.user?.id)">
+                        {{ getUserInitials(option.user?.name) }}
                       </span>
                     }
-                    @if (getEquippedOverlayUrl(option.user.id); as overlayUrl) {
+                    @if (getEquippedOverlayUrl(option.user?.id); as overlayUrl) {
                       <img
                         class="avatar-overlay avatar-overlay--sm"
-                        [class.avatar-overlay--hat]="getEquippedOverlayType(option.user.id) === 'hat' || getEquippedOverlayType(option.user.id) === 'bun'"
+                        [class.avatar-overlay--hat]="getEquippedOverlayType(option.user?.id) === 'hat' || getEquippedOverlayType(option.user?.id) === 'bun'"
                         [src]="overlayUrl"
                         alt="Cosmetic"
                         onerror="this.style.display='none'">
                     }
                   </div>
-                  <span class="friend-name">{{ option.user.name }}</span>
+                  <span class="friend-name">{{ option.user?.name }}</span>
                   <button
                     type="button"
                     class="small-action"
                     [disabled]="!option.canInvite"
-                    (click)="inviteFriend(option.user.id)"
+                    (click)="inviteFriend(option.user?.id)"
                   >
                     @if (option.alreadyInvited) {
                       {{ 'quests.collaboration.invited' | translate }}
