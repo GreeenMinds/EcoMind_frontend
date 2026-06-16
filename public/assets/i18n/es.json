@@ -157,11 +157,24 @@
       "month": "Este mes"
     },
     "actions": {
-      "createEvent": "+ Crear evento"
+      "createEvent": "+ Crear evento",
+      "createPost": "+ Crear post"
     },
     "post": {
       "justNow": "Ahora mismo",
-      "defaultAuthor": "Usuario EcoMind"
+      "defaultAuthor": "Usuario EcoMind",
+      "noPoints": "- puntos"
+    },
+    "postForm": {
+      "title": "Nuevo post",
+      "content": "Contenido",
+      "contentPlaceholder": "Comparte tu avance sostenible con la comunidad",
+      "points": "Puntos",
+      "pointsPlaceholder": "0",
+      "imageUrl": "URL de imagen",
+      "optional": "(opcional)",
+      "create": "Crear post",
+      "cancel": "Cancelar"
     },
     "eventCard": {
       "joinNow": "Unirse ahora",

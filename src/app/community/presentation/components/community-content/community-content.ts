@@ -10,6 +10,7 @@ import { CommunityAchievementsList } from '../community-achievements-list/commun
 import { CommunityEventsList } from '../community-events-list/community-events-list';
 import { CommunityEventFormModal } from '../community-event-form-modal/community-event-form-modal';
 import { CommunityEventRegistrationModal } from '../community-event-registration-modal/community-event-registration-modal';
+import { CommunityPostFormModal } from '../community-post-form-modal/community-post-form-modal';
 
 type CommunityTab = 'all' | 'achievements' | 'events';
 type AchievementPeriod = 'all' | 'week' | 'month';
@@ -26,6 +27,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
     CommunityEventsList,
     CommunityEventFormModal,
     CommunityEventRegistrationModal,
+    CommunityPostFormModal,
     TranslatePipe,
   ],
   templateUrl: './community-content.html',
@@ -38,6 +40,7 @@ export class CommunityContent {
   readonly activeTab = signal<CommunityTab>('all');
   readonly achievementPeriod = signal<AchievementPeriod>('all');
   readonly showEventForm = signal(false);
+  readonly showPostForm = signal(false);
   readonly selectedEvent = signal<CommunityEventSummary | null>(null);
 
   readonly filteredPosts = computed(() => {
@@ -96,6 +99,14 @@ export class CommunityContent {
 
   closeEventForm(): void {
     this.showEventForm.set(false);
+  }
+
+  openPostForm(): void {
+    this.showPostForm.set(true);
+  }
+
+  closePostForm(): void {
+    this.showPostForm.set(false);
   }
 
   openRegistrationModal(summary: CommunityEventSummary): void {

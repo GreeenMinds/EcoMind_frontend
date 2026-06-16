@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommunityPostSummary } from '../../../application/community.service';
 import { CommunityPostCard } from '../community-post-card/community-post-card';
@@ -11,4 +11,5 @@ import { CommunityPostCard } from '../community-post-card/community-post-card';
 })
 export class CommunityFeed {
   @Input() posts: CommunityPostSummary[] = [];
+  @Output() createPost = new EventEmitter<void>();
 }
