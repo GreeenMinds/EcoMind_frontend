@@ -1680,6 +1680,16 @@
       "likes": 70,
       "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "user_id": 1,
+      "content": "I completed the zero-waste challenge for two weeks. I significantly reduced the amount of trash I produced.",
+      "points": 40,
+      "likes": 0,
+      "image_url": null,
+      "created_at": "2026-06-16T05:51:35.541Z"
     }
   ],
   "community_goal": [

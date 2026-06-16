@@ -1,0 +1,43 @@
+<div class="modal-backdrop">
+  <form class="modal-card" (ngSubmit)="submit()">
+    <header>
+      <h2>{{ 'community.postForm.title' | translate }}</h2>
+    </header>
+
+    <label>
+      {{ 'community.postForm.content' | translate }}
+      <textarea
+        name="content"
+        [(ngModel)]="content"
+        [placeholder]="'community.postForm.contentPlaceholder' | translate">
+      </textarea>
+    </label>
+
+    <label>
+      {{ 'community.postForm.points' | translate }}
+      <span class="optional">{{ 'community.postForm.optional' | translate }}</span>
+      <input
+        type="number"
+        name="points"
+        min="0"
+        step="1"
+        [(ngModel)]="points"
+        [placeholder]="'community.postForm.pointsPlaceholder' | translate">
+    </label>
+
+    <label>
+      {{ 'community.postForm.imageUrl' | translate }}
+      <span class="optional">{{ 'community.postForm.optional' | translate }}</span>
+      <input
+        type="url"
+        name="imageUrl"
+        placeholder="https://example.com/post-image.jpg"
+        [(ngModel)]="imageUrl">
+    </label>
+
+    <button type="submit" class="primary">{{ 'community.postForm.create' | translate }}</button>
+    <button type="button" class="secondary" (click)="close.emit()">
+      {{ 'community.postForm.cancel' | translate }}
+    </button>
+  </form>
+</div>

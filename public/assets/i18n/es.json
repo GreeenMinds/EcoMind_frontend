@@ -157,11 +157,24 @@
       "month": "Este mes"
     },
     "actions": {
-      "createEvent": "+ Crear evento"
+      "createEvent": "+ Crear evento",
+      "createPost": "+ Crear post"
     },
     "post": {
       "justNow": "Ahora mismo",
-      "defaultAuthor": "Usuario EcoMind"
+      "defaultAuthor": "Usuario EcoMind",
+      "noPoints": "- puntos"
+    },
+    "postForm": {
+      "title": "Nuevo post",
+      "content": "Contenido",
+      "contentPlaceholder": "Comparte tu avance sostenible con la comunidad",
+      "points": "Puntos",
+      "pointsPlaceholder": "0",
+      "imageUrl": "URL de imagen",
+      "optional": "(opcional)",
+      "create": "Crear post",
+      "cancel": "Cancelar"
     },
     "eventCard": {
       "joinNow": "Unirse ahora",
@@ -239,6 +252,116 @@
       "megaBundleGems": "10,000 Gemas",
       "megaBundleAvatars": "3 Avatares Exclusivos",
       "megaBundleMultiplier": "Multiplicador 3x por una semana"
+    }
+  },
+  "profilePage": {
+    "hero": {
+      "eyebrow": "Perfil EcoMind",
+      "totalPoints": "Puntos Totales",
+      "friends": "Amigos",
+      "editProfile": "Editar Perfil",
+      "shareProfile": "Compartir Perfil",
+      "removeFriend": "Eliminar amigo"
+    },
+    "tabs": {
+      "ariaLabel": "Secciones del perfil",
+      "summary": "Resumen",
+      "family": "Familia",
+      "progress": "Ver Progreso",
+      "friends": "Amigos"
+    },
+    "common": {
+      "loadingProfile": "Cargando perfil...",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "viewProfile": "Ver perfil",
+      "remove": "Eliminar"
+    },
+    "summary": {
+      "selfCommitment": "Mi compromiso",
+      "memberCommitment": "Compromiso de {{name}}",
+      "updated": "Actualizado {{relative}}",
+      "edit": "Editar",
+      "achievements": "Medallas y Logros",
+      "registeredCount": "{{count}} registrados",
+      "currentStreak": "Racha Actual",
+      "defaultCommunity": "Comunidad EcoMind",
+      "familyRole": "Rol en la familia",
+      "friendshipRelation": "Relacion de amistad",
+      "inCommon": "{{count}} en comun",
+      "emptyMemberCommitment": "Este miembro todavia no registra un compromiso en EcoMind.",
+      "emptyMemberAchievements": "Este perfil todavia no tiene medallas registradas.",
+      "emptyFriendCommitment": "Este amigo aun no registro un compromiso.",
+      "emptyFriendAchievements": "Este amigo aun no tiene medallas registradas.",
+      "noJoinDate": "Sin fecha de ingreso",
+      "joined": "Se unio {{relative}}"
+    },
+    "progress": {
+      "pendingLabel": "Pendientes",
+      "pendingTitle": "Retos por completar",
+      "completedLabel": "Completadas",
+      "completedTitle": "Retos finalizados",
+      "challengeCount": "{{count}} retos",
+      "showMore": "Ver mas",
+      "showLess": "Ver menos",
+      "noActiveQuests": "No hay misiones activas.",
+      "noCompletedQuests": "Aun no se registran retos completados."
+    },
+    "family": {
+      "receivedInvitations": "Invitaciones recibidas",
+      "noFamilyTitle": "Sin familia registrada",
+      "familyNamePlaceholder": "Escribe el nombre de tu familia",
+      "createFamily": "Crear familia",
+      "adultOnlyCreate": "Solo un usuario mayor de edad puede crear una familia.",
+      "primaryGroup": "Grupo principal",
+      "commitmentLabel": "Compromiso familiar",
+      "noCommitment": "Tu familia aun no tiene un compromiso registrado.",
+      "editCommitment": "Editar compromiso",
+      "leaveFamily": "Salir de la familia",
+      "inviteTitle": "Invitar a la familia",
+      "searchUserPlaceholder": "Busca un usuario por nombre",
+      "invite": "Invitar",
+      "noMatches": "No se encontraron coincidencias para esa busqueda.",
+      "searchHint": "Escribe un nombre para ver coincidencias y enviar una invitacion.",
+      "noUsersToInvite": "No hay usuarios disponibles para invitar.",
+      "sentInvitations": "Invitaciones enviadas",
+      "membersTitle": "Miembros de la Familia ({{count}})",
+      "noMembers": "No hay miembros de familia asociados a este perfil."
+    },
+    "friends": {
+      "eyebrow": "Comunidad",
+      "title": "Red de amigos",
+      "subtitle": "Contactos registrados.",
+      "receivedRequests": "Solicitudes recibidas",
+      "sendRequestTitle": "Enviar solicitud de amistad",
+      "searchUserPlaceholder": "Busca un usuario por nombre",
+      "sendRequest": "Enviar solicitud",
+      "noMatches": "No se encontraron coincidencias para esa busqueda.",
+      "searchHint": "Escribe un nombre para ver coincidencias en tiempo real.",
+      "noUsersToInvite": "No hay usuarios disponibles para enviar solicitud.",
+      "listTitle": "Amigos ({{count}})",
+      "noFriends": "Aun no tienes amistades aceptadas."
+    },
+    "modal": {
+      "ariaLabel": "Editar compromiso",
+      "myCommitmentTitle": "Mi Compromiso",
+      "familyCommitmentTitle": "Compromiso de la familia",
+      "selfPlaceholder": "Escribe aqui el compromiso sostenible que quieres mostrar en tu perfil",
+      "familyPlaceholder": "Escribe aqui el compromiso sostenible que representara a toda la familia",
+      "saveCommitment": "Guardar Compromiso",
+      "deleteCommitment": "Eliminar compromiso"
+    },
+    "role": {
+      "parent": "Padre/Madre",
+      "child": "Hijo/Hija"
+    },
+    "relative": {
+      "justNow": "hace poco",
+      "today": "hoy",
+      "dayAgo": "hace 1 dia",
+      "daysAgo": "hace {{count}} dias",
+      "monthAgo": "hace 1 mes",
+      "monthsAgo": "hace {{count}} meses"
     }
   }
 }

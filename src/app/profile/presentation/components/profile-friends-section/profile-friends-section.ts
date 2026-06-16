@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Friend } from '../../../domain/model/friend.entity';
 import { User } from '../../../domain/model/user.entity';
 import { ProfileAvatar } from '../profile-avatar/profile-avatar';
@@ -32,7 +33,7 @@ export interface FriendRequestView {
 
 @Component({
   selector: 'app-profile-friends-section',
-  imports: [ProfileAvatar],
+  imports: [ProfileAvatar, TranslatePipe],
   templateUrl: './profile-friends-section.html',
   styleUrl: './profile-friends-section.css',
 })

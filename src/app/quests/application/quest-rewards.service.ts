@@ -1,6 +1,4 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { MonetizationStoreService } from '../../monetization/application/monetization-store.service';
 import { ProfileService } from '../../profile/application/profile.service';
 import { User } from '../../profile/domain/model/user.entity';
@@ -11,8 +9,6 @@ import { QuestsService } from './quests.service';
   providedIn: 'root',
 })
 export class QuestRewardsService {
-  private readonly destroyRef = inject(DestroyRef);
-
   constructor(
     private readonly questsService: QuestsService,
     private readonly profileService: ProfileService,
@@ -46,15 +42,9 @@ export class QuestRewardsService {
     const multiplierFactor = this.monetizationStoreService.activeMultiplierFactor();
     const todayDate = this.questsService.getTodayDate();
     const updatedUsers: User[] = [];
+    let completedRequests = 0;
 
-    const updateNextUser = (index: number) => {
-      if (index >= uniqueUserIds.length) {
-        onSuccess(updatedUsers);
-        return;
-      }
-
-      const userId = uniqueUserIds[index];
-
+    uniqueUserIds.forEach((userId) => {
       const ecopointsAmount = Math.round(
         quest.reward_ecopoints * (userId === currentUserId ? multiplierFactor : 1),
       );
@@ -67,7 +57,7 @@ export class QuestRewardsService {
         todayDate,
       );
 
-      profileReward$.pipe(retry(2), takeUntilDestroyed(this.destroyRef)).subscribe({
+      profileReward$.subscribe({
         next: (updatedUser) => {
           if (gemAmount > 0) {
             this.monetizationStoreService.onQuestGemsAwarded(
@@ -79,16 +69,18 @@ export class QuestRewardsService {
           }
 
           updatedUsers.push(updatedUser);
-          updateNextUser(index + 1);
+          completedRequests++;
+
+          if (completedRequests === uniqueUserIds.length) {
+            onSuccess(updatedUsers);
+          }
         },
         error: (error) => {
           this.questsService.errorSignal.set(this.questsService.formatError(error, fallbackMessage));
           this.questsService.loadingSignal.set(false);
         },
       });
-    };
-
-    updateNextUser(0);
+    });
   }
 
   mergeRewardedUsers(users: User[]): void {

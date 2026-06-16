@@ -7,14 +7,16 @@
         <div class="progress-item">
           <div class="progress-item__head">
             <a [routerLink]="item.route">{{ item.label }}</a>
-            <button
-              type="button"
-              class="abandon-quest"
-              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
-              (click)="requestAbandon(item, $event)"
-            >
-              X
-            </button>
+            @if (item.canAbandon) {
+              <button
+                type="button"
+                class="abandon-quest"
+                [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+                (click)="requestAbandon(item, $event)"
+              >
+                X
+              </button>
+            }
           </div>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-value" [style.width.%]="item.progress"></div>
@@ -42,14 +44,16 @@
         <div class="modal-progress-item">
           <div class="progress-item__head">
             <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
-            <button
-              type="button"
-              class="abandon-quest"
-              [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
-              (click)="requestAbandon(item, $event)"
-            >
-              X
-            </button>
+            @if (item.canAbandon) {
+              <button
+                type="button"
+                class="abandon-quest"
+                [attr.aria-label]="'quests.abandonAria' | translate: { quest: item.label }"
+                (click)="requestAbandon(item, $event)"
+              >
+                X
+              </button>
+            }
           </div>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-value" [style.width.%]="item.progress"></div>

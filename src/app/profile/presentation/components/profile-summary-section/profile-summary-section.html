@@ -3,7 +3,7 @@
     <h2>{{ title }}</h2>
     @if (canEdit) {
       <button class="surface-link" type="button" (click)="editCommitment.emit()">
-        Editar
+        {{ 'profilePage.summary.edit' | translate }}
       </button>
     }
   </div>
@@ -17,8 +17,10 @@
 
 <article class="surface-card">
   <div class="surface-card__header">
-    <h2>Medallas y Logros</h2>
-    <span class="surface-link surface-link--static">{{ achievements.length }} registrados</span>
+    <h2>{{ 'profilePage.summary.achievements' | translate }}</h2>
+    <span class="surface-link surface-link--static">
+      {{ 'profilePage.summary.registeredCount' | translate: { count: achievements.length } }}
+    </span>
   </div>
 
   @if (achievements.length > 0) {

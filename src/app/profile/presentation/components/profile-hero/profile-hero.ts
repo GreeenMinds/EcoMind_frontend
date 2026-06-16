@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { User } from '../../../domain/model/user.entity';
 import { ProfileAvatar } from '../profile-avatar/profile-avatar';
 
 @Component({
   selector: 'app-profile-hero',
-  imports: [ProfileAvatar],
+  imports: [ProfileAvatar, TranslatePipe],
   templateUrl: './profile-hero.html',
   styleUrl: './profile-hero.css',
 })

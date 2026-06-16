@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Family } from '../../../domain/model/family.entity';
 import { FamilyUser } from '../../../domain/model/family-user.entity';
 import { User } from '../../../domain/model/user.entity';
@@ -45,11 +46,13 @@ export interface FamilyInviteCandidateView {
 
 @Component({
   selector: 'app-profile-family-section',
-  imports: [ProfileAvatar],
+  imports: [ProfileAvatar, TranslatePipe],
   templateUrl: './profile-family-section.html',
   styleUrl: './profile-family-section.css',
 })
 export class ProfileFamilySection {
+  private readonly translate = inject(TranslateService);
+
   @Input() family: Family | null = null;
   @Input() familySummary = '';
   @Input() familyCommitment: string | null = null;
@@ -76,10 +79,10 @@ export class ProfileFamilySection {
   getRoleLabel(role: string): string {
     const normalizedRole = role.trim().toLowerCase();
     if (normalizedRole === 'parent' || normalizedRole === 'padre/madre') {
-      return 'Padre/Madre';
+      return this.translate.instant('profilePage.role.parent');
     }
     if (normalizedRole === 'child' || normalizedRole === 'hijo/hija') {
-      return 'Hijo/Hija';
+      return this.translate.instant('profilePage.role.child');
     }
     return role;
   }

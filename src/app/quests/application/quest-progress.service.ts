@@ -45,7 +45,7 @@ export class QuestProgressService {
     this.store.loadingSignal.set(true);
     this.store.errorSignal.set(null);
 
-    this.store.questsApi.createQuestUser(questUser).pipe(retry(2), takeUntilDestroyed())
+    this.store.questsApi.createQuestUser(questUser)
       .subscribe({
         next: (createdQuestUser) => {
           const activitiesToStart = quest.type === 'activities'
@@ -70,7 +70,7 @@ export class QuestProgressService {
               collaborative_session_id: null,
             });
 
-            this.store.questsApi.createActivityUser(newActivityUser).pipe(retry(2), takeUntilDestroyed())
+            this.store.questsApi.createActivityUser(newActivityUser)
               .subscribe({
                 next: (createdAct) => {
                   createdActivitiesUser.push(createdAct);
@@ -198,7 +198,7 @@ export class QuestProgressService {
 
     this.store.questsApi
       .deleteQuestUser(questUser.id)
-      .pipe(retry(2), takeUntilDestroyed())
+
       .subscribe({
         next: () => checkDeletesCompleted(),
         error: (err) => {
@@ -210,7 +210,7 @@ export class QuestProgressService {
     activityUsersToDelete.forEach((actUser) => {
       this.store.questsApi
         .deleteActivityUser(actUser.id)
-        .pipe(retry(2), takeUntilDestroyed())
+
         .subscribe({
           next: () => checkDeletesCompleted(),
           error: (err) =>
@@ -223,7 +223,7 @@ export class QuestProgressService {
     minigameAttemptsToDelete.forEach((attempt) => {
       this.store.questsApi
         .deleteMinigameAttempt(attempt.id)
-        .pipe(retry(2), takeUntilDestroyed())
+
         .subscribe({
           next: () => checkDeletesCompleted(),
           error: (err) =>
@@ -266,7 +266,7 @@ export class QuestProgressService {
     this.store.errorSignal.set(null);
     this.store.questsApi
       .createActivityUser(activityUser)
-      .pipe(retry(2), takeUntilDestroyed())
+
       .subscribe({
         next: (createdActivityUser) => {
           this.store.activitiesUserSignal.update((activitiesUser) => [
@@ -288,7 +288,7 @@ export class QuestProgressService {
     this.store.errorSignal.set(null);
     this.store.questsApi
       .updateActivityUser(activityUser)
-      .pipe(retry(2), takeUntilDestroyed())
+
       .subscribe({
         next: (updatedActivityUser) => {
           this.store.activitiesUserSignal.update((activitiesUser) =>
@@ -313,7 +313,7 @@ export class QuestProgressService {
     this.store.errorSignal.set(null);
     this.store.questsApi
       .updateQuestUser(questUser)
-      .pipe(retry(2), takeUntilDestroyed())
+
       .subscribe({
         next: (updatedQuestUser) => {
           this.store.questsUserSignal.update((questsUser) =>

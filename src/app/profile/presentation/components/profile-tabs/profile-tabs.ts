@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export type ProfileTab = 'summary' | 'family' | 'progress' | 'friends';
 
 @Component({
   selector: 'app-profile-tabs',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './profile-tabs.html',
   styleUrl: './profile-tabs.css',
 })

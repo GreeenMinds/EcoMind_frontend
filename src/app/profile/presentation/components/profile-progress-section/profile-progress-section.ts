@@ -1,4 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Quest } from '../../../../quests/domain/model/quest.entity';
 
 export interface QuestProgressView {
@@ -11,7 +12,7 @@ export interface QuestProgressView {
 
 @Component({
   selector: 'app-profile-progress-section',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './profile-progress-section.html',
   styleUrl: './profile-progress-section.css',
 })

@@ -1,6 +1,6 @@
-import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, retry } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
@@ -31,6 +31,12 @@ export interface CommunityEventSummary {
   author?: CommunityMember;
   registration?: EventRegistration;
   joined: boolean;
+}
+
+export interface CommunityPostFormValue {
+  content: string;
+  points: number;
+  image_url: string | null;
 }
 
 @Injectable({
@@ -145,46 +151,6 @@ export class CommunityService {
     this.loadCommunityData();
   }
 
-  getFilteredPosts(searchTerm: string): Signal<CommunityPostSummary[]> {
-    return computed(() => {
-      const normalizedSearchTerm = searchTerm.trim().toLowerCase();
-
-      if (!normalizedSearchTerm) {
-        return this.postSummaries();
-      }
-
-      return this.postSummaries().filter((summary) => {
-        const authorName = summary.author?.name.toLowerCase() ?? '';
-        return (
-          summary.post.content.toLowerCase().includes(normalizedSearchTerm) ||
-          authorName.includes(normalizedSearchTerm)
-        );
-      });
-    });
-  }
-
-  getFilteredEvents(searchTerm: string): Signal<CommunityEventSummary[]> {
-    return computed(() => {
-      const normalizedSearchTerm = searchTerm.trim().toLowerCase();
-
-      if (!normalizedSearchTerm) {
-        return this.eventSummaries();
-      }
-
-      return this.eventSummaries().filter((summary) =>
-        [
-          summary.event.name,
-          summary.event.description,
-          summary.event.location,
-          summary.author?.name ?? '',
-        ]
-          .join(' ')
-          .toLowerCase()
-          .includes(normalizedSearchTerm),
-      );
-    });
-  }
-
   joinEventAsIndividual(eventId: number): void {
     this.createRegistration(eventId, 'individual', null);
   }
@@ -270,38 +236,114 @@ export class CommunityService {
       });
   }
 
+  createPost(postData: CommunityPostFormValue): void {
+    const currentMember = this.currentMember();
+    const post = new CommunityPost();
+
+    post.id = 0;
+    post.community_id = currentMember?.community_id ?? 1;
+    post.user_id = this.currentUserId();
+    post.content = postData.content;
+    post.points = postData.points;
+    post.likes = 0;
+    post.image_url = postData.image_url;
+    post.created_at = new Date().toISOString();
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .createPost(post)
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (createdPost) => {
+          this.postsSignal.update((posts) => [...posts, createdPost]);
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not create the post'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
   private loadCommunityData(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    forkJoin({
-      communities: this.communityApi.getCommunities(),
-      members: this.communityApi.getCommunityMembers(),
-      posts: this.communityApi.getCommunityPosts(),
-      goals: this.communityApi.getCommunityGoals(),
-      achievements: this.communityApi.getAchievements(),
-      communityAchievements: this.communityApi.getCommunityAchievements(),
-      userAchievements: this.communityApi.getUserAchievements(),
-      events: this.communityApi.getEvents(),
-      eventRegistrations: this.communityApi.getEventRegistrations(),
-    })
+    let pendingRequests = 9;
+    const finishRequest = () => {
+      pendingRequests -= 1;
+
+      if (pendingRequests === 0) {
+        this.loadingSignal.set(false);
+      }
+    };
+
+    this.loadResource(
+      this.communityApi.getCommunities(),
+      (communities) => this.communitiesSignal.set(communities),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getCommunityMembers(),
+      (members) => this.membersSignal.set(members),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getCommunityPosts(),
+      (posts) => this.postsSignal.set(posts),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getCommunityGoals(),
+      (goals) => this.goalsSignal.set(goals),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getAchievements(),
+      (achievements) => this.achievementsSignal.set(achievements),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getCommunityAchievements(),
+      (communityAchievements) =>
+        this.communityAchievementsSignal.set(communityAchievements),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getUserAchievements(),
+      (userAchievements) => this.userAchievementsSignal.set(userAchievements),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getEvents(),
+      (events) => this.eventsSignal.set(events),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getEventRegistrations(),
+      (eventRegistrations) => this.eventRegistrationsSignal.set(eventRegistrations),
+      finishRequest,
+    );
+  }
+
+  private loadResource<T>(
+    request: Observable<T>,
+    applyValue: (value: T) => void,
+    finishRequest: () => void,
+  ): void {
+    request
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
-          this.communitiesSignal.set(data.communities);
-          this.membersSignal.set(data.members);
-          this.postsSignal.set(data.posts);
-          this.goalsSignal.set(data.goals);
-          this.achievementsSignal.set(data.achievements);
-          this.communityAchievementsSignal.set(data.communityAchievements);
-          this.userAchievementsSignal.set(data.userAchievements);
-          this.eventsSignal.set(data.events);
-          this.eventRegistrationsSignal.set(data.eventRegistrations);
-          this.loadingSignal.set(false);
+        next: (value) => {
+          applyValue(value);
+          finishRequest();
         },
         error: (error) => {
           this.errorSignal.set(this.formatError(error, 'Could not load the community'));
           this.loadingSignal.set(false);
+          finishRequest();
         },
       });
   }

@@ -10,18 +10,6 @@
   background: white;
 }
 
-.avatar {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #e2f5d8;
-  color: #4e8f39;
-  font-weight: 800;
-  border: 2px solid #333;
-}
-
 .post-header {
   display: flex;
   justify-content: space-between;

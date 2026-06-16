@@ -1,7 +1,7 @@
 <section class="family-shell">
   @if (incomingInvitations.length > 0) {
     <article class="family-invitations">
-      <h3>Invitaciones recibidas</h3>
+      <h3>{{ 'profilePage.family.receivedInvitations' | translate }}</h3>
       <div class="family-invitations__list">
         @for (invitation of incomingInvitations; track invitation.id) {
           <div class="family-invitations__item">
@@ -17,13 +17,13 @@
                 class="profile-action profile-action--solid"
                 type="button"
                 (click)="acceptInvitation.emit(invitation.id)">
-                Aceptar
+                {{ 'profilePage.common.accept' | translate }}
               </button>
               <button
                 class="profile-action profile-action--danger"
                 type="button"
                 (click)="rejectInvitation.emit(invitation.id)">
-                Rechazar
+                {{ 'profilePage.common.reject' | translate }}
               </button>
             </div>
           </div>
@@ -34,7 +34,7 @@
 
   @if (!family) {
     <article class="family-empty">
-      <h2>Sin familia registrada</h2>
+      <h2>{{ 'profilePage.family.noFamilyTitle' | translate }}</h2>
       <p>{{ noFamilyMessage }}</p>
 
       @if (canCreateFamily) {
@@ -43,34 +43,36 @@
             #familyNameInput
             class="family-input"
             type="text"
-            placeholder="Escribe el nombre de tu familia" />
+            [placeholder]="'profilePage.family.familyNamePlaceholder' | translate" />
           <button
             class="profile-action profile-action--invite"
             type="button"
             (click)="emitCreateFamily(familyNameInput.value)">
-            Crear familia
+            {{ 'profilePage.family.createFamily' | translate }}
           </button>
         </div>
       } @else {
-        <p class="empty-copy">Solo un usuario mayor de edad puede crear una familia.</p>
+        <p class="empty-copy">{{ 'profilePage.family.adultOnlyCreate' | translate }}</p>
       }
     </article>
   } @else {
     <article class="family-banner">
       <div class="family-banner__copy">
-        <p class="profile-eyebrow">Grupo principal</p>
+        <p class="profile-eyebrow">{{ 'profilePage.family.primaryGroup' | translate }}</p>
         <h2>{{ family.name }}</h2>
         <p>{{ familySummary }}</p>
         <div class="family-banner__commitment">
-          <span class="family-banner__commitment-label">Compromiso familiar</span>
-          <p>{{ familyCommitment || 'Tu familia aun no tiene un compromiso registrado.' }}</p>
+          <span class="family-banner__commitment-label">
+            {{ 'profilePage.family.commitmentLabel' | translate }}
+          </span>
+          <p>{{ familyCommitment || ('profilePage.family.noCommitment' | translate) }}</p>
         </div>
       </div>
 
       <div class="family-banner__actions">
         @if (canManageFamily) {
           <button class="family-banner__cta" type="button" (click)="editCommitment.emit()">
-            Editar compromiso
+            {{ 'profilePage.family.editCommitment' | translate }}
           </button>
         }
         @if (canLeaveFamily) {
@@ -78,7 +80,7 @@
             class="family-banner__cta family-banner__cta--ghost"
             type="button"
             (click)="leaveFamily.emit()">
-            Salir de la familia
+            {{ 'profilePage.family.leaveFamily' | translate }}
           </button>
         }
       </div>
@@ -86,7 +88,7 @@
 
     @if (canManageFamily) {
       <article class="family-invite">
-        <h3>Invitar a la familia</h3>
+        <h3>{{ 'profilePage.family.inviteTitle' | translate }}</h3>
 
         @if (inviteCandidates.length > 0) {
           <div class="family-invite__controls">
@@ -94,15 +96,15 @@
               class="family-input"
               type="text"
               [value]="familyInviteSearch"
-              placeholder="Busca un usuario por nombre"
+              [placeholder]="'profilePage.family.searchUserPlaceholder' | translate"
               (input)="updateFamilyInviteSearch($any($event.target).value)" />
 
             <select
               class="family-input"
               [value]="inviteRole"
               (change)="updateInviteRole($any($event.target).value)">
-              <option value="child">Hijo/Hija</option>
-              <option value="parent">Padre/Madre</option>
+              <option value="child">{{ 'profilePage.role.child' | translate }}</option>
+              <option value="parent">{{ 'profilePage.role.parent' | translate }}</option>
             </select>
           </div>
 
@@ -137,28 +139,28 @@
                       type="button"
                       [disabled]="!!candidate.disabledReason"
                       (click)="emitInvite(candidate)">
-                      Invitar
+                      {{ 'profilePage.family.invite' | translate }}
                     </button>
                   </div>
                 }
               </div>
             } @else {
-              <p class="empty-copy">No se encontraron coincidencias para esa busqueda.</p>
+              <p class="empty-copy">{{ 'profilePage.family.noMatches' | translate }}</p>
             }
           } @else {
             <p class="empty-copy">
-              Escribe un nombre para ver coincidencias y enviar una invitacion.
+              {{ 'profilePage.family.searchHint' | translate }}
             </p>
           }
         } @else {
-          <p class="empty-copy">No hay usuarios disponibles para invitar.</p>
+          <p class="empty-copy">{{ 'profilePage.family.noUsersToInvite' | translate }}</p>
         }
       </article>
     }
 
     @if (outgoingInvitations.length > 0) {
       <article class="family-invitations family-invitations--sent">
-        <h3>Invitaciones enviadas</h3>
+        <h3>{{ 'profilePage.family.sentInvitations' | translate }}</h3>
         <div class="family-invitations__list">
           @for (invitation of outgoingInvitations; track invitation.id) {
             <div class="family-invitations__item">
@@ -177,7 +179,7 @@
 
     <section class="family-members">
       <div class="family-members__header">
-        <h2>Miembros de la Familia ({{ members.length }})</h2>
+        <h2>{{ 'profilePage.family.membersTitle' | translate: { count: members.length } }}</h2>
       </div>
 
       @if (members.length > 0) {
@@ -194,13 +196,13 @@
               <h3>{{ member.user.name }}</h3>
               <span class="family-role-chip">{{ getRoleLabel(member.membership.family_role) }}</span>
               <button class="profile-action" type="button" (click)="openMember.emit(member)">
-                Ver perfil
+                {{ 'profilePage.common.viewProfile' | translate }}
               </button>
             </article>
           }
         </div>
       } @else {
-        <p class="empty-copy">No hay miembros de familia asociados a este perfil.</p>
+        <p class="empty-copy">{{ 'profilePage.family.noMembers' | translate }}</p>
       }
     </section>
   }

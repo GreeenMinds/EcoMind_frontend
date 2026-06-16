@@ -1,5 +1,6 @@
-import { computed, signal } from '@angular/core';
+import { EventEmitter, computed, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CommunityService } from '../../../../community/application/community.service';
 import { Achievement } from '../../../../community/domain/model/achievement.entity';
@@ -42,6 +43,44 @@ const createCosmetic = (overrides: Partial<CosmeticEntity>): CosmeticEntity =>
   Object.assign(new CosmeticEntity(), overrides);
 const createUserCosmetic = (overrides: Partial<UserCosmeticEntity>): UserCosmeticEntity =>
   Object.assign(new UserCosmeticEntity(), overrides);
+
+class TranslateServiceStub {
+  currentLang = 'es';
+  fallbackLang = 'en';
+  onTranslationChange = new EventEmitter();
+  onLangChange = new EventEmitter();
+  onFallbackLangChange = new EventEmitter();
+  onDefaultLangChange = new EventEmitter();
+
+  get(key: string | string[]) {
+    return of(key);
+  }
+
+  instant(key: string | string[], params?: Record<string, unknown>) {
+    if (typeof key !== 'string') {
+      return key;
+    }
+
+    return key.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, token) => `${params?.[token] ?? ''}`);
+  }
+
+  getParsedResult(key: string | string[]) {
+    return key;
+  }
+
+  use(lang: string) {
+    this.currentLang = lang;
+    return of({});
+  }
+
+  getCurrentLang() {
+    return this.currentLang;
+  }
+
+  getFallbackLang() {
+    return this.fallbackLang;
+  }
+}
 
 class ProfileServiceStub {
   readonly createFriendCalls: Friend[] = [];
@@ -350,6 +389,7 @@ describe('ProfileContent', () => {
         { provide: QuestsService, useClass: QuestsServiceStub },
         { provide: CommunityService, useClass: CommunityServiceStub },
         { provide: MonetizationApi, useClass: MonetizationApiStub },
+        { provide: TranslateService, useClass: TranslateServiceStub },
       ],
     }).compileComponents();
 
