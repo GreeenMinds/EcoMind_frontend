@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, retry } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ActivityUser } from '../domain/model/activity-user.entity';
 import { QuestUser } from '../domain/model/quest-user.entity';
 import { Quest } from '../domain/model/quest.entity';
@@ -9,7 +9,7 @@ import type { QuestsService } from './quests.service';
   providedIn: 'root',
 })
 export class QuestDailyService {
-  private dailyQuestTimerId: ReturnType<typeof setTimeout> | null = null;
+  private dailyQuestTimerId: number | null = null;
   private questsService?: QuestsService;
 
   start(questsService: QuestsService): void {
@@ -19,7 +19,7 @@ export class QuestDailyService {
 
   stop(): void {
     if (this.dailyQuestTimerId) {
-      clearTimeout(this.dailyQuestTimerId);
+      window.clearTimeout(this.dailyQuestTimerId);
     }
   }
 
@@ -32,7 +32,7 @@ export class QuestDailyService {
 
   private scheduleNextDailyQuestSync(): void {
     if (this.dailyQuestTimerId) {
-      clearTimeout(this.dailyQuestTimerId);
+      window.clearTimeout(this.dailyQuestTimerId);
     }
 
     const now = new Date();
@@ -42,7 +42,7 @@ export class QuestDailyService {
       nextMidnight.setDate(nextMidnight.getDate() + 1);
     }
 
-    this.dailyQuestTimerId = setTimeout(() => {
+    this.dailyQuestTimerId = window.setTimeout(() => {
       this.syncDailyQuestAssignment(true);
       this.scheduleNextDailyQuestSync();
     }, nextMidnight.getTime() - now.getTime());
@@ -92,7 +92,7 @@ export class QuestDailyService {
     let completedDeletes = 0;
 
     deletionRequests.forEach((request) => {
-      request.pipe(retry(2)).subscribe({
+      request.subscribe({
         next: () => {
           completedDeletes++;
 
@@ -135,7 +135,7 @@ export class QuestDailyService {
     });
   }
 
-  private buildDailyQuestDeletionRequests(staleQuestUsers: QuestUser[]): Observable<unknown>[] {
+  private buildDailyQuestDeletionRequests(staleQuestUsers: QuestUser[]): Observable<void>[] {
     const staleQuestIds = new Set(staleQuestUsers.map((questUser) => questUser.quest_id));
     const staleActivityIds = new Set(
       this.data
@@ -179,7 +179,7 @@ export class QuestDailyService {
 
     this.data.questsApi
       .createQuestUser(questUser)
-      .pipe(retry(2))
+
       .subscribe({
         next: (createdQuestUser) => {
           if (activitiesToStart.length === 0) {
@@ -204,7 +204,7 @@ export class QuestDailyService {
 
             this.data.questsApi
               .createActivityUser(newActivityUser)
-              .pipe(retry(2))
+
               .subscribe({
                 next: (createdAct) => {
                   createdActivitiesUser.push(createdAct);

@@ -10,6 +10,7 @@ type ProgressPanelItem = {
   label: string;
   progress: number;
   route: (string | number)[];
+  canAbandon: boolean;
 };
 
 @Component({
@@ -103,6 +104,7 @@ export class QuestProgressPanel {
       label: quest.title,
       progress: Math.round(quest.progress),
       route: this.getProgressItemRoute(quest),
+      canAbandon: quest.type !== 'collaborative',
     };
   }
 }

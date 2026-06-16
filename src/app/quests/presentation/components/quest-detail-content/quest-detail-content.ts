@@ -87,9 +87,8 @@ export class QuestDetailContent {
     const context = this.collaborativeContext();
     return Boolean(
       detail?.quest.type === 'collaborative' &&
-      context?.isAcceptedParticipant &&
-      !context.isOwner &&
-      !detail.started,
+      !detail.started &&
+      !context?.canStart,
     );
   });
 
@@ -230,7 +229,7 @@ export class QuestDetailContent {
       (participant) =>
         participant.member.role !== 'owner' && participant.member.status === 'accepted',
     ).length;
-    const pendingInvites = session
+    const activeInvites = session
       ? this.questsService
           .collaborativeMembers()
           .filter(
@@ -240,6 +239,10 @@ export class QuestDetailContent {
               ['accepted', 'pending'].includes(member.status),
           ).length
       : 0;
+    const pendingInvites = participants.filter(
+      (participant) =>
+        participant.member.role !== 'owner' && participant.member.status === 'pending',
+    ).length;
 
     return {
       session,
@@ -249,14 +252,21 @@ export class QuestDetailContent {
       inviteOptions,
       isOwner,
       isAcceptedParticipant,
-      canInvite: (!session || (isOwner && session.status === 'pending')) && pendingInvites < 5,
-      canStart: isOwner && (!session || session.status === 'pending'),
+      canInvite: (!session || (isOwner && session.status === 'pending')) && activeInvites < 5,
+      canStart:
+        isOwner &&
+        session?.status === 'pending' &&
+        acceptedInvites > 0 &&
+        pendingInvites === 0,
       canAcceptInvitation: Boolean(
         pendingInvitation &&
         this.findSessionForMember(pendingInvitation)?.status === 'pending' &&
         !this.isUserBusyInQuest(currentUserId, questId),
       ),
-      canLeave: isAcceptedParticipant && acceptedInvites >= 0,
+      canLeave:
+        isAcceptedParticipant &&
+        currentMember?.role !== 'owner' &&
+        session?.status === 'pending',
     };
   }
 
