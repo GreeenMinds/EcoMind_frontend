@@ -121,7 +121,7 @@
     {
       "id": 1,
       "name": "Mendoza Family",
-      "commitment": "Cuidar el medio ambiente para las futuras generaciones"
+      "commitment": "Create a better world."
     },
     {
       "id": 2,
@@ -1413,10 +1413,10 @@
     {
       "id": 16,
       "user_id": 1,
-      "quest_id": 16,
+      "quest_id": 13,
       "status": "in_progress",
       "progress": 0,
-      "start_date": "2026-06-13",
+      "start_date": "2026-06-16",
       "end_date": null,
       "collaborative_session_id": null
     }
@@ -1561,7 +1561,7 @@
     {
       "id": 22,
       "user_id": 1,
-      "activity_id": 16,
+      "activity_id": 13,
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": null
@@ -1680,16 +1680,6 @@
       "likes": 70,
       "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
-    },
-    {
-      "id": 4,
-      "community_id": 1,
-      "user_id": 1,
-      "content": "I completed the zero-waste challenge for two weeks. I significantly reduced the amount of trash I produced.",
-      "points": 40,
-      "likes": 0,
-      "image_url": null,
-      "created_at": "2026-06-16T05:51:35.541Z"
     }
   ],
   "community_goal": [
