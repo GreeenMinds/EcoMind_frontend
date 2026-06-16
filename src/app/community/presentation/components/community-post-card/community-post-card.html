@@ -1,5 +1,12 @@
 <article class="post-card">
-  <div class="avatar">{{ initials }}</div>
+  <app-profile-avatar
+    size="header"
+    [name]="authorName"
+    [userId]="authorId"
+    [avatarUrl]="avatarUrl"
+    [overlayUrl]="overlayUrl"
+    [overlayType]="overlayType">
+  </app-profile-avatar>
 
   <div class="post-content">
     <div class="post-header">
@@ -8,7 +15,13 @@
         <span>{{ 'community.post.justNow' | translate }}</span>
       </div>
 
-      <strong class="points">+{{ summary.post.points }} pts</strong>
+      <strong class="points">
+        @if (summary.post.points > 0) {
+          +{{ summary.post.points }} pts
+        } @else {
+          {{ 'community.post.noPoints' | translate }}
+        }
+      </strong>
     </div>
 
     <p>{{ summary.post.content }}</p>

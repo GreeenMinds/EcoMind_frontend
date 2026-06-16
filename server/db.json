@@ -1413,7 +1413,7 @@
     {
       "id": 16,
       "user_id": 1,
-      "quest_id": 15,
+      "quest_id": 14,
       "status": "in_progress",
       "progress": 0,
       "start_date": "2026-06-11",
@@ -1561,7 +1561,7 @@
     {
       "id": 22,
       "user_id": 1,
-      "activity_id": 15,
+      "activity_id": 14,
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": null
@@ -1680,6 +1680,16 @@
       "likes": 70,
       "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "user_id": 1,
+      "content": "I completed the zero-waste challenge for two weeks. I significantly reduced the amount of trash I produced.",
+      "points": 40,
+      "likes": 0,
+      "image_url": null,
+      "created_at": "2026-06-16T05:51:35.541Z"
     }
   ],
   "community_goal": [

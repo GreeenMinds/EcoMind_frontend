@@ -18,7 +18,10 @@
   } @else {
     @if (activeTab() === 'all') {
       <div class="community-overview">
-        <app-community-feed [posts]="filteredPosts()"></app-community-feed>
+        <app-community-feed
+          [posts]="filteredPosts()"
+          (createPost)="openPostForm()">
+        </app-community-feed>
 
         <aside class="community-side">
           <app-community-goal-card [goal]="communityService.activeGoal()"></app-community-goal-card>
@@ -50,6 +53,13 @@
       (close)="closeEventForm()"
       (create)="communityService.createEvent($event); closeEventForm()">
     </app-community-event-form-modal>
+  }
+
+  @if (showPostForm()) {
+    <app-community-post-form-modal
+      (close)="closePostForm()"
+      (create)="communityService.createPost($event); closePostForm()">
+    </app-community-post-form-modal>
   }
 
   @if (selectedEvent()) {

@@ -1,7 +1,13 @@
 <section class="feed">
   <header class="section-heading">
-    <h2>{{ 'community.title.feed' | translate }}</h2>
-    <p>{{ 'community.subtitle.feed' | translate }}</p>
+    <div>
+      <h2>{{ 'community.title.feed' | translate }}</h2>
+      <p>{{ 'community.subtitle.feed' | translate }}</p>
+    </div>
+
+    <button type="button" class="create-post" (click)="createPost.emit()">
+      {{ 'community.actions.createPost' | translate }}
+    </button>
   </header>
 
   <div class="post-list">
