@@ -1,0 +1,78 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 24px 0;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.modal-card {
+  position: relative;
+  z-index: 10001;
+  width: min(560px, calc(100vw - 32px));
+  display: grid;
+  gap: 18px;
+  padding: 34px;
+  border-radius: 28px;
+  background: white;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.optional {
+  color: #8b8b8b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: #eef0ff;
+  padding: 14px 18px;
+  outline: 0;
+}
+
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.primary,
+.secondary {
+  height: 56px;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary {
+  background: #68a94f;
+}
+
+.secondary {
+  background: #a6a6a6;
+}

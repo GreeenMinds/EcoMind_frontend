@@ -60,6 +60,10 @@ export class CommunityApi extends BaseApi {
     return this.postsEndpoint.getAll();
   }
 
+  createPost(post: CommunityPost): Observable<CommunityPost> {
+    return this.postsEndpoint.create(post);
+  }
+
   getCommunityGoals(): Observable<CommunityGoal[]> {
     return this.goalsEndpoint.getAll();
   }
