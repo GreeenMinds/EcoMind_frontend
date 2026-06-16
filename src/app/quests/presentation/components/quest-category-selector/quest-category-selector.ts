@@ -1,16 +1,16 @@
-import {NgStyle} from '@angular/common';
-import {Component, EventEmitter, Input, Output, inject, signal} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import { NgStyle } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-interface QuestCategoryConfig {
+type QuestCategoryConfig = {
   label: string;
   iconUrl: string;
   iconFallback: string;
   iconSize: number;
   backgroundColor: string;
   shadowColor: string;
-}
+};
 
 @Component({
   selector: 'app-quest-category-selector',
@@ -21,8 +21,8 @@ interface QuestCategoryConfig {
 export class QuestCategorySelector {
   private readonly translate = inject(TranslateService);
 
-  @Input({required: true}) categories: string[] = [];
-  @Input({required: true}) selectedCategory = '';
+  @Input({ required: true }) categories: string[] = [];
+  @Input({ required: true }) selectedCategory = '';
   @Output() categorySelected = new EventEmitter<string>();
 
   readonly categoryMenuOpen = signal(false);
@@ -76,15 +76,14 @@ export class QuestCategorySelector {
   }
 
   getCategoryConfig(category: string): QuestCategoryConfig {
-    const config =
-      this.categoryConfig[category] ?? {
-        label: category,
-        iconUrl: '',
-        iconFallback: '',
-        iconSize: 36,
-        backgroundColor: '#9aa3ad',
-        shadowColor: '#707984',
-      };
+    const config = this.categoryConfig[category] ?? {
+      label: category,
+      iconUrl: '',
+      iconFallback: '',
+      iconSize: 36,
+      backgroundColor: '#9aa3ad',
+      shadowColor: '#707984',
+    };
     const translationKey = `quests.categories.${category}`;
     const translatedLabel = this.translate.instant(translationKey);
 

@@ -1,7 +1,9 @@
-import {Component, computed, inject, signal} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {QuestSummary, QuestsService} from '../../../application/quests.service';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { QuestsService } from '../../../application/quests.service';
+import { Quest } from '../../../domain/model/quest.entity';
+import { QuestProgressService } from '../../../application/quest-progress.service';
 
 @Component({
   selector: 'app-quest-search-content',
@@ -11,9 +13,9 @@ import {QuestSummary, QuestsService} from '../../../application/quests.service';
 })
 export class QuestSearchContent {
   readonly questsService = inject(QuestsService);
+  private readonly questProgressService = inject(QuestProgressService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
-  private readonly questSummaries = this.questsService.getQuestSummaries();
 
   readonly searchInput = signal('');
   readonly searchTerm = signal('');
@@ -24,20 +26,21 @@ export class QuestSearchContent {
 
   readonly categories = computed(() => [
     'all',
-    ...this.getUniqueSortedValues(this.questSummaries().map((summary) => summary.quest.category)),
+    ...this.getUniqueSortedValues(this.questsService.quests().map((quest) => quest.category)),
   ]);
 
   readonly questTypes = computed(() => [
     'all',
-    ...this.getUniqueSortedValues(this.questSummaries().map((summary) => summary.quest.type)),
+    ...this.getUniqueSortedValues(this.questsService.quests().map((quest) => quest.type)),
   ]);
 
   readonly activityTypes = computed(() => [
     'all',
     ...this.getUniqueSortedValues(
-      this.questSummaries()
-        .filter((summary) => ['activities', 'collaborative'].includes(summary.quest.type))
-        .map((summary) => summary.themeType),
+      this.questsService
+        .quests()
+        .filter((quest) => ['activities', 'collaborative'].includes(quest.type))
+        .map((quest) => quest.theme_type),
     ),
   ]);
 
@@ -48,21 +51,23 @@ export class QuestSearchContent {
     const activityType = this.selectedActivityType();
     const age = this.getMinimumAgeValue();
 
-    return this.questSummaries().filter((summary) => {
+    return this.questsService.quests().filter((quest) => {
       const searchableText = [
-        summary.quest.title,
-        summary.quest.description,
-        summary.quest.category,
-        summary.quest.type,
-        summary.themeType,
-      ].join(' ').toLowerCase();
+        quest.title,
+        quest.description,
+        quest.category,
+        quest.type,
+        quest.theme_type,
+      ]
+        .join(' ')
+        .toLowerCase();
 
       return (
         (!term || searchableText.includes(term)) &&
-        (category === 'all' || summary.quest.category === category) &&
-        (questType === 'all' || summary.quest.type === questType) &&
-            (questType === 'minigame' || activityType === 'all' || summary.themeType === activityType) &&
-        summary.quest.age <= age
+        (category === 'all' || quest.category === category) &&
+        (questType === 'all' || quest.type === questType) &&
+        (questType === 'minigame' || activityType === 'all' || quest.theme_type === activityType) &&
+        quest.age <= age
       );
     });
   });
@@ -105,37 +110,39 @@ export class QuestSearchContent {
     this.minimumAge.set('');
   }
 
-  handleQuestAction(summary: QuestSummary): void {
-    if (summary.completed) {
-      this.questsService.startQuest(summary.quest.id);
-      if (['activities', 'collaborative'].includes(summary.quest.type)) {
-        void this.router.navigate(['/quests', summary.quest.id, 'started']);
+  handleQuestAction(quest: Quest): void {
+    if (quest.completed) {
+      this.questProgressService.addQuestProgress(quest.id);
+      if (['activities', 'collaborative'].includes(quest.type)) {
+        void this.router.navigate(['/quests', quest.id, 'started']);
         return;
       }
-      void this.router.navigate(['/quests', summary.quest.id]);
+      void this.router.navigate(['/quests', quest.id]);
       return;
     }
 
-    if (summary.started) {
-      void this.router.navigate(this.getQuestRoute(summary));
+    if (quest.started) {
+      void this.router.navigate(this.getQuestRoute(quest));
       return;
     }
 
-    this.questsService.startQuest(summary.quest.id);
-    if (['activities', 'collaborative'].includes(summary.quest.type)) {
-      void this.router.navigate(['/quests', summary.quest.id, 'started']);
+    this.questProgressService.addQuestProgress(quest.id);
+    if (['activities', 'collaborative'].includes(quest.type)) {
+      void this.router.navigate(['/quests', quest.id, 'started']);
       return;
     }
 
-    void this.router.navigate(['/quests', summary.quest.id]);
+    void this.router.navigate(['/quests', quest.id]);
   }
 
-  getActionLabel(summary: QuestSummary): string {
-    if (summary.completed) {
+  getActionLabel(quest: Quest): string {
+    if (quest.completed) {
       return this.translate.instant('quests.actions.startAgain');
     }
-    if (summary.started) {
-      return this.translate.instant(summary.quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest');
+    if (quest.started) {
+      return this.translate.instant(
+        quest.type === 'activities' ? 'quests.actions.viewActivity' : 'quests.actions.viewQuest',
+      );
     }
     return this.translate.instant('quests.actions.start');
   }
@@ -158,21 +165,21 @@ export class QuestSearchContent {
     return translated === key ? type : translated;
   }
 
-  getQuestAgeLabel(summary: QuestSummary): string {
-    return summary.quest.age > 0
-      ? this.translate.instant('common.yearsPlus', {count: summary.quest.age})
+  getQuestAgeLabel(quest: Quest): string {
+    return quest.age > 0
+      ? this.translate.instant('common.yearsPlus', { count: quest.age })
       : this.translate.instant('common.general');
   }
 
-  getRewardLabel(summary: QuestSummary): string {
-    if (summary.quest.reward_ecopoints > 0) {
-      return this.translate.instant('common.ecoPoints', {count: summary.quest.reward_ecopoints});
+  getRewardLabel(quest: Quest): string {
+    if (quest.reward_ecopoints > 0) {
+      return this.translate.instant('common.ecoPoints', { count: quest.reward_ecopoints });
     }
-    return this.translate.instant('common.gems', {count: summary.quest.reward_gems});
+    return this.translate.instant('common.gems', { count: quest.reward_gems });
   }
 
-  getQuestDisplayType(summary: QuestSummary): string {
-    return summary.quest.type === 'collaborative' ? 'collaborative' : summary.themeType;
+  getQuestDisplayType(quest: Quest): string {
+    return quest.type === 'collaborative' ? 'collaborative' : quest.theme_type;
   }
 
   getQuestTypeTheme(type: string): Record<string, string> {
@@ -194,11 +201,13 @@ export class QuestSearchContent {
       },
     };
 
-    return themes[type] ?? {
-      '--quest-bg': '#9aa3ad',
-      '--quest-shadow': '#707984',
-      '--quest-top-light': '#c8ced6',
-    };
+    return (
+      themes[type] ?? {
+        '--quest-bg': '#9aa3ad',
+        '--quest-shadow': '#707984',
+        '--quest-top-light': '#c8ced6',
+      }
+    );
   }
 
   getQuestTypeIcon(type: string): string {
@@ -211,11 +220,11 @@ export class QuestSearchContent {
     return icons[type] ?? '/assets/images/quests/checkbox.png';
   }
 
-  private getQuestRoute(summary: QuestSummary): (string | number)[] {
-    if (['activities', 'collaborative'].includes(summary.quest.type)) {
-      return ['/quests', summary.quest.id, 'activities'];
+  private getQuestRoute(quest: Quest): (string | number)[] {
+    if (['activities', 'collaborative'].includes(quest.type)) {
+      return ['/quests', quest.id, 'activities'];
     }
-    return ['/quests', summary.quest.id];
+    return ['/quests', quest.id];
   }
 
   private getMinimumAgeValue(): number {

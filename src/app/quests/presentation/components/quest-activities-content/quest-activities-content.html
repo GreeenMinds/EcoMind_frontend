@@ -1,7 +1,11 @@
 @if (detail(); as detail) {
   <section class="quest-activities">
     <header class="activity-route-header">
-      <a class="back-link" [routerLink]="['/quests', detail.quest.id]" [attr.aria-label]="'common.back' | translate">
+      <a
+        class="back-link"
+        [routerLink]="['/quests', detail.quest.id]"
+        [attr.aria-label]="'common.back' | translate"
+      >
         <span aria-hidden="true">&lsaquo;</span>
         {{ 'common.back' | translate }}
       </a>
@@ -19,18 +23,25 @@
             <input
               type="checkbox"
               [checked]="activityProgress.completed"
-              [disabled]="!detail.started || detail.completed"
+              [disabled]="!detail.quest.started || detail.quest.completed"
               (change)="toggleActivity(activityProgress.activity.id, $any($event.target).checked)"
-            >
+            />
             <span>{{ activityProgress.activity.description }}</span>
           </label>
         }
       </div>
 
       <div class="quest-progress">
-        <span>{{ 'quests.progressCount' | translate: {completed: detail.completedActivitiesCount, total: detail.activitiesCount} }}</span>
+        <span>{{
+          'quests.progressCount'
+            | translate
+              : {
+                  completed: detail.quest.completed_activities_count,
+                  total: detail.quest.activities_count,
+                }
+        }}</span>
         <div class="progress-track" aria-hidden="true">
-          <div class="progress-value" [style.width.%]="detail.progress"></div>
+          <div class="progress-value" [style.width.%]="detail.quest.progress"></div>
         </div>
       </div>
     } @else {
@@ -40,10 +51,10 @@
     <button
       type="button"
       class="primary-action"
-      [disabled]="!canCompleteQuest() || detail.completed"
+      [disabled]="!canCompleteQuest() || detail.quest.completed"
       (click)="completeQuest()"
     >
-      @if (detail.completed) {
+      @if (detail.quest.completed) {
         {{ 'quests.activityCompleted' | translate }}
       } @else {
         {{ 'quests.completeActivity' | translate }}

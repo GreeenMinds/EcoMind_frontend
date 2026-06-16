@@ -16,11 +16,13 @@
         (input)="updateSearchInput($event)"
         (keydown.enter)="applySearch()"
         [placeholder]="'quests.searchPlaceholder' | translate"
-      >
+      />
       <span class="search-icon">⌕</span>
     </label>
 
-    <button type="button" class="search-action" (click)="applySearch()">{{ 'common.search' | translate }}</button>
+    <button type="button" class="search-action" (click)="applySearch()">
+      {{ 'common.search' | translate }}
+    </button>
   </div>
 
   <div class="filter-row" [attr.aria-label]="'quests.filters' | translate">
@@ -63,10 +65,12 @@
         [value]="minimumAge()"
         (input)="updateAge($event)"
         placeholder="0"
-      >
+      />
     </label>
 
-    <button type="button" class="clear-action" (click)="clearFilters()">{{ 'common.clear' | translate }}</button>
+    <button type="button" class="clear-action" (click)="clearFilters()">
+      {{ 'common.clear' | translate }}
+    </button>
   </div>
 
   @if (questsService.loading()) {
@@ -77,44 +81,46 @@
     <p class="state-text">{{ 'quests.noneFound' | translate }}</p>
   } @else {
     <div class="result-list">
-      @for (summary of filteredQuests(); track summary.quest.id) {
+      @for (quest of filteredQuests(); track quest.id) {
         <article class="quest-result">
           <div class="result-copy">
             <div class="tag-row">
-              <span class="tag category" [class]="summary.quest.category">{{ getCategoryLabel(summary.quest.category) }}</span>
-              <span class="tag">{{ getQuestTypeLabel(summary.quest.type) }}</span>
-              <span class="tag">{{ 'common.minutes' | translate: {count: summary.quest.time} }}</span>
-              @if (summary.quest.age > 0) {
-                <span class="tag">{{ getQuestAgeLabel(summary) }}</span>
+              <span class="tag category" [class]="quest.category">{{
+                getCategoryLabel(quest.category)
+              }}</span>
+              <span class="tag">{{ getQuestTypeLabel(quest.type) }}</span>
+              <span class="tag">{{ 'common.minutes' | translate: { count: quest.time } }}</span>
+              @if (quest.age > 0) {
+                <span class="tag">{{ getQuestAgeLabel(quest) }}</span>
               }
-              @if (summary.quest.reward_ecopoints > 0) {
-                <span class="tag reward">{{ getRewardLabel(summary) }}</span>
+              @if (quest.reward_ecopoints > 0) {
+                <span class="tag reward">{{ getRewardLabel(quest) }}</span>
               }
-              @if (summary.quest.reward_gems > 0) {
-                <span class="tag gem-reward">{{ 'common.gems' | translate: {count: summary.quest.reward_gems} }}</span>
+              @if (quest.reward_gems > 0) {
+                <span class="tag gem-reward">{{
+                  'common.gems' | translate: { count: quest.reward_gems }
+                }}</span>
               }
             </div>
 
-            <h2>{{ summary.quest.title }}</h2>
-            <p>{{ summary.quest.description }}</p>
+            <h2>{{ quest.title }}</h2>
+            <p>{{ quest.description }}</p>
 
-            <button
-              type="button"
-              class="result-action"
-              (click)="handleQuestAction(summary)"
-            >
-              {{ getActionLabel(summary) }}
+            <button type="button" class="result-action" (click)="handleQuestAction(quest)">
+              {{ getActionLabel(quest) }}
             </button>
           </div>
 
           <div
             class="quest-type-card"
-            [style.--quest-bg]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-bg']"
-            [style.--quest-shadow]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-shadow']"
-            [style.--quest-top-light]="getQuestTypeTheme(getQuestDisplayType(summary))['--quest-top-light']"
+            [style.--quest-bg]="getQuestTypeTheme(getQuestDisplayType(quest))['--quest-bg']"
+            [style.--quest-shadow]="getQuestTypeTheme(getQuestDisplayType(quest))['--quest-shadow']"
+            [style.--quest-top-light]="
+              getQuestTypeTheme(getQuestDisplayType(quest))['--quest-top-light']
+            "
             aria-hidden="true"
           >
-            <img [src]="getQuestTypeIcon(getQuestDisplayType(summary))" alt="">
+            <img [src]="getQuestTypeIcon(getQuestDisplayType(quest))" alt="" />
           </div>
         </article>
       }

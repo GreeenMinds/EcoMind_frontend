@@ -1,9 +1,9 @@
 <section class="progress-grid">
   <article class="progress-panel">
-    <div class="progress-panel__label">Pendientes</div>
+    <div class="progress-panel__label">{{ 'profilePage.progress.pendingLabel' | translate }}</div>
     <div class="progress-panel__head">
-      <h2>Retos por completar</h2>
-      <span>{{ pending.length }} retos</span>
+      <h2>{{ 'profilePage.progress.pendingTitle' | translate }}</h2>
+      <span>{{ 'profilePage.progress.challengeCount' | translate: { count: pending.length } }}</span>
     </div>
 
     @if (visiblePending.length > 0) {
@@ -27,19 +27,23 @@
 
       @if (pending.length > 4) {
         <button class="progress-toggle" type="button" (click)="togglePending()">
-          {{ showAllPending() ? 'Ver menos' : 'Ver mas' }}
+          {{
+            showAllPending()
+              ? ('profilePage.progress.showLess' | translate)
+              : ('profilePage.progress.showMore' | translate)
+          }}
         </button>
       }
     } @else {
-      <p class="empty-copy">No hay misiones activas.</p>
+      <p class="empty-copy">{{ 'profilePage.progress.noActiveQuests' | translate }}</p>
     }
   </article>
 
   <article class="progress-panel">
-    <div class="progress-panel__label">Completadas</div>
+    <div class="progress-panel__label">{{ 'profilePage.progress.completedLabel' | translate }}</div>
     <div class="progress-panel__head">
-      <h2>Retos finalizados</h2>
-      <span>{{ completed.length }} retos</span>
+      <h2>{{ 'profilePage.progress.completedTitle' | translate }}</h2>
+      <span>{{ 'profilePage.progress.challengeCount' | translate: { count: completed.length } }}</span>
     </div>
 
     @if (visibleCompleted.length > 0) {
@@ -63,11 +67,15 @@
 
       @if (completed.length > 4) {
         <button class="progress-toggle" type="button" (click)="toggleCompleted()">
-          {{ showAllCompleted() ? 'Ver menos' : 'Ver mas' }}
+          {{
+            showAllCompleted()
+              ? ('profilePage.progress.showLess' | translate)
+              : ('profilePage.progress.showMore' | translate)
+          }}
         </button>
       }
     } @else {
-      <p class="empty-copy">Aun no se registran retos completados.</p>
+      <p class="empty-copy">{{ 'profilePage.progress.noCompletedQuests' | translate }}</p>
     }
   </article>
 </section>

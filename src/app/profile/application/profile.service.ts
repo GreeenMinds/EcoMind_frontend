@@ -19,7 +19,6 @@ export class ProfileService {
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
   readonly currentUserProfile = this.currentUserSignal.asReadonly();
 
-
   /**
    * Sincroniza el balance de gemas del usuario actual.
    */
@@ -60,6 +59,22 @@ export class ProfileService {
 
   updateUser(user: User): Observable<User> {
     return this.profileApi.updateUser(user);
+  }
+
+  awardQuestRewards(userId: number, gems: number, ecopoints: number, todayDate: string,): Observable<User> {
+    return this.profileApi.getUser(userId).pipe(
+      switchMap((user) => {
+        user.gem_balance += gems;
+        user.ecopoints += ecopoints;
+
+        if (user.last_streak_date !== todayDate) {
+          user.streak += 1;
+          user.last_streak_date = todayDate;
+        }
+
+        return this.profileApi.updateUser(user);
+      }),
+    );
   }
 
   getUserGemBalance(userId = this.currentUserId()): Observable<number> {
@@ -145,13 +160,15 @@ export class ProfileService {
   getCurrentUserFamilies(): Observable<Family[]> {
     return this.getCurrentUserFamilyUsers().pipe(
       switchMap((familyUsers) =>
-        this.profileApi.getFamilies().pipe(
-          map((families) =>
-            families.filter((family) =>
-              familyUsers.some((familyUser) => familyUser.family_id === family.id),
+        this.profileApi
+          .getFamilies()
+          .pipe(
+            map((families) =>
+              families.filter((family) =>
+                familyUsers.some((familyUser) => familyUser.family_id === family.id),
+              ),
             ),
           ),
-        ),
       ),
     );
   }

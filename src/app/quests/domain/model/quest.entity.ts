@@ -13,6 +13,14 @@ export class Quest implements BaseEntity {
   private _reward_ecopoints: number;
   private _expiration_date: string | null;
   private _time: number;
+  private _theme_type: string;
+  private _status: string;
+  private _progress: number;
+  private _started: boolean;
+  private _completed: boolean;
+  private _has_completed_attempt: boolean;
+  private _activities_count: number;
+  private _completed_activities_count: number;
 
   constructor(quest: {
     id: number;
@@ -27,6 +35,14 @@ export class Quest implements BaseEntity {
     reward_ecopoints: number;
     expiration_date: string | null;
     time: number;
+    theme_type?: string;
+    status?: string;
+    progress?: number;
+    started?: boolean;
+    completed?: boolean;
+    has_completed_attempt?: boolean;
+    activities_count?: number;
+    completed_activities_count?: number;
   }) {
     this._id = quest.id;
     this._minigame_id = quest.minigame_id;
@@ -40,6 +56,14 @@ export class Quest implements BaseEntity {
     this._reward_ecopoints = quest.reward_ecopoints;
     this._expiration_date = quest.expiration_date;
     this._time = quest.time;
+    this._theme_type = quest.theme_type ?? quest.type;
+    this._status = quest.status ?? 'pending';
+    this._progress = quest.progress ?? 0;
+    this._started = quest.started ?? false;
+    this._completed = quest.completed ?? false;
+    this._has_completed_attempt = quest.has_completed_attempt ?? false;
+    this._activities_count = quest.activities_count ?? 0;
+    this._completed_activities_count = quest.completed_activities_count ?? 0;
   }
 
   get id(): number {
@@ -136,5 +160,69 @@ export class Quest implements BaseEntity {
 
   set time(value: number) {
     this._time = value;
+  }
+
+  get theme_type(): string {
+    return this._theme_type;
+  }
+
+  set theme_type(value: string) {
+    this._theme_type = value;
+  }
+
+  get status(): string {
+    return this._status;
+  }
+
+  set status(value: string) {
+    this._status = value;
+  }
+
+  get progress(): number {
+    return this._progress;
+  }
+
+  set progress(value: number) {
+    this._progress = value;
+  }
+
+  get started(): boolean {
+    return this._started;
+  }
+
+  set started(value: boolean) {
+    this._started = value;
+  }
+
+  get completed(): boolean {
+    return this._completed;
+  }
+
+  set completed(value: boolean) {
+    this._completed = value;
+  }
+
+  get has_completed_attempt(): boolean {
+    return this._has_completed_attempt;
+  }
+
+  set has_completed_attempt(value: boolean) {
+    this._has_completed_attempt = value;
+  }
+
+  get activities_count(): number {
+    return this._activities_count;
+  }
+
+  set activities_count(value: number) {
+    this._activities_count = value;
+  }
+
+  get completed_activities_count(): number {
+    return this._completed_activities_count;
+  }
+
+  set completed_activities_count(value: number) {
+    this._completed_activities_count = value;
   }
 }

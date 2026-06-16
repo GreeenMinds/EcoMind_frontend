@@ -1,7 +1,16 @@
-import {Component, computed, effect, EventEmitter, input, Output, signal, untracked} from '@angular/core';
-import {TranslatePipe} from '@ngx-translate/core';
-import {QuestSummary} from '../../../application/quests.service';
-import {QuestCard} from '../quest-card/quest-card';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  input,
+  Output,
+  signal,
+  untracked,
+} from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Quest } from '../../../domain/model/quest.entity';
+import { QuestCard } from '../quest-card/quest-card';
 
 @Component({
   selector: 'app-quest-card-grid',
@@ -10,7 +19,7 @@ import {QuestCard} from '../quest-card/quest-card';
   styleUrl: './quest-card-grid.css',
 })
 export class QuestCardGrid {
-  readonly quests = input.required<QuestSummary[]>();
+  readonly quests = input.required<Quest[]>();
   readonly selectedQuestId = input<number | null>(null);
   readonly initialPage = input(0);
   @Output() questSelected = new EventEmitter<number>();
@@ -22,11 +31,13 @@ export class QuestCardGrid {
   readonly sortedQuests = computed(() =>
     [...this.quests()].sort((a, b) => {
       const statusDifference = this.getStatusOrder(a) - this.getStatusOrder(b);
-      return statusDifference === 0 ? a.quest.id - b.quest.id : statusDifference;
+      return statusDifference === 0 ? a.id - b.id : statusDifference;
     }),
   );
 
-  readonly pageCount = computed(() => Math.max(1, Math.ceil(this.sortedQuests().length / this.pageSize)));
+  readonly pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.sortedQuests().length / this.pageSize)),
+  );
 
   readonly questPages = computed(() => {
     const quests = this.sortedQuests();
@@ -36,8 +47,11 @@ export class QuestCardGrid {
     });
   });
 
-  readonly pages = computed(() => Array.from({length: this.pageCount()}, (_, index) => index));
-  readonly trackTransform = computed(() => `translateX(calc(-${this.currentPage() * 100}% - ${this.currentPage()} * var(--page-gap)))`);
+  readonly pages = computed(() => Array.from({ length: this.pageCount() }, (_, index) => index));
+  readonly trackTransform = computed(
+    () =>
+      `translateX(calc(-${this.currentPage() * 100}% - ${this.currentPage()} * var(--page-gap)))`,
+  );
 
   private dragStartX: number | null = null;
   private readonly dragThreshold = 48;
@@ -112,11 +126,11 @@ export class QuestCardGrid {
     this.dragStartX = null;
   }
 
-  private getStatusOrder(summary: QuestSummary): number {
-    if (summary.started && !summary.completed) {
+  private getStatusOrder(quest: Quest): number {
+    if (quest.started && !quest.completed) {
       return 0;
     }
-    if (summary.completed) {
+    if (quest.completed) {
       return 2;
     }
     return 1;

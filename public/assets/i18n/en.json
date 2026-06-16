@@ -240,5 +240,115 @@
       "megaBundleAvatars": "3 Exclusive Avatars",
       "megaBundleMultiplier": "3x Multiplier for one week"
     }
+  },
+  "profilePage": {
+    "hero": {
+      "eyebrow": "EcoMind Profile",
+      "totalPoints": "Total Points",
+      "friends": "Friends",
+      "editProfile": "Edit Profile",
+      "shareProfile": "Share Profile",
+      "removeFriend": "Remove friend"
+    },
+    "tabs": {
+      "ariaLabel": "Profile sections",
+      "summary": "Summary",
+      "family": "Family",
+      "progress": "View Progress",
+      "friends": "Friends"
+    },
+    "common": {
+      "loadingProfile": "Loading profile...",
+      "accept": "Accept",
+      "reject": "Reject",
+      "viewProfile": "View profile",
+      "remove": "Remove"
+    },
+    "summary": {
+      "selfCommitment": "My commitment",
+      "memberCommitment": "{{name}}'s commitment",
+      "updated": "Updated {{relative}}",
+      "edit": "Edit",
+      "achievements": "Badges and Achievements",
+      "registeredCount": "{{count}} registered",
+      "currentStreak": "Current Streak",
+      "defaultCommunity": "EcoMind Community",
+      "familyRole": "Family role",
+      "friendshipRelation": "Friendship status",
+      "inCommon": "{{count}} mutual",
+      "emptyMemberCommitment": "This member has not added an EcoMind commitment yet.",
+      "emptyMemberAchievements": "This profile does not have any recorded badges yet.",
+      "emptyFriendCommitment": "This friend has not added a commitment yet.",
+      "emptyFriendAchievements": "This friend does not have any recorded badges yet.",
+      "noJoinDate": "No join date",
+      "joined": "Joined {{relative}}"
+    },
+    "progress": {
+      "pendingLabel": "Pending",
+      "pendingTitle": "Challenges to complete",
+      "completedLabel": "Completed",
+      "completedTitle": "Finished challenges",
+      "challengeCount": "{{count}} challenges",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "noActiveQuests": "There are no active quests.",
+      "noCompletedQuests": "No completed challenges have been recorded yet."
+    },
+    "family": {
+      "receivedInvitations": "Received invitations",
+      "noFamilyTitle": "No family registered",
+      "familyNamePlaceholder": "Type your family name",
+      "createFamily": "Create family",
+      "adultOnlyCreate": "Only an adult user can create a family.",
+      "primaryGroup": "Primary group",
+      "commitmentLabel": "Family commitment",
+      "noCommitment": "Your family does not have a recorded commitment yet.",
+      "editCommitment": "Edit commitment",
+      "leaveFamily": "Leave family",
+      "inviteTitle": "Invite to family",
+      "searchUserPlaceholder": "Search a user by name",
+      "invite": "Invite",
+      "noMatches": "No matches were found for that search.",
+      "searchHint": "Type a name to see matches and send an invitation.",
+      "noUsersToInvite": "There are no users available to invite.",
+      "sentInvitations": "Sent invitations",
+      "membersTitle": "Family Members ({{count}})",
+      "noMembers": "There are no family members associated with this profile."
+    },
+    "friends": {
+      "eyebrow": "Community",
+      "title": "Friends network",
+      "subtitle": "Registered contacts.",
+      "receivedRequests": "Received requests",
+      "sendRequestTitle": "Send a friend request",
+      "searchUserPlaceholder": "Search a user by name",
+      "sendRequest": "Send request",
+      "noMatches": "No matches were found for that search.",
+      "searchHint": "Type a name to see matches in real time.",
+      "noUsersToInvite": "There are no users available to send a request to.",
+      "listTitle": "Friends ({{count}})",
+      "noFriends": "You do not have accepted friends yet."
+    },
+    "modal": {
+      "ariaLabel": "Edit commitment",
+      "myCommitmentTitle": "My Commitment",
+      "familyCommitmentTitle": "Family commitment",
+      "selfPlaceholder": "Write the sustainable commitment you want to show on your profile here",
+      "familyPlaceholder": "Write the sustainable commitment that will represent the whole family here",
+      "saveCommitment": "Save commitment",
+      "deleteCommitment": "Delete commitment"
+    },
+    "role": {
+      "parent": "Parent",
+      "child": "Child"
+    },
+    "relative": {
+      "justNow": "just now",
+      "today": "today",
+      "dayAgo": "1 day ago",
+      "daysAgo": "{{count}} days ago",
+      "monthAgo": "1 month ago",
+      "monthsAgo": "{{count}} months ago"
+    }
   }
 }
