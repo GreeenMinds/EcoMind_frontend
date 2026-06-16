@@ -1,6 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, retry } from 'rxjs';
+import { computed, inject, Injectable, OnDestroy, Signal, signal } from '@angular/core';
 import { QuestDailyService } from './quest-daily.service';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { Friend } from '../../profile/domain/model/friend.entity';
@@ -19,8 +17,7 @@ import { QuestsApi } from '../infrastructure/quests-api';
 @Injectable({
   providedIn: 'root',
 })
-export class QuestsService {
-  private readonly destroyRef = inject(DestroyRef);
+export class QuestsService implements OnDestroy {
   readonly questsSignal = signal<Quest[]>([]);
 
   readonly questsUserSignal = signal<QuestUser[]>([]);
@@ -76,9 +73,10 @@ export class QuestsService {
     this.loadFriends();
 
     this.questDailyService.start(this);
-    this.destroyRef.onDestroy(() => {
-      this.questDailyService.stop();
-    });
+  }
+  
+  ngOnDestroy(): void {
+    this.questDailyService.stop();
   }
 
   selectListCategory(category: string): void {
@@ -186,17 +184,18 @@ export class QuestsService {
     const acceptedUserIds = this.collaborativeMembers()
       .filter((member) => member.session_id === sessionId && member.status === 'accepted')
       .map((member) => member.user_id);
-    return this.activitiesUser()
-      .filter(
-        (activityUser) =>
-          activityUser.activity_id === activityId &&
-          activityUser.collaborative_session_id === sessionId &&
-          acceptedUserIds.includes(activityUser.user_id),
-      )
-      .reduce(
-        (highestProgress, activityUser) => Math.max(highestProgress, activityUser.progress),
-        0,
-      );
+    let highestProgress = 0;
+    this.activitiesUser().forEach((activityUser) => {
+      if (
+        activityUser.activity_id === activityId &&
+        activityUser.collaborative_session_id === sessionId &&
+        acceptedUserIds.includes(activityUser.user_id) &&
+        activityUser.progress > highestProgress
+      ) {
+        highestProgress = activityUser.progress;
+      }
+    });
+    return highestProgress;
   }
 
   getCurrentProgressSessionId(questId: number): number | null {
@@ -224,7 +223,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getQuests()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (quests) => {
           this.questsSignal.set(quests);
@@ -242,7 +240,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getQuestsUser()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (questsUser) => {
           this.questsUserSignal.set(questsUser);
@@ -260,7 +257,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getMinigames()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (minigames) => {
           this.minigamesSignal.set(minigames);
@@ -278,7 +274,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getMinigameAttempts()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (attempts) => {
           this.minigameAttemptsSignal.set(attempts);
@@ -296,7 +291,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getActivities()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (activities) => {
           this.activitiesSignal.set(activities);
@@ -314,7 +308,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getActivitiesUser()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (activitiesUser) => {
           this.activitiesUserSignal.set(activitiesUser);
@@ -332,7 +325,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getCollaborativeQuestSessions()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (sessions) => {
           this.collaborativeSessionsSignal.set(sessions);
@@ -350,7 +342,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.questsApi
       .getCollaborativeQuestMembers()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (members) => {
           this.collaborativeMembersSignal.set(members);
@@ -368,7 +359,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.profileApi
       .getUsers()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (users) => {
           this.usersSignal.set(users);
@@ -386,7 +376,6 @@ export class QuestsService {
     this.errorSignal.set(null);
     this.profileApi
       .getFriends()
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (friends) => {
           this.friendsSignal.set(friends);
