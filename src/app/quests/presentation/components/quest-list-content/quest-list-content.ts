@@ -1,8 +1,8 @@
-import {Component, computed, inject} from '@angular/core';
-import {Router} from '@angular/router';
-import {QuestsService} from '../../../application/quests.service';
-import {QuestCardGrid} from '../quest-card-grid/quest-card-grid';
-import {QuestCategorySelector} from '../quest-category-selector/quest-category-selector';
+import { Component, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { QuestsService } from '../../../application/quests.service';
+import { QuestCardGrid } from '../quest-card-grid/quest-card-grid';
+import { QuestCategorySelector } from '../quest-category-selector/quest-category-selector';
 
 @Component({
   selector: 'app-quest-list-content',
@@ -20,9 +20,13 @@ export class QuestListContent {
 
   readonly filteredQuests = computed(() =>
     this.questsService
-      .getQuestSummaries()()
-      .filter((summary) => summary.quest.category === this.selectedCategory())
-      .filter((summary) => this.selectedCategory() !== 'daily_quest' || !this.isFutureDailyQuest(summary.quest.expiration_date)),
+      .quests()
+      .filter((quest) => quest.category === this.selectedCategory())
+      .filter(
+        (quest) =>
+          this.selectedCategory() !== 'daily_quest' ||
+          !this.isFutureDailyQuest(quest.expiration_date),
+      ),
   );
 
   selectCategory(category: string): void {
@@ -38,6 +42,8 @@ export class QuestListContent {
   }
 
   private isFutureDailyQuest(expirationDate: string | null): boolean {
-    return expirationDate !== null && expirationDate.slice(0, 10) > new Date().toISOString().slice(0, 10);
+    return (
+      expirationDate !== null && expirationDate.slice(0, 10) > new Date().toISOString().slice(0, 10)
+    );
   }
 }

@@ -1,9 +1,9 @@
-import {Component, computed, inject} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {TranslatePipe} from '@ngx-translate/core';
-import {map} from 'rxjs';
-import {QuestsService} from '../../../application/quests.service';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { map } from 'rxjs';
+import { QuestsService } from '../../../application/quests.service';
 
 @Component({
   selector: 'app-quest-completed-content',
@@ -18,10 +18,11 @@ export class QuestCompletedContent {
   readonly imageSrc = '/assets/images/quests/activity-completed.png';
   readonly questId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
-    {initialValue: Number(this.route.snapshot.paramMap.get('questId'))},
+    { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
   );
   readonly detail = computed(() => {
     const id = this.questId();
-    return Number.isFinite(id) ? this.questsService.getQuestDetail(id)() : undefined;
+    const quest = Number.isFinite(id) ? this.questsService.getQuestById(id)() : undefined;
+    return quest ? { quest } : undefined;
   });
 }
