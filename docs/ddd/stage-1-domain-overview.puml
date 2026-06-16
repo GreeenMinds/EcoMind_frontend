@@ -1,0 +1,456 @@
+@startuml
+title EcoMind - Stage 1: Complete Domain Class Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+class Preference {
+  -preferenceId: long
+  -theme: Theme
+  -language: Language
+  +updateTheme(theme: Theme): void
+  +updateLanguage(language: Language): void
+  +enableNotifications(): void
+}
+
+class Notification {
+  -notificationId: long
+  -name: String
+  -type: NotificationType
+  -active: boolean
+  +send(): void
+  +activate(): void
+  +deactivate(): void
+}
+
+enum Theme {
+  ECO_GREEN
+  ECO_DARK
+  ECO_RED
+  ECO_LIGHT
+}
+
+enum Language {
+  ENGLISH
+  SPANISH
+}
+
+enum NotificationType {
+  EMAIL
+  PUSH
+  IN_APP
+}
+
+class AccessManager {
+  +signIn(): void
+  +validateCredentials(): void
+  +closeSession(): void
+  +registerAccount(): void
+}
+
+class Session {
+  -sessionId: long
+  -createdAt: DateTime
+  -expiresAt: DateTime
+  +isActive(): boolean
+  +invalidate(): void
+}
+
+class SocialAccount {
+  -provider: String
+  -externalAccountId: String
+  +connect(): void
+}
+
+class UserRepository {
+  +findByUsername(username: String): Object
+  +saveSession(session: Session): void
+  +invalidateSession(): void
+}
+
+class Profile {
+  -profileId: long
+  -displayName: String
+  -registeredAt: Date
+  +showSummary(): String
+  +updateEcoPoints(value: int): void
+}
+
+class Streak {
+  -consecutiveDays: int
+  -lastActivityDate: Date
+  -active: boolean
+  +increment(): void
+  +restart(): void
+}
+
+interface Alert {
+  +notifyActiveStreak(): void
+  +notifyStreakAtRisk(): void
+}
+
+class StreakState {
+  +evaluate(streak: Streak): void
+  +setActive(): void
+  +setLost(): void
+}
+
+class Family {
+  -familyId: long
+  -name: String
+  -memberCount: int
+  +addMember(): void
+  +removeMember(): void
+}
+
+class FamilyMembership {
+  -familyMembershipId: long
+  -role: String
+  -joinedAt: DateTime
+  +assignRole(role: String): void
+}
+
+class FamilyInvitation {
+  -familyInvitationId: long
+  -status: InvitationStatus
+  -invitedRole: InvitationRole
+  +accept(): void
+  +reject(): void
+}
+
+class Friend {
+  -friendshipId: long
+  -status: FriendshipStatus
+  +acceptRequest(): void
+  +block(): void
+}
+
+class UserAchievement {
+  -userAchievementId: long
+  -awardedAt: Date
+  +unlock(): void
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum InvitationRole {
+  PARENT
+  CHILD
+}
+
+class Community {
+  -communityId: long
+  -name: String
+  -memberCount: int
+  -location: String
+  +addMember(): void
+  +createEvent(): void
+}
+
+class CommunityMember {
+  -communityMemberId: long
+  -name: String
+  -ecoPoints: int
+  +showCommunitySummary(): String
+}
+
+class Achievement {
+  -achievementId: long
+  -name: String
+  -type: String
+  +showDetails(): String
+}
+
+class CommunityAchievement {
+  -communityAchievementId: long
+  -awardedAt: Date
+  +assignToCommunity(): void
+}
+
+class CommunityGoal {
+  -communityGoalId: long
+  -title: String
+  -progress: int
+  -target: int
+  +updateProgress(value: int): void
+}
+
+class CommunityPost {
+  -communityPostId: long
+  -content: String
+  -likes: int
+  +publish(): void
+}
+
+class Event {
+  -eventId: long
+  -name: String
+  -date: Date
+  -capacity: int
+  +publish(): void
+  +finish(): void
+}
+
+class EventRegistration {
+  -eventRegistrationId: long
+  -registrationType: String
+  -status: RegistrationStatus
+  +confirm(): void
+  +cancel(): void
+}
+
+class MapLocation {
+  -mapLocationId: long
+  -latitude: double
+  -longitude: double
+  +generateRoute(): String
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  CANCELLED
+  WAITING
+}
+
+class Ranking {
+  -rankingId: long
+  -type: RankingType
+  -generatedAt: Date
+  +updateRanking(): void
+}
+
+class RankingPosition {
+  -position: int
+  -score: int
+  -updatedOn: Date
+}
+
+enum RankingType {
+  LOCAL
+  GLOBAL
+  FAMILY
+}
+
+class Quest {
+  -questId: long
+  -title: String
+  -category: String
+  -rewardEcoPoints: int
+  +start(): void
+  +complete(): void
+}
+
+class QuestProgress {
+  -questProgressId: long
+  -status: String
+  -progress: int
+  +advance(value: int): void
+}
+
+class Activity {
+  -activityId: long
+  -description: String
+  -orderNumber: int
+  +showInstructions(): String
+}
+
+class ActivityProgress {
+  -activityProgressId: long
+  -progress: int
+  +updateProgress(value: int): void
+}
+
+class Minigame {
+  -minigameId: long
+  -name: String
+  -url: String
+  +launch(): void
+}
+
+class MinigameAttempt {
+  -minigameAttemptId: long
+  -score: int
+  -status: String
+  +finish(): void
+}
+
+class CollaborativeQuestSession {
+  -collaborativeQuestSessionId: long
+  -status: String
+  +startSession(): void
+  +completeSession(): void
+}
+
+class CollaborativeQuestMember {
+  -collaborativeQuestMemberId: long
+  -role: String
+  -status: String
+  +acceptInvitation(): void
+}
+
+class Store {
+  -storeId: long
+  -name: String
+  -address: String
+  +addProduct(product: Product): void
+  +listProducts(): List<Product>
+}
+
+class Product {
+  -productId: long
+  -name: String
+  -price: double
+  -stock: int
+  +updateStock(quantity: int): void
+}
+
+class Cosmetic {
+  -skinType: String
+  +getSkinType(): String
+}
+
+class Multiplier {
+  -multiplierFactor: number
+  -durationMinutes: int
+  +getDuration(): int
+}
+
+class PaymentMethod {
+  -type: String
+  -status: String
+  +activate(): void
+  +deactivate(): void
+}
+
+class GemWallet {
+  -gemWalletId: long
+  -amount: int
+  +purchaseGems(): void
+  +useGems(): void
+}
+
+class PurchaseHistory {
+  -purchaseHistoryId: long
+  -date: Date
+  -total: double
+  +calculateTotal(): double
+}
+
+class GemPackage {
+  -gemPackageId: long
+  -name: String
+  -gemAmount: int
+  -realPrice: double
+}
+
+class GemPurchase {
+  -gemPurchaseId: long
+  -amountPaid: double
+  -paymentStatus: String
+  +confirmPayment(): void
+}
+
+class GemMovement {
+  -gemMovementId: long
+  -type: String
+  -amount: int
+  +registerMovement(): void
+}
+
+class UserCosmetic {
+  -userCosmeticId: long
+  -equipped: boolean
+  +equip(): void
+}
+
+class UserMultiplier {
+  -userMultiplierId: long
+  -startDate: DateTime
+  -endDate: DateTime
+  +activate(): void
+}
+
+Preference "1" --> "0..*" Notification
+Preference ..> Theme
+Preference ..> Language
+Notification ..> NotificationType
+
+AccessManager "1" --> "0..*" Session
+AccessManager ..> UserRepository
+AccessManager ..> SocialAccount
+
+Profile *-- "1" Streak
+Profile *-- "0..*" UserAchievement
+Profile --> "0..1" Family
+Profile --> "0..*" Friend
+Streak o--> Alert
+StreakState ..> Alert
+Family "1" --> "0..*" FamilyMembership
+Family "1" --> "0..*" FamilyInvitation
+Friend ..> FriendshipStatus
+FamilyInvitation ..> InvitationStatus
+FamilyInvitation ..> InvitationRole
+
+Community "1" --> "0..*" CommunityMember
+Community "1" --> "0..*" CommunityAchievement
+Community "1" --> "0..*" CommunityGoal
+Community "1" --> "0..*" CommunityPost
+Community "1" --> "0..*" Event
+CommunityAchievement --> Achievement
+Event *-- "1" MapLocation
+Event "1" --> "0..*" EventRegistration
+EventRegistration ..> RegistrationStatus
+
+Ranking *-- "1..*" RankingPosition
+Ranking ..> RankingType
+
+Quest "1" --> "0..*" Activity
+Quest "1" --> "0..*" QuestProgress
+Quest --> "0..1" Minigame
+Activity "1" --> "0..*" ActivityProgress
+Minigame "1" --> "0..*" MinigameAttempt
+Quest "1" --> "0..*" CollaborativeQuestSession
+CollaborativeQuestSession "1" --> "1..*" CollaborativeQuestMember
+
+Store "1" --> "1..*" Product
+Store "1" --> "1..*" PaymentMethod
+Store "1" --> "0..*" GemWallet
+Store "1" --> "0..*" PurchaseHistory
+Product <|-- Cosmetic
+Product <|-- Multiplier
+PurchaseHistory --> Product
+GemPurchase --> GemPackage
+UserCosmetic --> Cosmetic
+UserMultiplier --> Multiplier
+
+Preference ..> Profile
+Session ..> Profile
+CommunityMember ..> Profile
+CommunityPost ..> Profile
+EventRegistration ..> Profile
+EventRegistration ..> Family
+RankingPosition ..> Profile
+QuestProgress ..> Profile
+ActivityProgress ..> Profile
+CollaborativeQuestSession ..> Profile
+CollaborativeQuestMember ..> Profile
+GemWallet ..> Profile
+PurchaseHistory ..> Profile
+GemPurchase ..> Profile
+GemMovement ..> Profile
+UserCosmetic ..> Profile
+UserMultiplier ..> Profile
+
+@enduml

@@ -1,0 +1,541 @@
+@startuml
+title EcoMind - Stage 3: DDD Bounded Contexts with Value Objects
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+skinparam class {
+  BackgroundColor white
+  BackgroundColor<<Aggregate>> #FFD6D6
+  BackgroundColor<<Entity>> #D7E8FF
+  BackgroundColor<<ValueObject>> #FFF4B8
+  BorderColor Black
+  BorderColor<<Aggregate>> #D9534F
+  BorderColor<<Entity>> #5B8DEF
+  BorderColor<<ValueObject>> #C8A200
+}
+
+package "Settings BC" #FFF2A8 {
+  class Preference <<Aggregate>> {
+    -preferenceId: long
+    -theme: Theme
+    -language: Language
+    +updateTheme(theme: Theme): void
+    +updateLanguage(language: Language): void
+    +enableNotifications(): void
+    +disableNotifications(): void
+  }
+
+  class Notification <<Entity>> {
+    -notificationId: long
+    -name: String
+    -type: NotificationType
+    -active: boolean
+    +send(): void
+    +activate(): void
+    +deactivate(): void
+  }
+
+  class "UserId" as SettingsUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  enum Theme {
+    ECO_GREEN
+    ECO_DARK
+    ECO_RED
+    ECO_LIGHT
+  }
+
+  enum Language {
+    ENGLISH
+    SPANISH
+  }
+
+  enum NotificationType {
+    EMAIL
+    PUSH
+    IN_APP
+  }
+
+  Preference "1" --> "0..*" Notification
+  Preference --> SettingsUserId
+  Preference ..> Theme
+  Preference ..> Language
+  Notification ..> NotificationType
+}
+
+package "Community BC" #DFF5D8 {
+  class Community <<Aggregate>> {
+    -communityId: long
+    -name: String
+    -memberCount: int
+    -location: String
+    +addMember(): void
+    +createEvent(): void
+    +grantAchievement(): void
+  }
+
+  class Event <<Aggregate>> {
+    -eventId: long
+    -name: String
+    -date: Date
+    -capacity: int
+    +publish(): void
+    +finish(): void
+  }
+
+  class CommunityMember <<Entity>> {
+    -communityMemberId: long
+    -name: String
+    -ecoPoints: int
+    +showCommunitySummary(): String
+  }
+
+  class Achievement <<Entity>> {
+    -achievementId: long
+    -name: String
+    -type: String
+    +showDetails(): String
+  }
+
+  class CommunityAchievement <<Entity>> {
+    -communityAchievementId: long
+    -awardedAt: Date
+    +assignToCommunity(): void
+  }
+
+  class CommunityGoal <<Entity>> {
+    -communityGoalId: long
+    -title: String
+    -progress: int
+    -target: int
+    +updateProgress(value: int): void
+  }
+
+  class CommunityPost <<Entity>> {
+    -communityPostId: long
+    -content: String
+    -likes: int
+    +publish(): void
+  }
+
+  class EventRegistration <<Entity>> {
+    -eventRegistrationId: long
+    -registrationType: String
+    -status: RegistrationStatus
+    +confirm(): void
+    +cancel(): void
+  }
+
+  class MapLocation <<Entity>> {
+    -mapLocationId: long
+    -latitude: double
+    -longitude: double
+    +generateRoute(): String
+  }
+
+  class "UserId" as CommunityUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  class "FamilyId" as CommunityFamilyId <<ValueObject>> {
+    -familyId: long
+  }
+
+  enum RegistrationStatus {
+    REGISTERED
+    CANCELLED
+    WAITING
+  }
+
+  Community "1" --> "0..*" CommunityMember
+  Community "1" --> "0..*" CommunityAchievement
+  Community "1" --> "0..*" CommunityGoal
+  Community "1" --> "0..*" CommunityPost
+  Community "1" --> "0..*" Event
+  CommunityAchievement --> Achievement
+  CommunityMember --> CommunityUserId
+  CommunityPost --> CommunityUserId
+  Event *-- "1" MapLocation
+  Event "1" --> "0..*" EventRegistration
+  EventRegistration --> CommunityUserId
+  EventRegistration --> CommunityFamilyId
+  EventRegistration ..> RegistrationStatus
+}
+
+package "IAM BC" #DCEBFF {
+  class Session <<Aggregate>> {
+    -sessionId: long
+    -createdAt: DateTime
+    -expiresAt: DateTime
+    +isActive(): boolean
+    +invalidate(): void
+  }
+
+  class AccessManager <<Entity>> {
+    +signIn(): void
+    +validateCredentials(): void
+    +closeSession(): void
+    +registerAccount(): void
+  }
+
+  class SocialAccount <<Entity>> {
+    -provider: String
+    -externalAccountId: String
+    +connect(): void
+  }
+
+  class UserRepository <<Entity>> {
+    +findByUsername(username: String): Object
+    +saveSession(session: Session): void
+    +invalidateSession(): void
+  }
+
+  class "UserId" as IamUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  Session --> IamUserId
+  AccessManager "1" --> "0..*" Session
+  AccessManager ..> UserRepository
+  AccessManager ..> SocialAccount
+}
+
+package "Profile BC" #FFD9D9 {
+  class Profile <<Aggregate>> {
+    -profileId: long
+    -displayName: String
+    -registeredAt: Date
+    +showSummary(): String
+    +updateEcoPoints(value: int): void
+  }
+
+  class Streak <<Entity>> {
+    -consecutiveDays: int
+    -lastActivityDate: Date
+    -active: boolean
+    +increment(): void
+    +restart(): void
+  }
+
+  interface Alert {
+    +notifyActiveStreak(): void
+    +notifyStreakAtRisk(): void
+  }
+
+  class StreakState <<Entity>> {
+    +evaluate(streak: Streak): void
+    +setActive(): void
+    +setLost(): void
+  }
+
+  class Family <<Entity>> {
+    -familyId: long
+    -name: String
+    -memberCount: int
+    +addMember(): void
+    +removeMember(): void
+  }
+
+  class FamilyMembership <<Entity>> {
+    -familyMembershipId: long
+    -role: String
+    -joinedAt: DateTime
+    +assignRole(role: String): void
+  }
+
+  class FamilyInvitation <<Entity>> {
+    -familyInvitationId: long
+    -status: InvitationStatus
+    -invitedRole: InvitationRole
+    +accept(): void
+    +reject(): void
+  }
+
+  class Friend <<Entity>> {
+    -friendshipId: long
+    -status: FriendshipStatus
+    +acceptRequest(): void
+    +block(): void
+  }
+
+  class UserAchievement <<Entity>> {
+    -userAchievementId: long
+    -awardedAt: Date
+    +unlock(): void
+  }
+
+  class "UserId" as ProfileUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  class "AchievementId" as ProfileAchievementId <<ValueObject>> {
+    -achievementId: long
+  }
+
+  class "FriendId" as ProfileFriendId <<ValueObject>> {
+    -friendId: long
+  }
+
+  enum FriendshipStatus {
+    PENDING
+    ACCEPTED
+    BLOCKED
+  }
+
+  enum InvitationStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+  }
+
+  enum InvitationRole {
+    PARENT
+    CHILD
+  }
+
+  Profile --> ProfileUserId
+  Profile *-- "1" Streak
+  Profile *-- "0..*" UserAchievement
+  Profile --> "0..1" Family
+  Profile --> "0..*" Friend
+  Streak o--> Alert
+  StreakState ..> Alert
+  Family "1" --> "0..*" FamilyMembership
+  Family "1" --> "0..*" FamilyInvitation
+  UserAchievement --> ProfileAchievementId
+  Friend --> ProfileFriendId
+  Friend ..> FriendshipStatus
+  FamilyInvitation ..> InvitationStatus
+  FamilyInvitation ..> InvitationRole
+}
+
+package "Ranking BC" #DAD7FF {
+  class Ranking <<Aggregate>> {
+    -rankingId: long
+    -type: RankingType
+    -generatedAt: Date
+    +updateRanking(): void
+  }
+
+  class RankingPosition <<Entity>> {
+    -position: int
+    -score: int
+    -updatedOn: Date
+  }
+
+  class "UserId" as RankingUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  enum RankingType {
+    LOCAL
+    GLOBAL
+    FAMILY
+  }
+
+  Ranking *-- "1..*" RankingPosition
+  RankingPosition --> RankingUserId
+  Ranking ..> RankingType
+}
+
+package "Quests BC" #D9D9D9 {
+  class Quest <<Aggregate>> {
+    -questId: long
+    -title: String
+    -category: String
+    -rewardEcoPoints: int
+    +start(): void
+    +complete(): void
+  }
+
+  class CollaborativeQuestSession <<Aggregate>> {
+    -collaborativeQuestSessionId: long
+    -status: String
+    +startSession(): void
+    +completeSession(): void
+  }
+
+  class QuestProgress <<Entity>> {
+    -questProgressId: long
+    -status: String
+    -progress: int
+    +advance(value: int): void
+  }
+
+  class Activity <<Entity>> {
+    -activityId: long
+    -description: String
+    -orderNumber: int
+    +showInstructions(): String
+  }
+
+  class ActivityProgress <<Entity>> {
+    -activityProgressId: long
+    -progress: int
+    +updateProgress(value: int): void
+  }
+
+  class Minigame <<Entity>> {
+    -minigameId: long
+    -name: String
+    -url: String
+    +launch(): void
+  }
+
+  class MinigameAttempt <<Entity>> {
+    -minigameAttemptId: long
+    -score: int
+    -status: String
+    +finish(): void
+  }
+
+  class CollaborativeQuestMember <<Entity>> {
+    -collaborativeQuestMemberId: long
+    -role: String
+    -status: String
+    +acceptInvitation(): void
+  }
+
+  class "UserId" as QuestUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  class "MinigameId" as QuestMinigameId <<ValueObject>> {
+    -minigameId: long
+  }
+
+  Quest "1" --> "0..*" Activity
+  Quest "1" --> "0..*" QuestProgress
+  Quest --> QuestMinigameId
+  Activity "1" --> "0..*" ActivityProgress
+  Minigame "1" --> "0..*" MinigameAttempt
+  Quest "1" --> "0..*" CollaborativeQuestSession
+  CollaborativeQuestSession "1" --> "1..*" CollaborativeQuestMember
+  QuestProgress --> QuestUserId
+  ActivityProgress --> QuestUserId
+  CollaborativeQuestSession --> QuestUserId
+  CollaborativeQuestMember --> QuestUserId
+}
+
+package "Store BC" #D9F3F0 {
+  class Store <<Aggregate>> {
+    -storeId: long
+    -name: String
+    -address: String
+    +addProduct(product: Product): void
+    +listProducts(): List<Product>
+  }
+
+  class PurchaseHistory <<Aggregate>> {
+    -purchaseHistoryId: long
+    -date: Date
+    -total: double
+    +calculateTotal(): double
+  }
+
+  class Product <<Entity>> {
+    -productId: long
+    -name: String
+    -price: double
+    -stock: int
+    +updateStock(quantity: int): void
+  }
+
+  class Cosmetic <<Entity>> {
+    -skinType: String
+    +getSkinType(): String
+  }
+
+  class Multiplier <<Entity>> {
+    -multiplierFactor: number
+    -durationMinutes: int
+    +getDuration(): int
+  }
+
+  class PaymentMethod <<Entity>> {
+    -type: String
+    -status: String
+    +activate(): void
+    +deactivate(): void
+  }
+
+  class GemWallet <<Entity>> {
+    -gemWalletId: long
+    -amount: int
+    +purchaseGems(): void
+    +useGems(): void
+  }
+
+  class GemPackage <<Entity>> {
+    -gemPackageId: long
+    -name: String
+    -gemAmount: int
+    -realPrice: double
+  }
+
+  class GemPurchase <<Entity>> {
+    -gemPurchaseId: long
+    -amountPaid: double
+    -paymentStatus: String
+    +confirmPayment(): void
+  }
+
+  class GemMovement <<Entity>> {
+    -gemMovementId: long
+    -type: String
+    -amount: int
+    +registerMovement(): void
+  }
+
+  class UserCosmetic <<Entity>> {
+    -userCosmeticId: long
+    -equipped: boolean
+    +equip(): void
+  }
+
+  class UserMultiplier <<Entity>> {
+    -userMultiplierId: long
+    -startDate: DateTime
+    -endDate: DateTime
+    +activate(): void
+  }
+
+  class "UserId" as StoreUserId <<ValueObject>> {
+    -userId: long
+  }
+
+  class "GemPackageId" as StoreGemPackageId <<ValueObject>> {
+    -gemPackageId: long
+  }
+
+  class "CosmeticId" as StoreCosmeticId <<ValueObject>> {
+    -cosmeticId: long
+  }
+
+  class "MultiplierId" as StoreMultiplierId <<ValueObject>> {
+    -multiplierId: long
+  }
+
+  Store "1" --> "1..*" Product
+  Store "1" --> "1..*" PaymentMethod
+  Store "1" --> "0..*" GemWallet
+  Store "1" --> "0..*" PurchaseHistory
+  Product <|-- Cosmetic
+  Product <|-- Multiplier
+  PurchaseHistory --> Product
+  GemWallet --> StoreUserId
+  GemPurchase --> StoreUserId
+  GemPurchase --> StoreGemPackageId
+  GemMovement --> StoreUserId
+  UserCosmetic --> StoreUserId
+  UserCosmetic --> StoreCosmeticId
+  UserMultiplier --> StoreUserId
+  UserMultiplier --> StoreMultiplierId
+}
+
+@enduml
