@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  platformProviderApiBaseUrl: 'http://localhost:3000/api/v1',
-  platformProviderBackendApiBaseUrl: 'http://localhost:8092/api/v1',
+  platformProviderApiBaseUrl: 'https://db-server-eco-1.onrender.com/api/v1',
+  platformProviderBackendApiBaseUrl: 'https://ecomind-backend-t2nh.onrender.com/api/v1',
   platformProviderCommunityEndpointPath: '/community',
   platformProviderUserEndpointPath: '/user',
   platformProviderFamilyEndpointPath: '/family',

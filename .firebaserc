@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "ecomind-app",
+    "ecomind-app": "ecomind-app"
+  },
+  "targets": {},
+  "etags": {}
+}
