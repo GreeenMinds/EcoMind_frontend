@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  platformProviderApiBaseUrl: 'https://db-server-eco-1.onrender.com/api/v1',
+  platformProviderApiBaseUrl: 'https://db-server-eco-1.onrender.com',
   platformProviderBackendApiBaseUrl: 'https://ecomind-backend-t2nh.onrender.com/api/v1',
   platformProviderCommunityEndpointPath: '/community',
   platformProviderUserEndpointPath: '/user',
