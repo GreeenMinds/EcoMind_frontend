@@ -154,6 +154,17 @@ ng build
 firebase deploy
 ```
 
+## Conclusiones
+
+### Frontend (Angular + Firebase)
+Se realizó el despliegue de la aplicación web en Firebase Hosting, configurando integración continua mediante GitHub Actions para que cada `git push` a la rama `master` ejecute automáticamente el build y deploy. La aplicación está disponible en **https://ecomind-app.web.app** y consume datos desde dos servidores independientes: el backend real para usuarios y un mock DB (json-server en Render) para el resto de funcionalidades (comunidad, quests, tienda, ranking, etc.).
+
+### Backend Real (Spring Boot / Render)
+El backend fue desarrollado y desplegado en Render, con auto-deploy desde el repositorio de GitHub. Los endpoints fueron validados mediante Swagger UI, accesible en **https://ecomind-backend-t2nh.onrender.com/swagger-ui/index.html**. Pendiente habilitar CORS para permitir peticiones desde el frontend en Firebase.
+
+### Mock DB (json-server en Render)
+Base de datos simulada con json-server desplegada en Render, utilizando el archivo `server/db.json` del repositorio. Se configuró el auto-deploy para que cualquier cambio en los datos se refleje automáticamente.
+
 ## Eliminar rastros de IA (opcional)
 
 Si quieres borrar el archivo de configuración de Copilot:
