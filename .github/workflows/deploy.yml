@@ -13,6 +13,6 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
-      - run: npx ng build
-      - run: npm i -g firebase-tools
-      - run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - run: npm run build
+      - run: npm install -g firebase-tools
+      - run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
