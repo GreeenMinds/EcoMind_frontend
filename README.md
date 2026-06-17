@@ -1,59 +1,66 @@
-# EcoMindFrontend
+# EcoMind Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+## Links
 
-## Development server
+| Servicio | URL |
+|---|---|
+| Frontend (Firebase) | https://ecomind-app.web.app |
+| Backend Real (API) | https://ecomind-backend-t2nh.onrender.com |
+| Swagger API Docs | https://ecomind-backend-t2nh.onrender.com/swagger-ui/index.html |
+| Mock DB (json-server) | https://db-server-eco-1.onrender.com |
 
-To start a local development server, run:
+## Stack
+
+- **Frontend:** Angular 21 (standalone components)
+- **Hosting:** Firebase Hosting
+- **Backend Real:** Render
+- **Mock DB:** Render (json-server con db.json)
+
+## Cómo desplegar
+
+### Frontend (Firebase) — Automático
+Cada `git push` a `master`:
+1. GitHub Actions corre `ng build`
+2. Firebase Hosting se actualiza automáticamente
+3. El cambio se ve en https://ecomind-app.web.app
+
+No necesitas deployar manualmente nunca más.
+
+### Backend Real (Render) — Automático
+Cada `git push` a `master`:
+1. Render detecta el cambio en el repositorio del backend
+2. Reconstruye y redeploya automáticamente
+
+### Mock DB (Render) — Automático
+Cada `git push` a `master`:
+1. Render detecta el cambio en `server/db.json`
+2. Reinicia json-server automáticamente
+
+## Conexión Frontend ↔ Backend
+
+El frontend apunta a **2 servidores distintos**:
+
+| Funcionalidad | Apunta a | Servidor |
+|---|---|---|
+| Users (perfil, login) | `https://ecomind-backend-t2nh.onrender.com/api/v1/user` | Backend Real |
+| Comunidad, Quests, Eventos, Tienda, Ranking, etc. | `https://db-server-eco-1.onrender.com/{recurso}` | Mock DB |
+
+## Desarrollo Local
 
 ```bash
-ng serve
+# 1. Iniciar json-server mock
+npm run server
+
+# 2. Iniciar frontend
+npm start
+
+# 3. Abrir en el navegador
+http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build Manual
 
 ```bash
 ng build
+firebase deploy
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
