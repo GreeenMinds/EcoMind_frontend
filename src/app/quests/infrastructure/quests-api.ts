@@ -191,6 +191,7 @@ export class QuestsApi extends BaseApi {
     pendingInvitation: CollaborativeQuestMember | null;
     permissions: CollaborativeQuestPermissionsResource;
     counters: CollaborativeQuestCountersResource;
+    unavailableUserIds: number[];
   }> {
     return this.collaborativeSessionsEndpoint.getState(questId, userId);
   }

@@ -27,6 +27,10 @@ export class QuestDetailContent {
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
     { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
   );
+  readonly backUrl = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('returnUrl') || '/quests')),
+    { initialValue: this.route.snapshot.queryParamMap.get('returnUrl') || '/quests' },
+  );
   readonly detail = computed(() => {
     const id = this.questId();
     const quest = Number.isFinite(id) ? this.questsService.getQuestById(id)() : undefined;
@@ -102,18 +106,8 @@ export class QuestDetailContent {
     if (this.primaryActionDisabled()) return;
 
     if (detail.quest.type === 'MINIGAME') {
-      if (!detail.started) {
-        this.questProgressService.addQuestProgress(detail.quest.id).subscribe({
-          next: () => {
-            if (detail.minigame?.url) {
-              window.location.href = detail.minigame.url;
-            }
-          },
-        });
-        return;
-      }
       if (detail.minigame?.url) {
-        window.location.href = detail.minigame.url;
+        window.location.href = this.buildMinigameUrl(detail.minigame.url, detail.quest.id);
       }
       return;
     }
@@ -172,6 +166,11 @@ export class QuestDetailContent {
     this.collaborativeQuestsService.leaveQuest(memberId);
   }
 
+  deleteSession(sessionId: number | undefined): void {
+    if (sessionId === undefined) return;
+    this.collaborativeQuestsService.deletePendingSession(sessionId);
+  }
+
   removeMember(memberId: number): void {
     this.collaborativeQuestsService.removeMember(memberId);
   }
@@ -215,7 +214,12 @@ export class QuestDetailContent {
     const currentMember = session ? state?.currentMember ?? undefined : undefined;
     const pendingInvitation = session ? state?.pendingInvitation ?? undefined : undefined;
     const participants = this.buildParticipants(members);
-    const inviteOptions = this.buildInviteOptions(questId, session?.id, members);
+    const inviteOptions = this.buildInviteOptions(
+      questId,
+      session?.id,
+      members,
+      state?.unavailableUserIds ?? [],
+    );
     const isOwner = Boolean(session && session.owner_user_id === this.questsService.currentUserId());
     const isAcceptedParticipant = currentMember?.status === 'ACCEPTED';
     const permissions = state?.permissions;
@@ -258,6 +262,7 @@ export class QuestDetailContent {
     questId: number,
     sessionId: number | undefined,
     members: ReturnType<typeof this.questsService.collaborativeMembers>,
+    unavailableUserIds: number[],
   ) {
     const currentUserId = this.questsService.currentUserId();
     const friends = this.questsService
@@ -276,11 +281,12 @@ export class QuestDetailContent {
                 ['ACCEPTED', 'PENDING'].includes(member.status),
             )
           : false;
+        const isBusy = unavailableUserIds.includes(user!.id);
         return {
           user,
           alreadyInvited,
-          isBusy: false,
-          canInvite: !alreadyInvited,
+          isBusy,
+          canInvite: !alreadyInvited && !isBusy,
         };
       });
   }
@@ -289,5 +295,11 @@ export class QuestDetailContent {
     if (member.role === 'OWNER') return 0;
     if (member.status === 'ACCEPTED') return 1;
     return 2;
+  }
+
+  private buildMinigameUrl(url: string, questId: number): string {
+    const minigameUrl = new URL(url, window.location.origin);
+    minigameUrl.searchParams.set('questId', String(questId));
+    return minigameUrl.toString();
   }
 }

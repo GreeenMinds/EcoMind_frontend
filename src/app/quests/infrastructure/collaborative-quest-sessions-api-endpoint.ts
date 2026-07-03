@@ -70,6 +70,7 @@ export class CollaborativeQuestSessionsApiEndpoint extends BaseApiEndpoint<
     pendingInvitation: CollaborativeQuestMember | null;
     permissions: CollaborativeQuestPermissionsResource;
     counters: CollaborativeQuestCountersResource;
+    unavailableUserIds: number[];
   }> {
     return this.http
       .get<CollaborativeQuestSessionStateResource>(`${this.endpointUrl}/state`, {
@@ -91,6 +92,7 @@ export class CollaborativeQuestSessionsApiEndpoint extends BaseApiEndpoint<
             : null,
           permissions: resource.permissions,
           counters: resource.counters,
+          unavailableUserIds: resource.unavailableUserIds ?? [],
         })),
         catchError(this.handleError('Failed to fetch collaborative quest state')),
       );

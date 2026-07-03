@@ -20,9 +20,18 @@
     <h2>{{ quest().title }}</h2>
     <p>{{ quest().description }}</p>
 
-    <button type="button" class="result-action" (click)="selectQuest()">
-      {{ actionLabel() }}
-    </button>
+    <div class="result-actions">
+      <a
+        class="result-action secondary"
+        [routerLink]="['/quests', quest().id]"
+        [queryParams]="detailQueryParams()"
+      >
+        Detalles
+      </a>
+      <button type="button" class="result-action" (click)="selectQuest()">
+        {{ actionLabel() }}
+      </button>
+    </div>
   </div>
 
   <div

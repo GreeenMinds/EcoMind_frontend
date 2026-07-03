@@ -21,6 +21,7 @@ export type CollaborativeQuestSessionStateResource = {
   pendingInvitation: import('./collaborative-quest-member-response').CollaborativeQuestMemberResource | null;
   permissions: CollaborativeQuestPermissionsResource;
   counters: CollaborativeQuestCountersResource;
+  unavailableUserIds: number[];
 };
 
 export type CreateCollaborativeQuestSessionPayload = {

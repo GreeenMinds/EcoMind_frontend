@@ -77,6 +77,7 @@ export class QuestProgressService {
           this.store.questsUserSignal.update((questsUser) =>
             this.store.mergeById(questsUser, [completedQuestUser]),
           );
+          this.store.refreshCurrentUserProfile();
           this.store.updateAllQuestStates();
           this.store.loadingSignal.set(false);
         },
@@ -162,7 +163,8 @@ export class QuestProgressService {
           this.store.activitiesUserSignal.update((activitiesUser) =>
             this.store.mergeById(activitiesUser, [updatedActivityUser]),
           );
-          this.refreshQuestUserFromActivity(activityId);
+          this.store.refreshCurrentUserProfile();
+          this.refreshActiveQuestUsers();
           this.store.loadingSignal.set(false);
         },
         error: (error) => {
@@ -172,21 +174,18 @@ export class QuestProgressService {
       });
   }
 
-  private refreshQuestUserFromActivity(activityId: number): void {
-    const activity = this.store.activities().find((item) => item.id === activityId);
-    if (!activity) {
-      return;
-    }
-
-    this.store.questsApi
-      .getQuestUserByUserAndQuest(this.store.currentUserId(), activity.quest_id)
-      .subscribe({
-        next: (questUser) => {
-          this.store.questsUserSignal.update((questsUser) =>
-            this.store.mergeById(questsUser, [questUser]),
-          );
-          this.store.updateAllQuestStates();
-        },
-      });
+  private refreshActiveQuestUsers(): void {
+    ['IN_PROGRESS', 'READY_TO_COMPLETE'].forEach((status) => {
+      this.store.questsApi
+        .getQuestUsersByUserAndStatus(this.store.currentUserId(), status)
+        .subscribe({
+          next: (questUsers) => {
+            this.store.questsUserSignal.update((current) =>
+              this.store.mergeById(current, questUsers),
+            );
+            this.store.updateAllQuestStates();
+          },
+        });
+    });
   }
 }

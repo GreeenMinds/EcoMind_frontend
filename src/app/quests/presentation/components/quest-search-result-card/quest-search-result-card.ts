@@ -1,11 +1,12 @@
 import { Component, computed, EventEmitter, inject, input, Output } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Quest } from '../../../domain/model/quest.entity';
 import { getQuestDisplayType, getQuestTypeIcon, getQuestTypeTheme } from '../../quest-visuals';
 
 @Component({
   selector: 'app-quest-search-result-card',
-  imports: [TranslatePipe],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './quest-search-result-card.html',
   styleUrl: './quest-search-result-card.css',
 })
@@ -13,8 +14,10 @@ export class QuestSearchResultCard {
   readonly quest = input.required<Quest>();
   @Output() questAction = new EventEmitter<Quest>();
 
+  private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
 
+  readonly detailQueryParams = computed(() => ({ returnUrl: this.router.url }));
   readonly categoryClass = computed(() => this.quest().category.toLowerCase());
   readonly categoryLabel = computed(() => this.getCategoryLabel(this.quest().category));
   readonly questTypeLabel = computed(() => this.getQuestTypeLabel(this.quest().type));

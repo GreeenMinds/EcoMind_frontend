@@ -22,6 +22,7 @@ export type CollaborativeQuestState = {
   pendingInvitation: CollaborativeQuestMember | null;
   permissions: CollaborativeQuestPermissionsResource;
   counters: CollaborativeQuestCountersResource;
+  unavailableUserIds: number[];
 };
 
 @Injectable({
@@ -112,6 +113,16 @@ export class QuestsService {
   }
 
   private updateQuestState(quest: Quest): void {
+    if (quest.type === 'MINIGAME') {
+      const successfulAttempt = this.findLatestRewardedMinigameAttempt(quest.id);
+      quest.progress = successfulAttempt ? 100 : 0;
+      quest.status = successfulAttempt ? 'COMPLETED' : 'PENDING';
+      quest.started = false;
+      quest.completed = Boolean(successfulAttempt);
+      quest.has_completed_attempt = Boolean(successfulAttempt);
+      return;
+    }
+
     const sessionId = this.getCurrentProgressSessionId(quest.id);
     const questUser =
       this.findCurrentUserActiveQuest(quest.id, sessionId) ??
@@ -121,7 +132,7 @@ export class QuestsService {
     quest.status = questUser?.status ?? 'PENDING';
     quest.started = Boolean(questUser && questUser.status !== 'COMPLETED');
     quest.completed = questUser?.status === 'COMPLETED';
-    quest.has_completed_attempt = quest.completed;
+    quest.has_completed_attempt = this.hasCurrentUserCompletedQuest(quest.id);
   }
 
   updateAllQuestStates(): void {
@@ -152,6 +163,31 @@ export class QuestsService {
         (questUser) => questUser.quest_id === questId && questUser.user_id === this.currentUserId(),
       )
       .sort((a, b) => b.id - a.id)[0];
+  }
+
+  findLatestRewardedMinigameAttempt(questId: number): MinigameAttempt | undefined {
+    return this.minigameAttempts()
+      .filter(
+        (attempt) =>
+          attempt.quest_id === questId &&
+          attempt.user_id === this.currentUserId() &&
+          attempt.status === 'COMPLETED' &&
+          (attempt.givenGems > 0 || attempt.givenEcopoints > 0),
+      )
+      .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())[0];
+  }
+
+  replaceMinigameAttempt(attempt: MinigameAttempt): void {
+    this.minigameAttemptsSignal.update((attempts) => this.mergeById(attempts, [attempt]));
+    this.updateAllQuestStates();
+  }
+
+  refreshCurrentUserProfile(): void {
+    this.profileService.refreshCurrentUser().subscribe({
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to refresh current user'));
+      },
+    });
   }
 
   findLatestCurrentUserActiveQuest(questId: number): QuestUser | undefined {
@@ -295,12 +331,30 @@ export class QuestsService {
     this.questsApi.getMinigames().subscribe({
       next: (minigames) => {
         this.minigamesSignal.set(minigames);
+        this.loadCurrentUserMinigameAttempts();
         this.loadingSignal.set(false);
       },
       error: (err) => {
         this.errorSignal.set(this.formatError(err, 'Failed to load minigames'));
         this.loadingSignal.set(false);
       },
+    });
+  }
+
+  private loadCurrentUserMinigameAttempts(): void {
+    this.minigameAttemptsSignal.set([]);
+    this.minigames().forEach((minigame) => {
+      this.questsApi
+        .getMinigameAttemptsByUserAndMinigame(this.currentUserId(), minigame.id)
+        .subscribe({
+          next: (attempts) => {
+            this.minigameAttemptsSignal.update((current) => this.mergeById(current, attempts));
+            this.updateAllQuestStates();
+          },
+          error: (err) => {
+            this.errorSignal.set(this.formatError(err, 'Failed to load minigame attempts'));
+          },
+        });
     });
   }
 

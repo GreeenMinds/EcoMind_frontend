@@ -97,14 +97,22 @@ export class QuestActivitiesContent {
         };
       });
 
-    return { quest, questUser, activities };
+    return {
+      quest,
+      questUser,
+      activities,
+      progress: questUser?.progress ?? quest.progress,
+      started: Boolean(questUser && questUser.status !== 'COMPLETED'),
+      completed: questUser?.status === 'COMPLETED',
+      status: questUser?.status ?? quest.status,
+    };
   });
 
   readonly canCompleteQuest = computed(() => {
     const detail = this.detail();
     if (!detail) return false;
 
-    return detail.quest.status === 'READY_TO_COMPLETE';
+    return detail.status === 'READY_TO_COMPLETE';
   });
 
   toggleActivity(activityId: number, checked: boolean): void {

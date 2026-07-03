@@ -2,7 +2,7 @@
   <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'COLLABORATIVE'">
     <section class="quest-detail">
       <header class="detail-header">
-        <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
+        <a class="back-link" [routerLink]="backUrl()" [attr.aria-label]="'common.back' | translate">
           <span aria-hidden="true">&lsaquo;</span>
           {{ 'common.back' | translate }}
         </a>
@@ -190,6 +190,11 @@
             @if (context.canLeave && context.currentMember?.role !== 'OWNER') {
               <button type="button" class="panel-action secondary" (click)="leaveQuest(context.currentMember!.id)">
                 {{ 'quests.collaboration.leave' | translate }}
+              </button>
+            }
+            @if (context.canDeleteSession) {
+              <button type="button" class="panel-action danger" (click)="deleteSession(context.session?.id)">
+                Eliminar grupo
               </button>
             }
           </section>

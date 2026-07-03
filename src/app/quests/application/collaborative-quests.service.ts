@@ -128,6 +128,7 @@ export class CollaborativeQuestsService {
           this.store.questsUserSignal.update((questsUser) =>
             this.store.mergeById(questsUser, [completedQuestUser]),
           );
+          this.store.refreshCurrentUserProfile();
           this.store.updateAllQuestStates();
         }),
         switchMap(() => this.syncCollaborativeState(questId)),
@@ -151,6 +152,7 @@ export class CollaborativeQuestsService {
             this.store.activitiesUserSignal.update((activitiesUser) =>
               this.store.mergeById(activitiesUser, [updatedActivityUser]),
             );
+            this.store.refreshCurrentUserProfile();
             this.refreshCurrentQuestUserFromActivity(activityId);
           }),
         ),
