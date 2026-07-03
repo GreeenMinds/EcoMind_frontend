@@ -6,11 +6,10 @@ export type QuestUserResponse = BaseResponse & {
 
 export type QuestUserResource = BaseResource & {
   id: number;
-  user_id: number;
-  quest_id: number;
+  userId: number;
+  questId: number;
   status: string;
   progress: number;
-  start_date: string;
-  end_date: string | null;
-  collaborative_session_id: number | null;
+  endDate: string | null;
+  collaborativeSessionId: number | null;
 };

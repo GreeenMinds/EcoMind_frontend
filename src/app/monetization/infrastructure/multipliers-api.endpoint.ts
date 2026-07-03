@@ -23,7 +23,7 @@ export class MultipliersApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderMultiplierEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderMultiplierEndpointPath}`,
       new MultiplierAssembler(),
     );
   }

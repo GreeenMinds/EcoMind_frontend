@@ -1,8 +1,8 @@
 @if (detail(); as detail) {
-  <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'collaborative'">
+  <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'COLLABORATIVE'">
     <section class="quest-detail">
       <header class="detail-header">
-        <a class="back-link" routerLink="/quests" [attr.aria-label]="'common.back' | translate">
+        <a class="back-link" [routerLink]="backUrl()" [attr.aria-label]="'common.back' | translate">
           <span aria-hidden="true">&lsaquo;</span>
           {{ 'common.back' | translate }}
         </a>
@@ -12,7 +12,7 @@
       <h2>{{ detail.quest.title }}</h2>
 
       <div class="quest-meta">
-        <span class="category-tag" [class]="detail.quest.category">{{ formatCategory(detail.quest.category) }}</span>
+        <span class="category-tag" [class]="detail.quest.category.toLowerCase()">{{ formatCategory(detail.quest.category) }}</span>
         @if (detail.quest.age > 0) {
           <span>{{ 'common.yearsPlus' | translate: {count: detail.quest.age} }}</span>
         }
@@ -49,7 +49,7 @@
       }
     </section>
 
-    @if (detail.quest.type === 'collaborative' && collaborativeContext(); as context) {
+    @if (detail.quest.type === 'COLLABORATIVE' && collaborativeContext(); as context) {
       <aside class="collaboration-panel" [attr.aria-label]="'quests.collaboration.panel' | translate">
         @if (context.pendingInvitation; as invitation) {
           <section class="collaboration-card join-card">
@@ -134,7 +134,7 @@
             <h3>{{ 'quests.collaboration.participants' | translate }}</h3>
             <div class="participant-list">
               @for (participant of context.participants; track participant.member.id) {
-                <div class="participant-row" [class.pending]="participant.member.status === 'pending'">
+                <div class="participant-row" [class.pending]="participant.member.status === 'PENDING'">
                   <div class="avatar-wrapper avatar-wrapper--sm">
                     @if (getEquippedAvatarUrl(participant.user?.id); as avatarUrl) {
                       <img
@@ -167,14 +167,14 @@
                   <div class="participant-copy">
                     <strong>{{ participant.user?.name || ('quests.collaboration.unknownUser' | translate) }}</strong>
                     <small>
-                      @if (participant.member.role === 'owner') {
+                      @if (participant.member.role === 'OWNER') {
                         {{ 'quests.collaboration.organizer' | translate }}
                       } @else {
                         {{ 'quests.collaboration.statuses.' + participant.member.status | translate }}
                       }
                     </small>
                   </div>
-                  @if (context.isOwner && detail.started === false && participant.member.role !== 'owner') {
+                  @if (context.canRemoveMembers && participant.member.role !== 'OWNER') {
                     <button
                       type="button"
                       class="icon-action"
@@ -187,9 +187,14 @@
                 </div>
               }
             </div>
-            @if (context.canLeave && context.currentMember?.role !== 'owner') {
+            @if (context.canLeave && context.currentMember?.role !== 'OWNER') {
               <button type="button" class="panel-action secondary" (click)="leaveQuest(context.currentMember!.id)">
                 {{ 'quests.collaboration.leave' | translate }}
+              </button>
+            }
+            @if (context.canDeleteSession) {
+              <button type="button" class="panel-action danger" (click)="deleteSession(context.session?.id)">
+                Eliminar grupo
               </button>
             }
           </section>

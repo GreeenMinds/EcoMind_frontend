@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -7,8 +7,6 @@ import { QuestsService } from '../../../application/quests.service';
 import { MonetizationStoreService } from '../../../../monetization/application/monetization-store.service';
 import { QuestProgressService } from '../../../application/quest-progress.service';
 import { CollaborativeQuestsService } from '../../../application/collaborative-quests.service';
-import { CollaborativeQuestMember } from '../../../domain/model/collaborative-quest-member.entity';
-import { CollaborativeQuestSession } from '../../../domain/model/collaborative-quest-session.entity';
 
 @Component({
   selector: 'app-quest-detail-content',
@@ -28,6 +26,10 @@ export class QuestDetailContent {
   readonly questId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
     { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
+  );
+  readonly backUrl = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('returnUrl') || '/quests')),
+    { initialValue: this.route.snapshot.queryParamMap.get('returnUrl') || '/quests' },
   );
   readonly detail = computed(() => {
     const id = this.questId();
@@ -52,16 +54,22 @@ export class QuestDetailContent {
   });
   readonly collaborativeContext = computed(() => {
     const detail = this.detail();
-    return detail?.quest.type === 'collaborative'
+    return detail?.quest.type === 'COLLABORATIVE'
       ? this.buildCollaborativeContext(detail.quest.id)
       : undefined;
+  });
+  private readonly collaborativeStateLoader = effect(() => {
+    const detail = this.detail();
+    if (detail?.quest.type === 'COLLABORATIVE') {
+      this.collaborativeQuestsService.refreshState(detail.quest.id);
+    }
   });
 
   readonly actionLabel = computed(() => {
     const detail = this.detail();
     if (!detail) return this.translate.instant('quests.actions.startActivity');
 
-    if (detail.quest.type === 'minigame') {
+    if (detail.quest.type === 'MINIGAME') {
       return this.translate.instant(
         detail.latestMinigameAttempt ? 'quests.actions.playAgain' : 'quests.actions.play',
       );
@@ -79,14 +87,14 @@ export class QuestDetailContent {
   readonly showPrimaryAction = computed(() => {
     const detail = this.detail();
     const context = this.collaborativeContext();
-    return detail?.quest.type !== 'collaborative' || !context?.pendingInvitation;
+    return detail?.quest.type !== 'COLLABORATIVE' || !context?.pendingInvitation;
   });
 
   readonly primaryActionDisabled = computed(() => {
     const detail = this.detail();
     const context = this.collaborativeContext();
     return Boolean(
-      detail?.quest.type === 'collaborative' &&
+      detail?.quest.type === 'COLLABORATIVE' &&
       !detail.started &&
       !context?.canStart,
     );
@@ -97,20 +105,25 @@ export class QuestDetailContent {
     if (!detail) return;
     if (this.primaryActionDisabled()) return;
 
-    if (detail.quest.type === 'minigame') {
-      if (!detail.started) {
-        this.questProgressService.addQuestProgress(detail.quest.id);
-      }
+    if (detail.quest.type === 'MINIGAME') {
       if (detail.minigame?.url) {
-        window.location.href = detail.minigame.url;
+        window.location.href = this.buildMinigameUrl(detail.minigame.url, detail.quest.id);
       }
       return;
     }
 
-    if (detail.quest.type === 'collaborative') {
+    if (detail.quest.type === 'COLLABORATIVE') {
       if (!detail.started) {
-        this.questProgressService.addCollaborativeQuestProgress(detail.quest.id);
-        void this.router.navigate(['/quests', detail.quest.id, 'started']);
+        const context = this.collaborativeContext();
+        if (context?.session?.status === 'PENDING') {
+          this.questProgressService.addCollaborativeQuestProgress(detail.quest.id);
+          void this.router.navigate(['/quests', detail.quest.id, 'started']);
+          return;
+        }
+
+        this.questProgressService.addQuestProgress(detail.quest.id).subscribe({
+          next: () => void this.router.navigate(['/quests', detail.quest.id, 'started']),
+        });
         return;
       }
 
@@ -119,8 +132,9 @@ export class QuestDetailContent {
     }
 
     if (!detail.started) {
-      this.questProgressService.addQuestProgress(detail.quest.id);
-      void this.router.navigate(['/quests', detail.quest.id, 'started']);
+      this.questProgressService.addQuestProgress(detail.quest.id).subscribe({
+        next: () => void this.router.navigate(['/quests', detail.quest.id, 'started']),
+      });
       return;
     }
 
@@ -128,9 +142,9 @@ export class QuestDetailContent {
   }
 
   formatCategory(category: string): string {
-    const key = `quests.categories.${category}`;
+    const key = `quests.categories.${category.toLowerCase()}`;
     const translated = this.translate.instant(key);
-    return translated === key ? category.replaceAll('_', ' ') : translated;
+    return translated === key ? category.toLowerCase().replaceAll('_', ' ') : translated;
   }
 
   inviteFriend(friendUserId: number | undefined): void {
@@ -150,6 +164,11 @@ export class QuestDetailContent {
 
   leaveQuest(memberId: number): void {
     this.collaborativeQuestsService.leaveQuest(memberId);
+  }
+
+  deleteSession(sessionId: number | undefined): void {
+    if (sessionId === undefined) return;
+    this.collaborativeQuestsService.deletePendingSession(sessionId);
   }
 
   removeMember(memberId: number): void {
@@ -188,61 +207,25 @@ export class QuestDetailContent {
   }
 
   private buildCollaborativeContext(questId: number) {
-    const currentUserId = this.questsService.currentUserId();
-    const visibleSessions = this.questsService
-      .collaborativeSessions()
-      .filter((session) => session.quest_id === questId)
-      .filter((session) =>
-        this.questsService
-          .collaborativeMembers()
-          .some(
-            (member) =>
-              member.session_id === session.id &&
-              member.user_id === currentUserId &&
-              ['accepted', 'pending'].includes(member.status),
-          ),
-      );
-    const ownedOpenSession = this.findCurrentUserOwnedOpenSession(questId);
-    const acceptedSession = visibleSessions.find((session) =>
-      this.questsService
-        .collaborativeMembers()
-        .some(
-          (member) =>
-            member.session_id === session.id &&
-            member.user_id === currentUserId &&
-            member.status === 'accepted',
-        ),
-    );
-    const pendingInvitation = this.findPendingInvitationForCurrentUser(questId);
+    const state = this.questsService.collaborativeStates()[questId];
     const session =
-      ownedOpenSession ?? acceptedSession ?? this.findSessionForMember(pendingInvitation);
-    const currentMember = session
-      ? this.questsService
-          .collaborativeMembers()
-          .find((member) => member.session_id === session.id && member.user_id === currentUserId)
-      : undefined;
-    const participants = session ? this.buildParticipants(session.id) : [];
-    const inviteOptions = this.buildInviteOptions(questId, session?.id);
-    const isOwner = Boolean(session && session.owner_user_id === currentUserId);
-    const isAcceptedParticipant = currentMember?.status === 'accepted';
-    const acceptedInvites = participants.filter(
-      (participant) =>
-        participant.member.role !== 'owner' && participant.member.status === 'accepted',
-    ).length;
-    const activeInvites = session
-      ? this.questsService
-          .collaborativeMembers()
-          .filter(
-            (member) =>
-              member.session_id === session.id &&
-              member.role !== 'owner' &&
-              ['accepted', 'pending'].includes(member.status),
-          ).length
-      : 0;
-    const pendingInvites = participants.filter(
-      (participant) =>
-        participant.member.role !== 'owner' && participant.member.status === 'pending',
-    ).length;
+      state?.session && state.session.status !== 'COMPLETED' ? state.session : undefined;
+    const members = session ? state?.members ?? [] : [];
+    const currentMember = session ? state?.currentMember ?? undefined : undefined;
+    const pendingInvitation = session ? state?.pendingInvitation ?? undefined : undefined;
+    const participants = this.buildParticipants(members);
+    const inviteOptions = this.buildInviteOptions(
+      questId,
+      session?.id,
+      members,
+      state?.unavailableUserIds ?? [],
+    );
+    const isOwner = Boolean(session && session.owner_user_id === this.questsService.currentUserId());
+    const isAcceptedParticipant = currentMember?.status === 'ACCEPTED';
+    const permissions = state?.permissions;
+    const hasActiveQuest = Boolean(this.questsService.findLatestCurrentUserActiveQuest(questId));
+    const fallbackCanInvite =
+      !hasActiveQuest && (!session || (isOwner && session.status === 'PENDING'));
 
     return {
       session,
@@ -252,30 +235,20 @@ export class QuestDetailContent {
       inviteOptions,
       isOwner,
       isAcceptedParticipant,
-      canInvite: (!session || (isOwner && session.status === 'pending')) && activeInvites < 5,
-      canStart:
-        isOwner &&
-        session?.status === 'pending' &&
-        acceptedInvites > 0 &&
-        pendingInvites === 0,
-      canAcceptInvitation: Boolean(
-        pendingInvitation &&
-        this.findSessionForMember(pendingInvitation)?.status === 'pending' &&
-        !this.isUserBusyInQuest(currentUserId, questId),
-      ),
-      canLeave:
-        isAcceptedParticipant &&
-        currentMember?.role !== 'owner' &&
-        session?.status === 'pending',
+      canInvite: permissions?.canInvite ?? fallbackCanInvite,
+      canStart: permissions?.canStart ?? true,
+      canAcceptInvitation: permissions?.canAcceptInvitation ?? false,
+      canLeave: permissions?.canLeave ?? false,
+      canRemoveMembers: permissions?.canRemoveMembers ?? false,
+      canDeleteSession: permissions?.canDeleteSession ?? false,
     };
   }
 
-  private buildParticipants(sessionId: number) {
-    return this.questsService
-      .collaborativeMembers()
+  private buildParticipants(members: ReturnType<typeof this.questsService.collaborativeMembers>) {
+    return members
       .filter(
         (member) =>
-          member.session_id === sessionId && ['accepted', 'pending'].includes(member.status),
+          ['ACCEPTED', 'PENDING'].includes(member.status),
       )
       .sort((a, b) => this.getMemberOrder(a) - this.getMemberOrder(b))
       .map((member) => ({
@@ -285,27 +258,30 @@ export class QuestDetailContent {
       }));
   }
 
-  private buildInviteOptions(questId: number, sessionId?: number) {
+  private buildInviteOptions(
+    questId: number,
+    sessionId: number | undefined,
+    members: ReturnType<typeof this.questsService.collaborativeMembers>,
+    unavailableUserIds: number[],
+  ) {
     const currentUserId = this.questsService.currentUserId();
     const friends = this.questsService
       .friends()
-      .filter((friend) => friend.status === 'accepted')
+      .filter((friend) => friend.status.toUpperCase() === 'ACCEPTED')
       .map((friend) => (friend.user_id === currentUserId ? friend.friend_id : friend.user_id));
     return [...new Set(friends)]
       .map((friendUserId) => this.questsService.users().find((user) => user.id === friendUserId))
       .filter((user) => Boolean(user))
       .map((user) => {
         const alreadyInvited = sessionId
-          ? this.questsService
-              .collaborativeMembers()
-              .some(
-                (member) =>
-                  member.session_id === sessionId &&
-                  member.user_id === user!.id &&
-                  ['accepted', 'pending'].includes(member.status),
-              )
+          ? members.some(
+              (member) =>
+                member.session_id === sessionId &&
+                member.user_id === user!.id &&
+                ['ACCEPTED', 'PENDING'].includes(member.status),
+            )
           : false;
-        const isBusy = this.isUserBusyInQuest(user!.id, questId);
+        const isBusy = unavailableUserIds.includes(user!.id);
         return {
           user,
           alreadyInvited,
@@ -315,82 +291,15 @@ export class QuestDetailContent {
       });
   }
 
-  private getMemberOrder(member: CollaborativeQuestMember): number {
-    if (member.role === 'owner') return 0;
-    if (member.status === 'accepted') return 1;
+  private getMemberOrder(member: ReturnType<typeof this.questsService.collaborativeMembers>[number]): number {
+    if (member.role === 'OWNER') return 0;
+    if (member.status === 'ACCEPTED') return 1;
     return 2;
   }
 
-  private findPendingInvitationForCurrentUser(
-    questId: number,
-  ): CollaborativeQuestMember | undefined {
-    return this.questsService.collaborativeMembers().find((member) => {
-      const session = this.findSessionForMember(member);
-      return (
-        member.user_id === this.questsService.currentUserId() &&
-        member.status === 'pending' &&
-        session?.quest_id === questId &&
-        session.status === 'pending'
-      );
-    });
-  }
-
-  private findSessionForMember(
-    member?: CollaborativeQuestMember,
-  ): CollaborativeQuestSession | undefined {
-    return member
-      ? this.questsService
-          .collaborativeSessions()
-          .find((session) => session.id === member.session_id)
-      : undefined;
-  }
-
-  private findCurrentUserOwnedOpenSession(questId: number): CollaborativeQuestSession | undefined {
-    return this.questsService
-      .collaborativeSessions()
-      .filter(
-        (session) =>
-          session.quest_id === questId &&
-          session.owner_user_id === this.questsService.currentUserId() &&
-          session.status === 'pending',
-      )
-      .sort((a, b) => b.id - a.id)[0];
-  }
-
-  private isUserBusyInQuest(userId: number, questId: number): boolean {
-    const hasIndividualActiveQuest = this.questsService
-      .questsUser()
-      .some(
-        (questUser) =>
-          questUser.user_id === userId &&
-          questUser.quest_id === questId &&
-          questUser.collaborative_session_id === null &&
-          questUser.status !== 'completed',
-      );
-    if (hasIndividualActiveQuest) return true;
-
-    return this.questsService.collaborativeMembers().some((member) => {
-      const session = this.findSessionForMember(member);
-      if (
-        member.user_id !== userId ||
-        member.status !== 'accepted' ||
-        session?.quest_id !== questId ||
-        !['pending', 'started'].includes(session.status)
-      ) {
-        return false;
-      }
-
-      if (session.status === 'pending') return true;
-
-      return this.questsService
-        .questsUser()
-        .some(
-          (questUser) =>
-            questUser.user_id === userId &&
-            questUser.quest_id === questId &&
-            questUser.collaborative_session_id === session.id &&
-            questUser.status !== 'completed',
-        );
-    });
+  private buildMinigameUrl(url: string, questId: number): string {
+    const minigameUrl = new URL(url, window.location.origin);
+    minigameUrl.searchParams.set('questId', String(questId));
+    return minigameUrl.toString();
   }
 }

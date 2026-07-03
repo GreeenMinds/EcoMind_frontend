@@ -9,10 +9,8 @@ import { MultiplierEntity }     from '../domain/multiplier.entity';
 import { GemPackageEntity }     from '../domain/gem-package.entity';
 import { UserCosmeticEntity }   from '../domain/user-cosmetic.entity';
 import { UserMultiplierEntity } from '../domain/user-multiplier.entity';
-import { GemPurchaseEntity }    from '../domain/gem.purchase.entity';
 import { GemMovementEntity }    from '../domain/gem.movement.entity';
 
-// ─── Interfaces────────────────────────────────────────────────────
 
 export interface CosmeticSummary {
   cosmetic: CosmeticEntity;
@@ -27,8 +25,6 @@ export interface MultiplierSummary {
   userRecord?: UserMultiplierEntity;
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
 @Injectable({ providedIn: 'root' })
 export class MonetizationStoreService {
 
@@ -36,9 +32,6 @@ export class MonetizationStoreService {
   private readonly monetizationApi  = inject(MonetizationApi);
   private readonly currentUser      = inject(CurrentUser);
   private readonly profileService   = inject(ProfileService);
-
-  // ─── Signals privates ────────────────────────────────────────────────────
-
   private readonly cosmeticsSignal        = signal<CosmeticEntity[]>([]);
   private readonly multipliersSignal      = signal<MultiplierEntity[]>([]);
   private readonly gemPackagesSignal      = signal<GemPackageEntity[]>([]);
@@ -48,12 +41,7 @@ export class MonetizationStoreService {
   private readonly gemBalanceSignal       = signal<number>(0);
   private readonly loadingSignal          = signal<boolean>(false);
   private readonly errorSignal            = signal<string | null>(null);
-
-  /** Timer*/
   private errorClearTimer: ReturnType<typeof setTimeout> | null = null;
-
-  // ─── Signals públicos (readonly) ─────────────────────────────────────────
-
   readonly cosmetics        = this.cosmeticsSignal.asReadonly();
   readonly multipliers      = this.multipliersSignal.asReadonly();
   readonly gemPackages      = this.gemPackagesSignal.asReadonly();
@@ -63,8 +51,6 @@ export class MonetizationStoreService {
   readonly gemBalance       = this.gemBalanceSignal.asReadonly();
   readonly loading          = this.loadingSignal.asReadonly();
   readonly error            = this.errorSignal.asReadonly();
-
-  // ─── Computed ────────────────────────────────────────────────────────────
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
 
@@ -80,7 +66,6 @@ export class MonetizationStoreService {
     ),
   );
 
-  /** Solo cuenta los multipliers cuyo endDate aún no ha pasado */
   readonly activeMultiplierIds = computed(() => {
     const now = new Date();
     return new Set(
@@ -90,10 +75,6 @@ export class MonetizationStoreService {
     );
   });
 
-  /**
-   * Highest active multiplier factor for the current user.
-   * Returns 1 if there are no active multipliers.
-   */
   readonly activeMultiplierFactor = computed(() => {
     const now = new Date();
     const activeFactors = this.userMultipliers()
@@ -126,9 +107,6 @@ export class MonetizationStoreService {
   constructor() {
     this.loadData();
   }
-
-  // ─── CARGA INICIAL ────────────────────────────────────────────────────────
-
   refresh(): void {
     this.loadData();
   }
@@ -169,16 +147,9 @@ export class MonetizationStoreService {
         },
       });
   }
-
-  /**
-   * Called by QuestsService when a challenge/activity is completed.
-   * Registers the gem_movement in db.json and immediately syncs
-   * the balance signal without waiting for a full refresh.
-   */
   onQuestGemsAwarded(userId: number, amount: number, questId: number, newBalance: number): void {
     if (amount <= 0) return;
 
-    // 1. Registrar movimiento en gem_movement (db.json)
     const movement = new GemMovementEntity();
     movement.userId   = userId;
     movement.type     = 'quest_reward';
@@ -190,14 +161,11 @@ export class MonetizationStoreService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
 
-    // 2.Synchronize balance immediately if you are the current user
     if (userId === this.currentUserId()) {
       this.gemBalanceSignal.set(newBalance);
       this.profileService.syncGemBalance(newBalance);
     }
   }
-
-  // ─── Buy cosmetic ────────────────────────────────────────────────────
 
   purchaseCosmetic(cosmetic: CosmeticEntity): void {
 
@@ -213,24 +181,15 @@ export class MonetizationStoreService {
       return;
     }
 
-    const newBalance = this.gemBalance() - cosmetic.price;
-
-    const userCosmetic = new UserCosmeticEntity();
-    userCosmetic.userId     = this.currentUserId();
-    userCosmetic.cosmeticId = cosmetic.id;
-    userCosmetic.acquiredAt = this.today();
-    userCosmetic.equipped   = false;
-
     this.loadingSignal.set(true);
-    this.monetizationApi
-      .purchaseCosmetic(userCosmetic)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+   this.monetizationApi
+      .buyCosmetic(this.currentUserId(), cosmetic.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (created) => {
           this.userCosmeticsSignal.update((list) => [...list, created]);
           this.allUserCosmeticsSignal.update((list) => [...list, created]);
-          this.updateBalance(newBalance);
-          this.recordMovement('spend', -cosmetic.price, 'cosmetic', cosmetic.id);
+          this.refreshBalance();
           this.errorSignal.set(null);
           this.loadingSignal.set(false);
         },
@@ -240,13 +199,6 @@ export class MonetizationStoreService {
         },
       });
   }
-
-  // ─── EQUIPAR / DESEQUIPAR ─────────────────────────────────────────────────
-
-  /**
-   * Devuelve la URL del avatar equipado de cualquier usuario.
-   * Útil para mostrar el avatar de amigos/familia sin exponer toda la lógica.
-   */
   getEquippedAvatarUrlForUser(userId: number): string | null {
     const equippedIds = this.allUserCosmeticsSignal()
       .filter((uc) => uc.userId === userId && uc.equipped)
@@ -287,11 +239,7 @@ export class MonetizationStoreService {
     const isEquipping = !summary.userRecord.equipped;
     const isAvatar = summary.cosmetic.type === 'avatar';
 
-    // Regla de slots:
-    //   - Slot 1 (avatar): solo 1 avatar equipado a la vez
-    //   - Slot 2 (cosmético): solo 1 cosmético no-avatar equipado a la vez (hat, bun, etc.)
-    //   → Se puede tener un avatar + un cosmético simultáneamente, pero no dos avatares ni dos cosméticos
-    const currentlyEquipped = isEquipping
+ const currentlyEquipped = isEquipping
       ? this.cosmeticSummaries().find((s) => {
         if (!s.equipped || !s.userRecord || s.cosmetic.id === summary.cosmetic.id) return false;
         const sIsAvatar = s.cosmetic.type === 'avatar';
@@ -304,8 +252,6 @@ export class MonetizationStoreService {
       equipped: isEquipping,
     };
 
-    // Primero desequipamos el anterior del mismo tipo (si existe)
-    // Regla: no 2 avatares ni 2 cosméticos, pero sí avatar + cosmético simultáneamente
     if (currentlyEquipped?.userRecord) {
       const toUnequip: UserCosmeticEntity = {
         ...currentlyEquipped.userRecord,
@@ -329,7 +275,6 @@ export class MonetizationStoreService {
         });
     }
 
-    // Luego equipamos/desequipamos el nuevo
     this.monetizationApi
       .equipCosmetic(updated)
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
@@ -349,8 +294,6 @@ export class MonetizationStoreService {
       });
   }
 
-  // ─── COMPRAR MULTIPLICADOR ────────────────────────────────────────────────
-
   purchaseMultiplier(multiplier: MultiplierEntity): void {
 
     if (this.gemBalance() < multiplier.gemCost) {
@@ -360,25 +303,15 @@ export class MonetizationStoreService {
       return;
     }
 
-    const newBalance = this.gemBalance() - multiplier.gemCost;
-
-    const userMultiplier = new UserMultiplierEntity();
-    userMultiplier.userId       = this.currentUserId();
-    userMultiplier.multiplierId = multiplier.id;
-    userMultiplier.startDate    = new Date().toISOString();
-    const end = new Date();
-    end.setMinutes(end.getMinutes() + multiplier.durationMinutes);
-    userMultiplier.endDate = end.toISOString();
-
     this.loadingSignal.set(true);
+
     this.monetizationApi
-      .purchaseMultiplier(userMultiplier)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .buyMultiplier(this.currentUserId(), multiplier.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (created) => {
           this.userMultipliersSignal.update((list) => [...list, created]);
-          this.updateBalance(newBalance);
-          this.recordMovement('spend', -multiplier.gemCost, 'multiplier', multiplier.id);
+          this.refreshBalance();
           this.errorSignal.set(null);
           this.loadingSignal.set(false);
         },
@@ -389,84 +322,33 @@ export class MonetizationStoreService {
       });
   }
 
-  // ─── COMPRAR PAQUETE DE GEMAS ─────────────────────────────────────────────
+  finalizeGemPackagePurchase(gemPackage: GemPackageEntity): void {
+    this.refreshBalance();
 
-  purchaseGemPackage(gemPackage: GemPackageEntity): void {
-
-    const purchase = new GemPurchaseEntity();
-    purchase.userId           = this.currentUserId();
-    purchase.packageId        = gemPackage.id;
-    purchase.purchaseDate     = this.today();
-    purchase.amountPaid       = gemPackage.realPrice;
-    purchase.paymentStatus    = 'approved';
-    purchase.paymentReference = `PAY-${Date.now()}`;
-
-    this.loadingSignal.set(true);
-    this.monetizationApi
-      .purchaseGemPackage(purchase)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          const newBalance = this.gemBalance() + gemPackage.gemAmount;
-          this.updateBalance(newBalance);
-          this.recordMovement('purchase', gemPackage.gemAmount, 'gem_package', gemPackage.id);
-
-          if (gemPackage.id === 5) {
-            this.giftSpecialPackageRewards();
-          } else {
-            this.loadingSignal.set(false);
-          }
-          this.errorSignal.set(null);
-        },
-        error: (err) => {
-          this.setError(this.formatError(err, 'Payment processing error'));
-          this.loadingSignal.set(false);
-        },
-      });
+    if (gemPackage.gemAmount === 10000) {
+      this.loadingSignal.set(true);
+      this.giftSpecialPackageRewards();
+    }
   }
 
-  /**
-   * Sets the error and automatically clears it after 4 seconds.
-   * Cancels any previous timer to prevent premature clearing.
-   */
   private setError(message: string): void {
-    // Cancelar timer anterior si existe
     if (this.errorClearTimer) {
       clearTimeout(this.errorClearTimer);
     }
     this.errorSignal.set(message);
-    // Programar limpieza automática
     this.errorClearTimer = setTimeout(() => {
       this.errorSignal.set(null);
       this.errorClearTimer = null;
     }, 4000);
   }
-
-  private updateBalance(newBalance: number): void {
-    // NUEVO: Actualizar ProfileService cuando cambian las gemas
-    this.gemBalanceSignal.set(newBalance);
-    this.profileService.syncGemBalance(newBalance);
-
+  private refreshBalance(): void {
     this.monetizationApi
-      .updateUserGemBalance(this.currentUserId(), newBalance)
+      .getUserGemBalance(this.currentUserId())
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  private recordMovement(
-    type: string, amount: number, origin: string, originId: number,
-  ): void {
-    const movement = new GemMovementEntity();
-    movement.userId   = this.currentUserId();
-    movement.type     = type;
-    movement.amount   = amount;
-    movement.origin   = origin;
-    movement.originId = originId;
-
-    this.monetizationApi
-      .registerGemMovement(movement)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe((balance) => {
+        this.gemBalanceSignal.set(balance);
+        this.profileService.syncGemBalance(balance);
+      });
   }
 
   private today(): string {

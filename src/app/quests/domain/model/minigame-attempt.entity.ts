@@ -1,96 +1,54 @@
-import {BaseEntity} from '../../../shared/infrastructure/base-entity';
+import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 
 export class MinigameAttempt implements BaseEntity {
-  private _id: number;
-  private _user_id: number;
-  private _quest_id: number;
-  private _score: number;
-  private _status: string;
-  private _start_date: string;
-  private _end_date: string | null;
-  private _metadata: Record<string, unknown>;
+  id: number;
+  userId: number;
+  questId: number;
+  score: number | null;
+  status: string;
+  startDate: string;
+  endDate: string | null;
+  metadata: Record<string, unknown>;
+  givenGems: number;
+  givenEcopoints: number;
 
-  constructor(minigameAttempt: {
+  constructor(attempt: {
     id: number;
-    user_id: number;
-    quest_id: number;
-    score: number;
+    userId: number;
+    questId: number;
+    score: number | null;
     status: string;
-    start_date: string;
-    end_date: string | null;
+    startDate: string;
+    endDate: string | null;
     metadata: Record<string, unknown>;
+    givenGems: number;
+    givenEcopoints: number;
   }) {
-    this._id = minigameAttempt.id;
-    this._user_id = minigameAttempt.user_id;
-    this._quest_id = minigameAttempt.quest_id;
-    this._score = minigameAttempt.score;
-    this._status = minigameAttempt.status;
-    this._start_date = minigameAttempt.start_date;
-    this._end_date = minigameAttempt.end_date;
-    this._metadata = minigameAttempt.metadata;
-  }
-
-  get id(): number {
-    return this._id;
-  }
-
-  set id(value: number) {
-    this._id = value;
+    this.id = attempt.id;
+    this.userId = attempt.userId;
+    this.questId = attempt.questId;
+    this.score = attempt.score;
+    this.status = attempt.status;
+    this.startDate = attempt.startDate;
+    this.endDate = attempt.endDate;
+    this.metadata = attempt.metadata;
+    this.givenGems = attempt.givenGems;
+    this.givenEcopoints = attempt.givenEcopoints;
   }
 
   get user_id(): number {
-    return this._user_id;
-  }
-
-  set user_id(value: number) {
-    this._user_id = value;
+    return this.userId;
   }
 
   get quest_id(): number {
-    return this._quest_id;
-  }
-
-  set quest_id(value: number) {
-    this._quest_id = value;
-  }
-
-  get score(): number {
-    return this._score;
-  }
-
-  set score(value: number) {
-    this._score = value;
-  }
-
-  get status(): string {
-    return this._status;
-  }
-
-  set status(value: string) {
-    this._status = value;
+    return this.questId;
   }
 
   get start_date(): string {
-    return this._start_date;
-  }
-
-  set start_date(value: string) {
-    this._start_date = value;
+    return this.startDate;
   }
 
   get end_date(): string | null {
-    return this._end_date;
-  }
-
-  set end_date(value: string | null) {
-    this._end_date = value;
-  }
-
-  get metadata(): Record<string, unknown> {
-    return this._metadata;
-  }
-
-  set metadata(value: Record<string, unknown>) {
-    this._metadata = value;
+    return this.endDate;
   }
 }

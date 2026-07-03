@@ -2,6 +2,7 @@ import { NgStyle } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Quest } from '../../../domain/model/quest.entity';
+import { getQuestDisplayType, getQuestTypeIcon, getQuestTypeTheme } from '../../quest-visuals';
 
 @Component({
   selector: 'app-quest-card',
@@ -18,44 +19,14 @@ export class QuestCard {
   }
 
   getDisplayType(): string {
-    return this.quest.type === 'collaborative' ? 'collaborative' : this.quest.theme_type;
+    return getQuestDisplayType(this.quest.type, this.quest.theme_type);
   }
 
   getQuestTypeTheme(type: string): Record<string, string> {
-    const themes: Record<string, Record<string, string>> = {
-      checkbox: {
-        '--quest-bg': '#66d575',
-        '--quest-shadow': '#159E67',
-        '--quest-top-light': '#76ea85',
-      },
-      minigame: {
-        '--quest-bg': '#3fa8f5',
-        '--quest-shadow': '#4b66df',
-        '--quest-top-light': '#83caff',
-      },
-      collaborative: {
-        '--quest-bg': '#ffc44d',
-        '--quest-shadow': '#d9901f',
-        '--quest-top-light': '#ffe079',
-      },
-    };
-
-    return (
-      themes[type] ?? {
-        '--quest-bg': '#9aa3ad',
-        '--quest-shadow': '#707984',
-        '--quest-top-light': '#c8ced6',
-      }
-    );
+    return getQuestTypeTheme(type);
   }
 
   getQuestTypeIcon(type: string): string {
-    const icons: Record<string, string> = {
-      checkbox: '/assets/images/quests/checkbox.png',
-      minigame: '/assets/images/quests/game.png',
-      collaborative: '/assets/images/quests/colab.png',
-    };
-
-    return icons[type] ?? '/assets/images/quests/checkbox.png';
+    return getQuestTypeIcon(type);
   }
 }

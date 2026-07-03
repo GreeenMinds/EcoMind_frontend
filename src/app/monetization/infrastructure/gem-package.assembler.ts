@@ -9,10 +9,10 @@ export class GemPackageAssembler
 
   toEntityFromResource(resource: any): GemPackageEntity {
     return {
-      id: resource.package_id,
+      id: resource.id,
       name: resource.name,
-      gemAmount: resource.gem_amount,
-      realPrice: resource.real_price,
+      gemAmount: resource.gemAmount,
+      realPrice: resource.realPrice,
       currency: resource.currency,
     };
   }

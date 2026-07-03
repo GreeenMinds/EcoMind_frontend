@@ -2,6 +2,7 @@ import {BaseEntity} from '../../../shared/infrastructure/base-entity';
 
 export class ActivityUser implements BaseEntity {
   private _id: number;
+  private _quest_user_id: number;
   private _user_id: number;
   private _activity_id: number;
   private _progress: number;
@@ -10,6 +11,7 @@ export class ActivityUser implements BaseEntity {
 
   constructor(activityUser: {
     id: number;
+    quest_user_id?: number;
     user_id: number;
     activity_id: number;
     progress: number;
@@ -17,6 +19,7 @@ export class ActivityUser implements BaseEntity {
     collaborative_session_id?: number | null;
   }) {
     this._id = activityUser.id;
+    this._quest_user_id = activityUser.quest_user_id ?? 0;
     this._user_id = activityUser.user_id;
     this._activity_id = activityUser.activity_id;
     this._progress = activityUser.progress;
@@ -30,6 +33,14 @@ export class ActivityUser implements BaseEntity {
 
   set id(value: number) {
     this._id = value;
+  }
+
+  get quest_user_id(): number {
+    return this._quest_user_id;
+  }
+
+  set quest_user_id(value: number) {
+    this._quest_user_id = value;
   }
 
   get user_id(): number {

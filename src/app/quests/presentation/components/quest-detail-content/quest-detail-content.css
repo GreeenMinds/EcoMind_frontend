@@ -328,6 +328,11 @@ h2 {
   color: #333333;
 }
 
+.panel-action.danger {
+  background: #f8e7e7;
+  color: #9f2f2f;
+}
+
 .small-action {
   min-width: 74px;
   min-height: 34px;

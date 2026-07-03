@@ -14,7 +14,7 @@ export class FriendsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderFriendEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFriendEndpointPath}`,
       new FriendAssembler(),
     );
   }

@@ -72,6 +72,10 @@
       "minigame": "Minijuego"
     },
     "statuses": {
+      "PENDING": "Pendiente",
+      "IN_PROGRESS": "En progreso",
+      "READY_TO_COMPLETE": "Lista para completar",
+      "COMPLETED": "Completada",
       "pending": "Pendiente",
       "in_progress": "En progreso",
       "ready_to_complete": "Lista para completar",
@@ -106,6 +110,11 @@
       "organizer": "Organizador",
       "unknownUser": "Usuario desconocido",
       "statuses": {
+        "ACCEPTED": "Participante",
+        "PENDING": "Esperando confirmación",
+        "REJECTED": "Rechazado",
+        "LEFT": "Abandonó",
+        "REMOVED": "Eliminado",
         "accepted": "Participante",
         "pending": "Esperando confirmación",
         "declined": "Rechazado",

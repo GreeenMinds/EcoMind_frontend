@@ -57,22 +57,6 @@ export class ProfileService {
     return this.profileApi.updateUser(user);
   }
 
-  awardQuestRewards(userId: number, gems: number, ecopoints: number, todayDate: string,): Observable<User> {
-    return this.profileApi.getUser(userId).pipe(
-      switchMap((user) => {
-        user.gem_balance += gems;
-        user.ecopoints += ecopoints;
-
-        if (user.last_streak_date !== todayDate) {
-          user.streak += 1;
-          user.last_streak_date = todayDate;
-        }
-
-        return this.profileApi.updateUser(user);
-      }),
-    );
-  }
-
   getUserGemBalance(userId = this.currentUserId()): Observable<number> {
     return this.profileApi.getUser(userId).pipe(map((user) => user.gem_balance));
   }

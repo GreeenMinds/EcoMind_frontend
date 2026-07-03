@@ -41,7 +41,6 @@ export class MultipliersTabComponent {
     return index === 2 ? 'white' : '#29b6e8';
   }
 
-  /** Main planet image according to the card */
   planetImg(index: number): string {
     const imgs = ['world_happy', 'world_run', 'world_trophy'];
     return `assets/images/multiplier/${imgs[index] ?? 'world_happy'}.png`;
