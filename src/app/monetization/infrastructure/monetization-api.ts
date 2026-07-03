@@ -42,8 +42,6 @@ export class MonetizationApi extends BaseApi {
   private readonly gemPurchaseUrl =
     `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGemPurchaseEndpointPath}`;
 
-  // ─── CATÁLOGO ─────────────────────────────────────────────────────────────
-
   getCosmetics(): Observable<CosmeticEntity[]> {
     return this.cosmeticsEndpoint.getAll();
   }
@@ -56,23 +54,18 @@ export class MonetizationApi extends BaseApi {
     return this.gemPackagesEndpoint.getAll();
   }
 
-  // ─── USUARIO / BALANCE ────────────────────────────────────────────────────
-
   getUserGemBalance(userId: number): Observable<number> {
     return this.http
       .get<{ gem_balance: number }>(`${this.userUrl}/${userId}`)
       .pipe(map((user) => user.gem_balance));
   }
 
-  /** PATCH gem_balance — no reemplaza todo el objeto (HU-035 E4) */
   updateUserGemBalance(userId: number, newBalance: number): Observable<void> {
     return this.http.patch<void>(
       `${this.userUrl}/${userId}`,
       { gem_balance: newBalance },
     );
   }
-
-  // ─── INVENTARIO DEL USUARIO ───────────────────────────────────────────────
 
   getUserCosmetics(): Observable<UserCosmeticEntity[]> {
     return this.userCosmeticsEndpoint.getAll();
@@ -82,17 +75,10 @@ export class MonetizationApi extends BaseApi {
     return this.userMultipliersEndpoint.getAll();
   }
 
-  // ─── COMANDOS: COSMÉTICOS (HU-029) ───────────────────────────────────────
-
-  /** Crea registro user_cosmetic → buy (E1) */
   purchaseCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {
     return this.userCosmeticsEndpoint.create(userCosmetic);
   }
 
-  /**
-   * Atomic cosmetic purchase: the backend validates the gem balance, charges it,
-   * creates the ownership record and records the SPEND movement in one transaction.
-   */
   buyCosmetic(userId: number, cosmeticId: number): Observable<UserCosmeticEntity> {
     return this.http
       .post<any>(`${this.userCosmeticUrl}/purchase`, { userId, cosmeticId })
@@ -108,10 +94,6 @@ export class MonetizationApi extends BaseApi {
       );
   }
 
-  /**
-   * Atomic multiplier purchase: the backend validates the gem balance, charges it,
-   * activates the multiplier and records the SPEND movement in one transaction.
-   */
   buyMultiplier(userId: number, multiplierId: number): Observable<UserMultiplierEntity> {
     return this.http
       .post<any>(`${this.userMultiplierUrl}/purchase`, { userId, multiplierId })
@@ -127,7 +109,6 @@ export class MonetizationApi extends BaseApi {
       );
   }
 
-  /** Extracts a readable message from a backend error response ({ code, message, details }). */
   private backendMessage(err: unknown): string {
     if (err instanceof HttpErrorResponse) {
       const body = err.error;
@@ -139,24 +120,14 @@ export class MonetizationApi extends BaseApi {
     return 'Unexpected error';
   }
 
-  /** PUT user_cosmetic/{id} → equipar / desequipar (E4) */
   equipCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {
     return this.userCosmeticsEndpoint.update(userCosmetic, userCosmetic.id);
   }
 
-  // COMANDOS: MULTIPLICADORES (HU-031)
-
-  /** Creates user_multiplier record → activates multiplier (E1) */
   purchaseMultiplier(userMultiplier: UserMultiplierEntity): Observable<UserMultiplierEntity> {
     return this.userMultipliersEndpoint.create(userMultiplier);
   }
 
-  // COMANDOS: GEMAS (HU-035)
-
-  /**
-   * Starts a real gem package checkout. The backend prices it server-side from the
-   * GemPackage and creates the purchase in PENDING status.
-   */
   checkoutGemPurchase(
     userId: number,
     packageId: number,
@@ -167,50 +138,12 @@ export class MonetizationApi extends BaseApi {
       .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
   }
 
-  /**
-   * Pays a PENDING gem purchase. The backend resolves the right gateway (Culqi for
-   * card/yape, PayPal for paypal) from the purchase's payment method, charges it and,
-   * on approval, credits the gems and records the movement atomically.
-   */
   payGemPurchase(gemPurchaseId: number, sourceToken: string, email: string): Observable<any> {
     return this.http
       .post<any>(`${this.gemPurchaseUrl}/${gemPurchaseId}/pay`, { sourceToken, email })
       .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
   }
 
-  /**
-   * Manually approves a PENDING gem purchase without going through a gateway charge.
-   * Used only for Yape until its real Culqi tokenization flow is verified against docs.
-   */
-  approveGemPurchase(gemPurchaseId: number): Observable<any> {
-    return this.http
-      .patch<any>(`${this.gemPurchaseUrl}/${gemPurchaseId}/approve`, {})
-      .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
-  }
-
-  tokenizeCulqiCard(card: {
-    card_number: string;
-    cvv: string;
-    expiration_month: string;
-    expiration_year: string;
-    email: string;
-  }): Observable<{ id: string }> {
-    return this.http
-      .post<{ id: string }>(`${this.gemPurchaseUrl}/tokenize`, card)
-      .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
-  }
-
-  tokenizeCulqiYape(yape: {
-    phone_number: string;
-    otp: string;
-    email: string;
-  }): Observable<{ id: string }> {
-    return this.http
-      .post<{ id: string }>(`${this.gemPurchaseUrl}/tokenize`, yape)
-      .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
-  }
-
-  /** Registers movement in gem_movement */
   registerGemMovement(movement: GemMovementEntity): Observable<GemMovementEntity> {
     return this.gemMovementsEndpoint.create(movement);
   }

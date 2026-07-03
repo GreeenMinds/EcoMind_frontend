@@ -7,7 +7,7 @@ export class UserCosmeticAssembler
 {
   toEntityFromResource(resource: any): UserCosmeticEntity {
     return {
-      id: resource.id,               // ← ID real del registro en DB
+      id: resource.id,
       userId: resource.userId,
       cosmeticId: resource.cosmeticId,
       acquiredAt: resource.acquiredAt,

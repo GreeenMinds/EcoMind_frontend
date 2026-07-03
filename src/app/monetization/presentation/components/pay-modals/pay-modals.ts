@@ -33,6 +33,7 @@ export class PayModalComponent implements OnChanges {
 
   private static paypalSdkPromise: Promise<void> | null = null;
   private static culqiSdkPromise: Promise<void> | null = null;
+  private static readonly PEN_TO_USD_RATE = 0.27;
   private paypalButtonsRendered = false;
 
   ngOnChanges(): void {
@@ -146,7 +147,12 @@ export class PayModalComponent implements OnChanges {
             createOrder: (_data: unknown, actions: any) =>
               actions.order.create({
                 purchase_units: [
-                  { amount: { currency_code: 'USD', value: this.gemPackage!.realPrice.toFixed(2) } },
+                  {
+                    amount: {
+                      currency_code: 'USD',
+                      value: (this.gemPackage!.realPrice * PayModalComponent.PEN_TO_USD_RATE).toFixed(2),
+                    },
+                  },
                 ],
               }),
             onApprove: (data: { orderID: string }) => {

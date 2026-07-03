@@ -7,7 +7,7 @@ export class UserMultiplierAssembler
 {
   toEntityFromResource(resource: any): UserMultiplierEntity {
     return {
-      id: resource.id,               // ← ID real del registro en DB
+      id: resource.id,
       multiplierId: resource.multiplierId,
       userId: resource.userId,
       startDate: resource.startDate,

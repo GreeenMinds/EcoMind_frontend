@@ -33,12 +33,10 @@ export class GemsTabComponent {
     this.showModal = true;
   }
 
-  // ─── Pago confirmado (éxito) ──────────────────────────────────────────────
   onPaymentDone(pkg: GemPackageEntity): void {
     this.svc.finalizeGemPackagePurchase(pkg);
   }
 
-  // ─── Modal cerrado ────────────────────────────────────────────────────────
   onModalClosed(): void {
     this.showModal = false;
     this.selectedPackage = null;
@@ -53,7 +51,6 @@ export class GemsTabComponent {
     if (amount <= 1000) return path + 'gem_pack_1.png';
     if (amount <= 2000) return path + 'gem_pack_2.png';
 
-    // Para 5000 o cualquier monto mayor, usamos la imagen del saco grande
     return path + 'gem_pack_3.png';
   }
 }

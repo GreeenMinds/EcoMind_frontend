@@ -52,8 +52,6 @@ export class MonetizationStoreService {
   readonly loading          = this.loadingSignal.asReadonly();
   readonly error            = this.errorSignal.asReadonly();
 
-  // ─── Computed ────────────────────────────────────────────────────────────
-
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
 
   readonly ownedCosmeticIds = computed(() =>
@@ -163,7 +161,6 @@ export class MonetizationStoreService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
 
-    // 2.Synchronize balance immediately if you are the current user
     if (userId === this.currentUserId()) {
       this.gemBalanceSignal.set(newBalance);
       this.profileService.syncGemBalance(newBalance);
@@ -255,8 +252,6 @@ export class MonetizationStoreService {
       equipped: isEquipping,
     };
 
-    // Primero desequipamos el anterior del mismo tipo (si existe)
-    // Regla: no 2 avatares ni 2 cosméticos, pero sí avatar + cosmético simultáneamente
     if (currentlyEquipped?.userRecord) {
       const toUnequip: UserCosmeticEntity = {
         ...currentlyEquipped.userRecord,
@@ -280,7 +275,6 @@ export class MonetizationStoreService {
         });
     }
 
-    // Luego equipamos/desequipamos el nuevo
     this.monetizationApi
       .equipCosmetic(updated)
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
@@ -342,17 +336,11 @@ export class MonetizationStoreService {
       clearTimeout(this.errorClearTimer);
     }
     this.errorSignal.set(message);
-    // Programar limpieza automática
     this.errorClearTimer = setTimeout(() => {
       this.errorSignal.set(null);
       this.errorClearTimer = null;
     }, 4000);
   }
-
-  /**
-   * Re-reads the gem balance from the backend (the source of truth after an
-   * atomic purchase) and syncs the signals.
-   */
   private refreshBalance(): void {
     this.monetizationApi
       .getUserGemBalance(this.currentUserId())

@@ -1,6 +1,5 @@
 <div class="store-page">
 
-  <!-- Skeleton loader -->
   <div class="store-skeleton" *ngIf="loading()">
     <div class="skeleton-title"></div>
     <div class="skeleton-tabs"></div>
@@ -11,7 +10,6 @@
 
   <ng-container *ngIf="!loading()">
 
-    <!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
     <div class="store-header">
 
       <div class="store-title-block">
@@ -20,7 +18,6 @@
       </div>
     </div>
 
-    <!-- ══ TABS ════════════════════════════════════════════════════════════ -->
     <div class="store-tabs" role="tablist">
 
       <button
@@ -49,10 +46,8 @@
 
     </div>
 
-    <!-- ══ CONTENIDO POR TAB ════════════════════════════════════════════════ -->
     <div class="tab-content">
 
-      <!-- Delegado a sub-componentes (cada uno inyecta el servicio) -->
       <app-cosmetics-tab  *ngIf="activeTab === 'cosmetics'"/>
       <app-multipliers-tab *ngIf="activeTab === 'multipliers'"></app-multipliers-tab>
       <app-gems-tab        *ngIf="activeTab === 'gems'"/>
