@@ -111,6 +111,13 @@ export class MonetizationStoreService {
     this.loadData();
   }
 
+  refreshGemPackages(): void {
+    this.monetizationApi
+      .getGemPackages()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((packages) => this.gemPackagesSignal.set(packages));
+  }
+
   private loadData(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
