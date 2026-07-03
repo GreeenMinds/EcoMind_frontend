@@ -44,7 +44,8 @@
         [events]="filteredEvents()"
         (createEvent)="openEventForm()"
         (joinEvent)="openRegistrationModal($event)"
-        (cancelRegistration)="communityService.cancelEventRegistration($event.event.id)">
+        (cancelRegistration)="communityService.cancelEventRegistration($event.event.id)"
+        (deleteEvent)="deleteEvent($event)">
       </app-community-events-list>
     }
   }

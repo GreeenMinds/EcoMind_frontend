@@ -45,6 +45,7 @@ export interface CommunityEventSummary {
   author?: CommunityMember;
   registration?: EventRegistration;
   joined: boolean;
+  canDelete: boolean;
 }
 
 export interface CommunityPostFormValue {
@@ -249,6 +250,34 @@ export class CommunityService {
         },
         error: (error) => {
           this.errorSignal.set(this.formatError(error, 'Could not create the event'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
+  deleteEvent(eventId: number): void {
+    const event = this.events().find((item) => item.id === eventId);
+
+    if (!event || event.author_id !== this.currentUserId()) {
+      return;
+    }
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .deleteEvent(eventId)
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.eventsSignal.update((events) => events.filter((item) => item.id !== eventId));
+          this.eventRegistrationsSignal.update((registrations) =>
+            registrations.filter((registration) => registration.event_id !== eventId),
+          );
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not delete the event'));
           this.loadingSignal.set(false);
         },
       });
@@ -574,6 +603,7 @@ export class CommunityService {
       author: this.members().find((member) => member.id === event.author_id),
       registration,
       joined: registration?.status === 'active',
+      canDelete: event.author_id === this.currentUserId(),
     };
   }
 

@@ -203,7 +203,11 @@
     },
     "eventCard": {
       "joinNow": "Join now",
-      "alreadyJoined": "Already joined"
+      "alreadyJoined": "Already joined",
+      "cancelRegistration": "Cancel registration",
+      "delete": "Delete",
+      "deleteEvent": "Delete event",
+      "confirmDelete": "Delete \"{{ event }}\"? This action cannot be undone."
     },
     "eventForm": {
       "title": "New Event",

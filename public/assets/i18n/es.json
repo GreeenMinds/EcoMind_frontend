@@ -203,7 +203,11 @@
     },
     "eventCard": {
       "joinNow": "Unirse ahora",
-      "alreadyJoined": "Ya te uniste"
+      "alreadyJoined": "Ya te uniste",
+      "cancelRegistration": "Cancelar registro",
+      "delete": "Eliminar",
+      "deleteEvent": "Eliminar evento",
+      "confirmDelete": "¿Eliminar \"{{ event }}\"? Esta acción no se puede deshacer."
     },
     "eventForm": {
       "title": "Nuevo evento",

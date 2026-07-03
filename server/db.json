@@ -1856,6 +1856,15 @@
       "registration_type": "individual",
       "registered_at": "2026-05-09T23:44:17.135Z",
       "status": "cancelled"
+    },
+    {
+      "id": 7,
+      "event_id": 7,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-07-03T22:37:10.032Z",
+      "status": "cancelled"
     }
   ],
   "community_post": [

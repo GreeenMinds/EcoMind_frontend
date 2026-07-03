@@ -14,7 +14,8 @@
         <app-community-event-card
           [summary]="summary"
           (join)="joinEvent.emit($event)"
-          (cancel)="cancelRegistration.emit($event)">
+          (cancel)="cancelRegistration.emit($event)"
+          (delete)="deleteEvent.emit($event)">
         </app-community-event-card>
       }
     </div>
