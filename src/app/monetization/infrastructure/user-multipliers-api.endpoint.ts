@@ -23,7 +23,7 @@ export class UserMultipliersApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserMultiplierEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserMultiplierEndpointPath}`,
       new UserMultiplierAssembler(),
     );
   }

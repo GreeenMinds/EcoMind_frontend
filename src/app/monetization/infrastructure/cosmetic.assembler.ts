@@ -12,7 +12,7 @@ export class CosmeticAssembler
       description: resource.description,
       price: resource.price,
       type: resource.type,
-      imageUrl: resource.image_url,
+      imageUrl: resource.imageUrl,
     };
   }
 
@@ -31,7 +31,7 @@ export class CosmeticAssembler
       description: entity.description,
       price: entity.price,
       type: entity.type,
-      image_url: entity.imageUrl,
+      imageUrl: entity.imageUrl,
     };
   }
 }

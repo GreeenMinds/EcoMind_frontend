@@ -9,12 +9,12 @@ export class GemMovementAssembler
 
   toEntityFromResource(resource: any): GemMovementEntity {
     return {
-      id: resource.movement_id,
-      userId: resource.user_id,
+      id: resource.id,
+      userId: resource.userId,
       type: resource.type,
       amount: resource.amount,
       origin: resource.origin,
-      originId: resource.origin_id,
+      originId: resource.originId,
     };
   }
 
@@ -29,12 +29,11 @@ export class GemMovementAssembler
 
   toResourceFromEntity(entity: GemMovementEntity): any {
     return {
-      movement_id: entity.id,
-      user_id: entity.userId,
+      userId: entity.userId,
       type: entity.type,
       amount: entity.amount,
       origin: entity.origin,
-      origin_id: entity.originId,
+      originId: entity.originId,
     };
   }
 }

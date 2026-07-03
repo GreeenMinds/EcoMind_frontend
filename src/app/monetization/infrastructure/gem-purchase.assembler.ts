@@ -10,24 +10,23 @@ export class GemPurchaseAssembler
   toEntityFromResource(resource: any): GemPurchaseEntity {
     return {
       id: resource.id,
-      userId: resource.user_id,
-      packageId: resource.package_id,
-      purchaseDate: resource.purchase_date,
-      amountPaid: resource.amount_paid,
-      paymentStatus: resource.payment_status,
-      paymentReference: resource.payment_reference,
+      userId: resource.userId,
+      packageId: resource.packageId,
+      purchaseDate: resource.purchaseDate,
+      amountPaid: resource.amountPaid,
+      paymentStatus: resource.paymentStatus,
+      paymentReference: resource.paymentReference,
     };
   }
 
   toResourceFromEntity(entity: GemPurchaseEntity): any {
     return {
-      id: entity.id,
-      user_id: entity.userId,
-      package_id: entity.packageId,
-      purchase_date: entity.purchaseDate,
-      amount_paid: entity.amountPaid,
-      payment_status: entity.paymentStatus,
-      payment_reference: entity.paymentReference,
+      userId: entity.userId,
+      packageId: entity.packageId,
+      purchaseDate: entity.purchaseDate,
+      amountPaid: entity.amountPaid,
+      paymentStatus: entity.paymentStatus,
+      paymentReference: entity.paymentReference,
     };
   }
 

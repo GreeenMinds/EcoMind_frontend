@@ -36,5 +36,6 @@ export const environment = {
   platformProviderGemPurchaseEndpointPath: '/gem_purchase',
   platformProviderGemMovementEndpointPath: '/gem_movement',
 
-
+  platformProviderCulqiPublicKey: 'pk_test_Z2WRdxu0EQOGU2Ge',
+  platformProviderPaypalClientId: 'AUmHZeDzviWVJj_rnXU_c5wEhRKANH7yy_HFdJVDWxgsc1lX_8xYrfG0NJqLJHynBKAsXy4YsaIzZeh2',
 };

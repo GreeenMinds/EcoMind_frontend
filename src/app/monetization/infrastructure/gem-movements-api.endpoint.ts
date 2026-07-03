@@ -23,7 +23,7 @@ export class GemMovementsApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderGemMovementEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGemMovementEndpointPath}`,
       new GemMovementAssembler(),
     );
   }
