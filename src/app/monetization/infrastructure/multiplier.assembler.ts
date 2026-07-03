@@ -10,9 +10,9 @@ export class MultiplierAssembler
   toEntityFromResource(resource: any): MultiplierEntity {
     return {
       id: resource.id,
-      multiplierFactor: resource.multiplier_factor,
-      durationMinutes: resource.duration_minutes,
-      gemCost: resource.gem_cost,
+      multiplierFactor: resource.multiplierFactor,
+      durationMinutes: resource.durationMinutes,
+      gemCost: resource.gemCost,
     };
   }
 
@@ -28,9 +28,9 @@ export class MultiplierAssembler
   toResourceFromEntity(entity: MultiplierEntity): any {
     return {
       id: entity.id,
-      multiplier_factor: entity.multiplierFactor,
-      duration_minutes: entity.durationMinutes,
-      gem_cost: entity.gemCost,
+      multiplierFactor: entity.multiplierFactor,
+      durationMinutes: entity.durationMinutes,
+      gemCost: entity.gemCost,
     };
   }
 }

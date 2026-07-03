@@ -8,9 +8,9 @@ export class UserCosmeticAssembler
   toEntityFromResource(resource: any): UserCosmeticEntity {
     return {
       id: resource.id,               // ← ID real del registro en DB
-      userId: resource.user_id,
-      cosmeticId: resource.cosmetic_id,
-      acquiredAt: resource.acquired_at,
+      userId: resource.userId,
+      cosmeticId: resource.cosmeticId,
+      acquiredAt: resource.acquiredAt,
       equipped: resource.equipped,
     };
   }
@@ -18,9 +18,9 @@ export class UserCosmeticAssembler
   toResourceFromEntity(entity: UserCosmeticEntity): any {
     return {
       id: entity.id,
-      user_id: entity.userId,
-      cosmetic_id: entity.cosmeticId,
-      acquired_at: entity.acquiredAt,
+      userId: entity.userId,
+      cosmeticId: entity.cosmeticId,
+      acquiredAt: entity.acquiredAt,
       equipped: entity.equipped,
     };
   }

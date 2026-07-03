@@ -34,7 +34,7 @@ export class MonetizationApi extends BaseApi {
   private readonly gemMovementsEndpoint   = inject(GemMovementsApiEndpoint);
 
   private readonly userUrl =
-    `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserEndpointPath}`;
+    `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}`;
 
   // ─── CATÁLOGO ─────────────────────────────────────────────────────────────
 
