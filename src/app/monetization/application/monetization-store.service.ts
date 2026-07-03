@@ -9,7 +9,6 @@ import { MultiplierEntity }     from '../domain/multiplier.entity';
 import { GemPackageEntity }     from '../domain/gem-package.entity';
 import { UserCosmeticEntity }   from '../domain/user-cosmetic.entity';
 import { UserMultiplierEntity } from '../domain/user-multiplier.entity';
-import { GemPurchaseEntity }    from '../domain/gem.purchase.entity';
 import { GemMovementEntity }    from '../domain/gem.movement.entity';
 
 // ─── Interfaces────────────────────────────────────────────────────
@@ -213,24 +212,17 @@ export class MonetizationStoreService {
       return;
     }
 
-    const newBalance = this.gemBalance() - cosmetic.price;
-
-    const userCosmetic = new UserCosmeticEntity();
-    userCosmetic.userId     = this.currentUserId();
-    userCosmetic.cosmeticId = cosmetic.id;
-    userCosmetic.acquiredAt = this.today();
-    userCosmetic.equipped   = false;
-
     this.loadingSignal.set(true);
+    // The backend does everything atomically: validates the balance, charges the
+    // gems, creates the ownership record and records the movement.
     this.monetizationApi
-      .purchaseCosmetic(userCosmetic)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .buyCosmetic(this.currentUserId(), cosmetic.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (created) => {
           this.userCosmeticsSignal.update((list) => [...list, created]);
           this.allUserCosmeticsSignal.update((list) => [...list, created]);
-          this.updateBalance(newBalance);
-          this.recordMovement('spend', -cosmetic.price, 'cosmetic', cosmetic.id);
+          this.refreshBalance();
           this.errorSignal.set(null);
           this.loadingSignal.set(false);
         },
@@ -360,25 +352,16 @@ export class MonetizationStoreService {
       return;
     }
 
-    const newBalance = this.gemBalance() - multiplier.gemCost;
-
-    const userMultiplier = new UserMultiplierEntity();
-    userMultiplier.userId       = this.currentUserId();
-    userMultiplier.multiplierId = multiplier.id;
-    userMultiplier.startDate    = new Date().toISOString();
-    const end = new Date();
-    end.setMinutes(end.getMinutes() + multiplier.durationMinutes);
-    userMultiplier.endDate = end.toISOString();
-
     this.loadingSignal.set(true);
+    // Atomic on the backend: validates balance, charges gems, activates the
+    // multiplier and records the movement.
     this.monetizationApi
-      .purchaseMultiplier(userMultiplier)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .buyMultiplier(this.currentUserId(), multiplier.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (created) => {
           this.userMultipliersSignal.update((list) => [...list, created]);
-          this.updateBalance(newBalance);
-          this.recordMovement('spend', -multiplier.gemCost, 'multiplier', multiplier.id);
+          this.refreshBalance();
           this.errorSignal.set(null);
           this.loadingSignal.set(false);
         },
@@ -391,38 +374,13 @@ export class MonetizationStoreService {
 
   // ─── COMPRAR PAQUETE DE GEMAS ─────────────────────────────────────────────
 
-  purchaseGemPackage(gemPackage: GemPackageEntity): void {
+  finalizeGemPackagePurchase(gemPackage: GemPackageEntity): void {
+    this.refreshBalance();
 
-    const purchase = new GemPurchaseEntity();
-    purchase.userId           = this.currentUserId();
-    purchase.packageId        = gemPackage.id;
-    purchase.purchaseDate     = this.today();
-    purchase.amountPaid       = gemPackage.realPrice;
-    purchase.paymentStatus    = 'approved';
-    purchase.paymentReference = `PAY-${Date.now()}`;
-
-    this.loadingSignal.set(true);
-    this.monetizationApi
-      .purchaseGemPackage(purchase)
-      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          const newBalance = this.gemBalance() + gemPackage.gemAmount;
-          this.updateBalance(newBalance);
-          this.recordMovement('purchase', gemPackage.gemAmount, 'gem_package', gemPackage.id);
-
-          if (gemPackage.id === 5) {
-            this.giftSpecialPackageRewards();
-          } else {
-            this.loadingSignal.set(false);
-          }
-          this.errorSignal.set(null);
-        },
-        error: (err) => {
-          this.setError(this.formatError(err, 'Payment processing error'));
-          this.loadingSignal.set(false);
-        },
-      });
+    if (gemPackage.gemAmount === 10000) {
+      this.loadingSignal.set(true);
+      this.giftSpecialPackageRewards();
+    }
   }
 
   /**
@@ -442,31 +400,18 @@ export class MonetizationStoreService {
     }, 4000);
   }
 
-  private updateBalance(newBalance: number): void {
-    // NUEVO: Actualizar ProfileService cuando cambian las gemas
-    this.gemBalanceSignal.set(newBalance);
-    this.profileService.syncGemBalance(newBalance);
-
+  /**
+   * Re-reads the gem balance from the backend (the source of truth after an
+   * atomic purchase) and syncs the signals.
+   */
+  private refreshBalance(): void {
     this.monetizationApi
-      .updateUserGemBalance(this.currentUserId(), newBalance)
+      .getUserGemBalance(this.currentUserId())
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  private recordMovement(
-    type: string, amount: number, origin: string, originId: number,
-  ): void {
-    const movement = new GemMovementEntity();
-    movement.userId   = this.currentUserId();
-    movement.type     = type;
-    movement.amount   = amount;
-    movement.origin   = origin;
-    movement.originId = originId;
-
-    this.monetizationApi
-      .registerGemMovement(movement)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe((balance) => {
+        this.gemBalanceSignal.set(balance);
+        this.profileService.syncGemBalance(balance);
+      });
   }
 
   private today(): string {

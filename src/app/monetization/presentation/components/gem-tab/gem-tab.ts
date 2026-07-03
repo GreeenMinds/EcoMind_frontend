@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MonetizationStoreService } from '../../../application/monetization-store.service';
@@ -20,25 +20,22 @@ export class GemsTabComponent {
   readonly loading  = this.svc.loading;
   readonly error    = this.svc.error;
 
-  // ─── Estado del modal ─────────────────────────────────────────────────────
   showModal        = false;
   selectedPackage: GemPackageEntity | null = null;
 
-  // Gran paquete hardcoded (oferta especial)
-  readonly granPaquete: GemPackageEntity = Object.assign(
-    new GemPackageEntity(),
-    { id: 5, name: 'Gran paquete', gemAmount: 10000, realPrice: 149.99, currency: 'PEN' },
+  readonly granPaquete = computed(() =>
+    this.packages().find((pkg) => pkg.gemAmount === 10000) ?? null,
   );
 
-  // ─── Abrir modal ──────────────────────────────────────────────────────────
-  openModal(pkg: GemPackageEntity): void {
+  openModal(pkg: GemPackageEntity | null): void {
+    if (!pkg) return;
     this.selectedPackage = pkg;
     this.showModal = true;
   }
 
   // ─── Pago confirmado (éxito) ──────────────────────────────────────────────
   onPaymentDone(pkg: GemPackageEntity): void {
-    this.svc.purchaseGemPackage(pkg);
+    this.svc.finalizeGemPackagePurchase(pkg);
   }
 
   // ─── Modal cerrado ────────────────────────────────────────────────────────

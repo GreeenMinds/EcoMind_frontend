@@ -42,72 +42,47 @@
       </div>
     </ng-container>
 
-    <!-- PASO 2A: Yape QR -->
     <ng-container *ngIf="step === 'yape'">
       <button class="back-btn" (click)="step = 'method'">← Return</button>
-      <p class="pay-label">Scan the QR code with Yap</p>
+      <p class="pay-label">Pay with Yape</p>
 
-      <div class="qr-container">
-        <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="180" height="180" fill="white" rx="8"/>
-          <!-- Esquinas QR -->
-          <rect x="12" y="12" width="45" height="45" fill="none" stroke="#6D28D9" stroke-width="7" rx="3"/>
-          <rect x="21" y="21" width="27" height="27" fill="#6D28D9" rx="2"/>
-          <rect x="123" y="12" width="45" height="45" fill="none" stroke="#6D28D9" stroke-width="7" rx="3"/>
-          <rect x="132" y="21" width="27" height="27" fill="#6D28D9" rx="2"/>
-          <rect x="12" y="123" width="45" height="45" fill="none" stroke="#6D28D9" stroke-width="7" rx="3"/>
-          <rect x="21" y="132" width="27" height="27" fill="#6D28D9" rx="2"/>
-          <!-- Puntos centrales -->
-          <g fill="#6D28D9">
-            <rect x="72" y="12" width="9" height="9" rx="1"/><rect x="84" y="12" width="9" height="9" rx="1"/>
-            <rect x="96" y="12" width="9" height="9" rx="1"/><rect x="72" y="24" width="9" height="9" rx="1"/>
-            <rect x="96" y="24" width="9" height="9" rx="1"/><rect x="72" y="36" width="9" height="9" rx="1"/>
-            <rect x="84" y="36" width="9" height="9" rx="1"/><rect x="12" y="72" width="9" height="9" rx="1"/>
-            <rect x="24" y="72" width="9" height="9" rx="1"/><rect x="36" y="72" width="9" height="9" rx="1"/>
-            <rect x="72" y="72" width="9" height="9" rx="1"/><rect x="84" y="84" width="9" height="9" rx="1"/>
-            <rect x="96" y="72" width="9" height="9" rx="1"/><rect x="108" y="72" width="9" height="9" rx="1"/>
-            <rect x="120" y="72" width="9" height="9" rx="1"/><rect x="132" y="72" width="9" height="9" rx="1"/>
-            <rect x="144" y="72" width="9" height="9" rx="1"/><rect x="156" y="72" width="9" height="9" rx="1"/>
-            <rect x="72" y="96" width="9" height="9" rx="1"/><rect x="96" y="96" width="9" height="9" rx="1"/>
-            <rect x="120" y="96" width="9" height="9" rx="1"/><rect x="144" y="96" width="9" height="9" rx="1"/>
-            <rect x="72" y="108" width="9" height="9" rx="1"/><rect x="84" y="108" width="9" height="9" rx="1"/>
-            <rect x="108" y="108" width="9" height="9" rx="1"/><rect x="132" y="108" width="9" height="9" rx="1"/>
-            <rect x="72" y="120" width="9" height="9" rx="1"/><rect x="96" y="120" width="9" height="9" rx="1"/>
-            <rect x="120" y="120" width="9" height="9" rx="1"/><rect x="144" y="120" width="9" height="9" rx="1"/>
-            <rect x="72" y="132" width="9" height="9" rx="1"/><rect x="84" y="144" width="9" height="9" rx="1"/>
-            <rect x="108" y="132" width="9" height="9" rx="1"/><rect x="120" y="144" width="9" height="9" rx="1"/>
-            <rect x="144" y="132" width="9" height="9" rx="1"/><rect x="156" y="144" width="9" height="9" rx="1"/>
-          </g>
-        </svg>
-        <p class="qr-amount">s/. {{ gemPackage?.realPrice | number:'1.2-2' }}</p>
-        <p class="qr-note">Open Yape → Pay → Scan the QR code</p>
+      <div class="form-group">
+        <label class="form-label">Yape phone number</label>
+        <input class="form-input" type="text" placeholder="912345678"
+               maxlength="9" [(ngModel)]="yapePhone">
+        <span class="form-error" *ngIf="yapePhone && !isValidPhone(yapePhone)">
+          9 digits, starting with 9
+        </span>
       </div>
+      <div class="form-group">
+        <label class="form-label">Approval code</label>
+        <input class="form-input" type="text" placeholder="123456"
+               maxlength="6" [(ngModel)]="yapeOtp">
+        <span class="form-error" *ngIf="yapeOtp && !isValidOtp(yapeOtp)">
+          6 digits from the Yape app
+        </span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="tu@email.com"
+               [(ngModel)]="yapeEmail">
+      </div>
+      <p class="qr-note">Open Yape → menu → "Código de aprobación"</p>
 
-      <button class="confirm-btn yape-confirm" (click)="confirmPayment()">
-        ✓ I already paid with Yape
+      <button class="confirm-btn yape-confirm"
+              [disabled]="!yapeFormValid"
+              (click)="confirmYapePayment()">
+        Pay s/. {{ gemPackage?.realPrice | number:'1.2-2' }}
       </button>
     </ng-container>
 
     <!-- PASO 2B: PayPal -->
     <ng-container *ngIf="step === 'paypal'">
       <button class="back-btn" (click)="step = 'method'">← Return</button>
-      <p class="pay-label">Sign in to PayPal</p>
+      <p class="pay-label">Pay with PayPal</p>
 
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="tu@email.com"
-               [(ngModel)]="paypalEmail">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" placeholder="••••••••">
-      </div>
-
-      <button class="confirm-btn paypal-confirm"
-              [disabled]="!paypalFormValid"
-              (click)="confirmPayment()">
-        Pay with PayPal — s/. {{ gemPackage?.realPrice | number:'1.2-2' }}
-      </button>
+      <!-- The real PayPal Smart Button mounts here once the SDK loads -->
+      <div id="paypal-button-container"></div>
     </ng-container>
 
     <!-- PASO 2C: Card -->
@@ -146,10 +121,15 @@
           </span>
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="tu@email.com"
+               [(ngModel)]="cardEmail">
+      </div>
 
       <button class="confirm-btn card-confirm"
               [disabled]="!cardFormValid"
-              (click)="confirmPayment()">
+              (click)="confirmCardPayment()">
         Pay s/. {{ gemPackage?.realPrice | number:'1.2-2' }}
       </button>
     </ng-container>
@@ -166,7 +146,6 @@
     <!-- PASO 4: success -->
     <ng-container *ngIf="step === 'success'">
       <div class="step-center">
-        <div class="result-icon success-icon">✅</div>
         <h3 class="result-title">Payment successful!</h3>
         <p class="result-msg">
           They were accredited
@@ -182,9 +161,8 @@
     <!-- PASO 5: Error -->
     <ng-container *ngIf="step === 'error'">
       <div class="step-center">
-        <div class="result-icon error-icon">❌</div>
         <h3 class="result-title">Failed payment</h3>
-        <p class="result-msg">The payment could not be processed. Please try again.</p>
+        <p class="result-msg">{{ errorMessage || 'The payment could not be processed. Please try again.' }}</p>
         <button class="confirm-btn retry-confirm" (click)="step = 'method'">
           Retry
         </button>

@@ -34,7 +34,7 @@
 
   <div class="gran-right">
     <span class="gran-price-label">S/. 149.99</span>
-    <button class="gran-buy-btn" (click)="openModal(granPaquete)">
+    <button class="gran-buy-btn" [disabled]="!granPaquete()" (click)="openModal(granPaquete())">
       Buy
     </button>
   </div>

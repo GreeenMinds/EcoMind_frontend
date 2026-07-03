@@ -35,4 +35,8 @@ export const environment = {
   platformProviderGemPackageEndpointPath: '/gem_package',
   platformProviderGemPurchaseEndpointPath: '/gem_purchase',
   platformProviderGemMovementEndpointPath: '/gem_movement',
+
+  // Public keys only (safe to expose client-side). Replace with your own live/sandbox keys.
+  platformProviderCulqiPublicKey: 'pk_test_Z2WRdxu0EQOGU2Ge',
+  platformProviderPaypalClientId: 'AUmHZeDzviWVJj_rnXU_c5wEhRKANH7yy_HFdJVDWxgsc1lX_8xYrfG0NJqLJHynBKAsXy4YsaIzZeh2',
 };

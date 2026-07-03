@@ -1424,6 +1424,116 @@
       "id": 17,
       "user_id": 1,
       "quest_id": 14,
+      "status": "ready_to_complete",
+      "progress": 100,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 18,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 19,
+      "user_id": 1,
+      "quest_id": 17,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 20,
+      "user_id": 1,
+      "quest_id": 17,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 21,
+      "user_id": 1,
+      "quest_id": 10,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 22,
+      "user_id": 1,
+      "quest_id": 9,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 23,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 24,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 25,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 26,
+      "user_id": 1,
+      "quest_id": 13,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 27,
+      "user_id": 1,
+      "quest_id": 13,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 28,
+      "user_id": 1,
+      "quest_id": 13,
       "status": "in_progress",
       "progress": 0,
       "start_date": "2026-07-03",
@@ -1572,6 +1682,94 @@
       "id": 22,
       "user_id": 1,
       "activity_id": 14,
+      "progress": 100,
+      "end_date": "2026-07-03",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 23,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 24,
+      "user_id": 1,
+      "activity_id": 17,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 25,
+      "user_id": 1,
+      "activity_id": 17,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 26,
+      "user_id": 1,
+      "activity_id": 11,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 27,
+      "user_id": 1,
+      "activity_id": 10,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 28,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 29,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 30,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 31,
+      "user_id": 1,
+      "activity_id": 13,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 32,
+      "user_id": 1,
+      "activity_id": 13,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 33,
+      "user_id": 1,
+      "activity_id": 13,
       "progress": 0,
       "end_date": null,
       "collaborative_session_id": null
