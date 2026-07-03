@@ -23,7 +23,7 @@ export class UserCosmeticsApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserCosmeticEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserCosmeticEndpointPath}`,
       new UserCosmeticAssembler(),
     );
   }

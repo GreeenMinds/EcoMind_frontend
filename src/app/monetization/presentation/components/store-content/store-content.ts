@@ -26,12 +26,10 @@ export class StoreContentComponent {
 
   private readonly svc = inject(MonetizationStoreService);
 
-  // Señales del servicio que necesita el header
   readonly gemBalance = this.svc.gemBalance;
   readonly loading    = this.svc.loading;
   readonly error      = this.svc.error;
 
-  // Tab activo
   activeTab: StoreTab = 'cosmetics';
 
   setTab(tab: StoreTab): void {

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, map, catchError, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { BaseApi } from '../../shared/infrastructure/base-api';
@@ -10,7 +10,6 @@ import { MultiplierEntity }     from '../domain/multiplier.entity';
 import { GemPackageEntity }     from '../domain/gem-package.entity';
 import { UserCosmeticEntity }   from '../domain/user-cosmetic.entity';
 import { UserMultiplierEntity } from '../domain/user-multiplier.entity';
-import { GemPurchaseEntity }    from '../domain/gem.purchase.entity';
 import { GemMovementEntity }    from '../domain/gem.movement.entity';
 
 import { CosmeticsApiEndpoint }       from './cosmetics-api.endpoint';
@@ -18,7 +17,6 @@ import { MultipliersApiEndpoint }     from './multipliers-api.endpoint';
 import { GemPackagesApiEndpoint }     from './gem-packages-api.endpoint';
 import { UserCosmeticsApiEndpoint }   from './user-cosmetics-api.endpoint';
 import { UserMultipliersApiEndpoint } from './user-multipliers-api.endpoint';
-import { GemPurchasesApiEndpoint }    from './gem-purchases-api.endpoint';
 import { GemMovementsApiEndpoint }    from './gem-movements-api.endpoint';
 
 @Injectable({ providedIn: 'root' })
@@ -30,13 +28,19 @@ export class MonetizationApi extends BaseApi {
   private readonly gemPackagesEndpoint    = inject(GemPackagesApiEndpoint);
   private readonly userCosmeticsEndpoint  = inject(UserCosmeticsApiEndpoint);
   private readonly userMultipliersEndpoint= inject(UserMultipliersApiEndpoint);
-  private readonly gemPurchasesEndpoint   = inject(GemPurchasesApiEndpoint);
   private readonly gemMovementsEndpoint   = inject(GemMovementsApiEndpoint);
 
   private readonly userUrl =
-    `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserEndpointPath}`;
+    `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}`;
 
-  // ─── CATÁLOGO ─────────────────────────────────────────────────────────────
+  private readonly userCosmeticUrl =
+    `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserCosmeticEndpointPath}`;
+
+  private readonly userMultiplierUrl =
+    `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserMultiplierEndpointPath}`;
+
+  private readonly gemPurchaseUrl =
+    `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGemPurchaseEndpointPath}`;
 
   getCosmetics(): Observable<CosmeticEntity[]> {
     return this.cosmeticsEndpoint.getAll();
@@ -50,23 +54,18 @@ export class MonetizationApi extends BaseApi {
     return this.gemPackagesEndpoint.getAll();
   }
 
-  // ─── USUARIO / BALANCE ────────────────────────────────────────────────────
-
   getUserGemBalance(userId: number): Observable<number> {
     return this.http
       .get<{ gem_balance: number }>(`${this.userUrl}/${userId}`)
       .pipe(map((user) => user.gem_balance));
   }
 
-  /** PATCH gem_balance — no reemplaza todo el objeto (HU-035 E4) */
   updateUserGemBalance(userId: number, newBalance: number): Observable<void> {
     return this.http.patch<void>(
       `${this.userUrl}/${userId}`,
       { gem_balance: newBalance },
     );
   }
-
-  // ─── INVENTARIO DEL USUARIO ───────────────────────────────────────────────
 
   getUserCosmetics(): Observable<UserCosmeticEntity[]> {
     return this.userCosmeticsEndpoint.getAll();
@@ -76,33 +75,75 @@ export class MonetizationApi extends BaseApi {
     return this.userMultipliersEndpoint.getAll();
   }
 
-  // ─── COMANDOS: COSMÉTICOS (HU-029) ───────────────────────────────────────
-
-  /** Crea registro user_cosmetic → buy (E1) */
   purchaseCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {
     return this.userCosmeticsEndpoint.create(userCosmetic);
   }
 
-  /** PUT user_cosmetic/{id} → equipar / desequipar (E4) */
+  buyCosmetic(userId: number, cosmeticId: number): Observable<UserCosmeticEntity> {
+    return this.http
+      .post<any>(`${this.userCosmeticUrl}/purchase`, { userId, cosmeticId })
+      .pipe(
+        map((r) => ({
+          id: r.id,
+          userId: r.userId,
+          cosmeticId: r.cosmeticId,
+          acquiredAt: r.acquiredAt,
+          equipped: r.equipped,
+        })),
+        catchError((err) => throwError(() => new Error(this.backendMessage(err)))),
+      );
+  }
+
+  buyMultiplier(userId: number, multiplierId: number): Observable<UserMultiplierEntity> {
+    return this.http
+      .post<any>(`${this.userMultiplierUrl}/purchase`, { userId, multiplierId })
+      .pipe(
+        map((r) => ({
+          id: r.id,
+          userId: r.userId,
+          multiplierId: r.multiplierId,
+          startDate: r.startDate,
+          endDate: r.endDate,
+        })),
+        catchError((err) => throwError(() => new Error(this.backendMessage(err)))),
+      );
+  }
+
+  private backendMessage(err: unknown): string {
+    if (err instanceof HttpErrorResponse) {
+      const body = err.error;
+      if (body && typeof body === 'object') {
+        return body.details || body.message || `Request failed (${err.status})`;
+      }
+      return `Request failed (${err.status})`;
+    }
+    return 'Unexpected error';
+  }
+
   equipCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {
     return this.userCosmeticsEndpoint.update(userCosmetic, userCosmetic.id);
   }
 
-  // COMANDOS: MULTIPLICADORES (HU-031)
-
-  /** Creates user_multiplier record → activates multiplier (E1) */
   purchaseMultiplier(userMultiplier: UserMultiplierEntity): Observable<UserMultiplierEntity> {
     return this.userMultipliersEndpoint.create(userMultiplier);
   }
 
-  // COMANDOS: GEMAS (HU-035)
-
-  /** Creates gem_purchase record → purchase with real money (E1) */
-  purchaseGemPackage(gemPurchase: GemPurchaseEntity): Observable<GemPurchaseEntity> {
-    return this.gemPurchasesEndpoint.create(gemPurchase);
+  checkoutGemPurchase(
+    userId: number,
+    packageId: number,
+    paymentMethod: 'card' | 'yape' | 'paypal',
+  ): Observable<any> {
+    return this.http
+      .post<any>(`${this.gemPurchaseUrl}/checkout`, { userId, packageId, paymentMethod })
+      .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
   }
 
-  /** Registers movement in gem_movement */
+  payGemPurchase(gemPurchaseId: number, sourceToken: string, email: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.gemPurchaseUrl}/${gemPurchaseId}/pay`, { sourceToken, email })
+      .pipe(catchError((err) => throwError(() => new Error(this.backendMessage(err)))));
+  }
+
   registerGemMovement(movement: GemMovementEntity): Observable<GemMovementEntity> {
     return this.gemMovementsEndpoint.create(movement);
   }

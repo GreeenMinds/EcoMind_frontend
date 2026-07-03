@@ -21,15 +21,11 @@ export class CosmeticsTabComponent {
 
   view: CosmeticView = 'store';
 
-  // ─── Signals del servicio ─────────────────────────────────────────────────
-
   readonly summaries    = this.svc.cosmeticSummaries;
   readonly inventory    = this.svc.inventorySummaries;
   readonly ownedCount   = computed(() => this.svc.inventorySummaries().length);
   readonly loading      = this.svc.loading;
   readonly error        = this.svc.error;
-
-  // ─── Acciones ────────────────────────────────────────────────────────────
 
   buy(summary: CosmeticSummary): void {
     this.svc.purchaseCosmetic(summary.cosmetic);

@@ -34,7 +34,6 @@
 .equip-btn   { background: #6cab4f; }
 .unequip-btn { background: #9e9e9e; }
 
-/*Gem price*/
 .gem-icon { font-size: 1rem; }
 .gem-price-row {
   display: flex;
@@ -46,7 +45,6 @@
   margin-bottom: 0.8rem;
 }
 
-/*Sub tabs*/
 .sub-tabs
 { display: flex;
   gap: 0.6rem;
@@ -88,7 +86,6 @@
 }
 .sub-tab.active .count-badge { background: rgba(255,255,255,0.9); }
 
-/*Cosmetics grids*/
 .cosmetics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
@@ -150,7 +147,6 @@
   margin-bottom: 0.8rem;
 }
 
-/* Inventory empty */
 .empty-inventory {
   text-align: center;
   padding: 3rem 1rem;
@@ -163,7 +159,6 @@
 .empty-icon { font-size: 3rem; }
 .empty-sub  { font-size: 0.88rem; }
 
-/*Multiplier*/
 .multiplier-card {
   border-radius: 22px;
   padding: 1.5rem 1.8rem;
@@ -204,7 +199,6 @@
 .active-btn    { background: #66bb6a;
   cursor: default; }
 
-/*Gems*/
 .gems-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   gap: 1.2rem; margin-bottom: 1.5rem;
@@ -260,7 +254,6 @@
 
 .empty-state { color: #aaa; font-style: italic; margin-top: 0.5rem; }
 
-/*Pay modal*/
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -330,7 +323,6 @@
 }
 .back-btn:hover { color: #333; }
 
-/* QR */
 .qr-container {
   display: flex;
   flex-direction: column;
@@ -345,7 +337,6 @@
   font-size: 0.82rem;
   color: #999; }
 
-/* Form */
 .form-group {
   margin-bottom: 0.8rem;
 }
@@ -382,7 +373,6 @@
 }
 .form-row .form-group { flex: 1; }
 
-/* Botones de confirmación */
 .confirm-btn {
   width: 100%;
   padding: 0.85rem;
@@ -403,7 +393,6 @@
 .success-confirm { background: #2e7d32; }
 .retry-confirm   { background: #f44336; }
 
-/* Processing / Result */
 .step-center {
   display: flex;
   flex-direction: column;

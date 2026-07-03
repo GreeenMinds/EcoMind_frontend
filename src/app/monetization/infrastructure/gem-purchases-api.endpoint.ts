@@ -23,7 +23,7 @@ export class GemPurchasesApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderGemPurchaseEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGemPurchaseEndpointPath}`,
       new GemPurchaseAssembler(),
     );
   }
