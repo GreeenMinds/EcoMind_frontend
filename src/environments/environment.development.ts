@@ -26,6 +26,7 @@ export const environment = {
   platformProviderCollaborativeQuestMemberEndpointPath: '/collaborative-quest-members',
   platformProviderMinigameAttemptEndpointPath: '/minigame-attempts',
   platformProviderCommunityPostEndpointPath: '/community_post',
+  platformProviderPostReactionEndpointPath: '/post_reaction',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
   platformProviderCosmeticEndpointPath: '/cosmetic',

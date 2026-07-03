@@ -20,7 +20,8 @@
       <div class="community-overview">
         <app-community-feed
           [posts]="filteredPosts()"
-          (createPost)="openPostForm()">
+          (createPost)="openPostForm()"
+          (selectReaction)="communityService.selectPostReaction($event.postId, $event.reactionType)">
         </app-community-feed>
 
         <aside class="community-side">
