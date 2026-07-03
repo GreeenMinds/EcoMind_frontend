@@ -11,7 +11,6 @@ import { UserCosmeticEntity }   from '../domain/user-cosmetic.entity';
 import { UserMultiplierEntity } from '../domain/user-multiplier.entity';
 import { GemMovementEntity }    from '../domain/gem.movement.entity';
 
-// ─── Interfaces────────────────────────────────────────────────────
 
 export interface CosmeticSummary {
   cosmetic: CosmeticEntity;
@@ -26,8 +25,6 @@ export interface MultiplierSummary {
   userRecord?: UserMultiplierEntity;
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
 @Injectable({ providedIn: 'root' })
 export class MonetizationStoreService {
 
@@ -35,9 +32,6 @@ export class MonetizationStoreService {
   private readonly monetizationApi  = inject(MonetizationApi);
   private readonly currentUser      = inject(CurrentUser);
   private readonly profileService   = inject(ProfileService);
-
-  // ─── Signals privates ────────────────────────────────────────────────────
-
   private readonly cosmeticsSignal        = signal<CosmeticEntity[]>([]);
   private readonly multipliersSignal      = signal<MultiplierEntity[]>([]);
   private readonly gemPackagesSignal      = signal<GemPackageEntity[]>([]);
@@ -47,12 +41,7 @@ export class MonetizationStoreService {
   private readonly gemBalanceSignal       = signal<number>(0);
   private readonly loadingSignal          = signal<boolean>(false);
   private readonly errorSignal            = signal<string | null>(null);
-
-  /** Timer*/
   private errorClearTimer: ReturnType<typeof setTimeout> | null = null;
-
-  // ─── Signals públicos (readonly) ─────────────────────────────────────────
-
   readonly cosmetics        = this.cosmeticsSignal.asReadonly();
   readonly multipliers      = this.multipliersSignal.asReadonly();
   readonly gemPackages      = this.gemPackagesSignal.asReadonly();
@@ -79,7 +68,6 @@ export class MonetizationStoreService {
     ),
   );
 
-  /** Solo cuenta los multipliers cuyo endDate aún no ha pasado */
   readonly activeMultiplierIds = computed(() => {
     const now = new Date();
     return new Set(
@@ -89,10 +77,6 @@ export class MonetizationStoreService {
     );
   });
 
-  /**
-   * Highest active multiplier factor for the current user.
-   * Returns 1 if there are no active multipliers.
-   */
   readonly activeMultiplierFactor = computed(() => {
     const now = new Date();
     const activeFactors = this.userMultipliers()
@@ -125,9 +109,6 @@ export class MonetizationStoreService {
   constructor() {
     this.loadData();
   }
-
-  // ─── CARGA INICIAL ────────────────────────────────────────────────────────
-
   refresh(): void {
     this.loadData();
   }
@@ -168,16 +149,9 @@ export class MonetizationStoreService {
         },
       });
   }
-
-  /**
-   * Called by QuestsService when a challenge/activity is completed.
-   * Registers the gem_movement in db.json and immediately syncs
-   * the balance signal without waiting for a full refresh.
-   */
   onQuestGemsAwarded(userId: number, amount: number, questId: number, newBalance: number): void {
     if (amount <= 0) return;
 
-    // 1. Registrar movimiento en gem_movement (db.json)
     const movement = new GemMovementEntity();
     movement.userId   = userId;
     movement.type     = 'quest_reward';
@@ -196,8 +170,6 @@ export class MonetizationStoreService {
     }
   }
 
-  // ─── Buy cosmetic ────────────────────────────────────────────────────
-
   purchaseCosmetic(cosmetic: CosmeticEntity): void {
 
     if (this.ownedCosmeticIds().has(cosmetic.id)) {
@@ -213,9 +185,7 @@ export class MonetizationStoreService {
     }
 
     this.loadingSignal.set(true);
-    // The backend does everything atomically: validates the balance, charges the
-    // gems, creates the ownership record and records the movement.
-    this.monetizationApi
+   this.monetizationApi
       .buyCosmetic(this.currentUserId(), cosmetic.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -232,13 +202,6 @@ export class MonetizationStoreService {
         },
       });
   }
-
-  // ─── EQUIPAR / DESEQUIPAR ─────────────────────────────────────────────────
-
-  /**
-   * Devuelve la URL del avatar equipado de cualquier usuario.
-   * Útil para mostrar el avatar de amigos/familia sin exponer toda la lógica.
-   */
   getEquippedAvatarUrlForUser(userId: number): string | null {
     const equippedIds = this.allUserCosmeticsSignal()
       .filter((uc) => uc.userId === userId && uc.equipped)
@@ -279,11 +242,7 @@ export class MonetizationStoreService {
     const isEquipping = !summary.userRecord.equipped;
     const isAvatar = summary.cosmetic.type === 'avatar';
 
-    // Regla de slots:
-    //   - Slot 1 (avatar): solo 1 avatar equipado a la vez
-    //   - Slot 2 (cosmético): solo 1 cosmético no-avatar equipado a la vez (hat, bun, etc.)
-    //   → Se puede tener un avatar + un cosmético simultáneamente, pero no dos avatares ni dos cosméticos
-    const currentlyEquipped = isEquipping
+ const currentlyEquipped = isEquipping
       ? this.cosmeticSummaries().find((s) => {
         if (!s.equipped || !s.userRecord || s.cosmetic.id === summary.cosmetic.id) return false;
         const sIsAvatar = s.cosmetic.type === 'avatar';
@@ -341,8 +300,6 @@ export class MonetizationStoreService {
       });
   }
 
-  // ─── COMPRAR MULTIPLICADOR ────────────────────────────────────────────────
-
   purchaseMultiplier(multiplier: MultiplierEntity): void {
 
     if (this.gemBalance() < multiplier.gemCost) {
@@ -353,8 +310,7 @@ export class MonetizationStoreService {
     }
 
     this.loadingSignal.set(true);
-    // Atomic on the backend: validates balance, charges gems, activates the
-    // multiplier and records the movement.
+
     this.monetizationApi
       .buyMultiplier(this.currentUserId(), multiplier.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -372,8 +328,6 @@ export class MonetizationStoreService {
       });
   }
 
-  // ─── COMPRAR PAQUETE DE GEMAS ─────────────────────────────────────────────
-
   finalizeGemPackagePurchase(gemPackage: GemPackageEntity): void {
     this.refreshBalance();
 
@@ -383,12 +337,7 @@ export class MonetizationStoreService {
     }
   }
 
-  /**
-   * Sets the error and automatically clears it after 4 seconds.
-   * Cancels any previous timer to prevent premature clearing.
-   */
   private setError(message: string): void {
-    // Cancelar timer anterior si existe
     if (this.errorClearTimer) {
       clearTimeout(this.errorClearTimer);
     }

@@ -1,7 +1,6 @@
 <div class="modal-overlay" *ngIf="visible" (click)="close()">
   <div class="modal-box" (click)="$event.stopPropagation()">
 
-    <!-- Cabecera -->
     <div class="modal-header">
       <div class="modal-header-info">
         <span class="modal-icon">💎</span>
@@ -16,125 +15,40 @@
       </div>
     </div>
 
-    <!-- PASO 1: Choose a payment method -->
     <ng-container *ngIf="step === 'method'">
       <p class="pay-label">Choose a payment method</p>
       <div class="pay-methods">
 
-        <button class="method-btn" (click)="selectMethod('yape')">
-          <span class="method-logo yape-logo">📱</span>
-          <span class="method-name">Yape</span>
-          <span class="method-desc">Pay with QR</span>
+        <button class="method-btn" (click)="selectMethod('culqi')">
+          <span class="method-logo method-logo-card">
+            <svg viewBox="0 0 24 14" width="26" height="15" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="7" r="7" fill="#EB001B"/>
+              <circle cx="15" cy="7" r="7" fill="#F79E1B" fill-opacity="0.85"/>
+            </svg>
+            <span class="yape-word">yape</span>
+          </span>
+          <span class="method-name">Card / Yape</span>
+          <span class="method-desc">Powered by Culqi</span>
         </button>
 
         <button class="method-btn" (click)="selectMethod('paypal')">
-          <span class="method-logo paypal-logo">🅿️</span>
+          <span class="method-logo method-logo-paypal">
+            <span class="pp-pay">Pay</span><span class="pp-pal">Pal</span>
+          </span>
           <span class="method-name">PayPal</span>
           <span class="method-desc">Account PayPal</span>
         </button>
 
-        <button class="method-btn" (click)="selectMethod('card')">
-          <span class="method-logo card-logo">💳</span>
-          <span class="method-name">Card</span>
-          <span class="method-desc">Credit / Debit</span>
-        </button>
-
       </div>
     </ng-container>
 
-    <ng-container *ngIf="step === 'yape'">
-      <button class="back-btn" (click)="step = 'method'">← Return</button>
-      <p class="pay-label">Pay with Yape</p>
-
-      <div class="form-group">
-        <label class="form-label">Yape phone number</label>
-        <input class="form-input" type="text" placeholder="912345678"
-               maxlength="9" [(ngModel)]="yapePhone">
-        <span class="form-error" *ngIf="yapePhone && !isValidPhone(yapePhone)">
-          9 digits, starting with 9
-        </span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Approval code</label>
-        <input class="form-input" type="text" placeholder="123456"
-               maxlength="6" [(ngModel)]="yapeOtp">
-        <span class="form-error" *ngIf="yapeOtp && !isValidOtp(yapeOtp)">
-          6 digits from the Yape app
-        </span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="tu@email.com"
-               [(ngModel)]="yapeEmail">
-      </div>
-      <p class="qr-note">Open Yape → menu → "Código de aprobación"</p>
-
-      <button class="confirm-btn yape-confirm"
-              [disabled]="!yapeFormValid"
-              (click)="confirmYapePayment()">
-        Pay s/. {{ gemPackage?.realPrice | number:'1.2-2' }}
-      </button>
-    </ng-container>
-
-    <!-- PASO 2B: PayPal -->
     <ng-container *ngIf="step === 'paypal'">
       <button class="back-btn" (click)="step = 'method'">← Return</button>
       <p class="pay-label">Pay with PayPal</p>
 
-      <!-- The real PayPal Smart Button mounts here once the SDK loads -->
       <div id="paypal-button-container"></div>
     </ng-container>
 
-    <!-- PASO 2C: Card -->
-    <ng-container *ngIf="step === 'card'">
-      <button class="back-btn" (click)="step = 'method'">← Return</button>
-      <p class="pay-label">Card details</p>
-
-      <div class="form-group">
-        <label class="form-label">Card Number</label>
-        <input class="form-input" type="text" placeholder="0000 0000 0000 0000"
-               maxlength="16" [(ngModel)]="cardNumber">
-        <span class="form-error" *ngIf="cardNumber && !isValidCard(cardNumber)">
-          It must have 16 digits
-        </span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Name on Card</label>
-        <input class="form-input" type="text" placeholder="NAME LAST NAME"
-               [(ngModel)]="cardName">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Expiry</label>
-          <input class="form-input" type="text" placeholder="MM/AA"
-                 maxlength="5" [(ngModel)]="cardExpiry">
-          <span class="form-error" *ngIf="cardExpiry && !isValidExpiry(cardExpiry)">
-            Formato MM/AA
-          </span>
-        </div>
-        <div class="form-group">
-          <label class="form-label">CVV</label>
-          <input class="form-input" type="text" placeholder="123"
-                 maxlength="4" [(ngModel)]="cardCvv">
-          <span class="form-error" *ngIf="cardCvv && !isValidCvv(cardCvv)">
-            3-4 dígitos
-          </span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="tu@email.com"
-               [(ngModel)]="cardEmail">
-      </div>
-
-      <button class="confirm-btn card-confirm"
-              [disabled]="!cardFormValid"
-              (click)="confirmCardPayment()">
-        Pay s/. {{ gemPackage?.realPrice | number:'1.2-2' }}
-      </button>
-    </ng-container>
-
-    <!-- PASO 3: Procesando -->
     <ng-container *ngIf="step === 'processing'">
       <div class="step-center">
         <div class="spinner"></div>
@@ -143,25 +57,31 @@
       </div>
     </ng-container>
 
-    <!-- PASO 4: success -->
     <ng-container *ngIf="step === 'success'">
-      <div class="step-center">
-        <h3 class="result-title">Payment successful!</h3>
-        <p class="result-msg">
-          They were accredited
-          <strong>{{ gemPackage?.gemAmount | number }} 💎</strong>
-          to your account.
-        </p>
-        <button class="confirm-btn success-confirm" (click)="close()">
-          Close
-        </button>
+      <div class="step-center result-compact">
+        <div class="result-row">
+          <span class="result-badge result-badge-success">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <h3 class="result-title">Payment successful</h3>
+        </div>
+        <p class="result-msg result-msg-success">{{ gemPackage?.gemAmount | number }} gems were added to your account.</p>
+        <button class="confirm-btn close-confirm" (click)="close()">Close</button>
       </div>
     </ng-container>
 
-    <!-- PASO 5: Error -->
     <ng-container *ngIf="step === 'error'">
-      <div class="step-center">
-        <h3 class="result-title">Failed payment</h3>
+      <div class="step-center result-compact">
+        <div class="result-row">
+          <span class="result-badge result-badge-error">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <h3 class="result-title">Payment failed</h3>
+        </div>
         <p class="result-msg">{{ errorMessage || 'The payment could not be processed. Please try again.' }}</p>
         <button class="confirm-btn retry-confirm" (click)="step = 'method'">
           Retry
