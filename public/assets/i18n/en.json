@@ -72,6 +72,10 @@
       "minigame": "Minigame"
     },
     "statuses": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "READY_TO_COMPLETE": "Ready to complete",
+      "COMPLETED": "Completed",
       "pending": "Pending",
       "in_progress": "In progress",
       "ready_to_complete": "Ready to complete",
@@ -106,6 +110,11 @@
       "organizer": "Organizer",
       "unknownUser": "Unknown user",
       "statuses": {
+        "ACCEPTED": "Participant",
+        "PENDING": "Waiting for confirmation",
+        "REJECTED": "Declined",
+        "LEFT": "Left",
+        "REMOVED": "Removed",
         "accepted": "Participant",
         "pending": "Waiting for confirmation",
         "declined": "Declined",

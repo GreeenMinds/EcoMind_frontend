@@ -1,35 +1,41 @@
-import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
-import {MinigameAttempt} from '../domain/model/minigame-attempt.entity';
-import {MinigameAttemptResponse, MinigameAttemptResource} from './minigame-attempt-response';
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { MinigameAttempt } from '../domain/model/minigame-attempt.entity';
+import { MinigameAttemptResponse, MinigameAttemptResource } from './minigame-attempt-response';
 
-export class MinigameAttemptAssembler implements BaseAssembler<MinigameAttempt, MinigameAttemptResource, MinigameAttemptResponse> {
+export class MinigameAttemptAssembler
+  implements BaseAssembler<MinigameAttempt, MinigameAttemptResource, MinigameAttemptResponse>
+{
   toEntitiesFromResponse(response: MinigameAttemptResponse): MinigameAttempt[] {
-    return response.minigameAttempts.map((resource) => this.toEntityFromResource(resource as MinigameAttemptResource));
+    return response.minigameAttempts.map((resource) => this.toEntityFromResource(resource));
   }
 
   toEntityFromResource(resource: MinigameAttemptResource): MinigameAttempt {
     return new MinigameAttempt({
       id: resource.id,
-      user_id: resource.user_id,
-      quest_id: resource.quest_id,
+      userId: resource.userId,
+      questId: resource.questId,
       score: resource.score,
       status: resource.status,
-      start_date: resource.start_date,
-      end_date: resource.end_date,
+      startDate: resource.startDate,
+      endDate: resource.endDate,
       metadata: resource.metadata,
+      givenGems: resource.givenGems,
+      givenEcopoints: resource.givenEcopoints,
     });
   }
 
   toResourceFromEntity(entity: MinigameAttempt): MinigameAttemptResource {
     return {
       id: entity.id,
-      user_id: entity.user_id,
-      quest_id: entity.quest_id,
+      userId: entity.userId,
+      questId: entity.questId,
       score: entity.score,
       status: entity.status,
-      start_date: entity.start_date,
-      end_date: entity.end_date,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
       metadata: entity.metadata,
-    } as MinigameAttemptResource;
+      givenGems: entity.givenGems,
+      givenEcopoints: entity.givenEcopoints,
+    };
   }
 }

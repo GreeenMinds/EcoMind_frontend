@@ -1,0 +1,37 @@
+<article class="quest-result">
+  <div class="result-copy">
+    <div class="tag-row">
+      <span class="tag category" [class]="categoryClass()">{{ categoryLabel() }}</span>
+      <span class="tag">{{ questTypeLabel() }}</span>
+      <span class="tag">{{ 'common.minutes' | translate: { count: quest().time } }}</span>
+      @if (ageLabel(); as label) {
+        <span class="tag">{{ label }}</span>
+      }
+      @if (ecoPointsLabel(); as label) {
+        <span class="tag reward">{{ label }}</span>
+      }
+      @if (quest().reward_gems > 0) {
+        <span class="tag gem-reward">{{
+          'common.gems' | translate: { count: quest().reward_gems }
+        }}</span>
+      }
+    </div>
+
+    <h2>{{ quest().title }}</h2>
+    <p>{{ quest().description }}</p>
+
+    <button type="button" class="result-action" (click)="selectQuest()">
+      {{ actionLabel() }}
+    </button>
+  </div>
+
+  <div
+    class="quest-type-card"
+    [style.--quest-bg]="theme()['--quest-bg']"
+    [style.--quest-shadow]="theme()['--quest-shadow']"
+    [style.--quest-top-light]="theme()['--quest-top-light']"
+    aria-hidden="true"
+  >
+    <img [src]="icon()" alt="" />
+  </div>
+</article>

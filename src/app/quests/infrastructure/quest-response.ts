@@ -6,16 +6,16 @@ export type QuestResponse = BaseResponse & {
 
 export type QuestResource = BaseResource & {
   id: number;
-  minigame_id: number | null;
-  category: string;
+  minigameId: number | null;
   title: string;
   description: string;
-  image_url: string | null;
-  age: number;
+  category: string;
   type: string;
-  theme_type: string;
-  reward_gems: number;
-  reward_ecopoints: number;
-  expiration_date: string | null;
+  gemReward: number;
+  ecopoints: number;
+  age: number;
   time: number;
+  theme: string;
+  assignedDate: string | null;
+  image: string | null;
 };

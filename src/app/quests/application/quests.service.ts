@@ -1,6 +1,5 @@
-import { computed, Injectable, OnDestroy, Signal, signal } from '@angular/core';
-import { QuestDailyService } from './quest-daily.service';
-import { ProfileApi } from '../../profile/infrastructure/profile-api';
+import { computed, Injectable, Signal, signal } from '@angular/core';
+import { ProfileService } from '../../profile/application/profile.service';
 import { Friend } from '../../profile/domain/model/friend.entity';
 import { User } from '../../profile/domain/model/user.entity';
 import { CurrentUser } from '../../shared/application/current-user';
@@ -13,12 +12,24 @@ import { Minigame } from '../domain/model/minigame.entity';
 import { QuestUser } from '../domain/model/quest-user.entity';
 import { Quest } from '../domain/model/quest.entity';
 import { QuestsApi } from '../infrastructure/quests-api';
+import { CollaborativeQuestCountersResource, CollaborativeQuestPermissionsResource} from '../infrastructure/collaborative-quest-session-response';
+import { QuestSearchFilters } from '../infrastructure/quest-search-filters';
+
+export type CollaborativeQuestState = {
+  session: CollaborativeQuestSession | null;
+  members: CollaborativeQuestMember[];
+  currentMember: CollaborativeQuestMember | null;
+  pendingInvitation: CollaborativeQuestMember | null;
+  permissions: CollaborativeQuestPermissionsResource;
+  counters: CollaborativeQuestCountersResource;
+};
 
 @Injectable({
   providedIn: 'root',
 })
-export class QuestsService implements OnDestroy {
+export class QuestsService {
   readonly questsSignal = signal<Quest[]>([]);
+  readonly questSearchResultsSignal = signal<Quest[]>([]);
 
   readonly questsUserSignal = signal<QuestUser[]>([]);
   readonly minigamesSignal = signal<Minigame[]>([]);
@@ -27,12 +38,14 @@ export class QuestsService implements OnDestroy {
   readonly activitiesUserSignal = signal<ActivityUser[]>([]);
   readonly collaborativeSessionsSignal = signal<CollaborativeQuestSession[]>([]);
   readonly collaborativeMembersSignal = signal<CollaborativeQuestMember[]>([]);
+  readonly collaborativeStatesSignal = signal<Record<number, CollaborativeQuestState>>({});
   readonly usersSignal = signal<User[]>([]);
   readonly friendsSignal = signal<Friend[]>([]);
-  private readonly selectedListCategorySignal = signal('energy');
+  private readonly selectedListCategorySignal = signal('ENERGY');
   private readonly selectedListPageSignal = signal(0);
 
   readonly quests = this.questsSignal.asReadonly();
+  readonly questSearchResults = this.questSearchResultsSignal.asReadonly();
   readonly questsUser = this.questsUserSignal.asReadonly();
   readonly minigames = this.minigamesSignal.asReadonly();
   readonly minigameAttempts = this.minigameAttemptsSignal.asReadonly();
@@ -40,6 +53,7 @@ export class QuestsService implements OnDestroy {
   readonly activitiesUser = this.activitiesUserSignal.asReadonly();
   readonly collaborativeSessions = this.collaborativeSessionsSignal.asReadonly();
   readonly collaborativeMembers = this.collaborativeMembersSignal.asReadonly();
+  readonly collaborativeStates = this.collaborativeStatesSignal.asReadonly();
   readonly users = this.usersSignal.asReadonly();
   readonly friends = this.friendsSignal.asReadonly();
   readonly selectedListCategory = this.selectedListCategorySignal.asReadonly();
@@ -52,31 +66,17 @@ export class QuestsService implements OnDestroy {
   readonly error = this.errorSignal.asReadonly();
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
-
-  private completedLoadsCount = 0;
+  private readonly requestedActivityUsersByQuestUserId = new Set<number>();
 
   constructor(
     readonly questsApi: QuestsApi,
-    readonly profileApi: ProfileApi,
     readonly currentUser: CurrentUser,
-    private readonly questDailyService: QuestDailyService,
+    private readonly profileService: ProfileService,
   ) {
     this.loadQuests();
-    this.loadQuestsUser();
+    this.loadCurrentUserQuestAssignments();
     this.loadMinigames();
-    this.loadMinigameAttempts();
-    this.loadActivities();
-    this.loadActivitiesUser();
-    this.loadCollaborativeSessions();
-    this.loadCollaborativeMembers();
-    this.loadUsers();
-    this.loadFriends();
-
-    this.questDailyService.start(this);
-  }
-  
-  ngOnDestroy(): void {
-    this.questDailyService.stop();
+    this.loadSocialContext();
   }
 
   selectListCategory(category: string): void {
@@ -94,41 +94,41 @@ export class QuestsService implements OnDestroy {
     return computed(() => this.quests().find((item) => item.id === questId));
   }
 
+  searchQuests(filters: QuestSearchFilters): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.questsApi.searchQuests(filters).subscribe({
+      next: (quests) => {
+        this.questSearchResultsSignal.set(quests);
+        this.questsSignal.update((current) => this.mergeById(current, quests));
+        this.updateAllQuestStates();
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to search quests'));
+        this.loadingSignal.set(false);
+      },
+    });
+  }
+
   private updateQuestState(quest: Quest): void {
     const sessionId = this.getCurrentProgressSessionId(quest.id);
     const questUser =
       this.findCurrentUserActiveQuest(quest.id, sessionId) ??
       this.findLatestCurrentUserQuest(quest.id);
-    const activities = this.activities().filter((activity) => activity.quest_id === quest.id);
-    const completedActivitiesCount = activities.filter((activity) => {
-      const progress =
-        sessionId === null
-          ? (this.findCurrentUserActivity(activity.id, sessionId)?.progress ?? 0)
-          : this.getCollaborativeActivityProgress(activity.id, sessionId);
-      return progress >= 100;
-    }).length;
-    const activeQuest = this.findCurrentUserActiveQuest(quest.id, sessionId);
 
-    quest.progress =
-      questUser?.progress ?? this.calculateActivityProgress(activities, completedActivitiesCount);
-    quest.status = questUser?.status ?? 'pending';
-    quest.started = Boolean(activeQuest);
-    quest.completed = !activeQuest && questUser?.status === 'completed';
-    quest.has_completed_attempt = this.hasCurrentUserCompletedQuest(quest.id);
-    quest.activities_count = activities.length;
-    quest.completed_activities_count = completedActivitiesCount;
-  }
-
-  calculateActivityProgress(activities: Activity[], completedActivitiesCount: number): number {
-    if (activities.length === 0) {
-      return 0;
-    }
-    return Math.round((completedActivitiesCount / activities.length) * 100);
+    quest.progress = questUser?.progress ?? 0;
+    quest.status = questUser?.status ?? 'PENDING';
+    quest.started = Boolean(questUser && questUser.status !== 'COMPLETED');
+    quest.completed = questUser?.status === 'COMPLETED';
+    quest.has_completed_attempt = quest.completed;
   }
 
   updateAllQuestStates(): void {
     this.quests().forEach((quest) => this.updateQuestState(quest));
     this.questsSignal.update((quests) => [...quests]);
+    this.questSearchResults().forEach((quest) => this.updateQuestState(quest));
+    this.questSearchResultsSignal.update((quests) => [...quests]);
   }
 
   findCurrentUserActiveQuest(
@@ -141,7 +141,7 @@ export class QuestsService implements OnDestroy {
           questUser.quest_id === questId &&
           questUser.user_id === this.currentUserId() &&
           questUser.collaborative_session_id === collaborativeSessionId &&
-          questUser.status !== 'completed',
+          questUser.status !== 'COMPLETED',
       )
       .sort((a, b) => b.id - a.id)[0];
   }
@@ -154,12 +154,33 @@ export class QuestsService implements OnDestroy {
       .sort((a, b) => b.id - a.id)[0];
   }
 
+  findLatestCurrentUserActiveQuest(questId: number): QuestUser | undefined {
+    return this.questsUser()
+      .filter(
+        (questUser) =>
+          questUser.quest_id === questId &&
+          questUser.user_id === this.currentUserId() &&
+          questUser.status !== 'COMPLETED',
+      )
+      .sort((a, b) => b.id - a.id)[0];
+  }
+
+  findActiveQuestForSession(
+    questId: number,
+    collaborativeSessionId: number | null,
+  ): QuestUser | undefined {
+    return (
+      this.findCurrentUserActiveQuest(questId, collaborativeSessionId) ??
+      this.findLatestCurrentUserActiveQuest(questId)
+    );
+  }
+
   hasCurrentUserCompletedQuest(questId: number): boolean {
     return this.questsUser().some(
       (questUser) =>
         questUser.quest_id === questId &&
         questUser.user_id === this.currentUserId() &&
-        questUser.status === 'completed',
+        questUser.status === 'COMPLETED',
     );
   }
 
@@ -167,11 +188,15 @@ export class QuestsService implements OnDestroy {
     activityId: number,
     collaborativeSessionId: number | null,
   ): ActivityUser | undefined {
+    const activity = this.activities().find((item) => item.id === activityId);
+    const questUser = activity
+      ? this.findActiveQuestForSession(activity.quest_id, collaborativeSessionId)
+      : undefined;
     return this.activitiesUser().find(
       (activityUser) =>
         activityUser.activity_id === activityId &&
-        activityUser.user_id === this.currentUserId() &&
-        activityUser.collaborative_session_id === collaborativeSessionId,
+        activityUser.quest_user_id === questUser?.id &&
+        activityUser.collaborative_session_id === questUser?.collaborative_session_id,
     );
   }
 
@@ -181,15 +206,18 @@ export class QuestsService implements OnDestroy {
   }
 
   getCollaborativeActivityProgress(activityId: number, sessionId: number): number {
-    const acceptedUserIds = this.collaborativeMembers()
-      .filter((member) => member.session_id === sessionId && member.status === 'accepted')
-      .map((member) => member.user_id);
+    const acceptedQuestUserIds = this.questsUser()
+      .filter(
+        (questUser) =>
+          questUser.collaborative_session_id === sessionId && questUser.status !== 'COMPLETED',
+      )
+      .map((questUser) => questUser.id);
     let highestProgress = 0;
     this.activitiesUser().forEach((activityUser) => {
       if (
         activityUser.activity_id === activityId &&
         activityUser.collaborative_session_id === sessionId &&
-        acceptedUserIds.includes(activityUser.user_id) &&
+        acceptedQuestUserIds.includes(activityUser.quest_user_id) &&
         activityUser.progress > highestProgress
       ) {
         highestProgress = activityUser.progress;
@@ -200,13 +228,13 @@ export class QuestsService implements OnDestroy {
 
   getCurrentProgressSessionId(questId: number): number | null {
     const session = this.collaborativeSessions()
-      .filter((item) => item.quest_id === questId && ['pending', 'started'].includes(item.status))
+      .filter((item) => item.quest_id === questId && ['PENDING', 'STARTED'].includes(item.status))
       .filter((item) =>
         this.collaborativeMembers().some(
           (member) =>
             member.session_id === item.id &&
             member.user_id === this.currentUserId() &&
-            member.status === 'accepted',
+            member.status === 'ACCEPTED',
         ),
       )
       .sort((a, b) => b.id - a.id)[0];
@@ -215,191 +243,126 @@ export class QuestsService implements OnDestroy {
 
   getCurrentActivitySessionId(activityId: number): number | null {
     const activity = this.activities().find((item) => item.id === activityId);
-    return activity ? this.getCurrentProgressSessionId(activity.quest_id) : null;
+    if (!activity) {
+      return null;
+    }
+
+    return (
+      this.getCurrentProgressSessionId(activity.quest_id) ??
+      this.findLatestCurrentUserActiveQuest(activity.quest_id)?.collaborative_session_id ??
+      null
+    );
   }
 
   private loadQuests(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.questsApi
-      .getQuests()
-      .subscribe({
-        next: (quests) => {
-          this.questsSignal.set(quests);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load quests'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.questsApi.getQuests().subscribe({
+      next: (quests) => {
+        this.questsSignal.set(quests);
+        this.questSearchResultsSignal.set(quests);
+        this.updateAllQuestStates();
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load quests'));
+        this.loadingSignal.set(false);
+      },
+    });
   }
 
-  private loadQuestsUser(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .getQuestsUser()
-      .subscribe({
+  private loadCurrentUserQuestAssignments(): void {
+    this.questsUserSignal.set([]);
+    ['IN_PROGRESS', 'READY_TO_COMPLETE', 'COMPLETED'].forEach((status) => {
+      this.questsApi.getQuestUsersByUserAndStatus(this.currentUserId(), status).subscribe({
         next: (questsUser) => {
-          this.questsUserSignal.set(questsUser);
-          this.checkAllLoadsCompleted();
+          this.questsUserSignal.update((current) => this.mergeById(current, questsUser));
+          questsUser
+            .filter((questUser) => questUser.status !== 'COMPLETED')
+            .forEach((questUser) => this.loadActivityUsersByQuestUserId(questUser.id));
+          this.updateAllQuestStates();
         },
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to load your quests'));
-          this.loadingSignal.set(false);
         },
       });
+    });
   }
 
   private loadMinigames(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.questsApi
-      .getMinigames()
-      .subscribe({
-        next: (minigames) => {
-          this.minigamesSignal.set(minigames);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load minigames'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.questsApi.getMinigames().subscribe({
+      next: (minigames) => {
+        this.minigamesSignal.set(minigames);
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load minigames'));
+        this.loadingSignal.set(false);
+      },
+    });
   }
 
-  private loadMinigameAttempts(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .getMinigameAttempts()
-      .subscribe({
-        next: (attempts) => {
-          this.minigameAttemptsSignal.set(attempts);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load minigame attempts'));
-          this.loadingSignal.set(false);
-        },
-      });
+  private loadSocialContext(): void {
+    this.profileService.getUsers().subscribe({
+      next: (users) => this.usersSignal.set(users),
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load users'));
+      },
+    });
+
+    this.profileService.getFriends().subscribe({
+      next: (friends) => this.friendsSignal.set(friends),
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load friends'));
+      },
+    });
   }
 
-  private loadActivities(): void {
+  loadActivitiesByQuestId(questId: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.questsApi
-      .getActivities()
-      .subscribe({
-        next: (activities) => {
-          this.activitiesSignal.set(activities);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load activities'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.questsApi.getActivitiesByQuestId(questId).subscribe({
+      next: (activities) => {
+        this.activitiesSignal.update((current) => this.mergeById(current, activities));
+        const questUser = this.findCurrentUserActiveQuest(questId, this.getCurrentProgressSessionId(questId));
+        if (questUser) {
+          this.loadActivityUsersByQuestUserId(questUser.id);
+        }
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load activities'));
+        this.loadingSignal.set(false);
+      },
+    });
   }
 
-  private loadActivitiesUser(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .getActivitiesUser()
-      .subscribe({
-        next: (activitiesUser) => {
-          this.activitiesUserSignal.set(activitiesUser);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to user activities'));
-          this.loadingSignal.set(false);
-        },
-      });
-  }
+  loadActivityUsersByQuestUserId(questUserId: number): void {
+    if (this.requestedActivityUsersByQuestUserId.has(questUserId)) {
+      return;
+    }
 
-  private loadCollaborativeSessions(): void {
+    this.requestedActivityUsersByQuestUserId.add(questUserId);
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.questsApi
-      .getCollaborativeQuestSessions()
-      .subscribe({
-        next: (sessions) => {
-          this.collaborativeSessionsSignal.set(sessions);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load collaborative sessions'));
-          this.loadingSignal.set(false);
-        },
-      });
-  }
-
-  private loadCollaborativeMembers(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.questsApi
-      .getCollaborativeQuestMembers()
-      .subscribe({
-        next: (members) => {
-          this.collaborativeMembersSignal.set(members);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load collaborative members'));
-          this.loadingSignal.set(false);
-        },
-      });
-  }
-
-  private loadUsers(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.profileApi
-      .getUsers()
-      .subscribe({
-        next: (users) => {
-          this.usersSignal.set(users);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load users'));
-          this.loadingSignal.set(false);
-        },
-      });
-  }
-
-  private loadFriends(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.profileApi
-      .getFriends()
-      .subscribe({
-        next: (friends) => {
-          this.friendsSignal.set(friends);
-          this.checkAllLoadsCompleted();
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load friends'));
-          this.loadingSignal.set(false);
-        },
-      });
+    this.questsApi.getActivityUsersByQuestUserId(questUserId).subscribe({
+      next: (activitiesUser) => {
+        this.activitiesUserSignal.update((current) => this.mergeById(current, activitiesUser));
+        this.updateAllQuestStates();
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.requestedActivityUsersByQuestUserId.delete(questUserId);
+        this.errorSignal.set(this.formatError(err, 'Failed to load activity progress'));
+        this.loadingSignal.set(false);
+      },
+    });
   }
 
   getTodayDate(): string {
     return new Date().toISOString().slice(0, 10);
-  }
-
-  private checkAllLoadsCompleted(): void {
-    this.completedLoadsCount++;
-
-    if (this.completedLoadsCount === 10) {
-      this.updateAllQuestStates();
-      this.questDailyService.syncDailyQuestAssignment();
-      this.loadingSignal.set(false);
-    }
   }
 
   formatError(error: unknown, fallback: string): string {

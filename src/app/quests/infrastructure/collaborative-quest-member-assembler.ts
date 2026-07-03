@@ -1,5 +1,5 @@
-import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
-import {CollaborativeQuestMember} from '../domain/model/collaborative-quest-member.entity';
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { CollaborativeQuestMember } from '../domain/model/collaborative-quest-member.entity';
 import {
   CollaborativeQuestMemberResource,
   CollaborativeQuestMemberResponse,
@@ -20,30 +20,28 @@ export class CollaborativeQuestMemberAssembler
   toEntityFromResource(resource: CollaborativeQuestMemberResource): CollaborativeQuestMember {
     return new CollaborativeQuestMember({
       id: resource.id,
-      session_id: resource.session_id,
-      user_id: resource.user_id,
-      invited_by_user_id: resource.invited_by_user_id,
+      session_id: resource.sessionId,
+      user_id: resource.userId,
+      invited_by_user_id: resource.ownerId,
       role: resource.role,
       status: resource.status,
-      invited_at: resource.invited_at,
-      responded_at: resource.responded_at,
-      left_at: resource.left_at,
-      removed_at: resource.removed_at,
+      invited_at: null,
+      responded_at: resource.answerDate,
+      left_at: resource.revokeDate,
+      removed_at: resource.revokeDate,
     });
   }
 
   toResourceFromEntity(entity: CollaborativeQuestMember): CollaborativeQuestMemberResource {
     return {
       id: entity.id,
-      session_id: entity.session_id,
-      user_id: entity.user_id,
-      invited_by_user_id: entity.invited_by_user_id,
+      sessionId: entity.session_id,
+      userId: entity.user_id,
+      ownerId: entity.invited_by_user_id,
       role: entity.role,
       status: entity.status,
-      invited_at: entity.invited_at,
-      responded_at: entity.responded_at,
-      left_at: entity.left_at,
-      removed_at: entity.removed_at,
+      answerDate: entity.responded_at,
+      revokeDate: entity.left_at ?? entity.removed_at,
     };
   }
 }

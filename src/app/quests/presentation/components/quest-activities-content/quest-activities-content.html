@@ -32,14 +32,7 @@
       </div>
 
       <div class="quest-progress">
-        <span>{{
-          'quests.progressCount'
-            | translate
-              : {
-                  completed: detail.quest.completed_activities_count,
-                  total: detail.quest.activities_count,
-                }
-        }}</span>
+        <span>{{ detail.quest.progress }}%</span>
         <div class="progress-track" aria-hidden="true">
           <div class="progress-value" [style.width.%]="detail.quest.progress"></div>
         </div>

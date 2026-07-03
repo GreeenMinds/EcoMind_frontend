@@ -14,7 +14,7 @@ export class QuestListContent {
   private readonly questsService = inject(QuestsService);
   private readonly router = inject(Router);
 
-  readonly categories = ['energy', 'water', 'recycle', 'daily_quest'];
+  readonly categories = ['ENERGY', 'WATER', 'RECYCLE', 'DAILY_QUEST'];
   readonly selectedCategory = this.questsService.selectedListCategory;
   readonly selectedPage = this.questsService.selectedListPage;
 
@@ -24,7 +24,7 @@ export class QuestListContent {
       .filter((quest) => quest.category === this.selectedCategory())
       .filter(
         (quest) =>
-          this.selectedCategory() !== 'daily_quest' ||
+          this.selectedCategory() !== 'DAILY_QUEST' ||
           !this.isFutureDailyQuest(quest.expiration_date),
       ),
   );

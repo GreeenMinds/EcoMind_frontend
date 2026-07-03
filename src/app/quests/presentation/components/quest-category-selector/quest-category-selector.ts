@@ -28,7 +28,7 @@ export class QuestCategorySelector {
   readonly categoryMenuOpen = signal(false);
 
   readonly categoryConfig: Record<string, QuestCategoryConfig> = {
-    energy: {
+    ENERGY: {
       label: 'energy',
       iconUrl: '/assets/images/quests/light.png',
       iconFallback: '',
@@ -36,7 +36,7 @@ export class QuestCategorySelector {
       backgroundColor: '#ffd34f',
       shadowColor: '#f0a13c',
     },
-    water: {
+    WATER: {
       label: 'water',
       iconUrl: '/assets/images/quests/water.png',
       iconFallback: '',
@@ -44,7 +44,7 @@ export class QuestCategorySelector {
       backgroundColor: '#58a9ff',
       shadowColor: '#5468df',
     },
-    recycle: {
+    RECYCLE: {
       label: 'recycle',
       iconUrl: '/assets/images/quests/recycle.png',
       iconFallback: '',
@@ -52,7 +52,7 @@ export class QuestCategorySelector {
       backgroundColor: '#68d474',
       shadowColor: '#3f9a55',
     },
-    daily_quest: {
+    DAILY_QUEST: {
       label: 'daily_quest',
       iconUrl: '/assets/images/quests/daily.png',
       iconFallback: '',
@@ -84,7 +84,7 @@ export class QuestCategorySelector {
       backgroundColor: '#9aa3ad',
       shadowColor: '#707984',
     };
-    const translationKey = `quests.categories.${category}`;
+    const translationKey = `quests.categories.${category.toLowerCase()}`;
     const translatedLabel = this.translate.instant(translationKey);
 
     return {

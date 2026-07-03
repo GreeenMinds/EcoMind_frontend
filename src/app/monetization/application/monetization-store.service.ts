@@ -90,18 +90,6 @@ export class MonetizationStoreService {
     );
   });
 
-  /**
-   * Highest active multiplier factor for the current user.
-   * Returns 1 if there are no active multipliers.
-   */
-  readonly activeMultiplierFactor = computed(() => {
-    const now = new Date();
-    const activeFactors = this.userMultipliers()
-      .filter((um) => new Date(um.endDate) > now)
-      .map((um) => this.multipliers().find((m) => m.id === um.multiplierId)?.multiplierFactor ?? 1);
-    return activeFactors.length > 0 ? Math.max(...activeFactors) : 1;
-  });
-
   readonly cosmeticSummaries: Signal<CosmeticSummary[]> = computed(() =>
     this.cosmetics().map((cosmetic) => ({
       cosmetic,
@@ -168,33 +156,6 @@ export class MonetizationStoreService {
           this.loadingSignal.set(false);
         },
       });
-  }
-
-  /**
-   * Called by QuestsService when a challenge/activity is completed.
-   * Registers the gem_movement in db.json and immediately syncs
-   * the balance signal without waiting for a full refresh.
-   */
-  onQuestGemsAwarded(userId: number, amount: number, questId: number, newBalance: number): void {
-    if (amount <= 0) return;
-
-    // 1. Registrar movimiento en gem_movement (db.json)
-    const movement = new GemMovementEntity();
-    movement.userId   = userId;
-    movement.type     = 'quest_reward';
-    movement.amount   = amount;
-    movement.origin   = 'quest';
-    movement.originId = questId;
-    this.monetizationApi
-      .registerGemMovement(movement)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-
-    // 2.Synchronize balance immediately if you are the current user
-    if (userId === this.currentUserId()) {
-      this.gemBalanceSignal.set(newBalance);
-      this.profileService.syncGemBalance(newBalance);
-    }
   }
 
   // ─── Buy cosmetic ────────────────────────────────────────────────────

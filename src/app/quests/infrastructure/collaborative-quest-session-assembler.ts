@@ -1,5 +1,5 @@
-import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
-import {CollaborativeQuestSession} from '../domain/model/collaborative-quest-session.entity';
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { CollaborativeQuestSession } from '../domain/model/collaborative-quest-session.entity';
 import {
   CollaborativeQuestSessionResource,
   CollaborativeQuestSessionResponse,
@@ -22,24 +22,24 @@ export class CollaborativeQuestSessionAssembler
   toEntityFromResource(resource: CollaborativeQuestSessionResource): CollaborativeQuestSession {
     return new CollaborativeQuestSession({
       id: resource.id,
-      quest_id: resource.quest_id,
-      owner_user_id: resource.owner_user_id,
+      quest_id: resource.questId,
+      owner_user_id: resource.ownerUserId,
       status: resource.status,
-      created_at: resource.created_at,
-      started_at: resource.started_at,
-      completed_at: resource.completed_at,
+      created_at: resource.createdAt,
+      started_at: resource.startedAt,
+      completed_at: resource.completedAt,
     });
   }
 
   toResourceFromEntity(entity: CollaborativeQuestSession): CollaborativeQuestSessionResource {
     return {
       id: entity.id,
-      quest_id: entity.quest_id,
-      owner_user_id: entity.owner_user_id,
+      questId: entity.quest_id,
+      ownerUserId: entity.owner_user_id,
       status: entity.status,
-      created_at: entity.created_at,
-      started_at: entity.started_at,
-      completed_at: entity.completed_at,
+      createdAt: entity.created_at,
+      startedAt: entity.started_at,
+      completedAt: entity.completed_at,
     };
   }
 }
