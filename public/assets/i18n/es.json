@@ -342,7 +342,8 @@
       "accept": "Aceptar",
       "reject": "Rechazar",
       "viewProfile": "Ver perfil",
-      "remove": "Eliminar"
+      "remove": "Eliminar",
+      "cancel": "Cancelar"
     },
     "summary": {
       "selfCommitment": "Mi compromiso",
@@ -400,6 +401,7 @@
       "title": "Red de amigos",
       "subtitle": "Contactos registrados.",
       "receivedRequests": "Solicitudes recibidas",
+      "sentRequests": "Solicitudes enviadas",
       "sendRequestTitle": "Enviar solicitud de amistad",
       "searchUserPlaceholder": "Busca un usuario por nombre",
       "sendRequest": "Enviar solicitud",

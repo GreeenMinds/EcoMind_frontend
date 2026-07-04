@@ -342,7 +342,8 @@
       "accept": "Accept",
       "reject": "Reject",
       "viewProfile": "View profile",
-      "remove": "Remove"
+      "remove": "Remove",
+      "cancel": "Cancel"
     },
     "summary": {
       "selfCommitment": "My commitment",
@@ -400,6 +401,7 @@
       "title": "Friends network",
       "subtitle": "Registered contacts.",
       "receivedRequests": "Received requests",
+      "sentRequests": "Sent requests",
       "sendRequestTitle": "Send a friend request",
       "searchUserPlaceholder": "Search a user by name",
       "sendRequest": "Send request",

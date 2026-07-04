@@ -155,6 +155,14 @@ export class ProfileService {
     return this.profileApi.updateFriend(friend);
   }
 
+  acceptFriend(friendId: number): Observable<Friend> {
+    return this.profileApi.acceptFriend(friendId);
+  }
+
+  rejectFriend(friendId: number): Observable<Friend> {
+    return this.profileApi.rejectFriend(friendId);
+  }
+
   removeFamilyMember(familyUserId: number): Observable<void> {
     return this.profileApi.deleteFamilyUser(familyUserId);
   }

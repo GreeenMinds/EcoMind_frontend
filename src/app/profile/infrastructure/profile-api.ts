@@ -92,6 +92,14 @@ export class ProfileApi extends BaseApi {
     return this.friendsEndpoint.update(friend, friend.id);
   }
 
+  acceptFriend(friendId: number): Observable<Friend> {
+    return this.friendsEndpoint.accept(friendId);
+  }
+
+  rejectFriend(friendId: number): Observable<Friend> {
+    return this.friendsEndpoint.reject(friendId);
+  }
+
   deleteFriend(id: number): Observable<void> {
     return this.friendsEndpoint.delete(id);
   }

@@ -1,4 +1,6 @@
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { Friend } from '../domain/model/friend.entity';
@@ -16,6 +18,20 @@ export class FriendsApiEndpoint extends BaseApiEndpoint<
       http,
       `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFriendEndpointPath}`,
       new FriendAssembler(),
+    );
+  }
+
+  accept(friendshipId: number): Observable<Friend> {
+    return this.http.patch<FriendResource>(`${this.endpointUrl}/${friendshipId}/accept`, {}).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError('Failed to accept friend request')),
+    );
+  }
+
+  reject(friendshipId: number): Observable<Friend> {
+    return this.http.patch<FriendResource>(`${this.endpointUrl}/${friendshipId}/reject`, {}).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError('Failed to reject friend request')),
     );
   }
 }

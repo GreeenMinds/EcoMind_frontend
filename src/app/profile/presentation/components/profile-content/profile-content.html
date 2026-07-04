@@ -24,6 +24,7 @@
       [equippedOverlayUrl]="viewedUserAvatar().equippedOverlayUrl"
       [equippedOverlayType]="viewedUserAvatar().equippedOverlayType"
       [removeActionLabel]="heroRemoveActionLabel()"
+      [showRemoveAction]="showHeroRemoveAction()"
       (editProfile)="ignoreEditProfile()"
       (shareProfile)="shareProfile()"
       (removeMember)="handleViewedUserRemoval()">
@@ -155,11 +156,13 @@
           [friends]="friendProfiles()"
           [inviteCandidates]="friendInviteCandidates()"
           [incomingRequests]="incomingFriendRequests()"
+          [outgoingRequests]="outgoingFriendRequests()"
           (openFriend)="openFriendProfile($event)"
           (removeFriend)="removeFriend($event)"
           (sendFriendRequest)="sendFriendRequest($event)"
           (acceptFriendRequest)="acceptFriendRequest($event)"
-          (rejectFriendRequest)="rejectFriendRequest($event)">
+          (rejectFriendRequest)="rejectFriendRequest($event)"
+          (cancelFriendRequest)="cancelFriendRequest($event)">
         </app-profile-friends-section>
       }
     }

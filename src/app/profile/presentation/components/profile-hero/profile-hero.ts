@@ -19,6 +19,7 @@ export class ProfileHero {
   @Input() equippedOverlayUrl: string | null = null;
   @Input() equippedOverlayType: string | null = null;
   @Input() removeActionLabel = 'Eliminar';
+  @Input() showRemoveAction = true;
 
   @Output() editProfile = new EventEmitter<void>();
   @Output() shareProfile = new EventEmitter<void>();

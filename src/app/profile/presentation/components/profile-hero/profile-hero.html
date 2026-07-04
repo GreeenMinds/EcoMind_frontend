@@ -41,13 +41,15 @@
         <button class="profile-action" type="button" (click)="shareProfile.emit()">
           {{ 'profilePage.hero.shareProfile' | translate }}
         </button>
-        <button
-          class="profile-action profile-action--danger"
-          type="button"
-          [disabled]="saving"
-          (click)="removeMember.emit()">
-          {{ removeActionLabel }}
-        </button>
+        @if (showRemoveAction) {
+          <button
+            class="profile-action profile-action--danger"
+            type="button"
+            [disabled]="saving"
+            (click)="removeMember.emit()">
+            {{ removeActionLabel }}
+          </button>
+        }
       }
     </div>
   </section>
