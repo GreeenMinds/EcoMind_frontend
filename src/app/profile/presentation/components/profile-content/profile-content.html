@@ -99,6 +99,7 @@
           [incomingInvitations]="incomingInvitations()"
           [outgoingInvitations]="outgoingInvitations()"
           (editCommitment)="openFamilyCommitmentEditor()"
+          (viewProgress)="openFamilyProgressModal()"
           (createFamily)="createFamily($event)"
           (inviteMember)="inviteFamilyMember($event)"
           (acceptInvitation)="acceptFamilyInvitation($event)"
@@ -188,6 +189,13 @@
       (clear)="clearCommitment()"
       (close)="closeCommitmentEditor()">
     </app-profile-commitment-modal>
+  }
+
+  @if (showFamilyProgressModal()) {
+    <app-family-progress-modal
+      [familyId]="primaryFamily()?.id ?? null"
+      (close)="closeFamilyProgressModal()">
+    </app-family-progress-modal>
   }
 
   @if (feedbackMessage()) {

@@ -1,0 +1,50 @@
+<div class="profile-modal-backdrop" (click)="close.emit()"></div>
+
+<section class="profile-modal" [attr.aria-label]="'profilePage.familyReport.title' | translate">
+  <div class="profile-modal__header">
+    <h2>{{ 'profilePage.familyReport.title' | translate }}</h2>
+    <button class="profile-modal__close" type="button" (click)="close.emit()">✕</button>
+  </div>
+
+  @if (loading()) {
+    <p class="empty-copy">{{ 'profilePage.familyReport.loading' | translate }}</p>
+  } @else if (report(); as report) {
+    <div class="report-quests">
+      <span class="report-quests__label">{{ 'profilePage.familyReport.questsThisWeek' | translate }}</span>
+
+      @if (report.hasData) {
+        <div class="progress-list">
+          @for (quest of report.completedQuests; track $index) {
+            <article class="progress-item">
+              <div class="progress-item__copy">
+                <h3>{{ quest.questTitle }}</h3>
+                <p>{{ 'profilePage.familyReport.completedRelative' | translate: { relative: formatRelativeDate(quest.completedAt) } }}</p>
+              </div>
+              <div class="progress-bar progress-bar--complete">
+                <span style="width: 100%"></span>
+              </div>
+              <div class="progress-item__meta">
+                <span>{{ quest.ecopoints }} ecoPoints</span>
+                <span>{{ quest.activityCount }} actividades</span>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="report-empty">{{ 'profilePage.familyReport.noData' | translate }}</p>
+      }
+    </div>
+
+    <article class="progress-item">
+      <div class="progress-item__copy">
+        <h3>{{ 'profilePage.familyReport.achievementsEarned' | translate }}</h3>
+      </div>
+      <div class="progress-bar progress-bar--complete">
+        <span [style.width]="getAchievementsPercent(report)"></span>
+      </div>
+      <div class="progress-item__meta">
+        <span>{{ report.achievementsEarned }}/{{ report.totalAchievements }}</span>
+      </div>
+    </article>
+  }
+</section>

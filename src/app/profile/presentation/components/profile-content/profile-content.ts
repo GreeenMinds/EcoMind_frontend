@@ -44,6 +44,7 @@ import {
 } from '../profile-summary-section/profile-summary-section';
 import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
 import { FamilyAchievementsSection } from '../family-achievements-section/family-achievements-section';
+import { FamilyProgressModal } from '../family-progress-modal/family-progress-modal';
 
 @Component({
   selector: 'app-profile-content',
@@ -53,6 +54,7 @@ import { FamilyAchievementsSection } from '../family-achievements-section/family
     ProfileSummarySection,
     ProfileFamilySection,
     FamilyAchievementsSection,
+    FamilyProgressModal,
     ProfileProgressSection,
     ProfileFriendsSection,
     ProfileCommitmentModal,
@@ -68,6 +70,16 @@ export class ProfileContent {
   private readonly communityService = inject(CommunityService);
   private readonly monetizationApi = inject(MonetizationApi);
   private readonly translate = inject(TranslateService);
+
+  readonly showFamilyProgressModal = signal(false);
+
+  openFamilyProgressModal(): void {
+    this.showFamilyProgressModal.set(true);
+  }
+
+  closeFamilyProgressModal(): void {
+    this.showFamilyProgressModal.set(false);
+  }
 
   readonly currentUser = this.profileService.currentUserProfile;
   readonly activeTab = signal<ProfileTab>('summary');

@@ -334,6 +334,7 @@
       "createFamily": "Create family",
       "adultOnlyCreate": "Only an adult user can create a family.",
       "primaryGroup": "Primary group",
+      "viewProgress": "View family progress",
       "commitmentLabel": "Family commitment",
       "noCommitment": "Your family does not have a recorded commitment yet.",
       "editCommitment": "Edit commitment",
@@ -353,6 +354,14 @@
       "registeredCount": "{{count}} registered",
       "loading": "Loading family achievements...",
       "empty": "No information available"
+    },
+    "familyReport": {
+      "title": "Family Progress Report",
+      "loading": "Generating report...",
+      "questsThisWeek": "Quests completed this week",
+      "completedRelative": "Completed {{ relative }}",
+      "achievementsEarned": "Achievements earned",
+      "noData": "Not enough data to generate a report this week"
     },
     "friends": {
       "eyebrow": "Community",

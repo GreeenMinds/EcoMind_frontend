@@ -334,6 +334,7 @@
       "createFamily": "Crear familia",
       "adultOnlyCreate": "Solo un usuario mayor de edad puede crear una familia.",
       "primaryGroup": "Grupo principal",
+      "viewProgress": "Ver progreso familiar",
       "commitmentLabel": "Compromiso familiar",
       "noCommitment": "Tu familia aun no tiene un compromiso registrado.",
       "editCommitment": "Editar compromiso",
@@ -353,6 +354,14 @@
       "registeredCount": "{{count}} registrados",
       "loading": "Cargando logros familiares...",
       "empty": "No hay información disponible"
+    },
+    "familyReport": {
+      "title": "Reporte de progreso familiar",
+      "loading": "Generando reporte...",
+      "questsThisWeek": "Retos cumplidos esta semana",
+      "completedRelative": "Completado {{ relative }}",
+      "achievementsEarned": "Logros obtenidos",
+      "noData": "No hay datos suficientes para generar un reporte esta semana"
     },
     "friends": {
       "eyebrow": "Comunidad",
