@@ -74,7 +74,7 @@ export class CommunityService {
   private readonly userAchievementsSignal = signal<UserAchievement[]>([]);
   private readonly eventsSignal = signal<Event[]>([]);
   private readonly eventRegistrationsSignal = signal<EventRegistration[]>([]);
-  private readonly realCurrentMemberSignal = signal<CommunityMember | null>(null);
+  private readonly realMembersSignal = signal<Map<number, CommunityMember>>(new Map());
 
   readonly communities = this.communitiesSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
@@ -102,14 +102,14 @@ export class CommunityService {
   readonly activeGoal = computed(() => this.goals().find((goal) => goal.status === 'active'));
 
   readonly postSummaries = computed(() => {
-    const realCurrentMember = this.realCurrentMemberSignal();
+    const realMembers = this.realMembersSignal();
     const mockPosts = this.posts().map((post) => ({
       post,
       author: this.members().find((member) => member.id === post.user_id),
     }));
     const realPosts = this.realPostsSignal().map((post) => ({
       post,
-      author: realCurrentMember ?? this.members().find((member) => member.id === post.user_id),
+      author: realMembers.get(post.user_id) ?? this.members().find((member) => member.id === post.user_id),
     }));
 
     return [...mockPosts, ...realPosts]
@@ -180,24 +180,32 @@ export class CommunityService {
   ) {
     this.loadCommunityData();
     this.loadRealPosts();
-    this.loadRealCurrentMember();
   }
 
   private loadRealPosts(): void {
     const realPostsUrl =
       `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityPostRealEndpointPath}`;
     this.http.get<CommunityPost[]>(realPostsUrl).subscribe({
-      next: (posts) => this.realPostsSignal.set(posts),
+      next: (posts) => {
+        this.realPostsSignal.set(posts);
+        this.loadRealMembers(posts.map((post) => post.user_id));
+      },
       error: () => this.realPostsSignal.set([]),
     });
   }
 
-  private loadRealCurrentMember(): void {
-    const realUserUrl =
-      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}/${this.currentUserId()}`;
-    this.http.get<CommunityMember>(realUserUrl).subscribe({
-      next: (member) => this.realCurrentMemberSignal.set(member),
-      error: () => this.realCurrentMemberSignal.set(null),
+  private loadRealMembers(userIds: number[]): void {
+    const knownIds = new Set(this.realMembersSignal().keys());
+    const missingIds = [...new Set(userIds)].filter((id) => !knownIds.has(id));
+
+    missingIds.forEach((userId) => {
+      const realUserUrl =
+        `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}/${userId}`;
+      this.http.get<CommunityMember>(realUserUrl).subscribe({
+        next: (member) =>
+          this.realMembersSignal.update((members) => new Map(members).set(userId, member)),
+        error: () => {},
+      });
     });
   }
 
@@ -365,6 +373,7 @@ export class CommunityService {
     return this.http.post<CommunityPost>(realPostsUrl, payload).pipe(
       tap((createdPost) => {
         this.realPostsSignal.update((posts) => [...posts, createdPost]);
+        this.loadRealMembers([createdPost.user_id]);
         this.notifyConnectedFriends(createdPost);
       }),
     );

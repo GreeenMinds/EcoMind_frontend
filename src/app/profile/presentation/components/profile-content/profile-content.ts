@@ -846,7 +846,7 @@ export class ProfileContent {
           familyUser.user_id = this.currentUser()?.id ?? 0;
           familyUser.family_id = createdFamily.id;
           familyUser.family_role = 'parent';
-          familyUser.joined_at = new Date().toISOString().slice(0, 10);
+          familyUser.joined_at = new Date().toISOString();
           return this.profileService.addFamilyMember(familyUser);
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -896,7 +896,7 @@ export class ProfileContent {
     membership.user_id = currentUser.id;
     membership.family_id = invitation.family_id;
     membership.family_role = acceptedRole;
-    membership.joined_at = new Date().toISOString().slice(0, 10);
+    membership.joined_at = new Date().toISOString();
 
     const updatedInvitation = new FamilyInvitation();
     Object.assign(updatedInvitation, invitation);
@@ -1090,6 +1090,7 @@ export class ProfileContent {
           this.cosmetics.set(cosmetics);
           this.userCosmetics.set(userCosmetics);
           this.profileLoading.set(false);
+          this.questsService.refreshFamilyContext();
         },
         error: (error: Error) => {
           this.profileError.set(error.message || 'No se pudo cargar el perfil');

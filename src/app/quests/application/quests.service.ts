@@ -590,6 +590,10 @@ export class QuestsService {
     });
   }
 
+  refreshFamilyContext(): void {
+    this.loadFamilyContext();
+  }
+
   private loadFamilyContext(): void {
     this.profileService.getFamilyUsers().subscribe({
       next: (familyUsers) => {
