@@ -7,6 +7,8 @@ import {QuestDetailContent} from './quests/presentation/components/quest-detail-
 import {QuestListContent} from './quests/presentation/components/quest-list-content/quest-list-content';
 import {QuestStartedContent} from './quests/presentation/components/quest-started-content/quest-started-content';
 import {QuestSearchContent} from './quests/presentation/components/quest-search-content/quest-search-content';
+import {FamilyPlanBuilder} from './quests/presentation/components/family-plan-builder/family-plan-builder';
+import {FamilyPlanDetail} from './quests/presentation/components/family-plan-detail/family-plan-detail';
 import {SimpleScoreMinigame} from './quests/presentation/minigames/simple-score/simple-score-minigame';
 import { ProfileContent } from './profile/presentation/components/profile-content';
 import {StoreContentComponent} from './monetization/presentation/components/store-content/store-content';
@@ -28,6 +30,14 @@ export const routes: Routes = [
       {
         path: 'search',
         component: QuestSearchContent,
+      },
+      {
+        path: 'family-plans/new',
+        component: FamilyPlanBuilder,
+      },
+      {
+        path: 'family-plans/:planId',
+        component: FamilyPlanDetail,
       },
       {
         path: 'minigames/simple-score',

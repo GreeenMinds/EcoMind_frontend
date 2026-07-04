@@ -25,6 +25,12 @@ import {
   CreateCollaborativeQuestSessionPayload,
 } from './collaborative-quest-session-response';
 import { InviteCollaborativeQuestMemberPayload } from './collaborative-quest-member-response';
+import { FamilyPlan } from '../domain/model/family-plan.entity';
+import {
+  CreateFamilyPlanPayload,
+  UpdateFamilyPlanPayload,
+} from './family-plan-response';
+import { FamilyPlansApiEndpoint } from './family-plans-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +44,7 @@ export class QuestsApi extends BaseApi {
   private readonly activitiesUserEndpoint: ActivitiesUserApiEndpoint;
   private readonly collaborativeSessionsEndpoint: CollaborativeQuestSessionsApiEndpoint;
   private readonly collaborativeMembersEndpoint: CollaborativeQuestMembersApiEndpoint;
+  private readonly familyPlansEndpoint: FamilyPlansApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -49,6 +56,7 @@ export class QuestsApi extends BaseApi {
     this.activitiesUserEndpoint = new ActivitiesUserApiEndpoint(http);
     this.collaborativeSessionsEndpoint = new CollaborativeQuestSessionsApiEndpoint(http);
     this.collaborativeMembersEndpoint = new CollaborativeQuestMembersApiEndpoint(http);
+    this.familyPlansEndpoint = new FamilyPlansApiEndpoint(http);
   }
 
   //get all quests
@@ -223,5 +231,40 @@ export class QuestsApi extends BaseApi {
     ownerUserId: number,
   ): Observable<CollaborativeQuestMember> {
     return this.collaborativeMembersEndpoint.remove(memberId, ownerUserId);
+  }
+
+  getFamilyPlansByFamilyId(familyId: number): Observable<FamilyPlan[]> {
+    return this.familyPlansEndpoint.getByFamilyId(familyId);
+  }
+
+  getActiveFamilyPlan(familyId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.getActiveByFamilyId(familyId);
+  }
+
+  getFamilyPlanById(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.getById(familyPlanId);
+  }
+
+  createFamilyPlan(payload: CreateFamilyPlanPayload): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.create(payload);
+  }
+
+  updateFamilyPlan(
+    familyPlanId: number,
+    payload: UpdateFamilyPlanPayload,
+  ): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.update(familyPlanId, payload);
+  }
+
+  activateFamilyPlan(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.activate(familyPlanId);
+  }
+
+  completeFamilyPlan(familyPlanId: number, ownerUserId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.complete(familyPlanId, ownerUserId);
+  }
+
+  deleteFamilyPlan(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.delete(familyPlanId);
   }
 }

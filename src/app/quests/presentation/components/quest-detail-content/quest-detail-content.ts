@@ -54,13 +54,14 @@ export class QuestDetailContent {
   });
   readonly collaborativeContext = computed(() => {
     const detail = this.detail();
-    return detail?.quest.type === 'COLLABORATIVE'
-      ? this.buildCollaborativeContext(detail.quest.id)
-      : undefined;
+    if (!detail || !['COLLABORATIVE', 'FAMILY'].includes(detail.quest.type)) {
+      return undefined;
+    }
+    return this.buildCollaborativeContext(detail.quest.id);
   });
   private readonly collaborativeStateLoader = effect(() => {
     const detail = this.detail();
-    if (detail?.quest.type === 'COLLABORATIVE') {
+    if (detail && ['COLLABORATIVE', 'FAMILY'].includes(detail.quest.type)) {
       this.collaborativeQuestsService.refreshState(detail.quest.id);
     }
   });
@@ -87,14 +88,20 @@ export class QuestDetailContent {
   readonly showPrimaryAction = computed(() => {
     const detail = this.detail();
     const context = this.collaborativeContext();
-    return detail?.quest.type !== 'COLLABORATIVE' || !context?.pendingInvitation;
+    if (detail?.quest.type === 'FAMILY' && !detail.started) {
+      return false;
+    }
+    return !['COLLABORATIVE', 'FAMILY'].includes(detail?.quest.type ?? '') || !context?.pendingInvitation;
   });
 
   readonly primaryActionDisabled = computed(() => {
     const detail = this.detail();
     const context = this.collaborativeContext();
+    if (!detail) {
+      return false;
+    }
     return Boolean(
-      detail?.quest.type === 'COLLABORATIVE' &&
+      ['COLLABORATIVE', 'FAMILY'].includes(detail?.quest.type ?? '') &&
       !detail.started &&
       !context?.canStart,
     );
@@ -112,7 +119,10 @@ export class QuestDetailContent {
       return;
     }
 
-    if (detail.quest.type === 'COLLABORATIVE') {
+    if (['COLLABORATIVE', 'FAMILY'].includes(detail.quest.type)) {
+      if (detail.quest.type === 'FAMILY' && !detail.started) {
+        return;
+      }
       if (!detail.started) {
         const context = this.collaborativeContext();
         if (context?.session?.status === 'PENDING') {
