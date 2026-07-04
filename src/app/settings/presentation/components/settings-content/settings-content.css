@@ -188,6 +188,104 @@
   cursor: pointer;
 }
 
+.support-section {
+  align-items: stretch;
+  overflow: hidden;
+  padding: 0;
+}
+
+.support-section__content {
+  display: grid;
+  align-content: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 28px;
+}
+
+.support-section__eyebrow {
+  color: #5aa345;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.support-section__content h2,
+.support-section__content p {
+  margin: 0;
+}
+
+.support-section__content h2 {
+  color: #18340f;
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.support-section__content p {
+  max-width: 560px;
+  color: #687361;
+  line-height: 1.55;
+}
+
+.support-contact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 620px;
+}
+
+.support-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(103, 171, 79, 0.24);
+  border-radius: 12px;
+  background: #f8fcf5;
+  color: #18340f;
+  text-decoration: none;
+}
+
+.support-contact > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e8f5e1;
+  color: #3d7f2f;
+  font-size: 1.1rem;
+}
+
+.support-contact div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.support-contact strong {
+  font-size: 0.92rem;
+}
+
+.support-contact small {
+  overflow-wrap: anywhere;
+  color: #687361;
+  font-size: 0.86rem;
+}
+
+.support-section__image {
+  align-self: end;
+  justify-self: end;
+  width: min(32vw, 250px);
+  min-width: 180px;
+  max-height: 300px;
+  object-fit: contain;
+  padding: 18px 24px 0 0;
+}
+
 @media (max-width: 760px) {
   .settings-section,
   .settings-disclosure,
@@ -198,5 +296,24 @@
 
   .settings-disclosure__actions {
     justify-content: space-between;
+  }
+
+  .support-section {
+    display: grid;
+  }
+
+  .support-section__content {
+    padding: 24px;
+  }
+
+  .support-contact-list {
+    grid-template-columns: 1fr;
+  }
+
+  .support-section__image {
+    justify-self: center;
+    width: min(72vw, 240px);
+    min-width: 0;
+    padding: 0 18px 10px;
   }
 }

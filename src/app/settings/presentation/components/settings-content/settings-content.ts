@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import {
   NotificationPreferenceKey,
@@ -13,7 +14,7 @@ interface NotificationPreferenceOption {
 
 @Component({
   selector: 'app-settings-content',
-  imports: [LanguageSwitcher],
+  imports: [LanguageSwitcher, TranslatePipe],
   templateUrl: './settings-content.html',
   styleUrl: './settings-content.css',
 })
@@ -25,38 +26,38 @@ export class SettingsContent {
   readonly notificationOptions: NotificationPreferenceOption[] = [
     {
       key: 'friendship',
-      title: 'Amistades',
-      description: 'Solicitudes de amistad, respuestas y cambios de relacion.',
+      title: 'settings.notifications.options.friendship.title',
+      description: 'settings.notifications.options.friendship.description',
     },
     {
       key: 'quests',
-      title: 'Misiones',
-      description: 'Retos, progreso, vencimientos y actividades familiares.',
+      title: 'settings.notifications.options.quests.title',
+      description: 'settings.notifications.options.quests.description',
     },
     {
       key: 'community',
-      title: 'Comunidad',
-      description: 'Eventos, publicaciones e interacciones del feed.',
+      title: 'settings.notifications.options.community.title',
+      description: 'settings.notifications.options.community.description',
     },
     {
       key: 'achievements',
-      title: 'Logros',
-      description: 'Medallas, ranking y logros compartidos.',
+      title: 'settings.notifications.options.achievements.title',
+      description: 'settings.notifications.options.achievements.description',
     },
     {
       key: 'learning',
-      title: 'Learning',
-      description: 'Recordatorios educativos y materiales pendientes.',
+      title: 'settings.notifications.options.learning.title',
+      description: 'settings.notifications.options.learning.description',
     },
     {
       key: 'support',
-      title: 'Soporte',
-      description: 'Actualizaciones de tickets y respuestas del equipo.',
+      title: 'settings.notifications.options.support.title',
+      description: 'settings.notifications.options.support.description',
     },
     {
       key: 'general',
-      title: 'General',
-      description: 'Avisos del sistema y mensajes generales.',
+      title: 'settings.notifications.options.general.title',
+      description: 'settings.notifications.options.general.description',
     },
   ];
 

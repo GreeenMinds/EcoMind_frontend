@@ -321,6 +321,68 @@
       "megaBundleMultiplier": "Multiplicador 3x por una semana"
     }
   },
+  "settings": {
+    "header": {
+      "eyebrow": "Ajustes",
+      "title": "Configuración"
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Elige el idioma principal de la aplicación."
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "description": "Controla qué avisos aparecen en la campana del encabezado.",
+      "status": {
+        "enabled": "Activadas",
+        "disabled": "Desactivadas"
+      },
+      "master": {
+        "title": "Estado general",
+        "description": "Activa o pausa todas las notificaciones de la campana."
+      },
+      "options": {
+        "friendship": {
+          "title": "Amistades",
+          "description": "Solicitudes de amistad, respuestas y cambios de relación."
+        },
+        "quests": {
+          "title": "Misiones",
+          "description": "Retos, progreso, vencimientos y actividades familiares."
+        },
+        "community": {
+          "title": "Comunidad",
+          "description": "Eventos, publicaciones e interacciones del feed."
+        },
+        "achievements": {
+          "title": "Logros",
+          "description": "Medallas, ranking y logros compartidos."
+        },
+        "learning": {
+          "title": "Learning",
+          "description": "Recordatorios educativos y materiales pendientes."
+        },
+        "support": {
+          "title": "Soporte",
+          "description": "Actualizaciones de tickets y respuestas del equipo."
+        },
+        "general": {
+          "title": "General",
+          "description": "Avisos del sistema y mensajes generales."
+        }
+      },
+      "reset": "Restaurar preferencias"
+    },
+    "support": {
+      "eyebrow": "Soporte técnico",
+      "title": "Contacta con EcoMind",
+      "description": "Si necesitas ayuda con tu cuenta, solicitudes o funcionamiento de la plataforma, comunícate con nuestro equipo.",
+      "ariaLabel": "Canales de soporte técnico",
+      "emailLabel": "Correo",
+      "phoneLabel": "Teléfono",
+      "imageAlt": "Asistente de soporte técnico EcoMind"
+    }
+  },
   "profilePage": {
     "hero": {
       "eyebrow": "Perfil EcoMind",

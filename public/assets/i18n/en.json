@@ -321,6 +321,68 @@
       "megaBundleMultiplier": "3x Multiplier for one week"
     }
   },
+  "settings": {
+    "header": {
+      "eyebrow": "Settings",
+      "title": "Configuration"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose the main language for the application."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Control which alerts appear in the header bell.",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "master": {
+        "title": "General status",
+        "description": "Turn all bell notifications on or off."
+      },
+      "options": {
+        "friendship": {
+          "title": "Friendships",
+          "description": "Friend requests, responses, and relationship changes."
+        },
+        "quests": {
+          "title": "Quests",
+          "description": "Challenges, progress, due dates, and family activities."
+        },
+        "community": {
+          "title": "Community",
+          "description": "Events, posts, and feed interactions."
+        },
+        "achievements": {
+          "title": "Achievements",
+          "description": "Badges, ranking, and shared achievements."
+        },
+        "learning": {
+          "title": "Learning",
+          "description": "Educational reminders and pending materials."
+        },
+        "support": {
+          "title": "Support",
+          "description": "Ticket updates and team responses."
+        },
+        "general": {
+          "title": "General",
+          "description": "System notices and general messages."
+        }
+      },
+      "reset": "Restore preferences"
+    },
+    "support": {
+      "eyebrow": "Technical support",
+      "title": "Contact EcoMind",
+      "description": "If you need help with your account, requests, or platform behavior, contact our team.",
+      "ariaLabel": "Technical support channels",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "imageAlt": "EcoMind technical support assistant"
+    }
+  },
   "profilePage": {
     "hero": {
       "eyebrow": "EcoMind Profile",

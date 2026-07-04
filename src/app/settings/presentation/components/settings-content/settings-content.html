@@ -1,13 +1,13 @@
 <section class="settings-page">
   <header class="settings-header">
-    <p>Ajustes</p>
-    <h1>Configuracion</h1>
+    <p>{{ 'settings.header.eyebrow' | translate }}</p>
+    <h1>{{ 'settings.header.title' | translate }}</h1>
   </header>
 
   <section class="settings-section">
     <div>
-      <h2>Idioma</h2>
-      <p>Elige el idioma principal de la aplicacion.</p>
+      <h2>{{ 'settings.language.title' | translate }}</h2>
+      <p>{{ 'settings.language.description' | translate }}</p>
     </div>
 
     <app-language-switcher></app-language-switcher>
@@ -20,12 +20,14 @@
       [attr.aria-expanded]="notificationSettingsOpen()"
       (click)="toggleNotificationSettings()">
       <div>
-        <h2>Notificaciones</h2>
-        <p>Controla que avisos aparecen en la campana del encabezado.</p>
+        <h2>{{ 'settings.notifications.title' | translate }}</h2>
+        <p>{{ 'settings.notifications.description' | translate }}</p>
       </div>
 
       <div class="settings-disclosure__actions">
-        <span class="settings-status">{{ preferences().enabled ? 'Activadas' : 'Desactivadas' }}</span>
+        <span class="settings-status">
+          {{ (preferences().enabled ? 'settings.notifications.status.enabled' : 'settings.notifications.status.disabled') | translate }}
+        </span>
         <span class="settings-chevron" [class.settings-chevron--open]="notificationSettingsOpen()">
           &#9662;
         </span>
@@ -36,8 +38,8 @@
       <div class="settings-disclosure__body">
         <article class="notification-preference notification-preference--master">
           <div>
-            <h3>Estado general</h3>
-            <p>Activa o pausa todas las notificaciones de la campana.</p>
+            <h3>{{ 'settings.notifications.master.title' | translate }}</h3>
+            <p>{{ 'settings.notifications.master.description' | translate }}</p>
           </div>
           <label class="settings-switch">
             <input
@@ -45,7 +47,9 @@
               [checked]="preferences().enabled"
               (change)="toggleNotifications($any($event.target).checked)">
             <span></span>
-            <strong>{{ preferences().enabled ? 'Activadas' : 'Desactivadas' }}</strong>
+            <strong>
+              {{ (preferences().enabled ? 'settings.notifications.status.enabled' : 'settings.notifications.status.disabled') | translate }}
+            </strong>
           </label>
         </article>
 
@@ -53,8 +57,8 @@
           @for (option of notificationOptions; track option.key) {
             <article class="notification-preference">
               <div>
-                <h3>{{ option.title }}</h3>
-                <p>{{ option.description }}</p>
+                <h3>{{ option.title | translate }}</h3>
+                <p>{{ option.description | translate }}</p>
               </div>
 
               <label class="settings-switch">
@@ -70,9 +74,40 @@
         </div>
 
         <button class="settings-secondary-action" type="button" (click)="resetNotificationPreferences()">
-          Restaurar preferencias
+          {{ 'settings.notifications.reset' | translate }}
         </button>
       </div>
     }
+  </section>
+
+  <section class="settings-section support-section">
+    <div class="support-section__content">
+      <span class="support-section__eyebrow">{{ 'settings.support.eyebrow' | translate }}</span>
+      <h2>{{ 'settings.support.title' | translate }}</h2>
+      <p>{{ 'settings.support.description' | translate }}</p>
+
+      <div class="support-contact-list" [attr.aria-label]="'settings.support.ariaLabel' | translate">
+        <a class="support-contact" href="mailto:soporte@ecomind.app">
+          <span aria-hidden="true">&#9993;</span>
+          <div>
+            <strong>{{ 'settings.support.emailLabel' | translate }}</strong>
+            <small>soporte&#64;ecomind.app</small>
+          </div>
+        </a>
+
+        <a class="support-contact" href="tel:+51987654321">
+          <span aria-hidden="true">&#9742;</span>
+          <div>
+            <strong>{{ 'settings.support.phoneLabel' | translate }}</strong>
+            <small>+51 987 654 321</small>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <img
+      class="support-section__image"
+      src="/assets/images/support-agent.png"
+      [alt]="'settings.support.imageAlt' | translate">
   </section>
 </section>
