@@ -7,11 +7,13 @@ import { Family } from '../domain/model/family.entity';
 import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
 import { FamilyInvitation } from '../domain/model/family-invitation.entity';
+import { Notification } from '../domain/model/notification.entity';
 import { UsersApiEndpoint } from './users-api-endpoint';
 import { FamiliesApiEndpoint } from './families-api-endpoint';
 import { FamilyUsersApiEndpoint } from './family-users-api-endpoint';
 import { FriendsApiEndpoint } from './friends-api-endpoint';
 import { FamilyInvitationsApiEndpoint } from './family-invitations-api-endpoint';
+import { NotificationsApiEndpoint } from './notifications-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +24,7 @@ export class ProfileApi extends BaseApi {
   private readonly familyUsersEndpoint: FamilyUsersApiEndpoint;
   private readonly friendsEndpoint: FriendsApiEndpoint;
   private readonly familyInvitationsEndpoint: FamilyInvitationsApiEndpoint;
+  private readonly notificationsEndpoint: NotificationsApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -30,6 +33,7 @@ export class ProfileApi extends BaseApi {
     this.familyUsersEndpoint = new FamilyUsersApiEndpoint(http);
     this.friendsEndpoint = new FriendsApiEndpoint(http);
     this.familyInvitationsEndpoint = new FamilyInvitationsApiEndpoint(http);
+    this.notificationsEndpoint = new NotificationsApiEndpoint(http);
   }
 
   getUsers(): Observable<User[]> {
@@ -102,5 +106,21 @@ export class ProfileApi extends BaseApi {
 
   deleteFriend(id: number): Observable<void> {
     return this.friendsEndpoint.delete(id);
+  }
+
+  getNotifications(userId: number): Observable<Notification[]> {
+    return this.notificationsEndpoint.getByUser(userId);
+  }
+
+  getUnreadNotificationCount(userId: number): Observable<number> {
+    return this.notificationsEndpoint.getUnreadCount(userId);
+  }
+
+  markNotificationAsRead(notificationId: number): Observable<Notification> {
+    return this.notificationsEndpoint.markAsRead(notificationId);
+  }
+
+  markAllNotificationsAsRead(userId: number): Observable<Notification[]> {
+    return this.notificationsEndpoint.markAllAsRead(userId);
   }
 }

@@ -214,6 +214,10 @@ class ProfileServiceStub {
     ]);
   }
 
+  loadNotifications() {
+    return of([]);
+  }
+
   getFamilyInvitations() {
     return of([
       createFamilyInvitation({

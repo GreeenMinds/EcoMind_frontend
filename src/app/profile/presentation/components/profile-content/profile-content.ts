@@ -1111,6 +1111,7 @@ export class ProfileContent {
       familyUsers: this.profileService.getFamilyUsers(),
       familyInvitations: this.profileService.getFamilyInvitations(),
       friends: this.profileService.getFriends(),
+      notifications: this.profileService.loadNotifications(),
       cosmetics: this.monetizationApi.getCosmetics(),
       userCosmetics: this.monetizationApi.getUserCosmetics(),
     })
@@ -1559,7 +1560,7 @@ export class ProfileContent {
       return 'Tienes una solicitud pendiente por responder';
     }
 
-    return 'No se puede enviar la solicitud de amistad';
+    return null;
   }
 }
 
