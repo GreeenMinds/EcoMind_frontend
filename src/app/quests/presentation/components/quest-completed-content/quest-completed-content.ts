@@ -1,9 +1,12 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { QuestsService } from '../../../application/quests.service';
+import { CommunityService } from '../../../../community/application/community.service';
+
+type ShareState = 'idle' | 'sharing' | 'shared' | 'error';
 
 @Component({
   selector: 'app-quest-completed-content',
@@ -13,7 +16,10 @@ import { QuestsService } from '../../../application/quests.service';
 })
 export class QuestCompletedContent {
   private readonly questsService = inject(QuestsService);
+  private readonly communityService = inject(CommunityService);
   private readonly route = inject(ActivatedRoute);
+
+  readonly shareState = signal<ShareState>('idle');
 
   readonly imageSrc = '/assets/images/quests/activity-completed.png';
   readonly questId = toSignal(
@@ -29,4 +35,24 @@ export class QuestCompletedContent {
     const quest = Number.isFinite(id) ? this.questsService.getQuestById(id)() : undefined;
     return quest ? { quest } : undefined;
   });
+
+  shareToCommunity(): void {
+    const detail = this.detail();
+    if (!detail) {
+      return;
+    }
+
+    const quest = detail.quest;
+    this.shareState.set('sharing');
+    this.communityService
+      .shareAchievement({
+        content: `Complete el reto "${quest.title}"`,
+        points: quest.reward_ecopoints,
+        image_url: quest.image_url,
+      })
+      .subscribe({
+        next: () => this.shareState.set('shared'),
+        error: () => this.shareState.set('error'),
+      });
+  }
 }

@@ -30,6 +30,7 @@ export const environment = {
   platformProviderFamilyPlanEndpointPath: '/family-plans',
   platformProviderMinigameAttemptEndpointPath: '/minigame-attempts',
   platformProviderCommunityPostEndpointPath: '/community_post',
+  platformProviderCommunityPostRealEndpointPath: '/community/posts',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
   platformProviderCosmeticEndpointPath: '/cosmetic',
