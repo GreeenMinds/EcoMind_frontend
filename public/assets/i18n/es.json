@@ -43,7 +43,8 @@
       "sharing": "Compartiendo...",
       "success": "¡Compartido en la comunidad!",
       "error": "No se pudo compartir. Intenta de nuevo.",
-      "retry": "Reintentar"
+      "retry": "Reintentar",
+      "draftSaved": "Guardado como borrador. Puedes reintentar cuando quieras."
     },
     "activeEmpty": "Aún no hay misiones activas",
     "seeMore": "Ver más",

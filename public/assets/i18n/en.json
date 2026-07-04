@@ -43,7 +43,8 @@
       "sharing": "Sharing...",
       "success": "Shared to the community!",
       "error": "Could not share. Please try again.",
-      "retry": "Retry"
+      "retry": "Retry",
+      "draftSaved": "Saved as a draft. You can retry whenever you want."
     },
     "activeEmpty": "No active quests yet",
     "seeMore": "See more",

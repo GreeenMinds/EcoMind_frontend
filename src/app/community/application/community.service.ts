@@ -74,6 +74,7 @@ export class CommunityService {
   private readonly userAchievementsSignal = signal<UserAchievement[]>([]);
   private readonly eventsSignal = signal<Event[]>([]);
   private readonly eventRegistrationsSignal = signal<EventRegistration[]>([]);
+  private readonly realCurrentMemberSignal = signal<CommunityMember | null>(null);
 
   readonly communities = this.communitiesSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
@@ -100,16 +101,26 @@ export class CommunityService {
 
   readonly activeGoal = computed(() => this.goals().find((goal) => goal.status === 'active'));
 
-  readonly postSummaries = computed(() =>
-    [...this.posts(), ...this.realPostsSignal()]
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .map((post) => ({
+  readonly postSummaries = computed(() => {
+    const realCurrentMember = this.realCurrentMemberSignal();
+    const mockPosts = this.posts().map((post) => ({
+      post,
+      author: this.members().find((member) => member.id === post.user_id),
+    }));
+    const realPosts = this.realPostsSignal().map((post) => ({
+      post,
+      author: realCurrentMember ?? this.members().find((member) => member.id === post.user_id),
+    }));
+
+    return [...mockPosts, ...realPosts]
+      .sort((a, b) => new Date(b.post.created_at).getTime() - new Date(a.post.created_at).getTime())
+      .map(({ post, author }) => ({
         post,
-        author: this.members().find((member) => member.id === post.user_id),
+        author,
         reactions: this.buildPostReactionSummaries(post.id),
         currentUserReaction: this.findCurrentUserReaction(post.id),
-      })),
-  );
+      }));
+  });
 
   readonly eventSummaries = computed(() =>
     this.events()
@@ -169,6 +180,7 @@ export class CommunityService {
   ) {
     this.loadCommunityData();
     this.loadRealPosts();
+    this.loadRealCurrentMember();
   }
 
   private loadRealPosts(): void {
@@ -177,6 +189,15 @@ export class CommunityService {
     this.http.get<CommunityPost[]>(realPostsUrl).subscribe({
       next: (posts) => this.realPostsSignal.set(posts),
       error: () => this.realPostsSignal.set([]),
+    });
+  }
+
+  private loadRealCurrentMember(): void {
+    const realUserUrl =
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}/${this.currentUserId()}`;
+    this.http.get<CommunityMember>(realUserUrl).subscribe({
+      next: (member) => this.realCurrentMemberSignal.set(member),
+      error: () => this.realCurrentMemberSignal.set(null),
     });
   }
 
