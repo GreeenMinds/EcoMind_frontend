@@ -12,7 +12,10 @@
 
   <div class="post-list">
     @for (summary of posts; track summary.post.id) {
-      <app-community-post-card [summary]="summary"></app-community-post-card>
+      <app-community-post-card
+        [summary]="summary"
+        (selectReaction)="selectReaction.emit($event)">
+      </app-community-post-card>
     } @empty {
       <p class="empty">{{ 'community.emptyPosts' | translate }}</p>
     }

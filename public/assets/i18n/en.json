@@ -174,6 +174,22 @@
       "defaultAuthor": "EcoMind user",
       "noPoints": "- points"
     },
+    "reactions": {
+      "react": "React",
+      "count": "reactions",
+      "modalTitle": "Post reactions",
+      "close": "Close",
+      "all": "All",
+      "empty": "There are no reactions to show yet.",
+      "types": {
+        "like": "Like",
+        "funny": "Funny",
+        "love": "Love",
+        "surprise": "Surprise",
+        "sad": "Sad",
+        "angry": "Angry"
+      }
+    },
     "postForm": {
       "title": "New post",
       "content": "Content",
@@ -187,7 +203,11 @@
     },
     "eventCard": {
       "joinNow": "Join now",
-      "alreadyJoined": "Already joined"
+      "alreadyJoined": "Already joined",
+      "cancelRegistration": "Cancel registration",
+      "delete": "Delete",
+      "deleteEvent": "Delete event",
+      "confirmDelete": "Delete \"{{ event }}\"? This action cannot be undone."
     },
     "eventForm": {
       "title": "New Event",

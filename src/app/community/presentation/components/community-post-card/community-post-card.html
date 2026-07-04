@@ -26,9 +26,115 @@
 
     <p>{{ summary.post.content }}</p>
 
+    <div class="post-actions">
+      <div class="reaction-control">
+        <button
+          type="button"
+          class="reaction-trigger"
+          [class.active]="activeReactionOption"
+          (click)="toggleReactionPicker()">
+          <img
+            class="reaction-trigger-icon"
+            [src]="activeReactionOption?.imageUrl ?? '/assets/images/reactions/like.png'"
+            [alt]="activeReactionOption ? (activeReactionOption.labelKey | translate) : ('community.reactions.react' | translate)">
+          <span>
+            {{ activeReactionOption ? (activeReactionOption.labelKey | translate) : ('community.reactions.react' | translate) }}
+          </span>
+        </button>
+
+        @if (showReactionPicker()) {
+          <div class="reaction-picker" role="menu">
+            @for (reaction of reactionOptions; track reaction.type) {
+              <button
+                type="button"
+                class="reaction-option"
+                [class.selected]="summary.currentUserReaction?.reaction_type === reaction.type"
+                [attr.aria-label]="reaction.labelKey | translate"
+                (click)="chooseReaction(reaction.type)">
+                <img [src]="reaction.imageUrl" [alt]="reaction.labelKey | translate">
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="reaction-count"
+        [disabled]="totalReactions === 0"
+        (click)="openReactionDetails()">
+        {{ totalReactions }} {{ 'community.reactions.count' | translate }}
+      </button>
+    </div>
   </div>
 
   @if (summary.post.image_url) {
-    <img [src]="summary.post.image_url" [alt]="summary.post.content">
+    <img class="post-image" [src]="summary.post.image_url" [alt]="summary.post.content">
+  }
+
+  @if (showReactionDetails()) {
+    <div class="modal-backdrop" (click)="closeReactionDetails()">
+      <section class="modal-card" (click)="$event.stopPropagation()">
+        <header>
+          <h2>{{ 'community.reactions.modalTitle' | translate }}</h2>
+          <button
+            type="button"
+            class="modal-close"
+            [attr.aria-label]="'community.reactions.close' | translate"
+            (click)="closeReactionDetails()">
+            x
+          </button>
+        </header>
+
+        <div class="reaction-filter-toolbar" aria-label="Reaction filters">
+          <button
+            type="button"
+            class="reaction-filter-chip reaction-filter-chip--all"
+            [class.selected]="selectedReactionDetailFilter() === 'all'"
+            (click)="selectReactionDetailFilter('all')">
+            <span>{{ 'community.reactions.all' | translate }}</span>
+            <strong>{{ getReactionDetailFilterCount('all') }}</strong>
+          </button>
+
+          @for (reaction of reactionOptions; track reaction.type) {
+            <button
+              type="button"
+              class="reaction-filter-chip"
+              [class.selected]="selectedReactionDetailFilter() === reaction.type"
+              [attr.aria-label]="reaction.labelKey | translate"
+              (click)="selectReactionDetailFilter(reaction.type)">
+              <img [src]="reaction.imageUrl" [alt]="reaction.labelKey | translate">
+              <strong>{{ getReactionDetailFilterCount(reaction.type) }}</strong>
+            </button>
+          }
+        </div>
+
+        <div class="reaction-detail-list">
+          @for (reactionSummary of filteredReactionSummaries; track reactionSummary.reaction.id) {
+            <article class="reaction-detail-item">
+              <app-profile-avatar
+                size="header"
+                [name]="reactionSummary.member?.name ?? ('community.post.defaultAuthor' | translate)"
+                [userId]="reactionSummary.member?.id ?? reactionSummary.reaction.user_id">
+              </app-profile-avatar>
+
+              <div>
+                <strong>
+                  {{ reactionSummary.member?.name ?? ('community.post.defaultAuthor' | translate) }}
+                </strong>
+                <span>{{ reactionSummary.labelKey | translate }}</span>
+              </div>
+
+              <img
+                class="reaction-detail-icon"
+                [src]="reactionSummary.imageUrl"
+                [alt]="reactionSummary.labelKey | translate">
+            </article>
+          } @empty {
+            <p class="empty-reactions">{{ 'community.reactions.empty' | translate }}</p>
+          }
+        </div>
+      </section>
+    </div>
   }
 </article>
