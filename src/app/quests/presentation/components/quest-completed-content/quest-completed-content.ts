@@ -20,6 +20,10 @@ export class QuestCompletedContent {
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
     { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
   );
+  readonly returnUrl = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('returnUrl') || '/quests')),
+    { initialValue: this.route.snapshot.queryParamMap.get('returnUrl') || '/quests' },
+  );
   readonly detail = computed(() => {
     const id = this.questId();
     const quest = Number.isFinite(id) ? this.questsService.getQuestById(id)() : undefined;
