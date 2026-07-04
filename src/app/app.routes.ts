@@ -18,6 +18,7 @@ import {StoreContentComponent} from './monetization/presentation/components/stor
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
 import { RankingContent } from './ranking/presentation/components/ranking-content';
 import { Layout } from './shared/presentation/components/layout/layout';
+import { RankingHubContent } from './ranking/presentation/components/ranking-hub-content';
 export const routes: Routes = [
   {
     path: 'sign-up',

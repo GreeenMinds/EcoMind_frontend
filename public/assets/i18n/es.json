@@ -38,6 +38,14 @@
     "activityCompleted": "Misión completada",
     "startedActivity": "¡Iniciaste una actividad!",
     "completedActivity": "¡Completaste la misión!",
+    "share": {
+      "cta": "Compartir en comunidad",
+      "sharing": "Compartiendo...",
+      "success": "¡Compartido en la comunidad!",
+      "error": "No se pudo compartir. Intenta de nuevo.",
+      "retry": "Reintentar",
+      "draftSaved": "Guardado como borrador. Puedes reintentar cuando quieras."
+    },
     "activeEmpty": "Aún no hay misiones activas",
     "seeMore": "Ver más",
     "allActive": "Todas las misiones activas",
@@ -177,6 +185,17 @@
     },
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
+  },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Familia"
+  },
+  "familyRanking": {
+    "title": "Ranking de familias",
+    "subtitle": "Compite en equipo con tu familia",
+    "yourPosition": "Posición de tu familia",
+    "loading": "Cargando ranking de familias...",
+    "empty": "No hay información disponible"
   },
   "community": {
     "title": {
@@ -465,6 +484,7 @@
       "createFamily": "Crear familia",
       "adultOnlyCreate": "Solo un usuario mayor de edad puede crear una familia.",
       "primaryGroup": "Grupo principal",
+      "viewProgress": "Ver progreso familiar",
       "commitmentLabel": "Compromiso familiar",
       "noCommitment": "Tu familia aun no tiene un compromiso registrado.",
       "editCommitment": "Editar compromiso",
@@ -478,6 +498,20 @@
       "sentInvitations": "Invitaciones enviadas",
       "membersTitle": "Miembros de la Familia ({{count}})",
       "noMembers": "No hay miembros de familia asociados a este perfil."
+    },
+    "familyAchievements": {
+      "title": "Logros familiares",
+      "registeredCount": "{{count}} registrados",
+      "loading": "Cargando logros familiares...",
+      "empty": "No hay información disponible"
+    },
+    "familyReport": {
+      "title": "Reporte de progreso familiar",
+      "loading": "Generando reporte...",
+      "questsThisWeek": "Retos cumplidos esta semana",
+      "completedRelative": "Completado {{ relative }}",
+      "achievementsEarned": "Logros obtenidos",
+      "noData": "No hay datos suficientes para generar un reporte esta semana"
     },
     "friends": {
       "eyebrow": "Comunidad",

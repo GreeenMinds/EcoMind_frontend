@@ -28,14 +28,9 @@ export class ProfileService {
    * Sincroniza el balance de gemas del usuario actual.
    */
   syncGemBalance(newBalance: number): void {
-    if (this.currentUserSignal()) {
-      this.currentUserSignal.update((user) => {
-        if (user) {
-          user.gem_balance = newBalance;
-        }
-        return user;
-      });
-    }
+    this.currentUserSignal.update((user) =>
+      user ? { ...user, gem_balance: newBalance } : user,
+    );
   }
 
   getCurrentUser(): Observable<User> {

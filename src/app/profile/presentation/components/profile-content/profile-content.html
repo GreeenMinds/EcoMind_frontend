@@ -100,6 +100,7 @@
           [incomingInvitations]="incomingInvitations()"
           [outgoingInvitations]="outgoingInvitations()"
           (editCommitment)="openFamilyCommitmentEditor()"
+          (viewProgress)="openFamilyProgressModal()"
           (createFamily)="createFamily($event)"
           (inviteMember)="inviteFamilyMember($event)"
           (acceptInvitation)="acceptFamilyInvitation($event)"
@@ -107,6 +108,10 @@
           (leaveFamily)="leaveCurrentFamily()"
           (openMember)="openFamilyMember($event)">
         </app-profile-family-section>
+
+        <app-family-achievements-section
+          [familyId]="primaryFamily()?.id ?? null">
+        </app-family-achievements-section>
       }
     }
 
@@ -187,6 +192,13 @@
       (clear)="clearCommitment()"
       (close)="closeCommitmentEditor()">
     </app-profile-commitment-modal>
+  }
+
+  @if (showFamilyProgressModal()) {
+    <app-family-progress-modal
+      [familyId]="primaryFamily()?.id ?? null"
+      (close)="closeFamilyProgressModal()">
+    </app-family-progress-modal>
   }
 
   @if (feedbackMessage()) {

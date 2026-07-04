@@ -27,6 +27,35 @@ strong {
   font-weight: 800;
 }
 
+.share-action {
+  min-width: 150px;
+  padding: 11px 26px;
+  border: 2px solid #65a850;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #3f7d34;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.share-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.share-status {
+  margin: 0;
+  font-weight: 700;
+}
+
+.share-status--success {
+  color: #3f7d34;
+}
+
+.share-status--error {
+  color: #b3392c;
+}
+
 .continue-action {
   min-width: 150px;
   padding: 11px 26px;

@@ -1,7 +1,10 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map, Observable, retry, switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable, retry, switchMap, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
+import { Friend } from '../../profile/domain/model/friend.entity';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
 import { CommunityGoal } from '../domain/model/community-goal.entity';
@@ -63,6 +66,7 @@ export class CommunityService {
   private readonly communitiesSignal = signal<Community[]>([]);
   private readonly membersSignal = signal<CommunityMember[]>([]);
   private readonly postsSignal = signal<CommunityPost[]>([]);
+  private readonly realPostsSignal = signal<CommunityPost[]>([]);
   private readonly postReactionsSignal = signal<CommunityPostReaction[]>([]);
   private readonly goalsSignal = signal<CommunityGoal[]>([]);
   private readonly achievementsSignal = signal<Achievement[]>([]);
@@ -70,6 +74,7 @@ export class CommunityService {
   private readonly userAchievementsSignal = signal<UserAchievement[]>([]);
   private readonly eventsSignal = signal<Event[]>([]);
   private readonly eventRegistrationsSignal = signal<EventRegistration[]>([]);
+  private readonly realMembersSignal = signal<Map<number, CommunityMember>>(new Map());
 
   readonly communities = this.communitiesSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
@@ -96,17 +101,26 @@ export class CommunityService {
 
   readonly activeGoal = computed(() => this.goals().find((goal) => goal.status === 'active'));
 
-  readonly postSummaries = computed(() =>
-    this.posts()
-      .slice()
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .map((post) => ({
+  readonly postSummaries = computed(() => {
+    const realMembers = this.realMembersSignal();
+    const mockPosts = this.posts().map((post) => ({
+      post,
+      author: this.members().find((member) => member.id === post.user_id),
+    }));
+    const realPosts = this.realPostsSignal().map((post) => ({
+      post,
+      author: realMembers.get(post.user_id) ?? this.members().find((member) => member.id === post.user_id),
+    }));
+
+    return [...mockPosts, ...realPosts]
+      .sort((a, b) => new Date(b.post.created_at).getTime() - new Date(a.post.created_at).getTime())
+      .map(({ post, author }) => ({
         post,
-        author: this.members().find((member) => member.id === post.user_id),
+        author,
         reactions: this.buildPostReactionSummaries(post.id),
         currentUserReaction: this.findCurrentUserReaction(post.id),
-      })),
-  );
+      }));
+  });
 
   readonly eventSummaries = computed(() =>
     this.events()
@@ -162,8 +176,37 @@ export class CommunityService {
   constructor(
     private readonly communityApi: CommunityApi,
     private readonly currentUser: CurrentUser,
+    private readonly http: HttpClient,
   ) {
     this.loadCommunityData();
+    this.loadRealPosts();
+  }
+
+  private loadRealPosts(): void {
+    const realPostsUrl =
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityPostRealEndpointPath}`;
+    this.http.get<CommunityPost[]>(realPostsUrl).subscribe({
+      next: (posts) => {
+        this.realPostsSignal.set(posts);
+        this.loadRealMembers(posts.map((post) => post.user_id));
+      },
+      error: () => this.realPostsSignal.set([]),
+    });
+  }
+
+  private loadRealMembers(userIds: number[]): void {
+    const knownIds = new Set(this.realMembersSignal().keys());
+    const missingIds = [...new Set(userIds)].filter((id) => !knownIds.has(id));
+
+    missingIds.forEach((userId) => {
+      const realUserUrl =
+        `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}/${userId}`;
+      this.http.get<CommunityMember>(realUserUrl).subscribe({
+        next: (member) =>
+          this.realMembersSignal.update((members) => new Map(members).set(userId, member)),
+        error: () => {},
+      });
+    });
   }
 
   refresh(): void {
@@ -312,6 +355,56 @@ export class CommunityService {
           this.loadingSignal.set(false);
         },
       });
+  }
+
+  shareAchievement(postData: CommunityPostFormValue): Observable<CommunityPost> {
+    const currentMember = this.currentMember();
+    const realPostsUrl =
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityPostRealEndpointPath}`;
+
+    const payload = {
+      community_id: currentMember?.community_id ?? 1,
+      user_id: this.currentUserId(),
+      content: postData.content,
+      points: postData.points,
+      image_url: postData.image_url,
+    };
+
+    return this.http.post<CommunityPost>(realPostsUrl, payload).pipe(
+      tap((createdPost) => {
+        this.realPostsSignal.update((posts) => [...posts, createdPost]);
+        this.loadRealMembers([createdPost.user_id]);
+        this.notifyConnectedFriends(createdPost);
+      }),
+    );
+  }
+
+  private notifyConnectedFriends(post: CommunityPost): void {
+    const currentUserId = this.currentUserId();
+    const friendsUrl =
+      `${environment.platformProviderApiBaseUrl}${environment.platformProviderFriendEndpointPath}`;
+
+    this.http.get<Friend[]>(friendsUrl).subscribe({
+      next: (friends) => {
+        friends
+          .filter((friend) => friend.status === 'accepted')
+          .map((friend) => (friend.user_id === currentUserId ? friend.friend_id : friend.user_id))
+          .forEach((friendId) => {
+            const notificationUrl =
+              `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserNotificationEndpointPath}`;
+            this.http
+              .post(notificationUrl, {
+                user_id: friendId,
+                type: 'community_post',
+                reference_id: post.id,
+                message: 'Un amigo compartio un logro en la comunidad',
+                read: false,
+                created_at: new Date().toISOString(),
+              })
+              .subscribe();
+          });
+      },
+    });
   }
 
   selectPostReaction(postId: number, reactionType: CommunityPostReactionType): void {
@@ -625,4 +718,5 @@ export class CommunityService {
 
     return fallback;
   }
+
 }
