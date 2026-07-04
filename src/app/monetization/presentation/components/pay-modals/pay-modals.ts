@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnChanges, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GemPackageEntity } from '../../../domain/gem-package.entity';
 import { MonetizationApi } from '../../../infrastructure/monetization-api';
@@ -21,6 +21,7 @@ export class PayModalComponent implements OnChanges {
 
   private readonly monetizationApi = inject(MonetizationApi);
   private readonly currentUser     = inject(CurrentUser);
+  private readonly ngZone          = inject(NgZone);
 
   @Input() gemPackage: GemPackageEntity | null = null;
   @Input() visible = false;
@@ -89,17 +90,19 @@ export class PayModalComponent implements OnChanges {
   }
 
   private handleCulqiResult(): void {
-    if (Culqi.token) {
-      const token = Culqi.token.id as string;
-      const method: 'card' | 'yape' = token.startsWith('ype_') ? 'yape' : 'card';
-      const email = Culqi.token.email as string;
-      this.step = 'processing';
-      this.checkoutAndPay(method, token, email);
-      return;
-    }
-    if (Culqi.error) {
-      this.handleError(new Error(Culqi.error.user_message || Culqi.error.merchant_message || 'Culqi error'));
-    }
+    this.ngZone.run(() => {
+      if (Culqi.token) {
+        const token = Culqi.token.id as string;
+        const method: 'card' | 'yape' = token.startsWith('ype_') ? 'yape' : 'card';
+        const email = Culqi.token.email as string;
+        this.step = 'processing';
+        this.checkoutAndPay(method, token, email);
+        return;
+      }
+      if (Culqi.error) {
+        this.handleError(new Error(Culqi.error.user_message || Culqi.error.merchant_message || 'Culqi error'));
+      }
+    });
   }
 
   private loadCulqiSdk(): Promise<void> {
