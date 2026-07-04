@@ -4,10 +4,11 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {ProfileService} from '../../../../profile/application/profile.service';
 import {RankingService} from '../../../../ranking/application/ranking';
 import {QuestProgressPanel} from '../quest-progress-panel/quest-progress-panel';
+import {FamilyPlanPanel} from '../family-plan-panel/family-plan-panel';
 
 @Component({
   selector: 'app-quests-content',
-  imports: [QuestProgressPanel, RouterOutlet, TranslatePipe],
+  imports: [QuestProgressPanel, FamilyPlanPanel, RouterOutlet, TranslatePipe],
   templateUrl: './quests-content.html',
   styleUrl: './quests-content.css',
 })

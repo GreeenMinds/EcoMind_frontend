@@ -3,7 +3,7 @@
     <header class="activity-route-header">
       <a
         class="back-link"
-        [routerLink]="['/quests', detail.quest.id]"
+        [routerLink]="backUrl() || ['/quests', detail.quest.id]"
         [attr.aria-label]="'common.back' | translate"
       >
         <span aria-hidden="true">&lsaquo;</span>

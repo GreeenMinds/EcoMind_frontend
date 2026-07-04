@@ -1,0 +1,119 @@
+<section class="family-builder">
+  <header class="builder-header">
+    <a class="back-link" routerLink="/quests">
+      <span aria-hidden="true">&lsaquo;</span>
+      Volver
+    </a>
+    <span>Plan familiar</span>
+  </header>
+
+  @if (!questsService.familyMembership()) {
+    <p class="state-text">Necesitas pertenecer a una familia para crear un plan.</p>
+  } @else if (!questsService.isFamilyParent()) {
+    <p class="state-text">Solo el padre o madre de la familia puede crear el plan.</p>
+  } @else {
+    <div class="builder-layout">
+      <main class="builder-main">
+        <div class="search-toolbar">
+          <label class="search-bar">
+            <input
+              type="search"
+              [value]="searchInput()"
+              (input)="updateSearchInput($event)"
+              (keydown.enter)="applySearch()"
+              placeholder="Buscar reto familiar"
+            />
+          </label>
+          <button type="button" class="search-action" (click)="applySearch()">Buscar</button>
+        </div>
+
+        <div class="filter-row">
+          <label>
+            <span>Categoría</span>
+            <select [value]="selectedCategory()" (change)="updateCategory($event)">
+              @for (category of categories; track category) {
+                <option [value]="category">{{ category === 'all' ? 'Todas' : category }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Tipo de actividad</span>
+            <select [value]="selectedActivityType()" (change)="updateActivityType($event)">
+              @for (type of activityTypes; track type) {
+                <option [value]="type">{{ type === 'all' ? 'Todos' : type }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        @if (questsService.loading()) {
+          <p class="state-text">Cargando retos...</p>
+        } @else if (questsService.error()) {
+          <p class="state-text error">{{ questsService.error() }}</p>
+        } @else if (familyQuests().length === 0) {
+          <p class="state-text">No hay retos familiares disponibles.</p>
+        } @else {
+          <div class="family-result-list">
+            @for (quest of familyQuests(); track quest.id) {
+              <article class="family-result">
+                <div class="tag-row">
+                  <span class="tag">{{ quest.category }}</span>
+                  <span class="tag">{{ quest.theme_type }}</span>
+                  <span class="tag">{{ quest.time }} min</span>
+                </div>
+                <h2>{{ quest.title }}</h2>
+                <p>{{ quest.description }}</p>
+                <div class="result-actions">
+                  <a
+                    class="result-action secondary"
+                    [routerLink]="['/quests', quest.id]"
+                    [queryParams]="{ returnUrl: '/quests/family-plans/new' }"
+                  >
+                    Detalles
+                  </a>
+                  <button
+                    type="button"
+                    class="result-action"
+                    [disabled]="selectedQuestIds().has(quest.id)"
+                    (click)="addQuest(quest)"
+                  >
+                    {{ selectedQuestIds().has(quest.id) ? 'Agregado' : 'Agregar al plan' }}
+                  </button>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </main>
+
+      <aside class="plan-draft-panel">
+        <div class="builder-actions">
+          <div class="selected-summary">
+            <strong>{{ selectedQuests().length }}</strong>
+            <span>retos agregados</span>
+          </div>
+          <button type="button" [disabled]="!canStartPlan()" (click)="startPlan()">
+            Iniciar plan familiar
+          </button>
+        </div>
+
+        @if (selectedQuests().length > 0) {
+          <section class="selected-list" aria-label="Retos seleccionados">
+            @for (quest of selectedQuests(); track quest.id) {
+              <article class="selected-item">
+                <div>
+                  <strong>{{ quest.title }}</strong>
+                  <span>{{ quest.category }}</span>
+                </div>
+                <button type="button" (click)="removeQuest(quest.id)">Quitar</button>
+              </article>
+            }
+          </section>
+        } @else {
+          <p class="empty-draft">Agrega al menos un reto para iniciar el plan.</p>
+        }
+      </aside>
+    </div>
+  }
+</section>

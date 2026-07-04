@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestsService } from '../../../application/quests.service';
@@ -28,7 +28,9 @@ export class QuestSearchContent {
   readonly categories = ['all', 'WATER', 'RECYCLE', 'ENERGY'];
   readonly questTypes = ['all', 'COLLABORATIVE', 'MINIGAME', 'ACTIVITIES', 'DAILY_QUEST'];
   readonly activityTypes = ['all', 'CHECKBOX', 'MINIGAME', 'COLLABORATIVE'];
-  readonly filteredQuests = this.questsService.questSearchResults;
+  readonly filteredQuests = computed(() =>
+    this.questsService.questSearchResults().filter((quest) => quest.type !== 'FAMILY'),
+  );
 
   applySearch(): void {
     this.searchTerm.set(this.searchInput());

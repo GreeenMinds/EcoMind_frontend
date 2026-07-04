@@ -103,7 +103,8 @@
   }
 
   .streak-card,
-  app-quest-progress-panel {
+  app-quest-progress-panel,
+  app-family-plan-panel {
     max-width: 420px;
   }
 }
@@ -167,7 +168,8 @@
   }
 
   .streak-card,
-  app-quest-progress-panel {
+  app-quest-progress-panel,
+  app-family-plan-panel {
     max-width: 360px;
   }
 }
