@@ -22,16 +22,22 @@ const QUEST_THEMES: Record<string, QuestThemeStyle> = {
     '--quest-shadow': '#d9901f',
     '--quest-top-light': '#ffe079',
   },
+  FAMILY: {
+    '--quest-bg': '#8fd773',
+    '--quest-shadow': '#5ca64e',
+    '--quest-top-light': '#c9f2bb',
+  },
 };
 
 const QUEST_ICONS: Record<string, string> = {
   CHECKBOX: '/assets/images/quests/checkbox.png',
   MINIGAME: '/assets/images/quests/game.png',
   COLLABORATIVE: '/assets/images/quests/colab.png',
+  FAMILY: '/assets/images/quests/colab.png',
 };
 
 export function getQuestDisplayType(questType: string, themeType: string): string {
-  return questType === 'COLLABORATIVE' ? 'COLLABORATIVE' : themeType;
+  return ['COLLABORATIVE', 'FAMILY'].includes(questType) ? questType : themeType;
 }
 
 export function getQuestTypeTheme(type: string): QuestThemeStyle {

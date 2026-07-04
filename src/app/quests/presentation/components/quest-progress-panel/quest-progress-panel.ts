@@ -83,7 +83,7 @@ export class QuestProgressPanel {
   private getVisibleProgressQuests(): Quest[] {
     const activeQuests = this.questsService
       .quests()
-      .filter((quest) => quest.started && !quest.completed);
+      .filter((quest) => quest.type !== 'FAMILY' && quest.started && !quest.completed);
     const activeIds = new Set(activeQuests.map((quest) => quest.id));
     const pendingCollaborativeQuestIds = new Set(
       this.questsService
@@ -103,6 +103,7 @@ export class QuestProgressPanel {
       .quests()
       .filter(
         (quest) =>
+          quest.type !== 'FAMILY' &&
           pendingCollaborativeQuestIds.has(quest.id) &&
           !activeIds.has(quest.id) &&
           !quest.completed,

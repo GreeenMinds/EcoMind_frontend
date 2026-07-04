@@ -34,10 +34,10 @@
     "progress": "Progreso",
     "progressCount": "Progreso: {{ completed }} / {{ total }}",
     "emptyActivities": "Esta misión no tiene actividades registradas.",
-    "completeActivity": "Completar actividad",
-    "activityCompleted": "Actividad completada",
+    "completeActivity": "Completar misión",
+    "activityCompleted": "Misión completada",
     "startedActivity": "¡Iniciaste una actividad!",
-    "completedActivity": "¡Completaste la actividad!",
+    "completedActivity": "¡Completaste la misión!",
     "activeEmpty": "Aún no hay misiones activas",
     "seeMore": "Ver más",
     "allActive": "Todas las misiones activas",
@@ -212,6 +212,22 @@
       "defaultAuthor": "Usuario EcoMind",
       "noPoints": "- puntos"
     },
+    "reactions": {
+      "react": "Reaccionar",
+      "count": "reacciones",
+      "modalTitle": "Reacciones del post",
+      "close": "Cerrar",
+      "all": "Todos",
+      "empty": "Aun no hay reacciones para mostrar.",
+      "types": {
+        "like": "Me gusta",
+        "funny": "Divertido",
+        "love": "Me encanta",
+        "surprise": "Sorpresa",
+        "sad": "Triste",
+        "angry": "Molesto"
+      }
+    },
     "postForm": {
       "title": "Nuevo post",
       "content": "Contenido",
@@ -225,7 +241,11 @@
     },
     "eventCard": {
       "joinNow": "Unirse ahora",
-      "alreadyJoined": "Ya te uniste"
+      "alreadyJoined": "Ya te uniste",
+      "cancelRegistration": "Cancelar registro",
+      "delete": "Eliminar",
+      "deleteEvent": "Eliminar evento",
+      "confirmDelete": "¿Eliminar \"{{ event }}\"? Esta acción no se puede deshacer."
     },
     "eventForm": {
       "title": "Nuevo evento",

@@ -1,5 +1,5 @@
 @if (detail(); as detail) {
-  <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'COLLABORATIVE'">
+  <div class="quest-detail-layout" [class.has-collaboration]="detail.quest.type === 'COLLABORATIVE' || detail.quest.type === 'FAMILY'">
     <section class="quest-detail">
       <header class="detail-header">
         <a class="back-link" [routerLink]="backUrl()" [attr.aria-label]="'common.back' | translate">
@@ -49,7 +49,7 @@
       }
     </section>
 
-    @if (detail.quest.type === 'COLLABORATIVE' && collaborativeContext(); as context) {
+    @if ((detail.quest.type === 'COLLABORATIVE' || detail.quest.type === 'FAMILY') && collaborativeContext(); as context) {
       <aside class="collaboration-panel" [attr.aria-label]="'quests.collaboration.panel' | translate">
         @if (context.pendingInvitation; as invitation) {
           <section class="collaboration-card join-card">

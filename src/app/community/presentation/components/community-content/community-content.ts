@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommunityService, CommunityEventSummary } from '../../../application/community.service';
 import { CommunitySearchBar } from '../community-search-bar/community-search-bar';
 import { CommunityTabs } from '../community-tabs/community-tabs';
@@ -35,6 +35,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
 })
 export class CommunityContent {
   readonly communityService = inject(CommunityService);
+  private readonly translate = inject(TranslateService);
 
   readonly searchTerm = signal('');
   readonly activeTab = signal<CommunityTab>('all');
@@ -117,6 +118,18 @@ export class CommunityContent {
 
   closeRegistrationModal(): void {
     this.selectedEvent.set(null);
+  }
+
+  deleteEvent(summary: CommunityEventSummary): void {
+    const confirmed = window.confirm(
+      this.translate.instant('community.eventCard.confirmDelete', {
+        event: summary.event.name,
+      }),
+    );
+
+    if (confirmed) {
+      this.communityService.deleteEvent(summary.event.id);
+    }
   }
 
   joinSelectedEventAsIndividual(): void {

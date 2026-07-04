@@ -21,6 +21,7 @@ export class QuestListContent {
   readonly filteredQuests = computed(() =>
     this.questsService
       .quests()
+      .filter((quest) => quest.type !== 'FAMILY')
       .filter((quest) => quest.category === this.selectedCategory())
       .filter(
         (quest) =>
