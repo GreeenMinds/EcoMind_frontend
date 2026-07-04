@@ -45,16 +45,28 @@
 }
 
 .settings-section h2,
-.notification-preference h3 {
+.notification-preference h3,
+.account-action-item h3 {
   margin: 0;
   color: #18340f;
 }
 
 .settings-section p,
-.notification-preference p {
+.notification-preference p,
+.account-action-item p {
   margin: 6px 0 0;
   color: #687361;
   line-height: 1.5;
+}
+
+.settings-section__eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #5aa345;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .settings-disclosure {
@@ -202,14 +214,6 @@
   padding: 28px;
 }
 
-.support-section__eyebrow {
-  color: #5aa345;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .support-section__content h2,
 .support-section__content p {
   margin: 0;
@@ -286,6 +290,153 @@
   padding: 18px 24px 0 0;
 }
 
+.account-section {
+  display: grid;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.account-section__header {
+  min-width: 0;
+}
+
+.account-action-list {
+  display: grid;
+  gap: 12px;
+}
+
+.account-action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(122, 151, 104, 0.14);
+  border-radius: 12px;
+  background: #fbfef8;
+}
+
+.account-action-item--danger {
+  border-color: rgba(215, 68, 54, 0.18);
+  background: #fffafa;
+}
+
+.account-action-item h3 {
+  font-size: 1rem;
+}
+
+.account-action-item button {
+  flex: 0 0 auto;
+}
+
+.settings-danger-action {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(215, 68, 54, 0.5);
+  border-radius: 12px;
+  background: #fff8f7;
+  color: #c43125;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.settings-danger-action--solid {
+  background: #d74436;
+  color: #ffffff;
+}
+
+.settings-danger-action:disabled,
+.settings-secondary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.settings-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(14, 28, 10, 0.48);
+}
+
+.settings-modal {
+  display: grid;
+  gap: 22px;
+  width: min(520px, 100%);
+  padding: 24px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 28px 80px rgba(10, 22, 8, 0.24);
+}
+
+.settings-modal__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.settings-modal__header > span {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff0ef;
+  color: #d74436;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.settings-modal__header h2,
+.settings-modal__header p {
+  margin: 0;
+}
+
+.settings-modal__header h2 {
+  color: #18340f;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.settings-modal__header p {
+  margin-top: 8px;
+  color: #687361;
+  line-height: 1.5;
+}
+
+.delete-confirmation-field {
+  display: grid;
+  gap: 8px;
+  color: #18340f;
+  font-weight: 800;
+}
+
+.delete-confirmation-field input {
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(215, 68, 54, 0.34);
+  border-radius: 12px;
+  color: #18340f;
+  font: inherit;
+  outline: none;
+}
+
+.delete-confirmation-field input:focus {
+  border-color: #d74436;
+  box-shadow: 0 0 0 4px rgba(215, 68, 54, 0.12);
+}
+
+.settings-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 760px) {
   .settings-section,
   .settings-disclosure,
@@ -315,5 +466,16 @@
     width: min(72vw, 240px);
     min-width: 0;
     padding: 0 18px 10px;
+  }
+
+  .account-action-item,
+  .settings-modal__actions {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .account-action-item button,
+  .settings-modal__actions button {
+    width: 100%;
   }
 }
