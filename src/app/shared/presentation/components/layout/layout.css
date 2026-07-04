@@ -42,6 +42,126 @@
   gap: 22px;
   font-weight: 500;
   line-height: 1;
+  position: relative;
+}
+
+.notification-shell {
+  position: relative;
+}
+
+.notification-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(90, 163, 69, 0.28);
+  border-radius: 50%;
+  background: #f5fbf1;
+  color: #2f7d25;
+  cursor: pointer;
+  font-size: 19px;
+}
+
+.notification-button strong {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #d74436;
+  color: #ffffff;
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.notification-panel {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  z-index: 40;
+  width: min(360px, calc(100vw - 32px));
+  max-height: 440px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border: 1px solid rgba(122, 151, 104, 0.18);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(39, 69, 32, 0.14);
+  line-height: 1.35;
+}
+
+.notification-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(122, 151, 104, 0.14);
+}
+
+.notification-panel__header h2 {
+  margin: 0;
+  color: #18340f;
+  font-size: 1rem;
+}
+
+.notification-panel button {
+  border: 0;
+  background: transparent;
+  color: #3d7f2f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.notification-list {
+  overflow: auto;
+  display: grid;
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(122, 151, 104, 0.1);
+  color: #2d3e27;
+}
+
+.notification-item--unread {
+  background: #f5fbf1;
+}
+
+.notification-item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.94rem;
+}
+
+.notification-item p {
+  margin: 0 0 6px;
+  color: #57634f;
+  font-size: 0.88rem;
+}
+
+.notification-item span {
+  color: #74806f;
+  font-size: 0.78rem;
+}
+
+.notification-empty {
+  margin: 0;
+  padding: 18px 16px;
+  color: #74806f;
+  font-size: 0.9rem;
 }
 
 .header-stat {
@@ -106,6 +226,11 @@
 
   .app-header-profile {
     gap: 12px;
+  }
+
+  .notification-button {
+    width: 38px;
+    height: 38px;
   }
 
   .header-stat {
