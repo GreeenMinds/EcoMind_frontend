@@ -23,6 +23,10 @@ export class GemsTabComponent {
   showModal        = false;
   selectedPackage: GemPackageEntity | null = null;
 
+  constructor() {
+    this.svc.refreshGemPackages();
+  }
+
   readonly granPaquete = computed(() =>
     this.packages().find((pkg) => pkg.gemAmount === 10000) ?? null,
   );

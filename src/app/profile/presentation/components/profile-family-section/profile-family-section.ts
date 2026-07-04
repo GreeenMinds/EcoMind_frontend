@@ -66,6 +66,7 @@ export class ProfileFamilySection {
   @Input() outgoingInvitations: FamilyInvitationOutboxView[] = [];
 
   @Output() editCommitment = new EventEmitter<void>();
+  @Output() viewProgress = new EventEmitter<void>();
   @Output() openMember = new EventEmitter<FamilyMemberView>();
   @Output() inviteMember = new EventEmitter<FamilyInvitePayload>();
   @Output() createFamily = new EventEmitter<string>();

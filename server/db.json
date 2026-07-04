@@ -664,6 +664,159 @@
       "created_at": "2026-05-06T12:30:00",
       "reference_type": "achievement",
       "reference_id": 9
+    },
+    {
+      "user_id": 4,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.510Z",
+      "id": 5
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.513Z",
+      "id": 6
+    },
+    {
+      "user_id": 3,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.514Z",
+      "id": 7
+    },
+    {
+      "user_id": 6,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.515Z",
+      "id": 8
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.512Z",
+      "id": 9
+    },
+    {
+      "user_id": 8,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.516Z",
+      "id": 10
+    },
+    {
+      "user_id": 7,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.515Z",
+      "id": 11
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.516Z",
+      "id": 12
+    },
+    {
+      "user_id": 4,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.394Z",
+      "id": 13
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.395Z",
+      "id": 14
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.396Z",
+      "id": 15
+    },
+    {
+      "user_id": 3,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.396Z",
+      "id": 16
+    },
+    {
+      "user_id": 6,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 17
+    },
+    {
+      "user_id": 7,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 18
+    },
+    {
+      "user_id": 8,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 19
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 20
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 21
     }
   ],
   "ranking": [
@@ -1874,7 +2027,7 @@
       "user_id": 1,
       "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
       "points": 50,
-      "likes": 4,
+      "likes": 5,
       "image_url": "https://i.imgur.com/nscRbEZ.jpeg",
       "created_at": "2026-05-09T09:00:00"
     },
@@ -1929,13 +2082,6 @@
       "created_at": "2026-05-09T09:21:00"
     },
     {
-      "id": 5,
-      "post_id": 2,
-      "user_id": 1,
-      "reaction_type": "like",
-      "created_at": "2026-05-09T08:22:00"
-    },
-    {
       "id": 6,
       "post_id": 2,
       "user_id": 4,
@@ -1953,7 +2099,7 @@
       "id": 8,
       "post_id": 3,
       "user_id": 1,
-      "reaction_type": "angry",
+      "reaction_type": "like",
       "created_at": "2026-05-09T07:58:00"
     },
     {
@@ -1962,6 +2108,20 @@
       "user_id": 9,
       "reaction_type": "love",
       "created_at": "2026-05-09T08:05:00"
+    },
+    {
+      "id": 10,
+      "post_id": 1,
+      "user_id": 1,
+      "reaction_type": "like",
+      "created_at": "2026-07-04T05:18:43.367Z"
+    },
+    {
+      "id": 11,
+      "post_id": 2,
+      "user_id": 1,
+      "reaction_type": "funny",
+      "created_at": "2026-07-04T05:18:48.654Z"
     }
   ],
   "community_goal": [

@@ -13,7 +13,7 @@ import {SimpleScoreMinigame} from './quests/presentation/minigames/simple-score/
 import { ProfileContent } from './profile/presentation/components/profile-content';
 import {StoreContentComponent} from './monetization/presentation/components/store-content/store-content';
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
-import { RankingContent } from './ranking/presentation/components/ranking-content';
+import { RankingHubContent } from './ranking/presentation/components/ranking-hub-content';
 export const routes: Routes = [
   {
     path: 'profile',
@@ -71,7 +71,7 @@ export const routes: Routes = [
   },
   {
     path: 'ranking',
-    component: RankingContent,
+    component: RankingHubContent,
   },
   {
     path: 'settings',

@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, retry } from 'rxjs';
+import { forkJoin, retry, switchMap } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
 import { MonetizationApi } from '../infrastructure/monetization-api';
 import { ProfileService } from '../../profile/application/profile.service';
@@ -109,6 +109,13 @@ export class MonetizationStoreService {
   }
   refresh(): void {
     this.loadData();
+  }
+
+  refreshGemPackages(): void {
+    this.monetizationApi
+      .getGemPackages()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((packages) => this.gemPackagesSignal.set(packages));
   }
 
   private loadData(): void {
@@ -352,7 +359,12 @@ export class MonetizationStoreService {
   }
 
   private today(): string {
-    return new Date().toISOString().slice(0, 10);
+    return this.toLocalDateTimeString(new Date());
+  }
+
+  private toLocalDateTimeString(date: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   }
 
   private formatError(error: unknown, fallback: string): string {
@@ -367,32 +379,57 @@ export class MonetizationStoreService {
   private giftSpecialPackageRewards(): void {
     const userId = this.currentUserId();
 
-    const avatarIds = [9, 10, 11];
-    const avatarRequests = avatarIds.map(id => {
-      const gift = new UserCosmeticEntity();
-      gift.userId = userId;
-      gift.cosmeticId = id;
-      gift.acquiredAt = this.today();
-      gift.equipped = false;
-      return this.monetizationApi.purchaseCosmetic(gift);
-    });
+    forkJoin({
+      cosmetics: this.monetizationApi.getCosmetics(),
+      userCosmetics: this.monetizationApi.getUserCosmetics(),
+      multipliers: this.monetizationApi.getMultipliers(),
+    })
+      .pipe(
+        switchMap(({ cosmetics, userCosmetics, multipliers }) => {
+          const ownedIds = new Set(
+            userCosmetics.filter((uc) => uc.userId === userId).map((uc) => uc.cosmeticId),
+          );
 
-    const multiplierGift = new UserMultiplierEntity();
-    multiplierGift.userId = userId;
-    multiplierGift.multiplierId = 3;
-    multiplierGift.startDate = new Date().toISOString();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 7);
-    multiplierGift.endDate = endDate.toISOString();
+          const avatarRequests = cosmetics
+            .filter((cosmetic) => cosmetic.type === 'avatar' && !ownedIds.has(cosmetic.id))
+            .slice(0, 3)
+            .map((cosmetic) => {
+              const gift = new UserCosmeticEntity();
+              gift.userId = userId;
+              gift.cosmeticId = cosmetic.id;
+              gift.acquiredAt = this.today();
+              gift.equipped = false;
+              return this.monetizationApi.purchaseCosmetic(gift);
+            });
 
-    const multiplierRequest = this.monetizationApi.purchaseMultiplier(multiplierGift);
+          const bestMultiplier = [...multipliers].sort(
+            (a, b) => b.multiplierFactor - a.multiplierFactor,
+          )[0];
 
-    forkJoin([...avatarRequests, multiplierRequest])
-      .pipe(takeUntilDestroyed(this.destroyRef))
+          const multiplierRequests = [];
+          if (bestMultiplier) {
+            const multiplierGift = new UserMultiplierEntity();
+            multiplierGift.userId = userId;
+            multiplierGift.multiplierId = bestMultiplier.id;
+            multiplierGift.startDate = this.toLocalDateTimeString(new Date());
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 7);
+            multiplierGift.endDate = this.toLocalDateTimeString(endDate);
+            multiplierRequests.push(this.monetizationApi.purchaseMultiplier(multiplierGift));
+          }
+
+          return forkJoin([...avatarRequests, ...multiplierRequests]);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: () => {
           this.loadData();
           console.log('¡Special package delivered!');
+        },
+        error: (err) => {
+          this.setError(this.formatError(err, 'Error delivering Mega Bundle rewards'));
+          this.loadingSignal.set(false);
         },
         complete: () => this.loadingSignal.set(false),
       });

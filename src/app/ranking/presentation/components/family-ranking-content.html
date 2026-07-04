@@ -1,0 +1,67 @@
+<div class="ranking-container">
+
+  <div class="ranking-header">
+    <div class="ranking-title-block">
+      <h2 class="ranking-title">{{ 'familyRanking.title' | translate }}</h2>
+      <span class="ranking-subtitle">{{ 'familyRanking.subtitle' | translate }}</span>
+    </div>
+  </div>
+
+  <div class="ranking-list" *ngIf="entries().length > 0 && !loading(); else stateTpl">
+
+    <div
+      *ngFor="let entry of getTop3(entries()); trackBy: trackByFamilyId"
+      class="ranking-item top3">
+      <span class="medal">{{ getMedalIcon(entry.position) }}</span>
+
+      <div class="avatar-wrapper">
+        <div class="avatar" [style.--avatar-hue]="getAvatarHue(entry.familyId)">
+          {{ getInitials(entry.familyName) }}
+        </div>
+      </div>
+
+      <span class="username">{{ entry.familyName }}</span>
+      <span class="score">{{ entry.totalEcopoints }} pts</span>
+    </div>
+
+    <div
+      *ngFor="let entry of getRestEntries(entries()); trackBy: trackByFamilyId"
+      class="ranking-item">
+      <span class="position">{{ entry.position }}.</span>
+
+      <div class="avatar-wrapper">
+        <div class="avatar" [style.--avatar-hue]="getAvatarHue(entry.familyId)">
+          {{ getInitials(entry.familyName) }}
+        </div>
+      </div>
+
+      <span class="username">{{ entry.familyName }}</span>
+      <span class="score">{{ entry.totalEcopoints }} pts</span>
+    </div>
+
+    <div
+      *ngIf="getCurrentFamily(entries()) as currentFamily"
+      class="ranking-item current-user">
+      <span class="your-position-label">{{ 'familyRanking.yourPosition' | translate }}</span>
+      <div class="current-user-row">
+        <span class="position">{{ currentFamily.position }}.</span>
+
+        <div class="avatar-wrapper">
+          <div class="avatar" [style.--avatar-hue]="getAvatarHue(currentFamily.familyId)">
+            {{ getInitials(currentFamily.familyName) }}
+          </div>
+        </div>
+
+        <span class="username">{{ currentFamily.familyName }}</span>
+        <span class="score">{{ currentFamily.totalEcopoints }} pts</span>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #stateTpl>
+    <p class="loading-msg" *ngIf="loading()">{{ 'familyRanking.loading' | translate }}</p>
+    <p class="loading-msg" *ngIf="!loading() && entries().length === 0">{{ 'familyRanking.empty' | translate }}</p>
+  </ng-template>
+
+</div>
