@@ -25,7 +25,7 @@
         </app-community-feed>
 
         <aside class="community-side">
-          <app-community-goal-card [goal]="communityService.activeGoal()"></app-community-goal-card>
+          <app-community-goal-card [goals]="communityService.communityGoals()"></app-community-goal-card>
           <app-community-events-map [events]="filteredEvents()"></app-community-events-map>
         </aside>
       </div>

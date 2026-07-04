@@ -1964,15 +1964,72 @@
       "created_at": "2026-05-09T08:05:00"
     }
   ],
+  "goal": [
+    {
+      "id": 1,
+      "title": "Improve our water habits",
+      "unit": "quests"
+    },
+    {
+      "id": 2,
+      "title": "Save energy at home together",
+      "unit": "quests"
+    },
+    {
+      "id": 3,
+      "title": "Strengthen our recycling habits",
+      "unit": "quests"
+    },
+    {
+      "id": 4,
+      "title": "Care for our green spaces",
+      "unit": "quests"
+    },
+    {
+      "id": 5,
+      "title": "Make our daily routines more sustainable",
+      "unit": "quests"
+    }
+  ],
   "community_goal": [
     {
       "id": 1,
       "community_id": 1,
-      "title": "Plant 1000 trees",
-      "target": 1000,
-      "progress": 730,
-      "unit": "trees",
-      "participants": 245,
+      "goal_id": 1,
+      "description": "Complete 20 quests from the Water category.",
+      "target": 20,
+      "progress": 1,
+      "participants": 1,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "community_id": 1,
+      "goal_id": 2,
+      "description": "Complete 20 quests from the Energy category.",
+      "target": 20,
+      "progress": 4,
+      "participants": 1,
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "goal_id": 3,
+      "description": "Complete 25 quests from the Recycling category.",
+      "target": 25,
+      "progress": 2,
+      "participants": 2,
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "goal_id": 5,
+      "description": "Complete 20 quests from the Daily Quest category.",
+      "target": 20,
+      "progress": 3,
+      "participants": 3,
       "status": "active"
     }
   ],

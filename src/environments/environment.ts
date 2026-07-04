@@ -27,6 +27,7 @@ export const environment = {
   platformProviderMinigameAttemptEndpointPath: '/minigame-attempts',
   platformProviderCommunityPostEndpointPath: '/community_post',
   platformProviderPostReactionEndpointPath: '/post_reaction',
+  platformProviderGoalEndpointPath: '/goal',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
   platformProviderCosmeticEndpointPath: '/cosmetic',
