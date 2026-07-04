@@ -12,6 +12,7 @@ export class GoalAssembler implements BaseAssembler<Goal, GoalResource, GoalResp
     goal.id = resource.id;
     goal.title = resource.title;
     goal.unit = resource.unit;
+    goal.quest_category = resource.quest_category;
     return goal;
   }
 
@@ -20,6 +21,7 @@ export class GoalAssembler implements BaseAssembler<Goal, GoalResource, GoalResp
       id: entity.id,
       title: entity.title,
       unit: entity.unit,
+      quest_category: entity.quest_category,
     };
   }
 }

@@ -763,7 +763,7 @@ export class CommunityService {
 
   private buildCommunityGoal(goal: CommunityGoal): CommunityGoal {
     const catalogGoal = this.goalCatalogSignal().find((item) => item.id === goal.goal_id);
-    const stats = this.calculateGoalStats(goal, catalogGoal?.title ?? '');
+    const stats = this.calculateGoalStats(goal, catalogGoal?.quest_category ?? '');
     const progress = stats?.progress ?? goal.progress;
     const participants = stats?.participants ?? goal.participants;
 
@@ -778,9 +778,9 @@ export class CommunityService {
 
   private calculateGoalStats(
     communityGoal: CommunityGoal,
-    title: string,
+    questCategory: string,
   ): { progress: number; participants: number } | null {
-    const category = this.resolveGoalCategory(`${title} ${communityGoal.description}`);
+    const category = this.normalizeText(questCategory);
 
     if (!category || this.questsSignal().length === 0 || this.questUsersSignal().length === 0) {
       return null;
@@ -807,22 +807,6 @@ export class CommunityService {
       progress: completedAssignments.length,
       participants: new Set(completedAssignments.map((questUser) => questUser.user_id)).size,
     };
-  }
-
-  private resolveGoalCategory(value: string): string | null {
-    const text = this.normalizeText(value);
-    const categoryTerms: Record<string, string[]> = {
-      water: ['agua', 'water'],
-      energy: ['energia', 'energy'],
-      recycle: ['reciclaje', 'reciclar', 'recycling', 'recycle'],
-      daily_quest: ['habitos sostenibles', 'rutinas diarias', 'daily quest'],
-    };
-
-    return (
-      Object.entries(categoryTerms).find(([, terms]) =>
-        terms.some((term) => text.includes(term)),
-      )?.[0] ?? null
-    );
   }
 
   private isQuestCompleted(questUser: QuestUser): boolean {
