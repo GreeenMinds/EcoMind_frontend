@@ -8,4 +8,5 @@ export interface GoalResource extends BaseResource {
   id: number;
   title: string;
   unit: string;
+  quest_category: string;
 }
