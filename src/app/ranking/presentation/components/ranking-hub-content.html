@@ -1,0 +1,24 @@
+<div class="ranking-hub">
+  <div class="scope-toggle">
+    <button
+      class="scope-toggle-btn"
+      type="button"
+      [class.active]="scope() === 'individual'"
+      (click)="selectScope('individual')">
+      {{ 'rankingHub.individual' | translate }}
+    </button>
+    <button
+      class="scope-toggle-btn"
+      type="button"
+      [class.active]="scope() === 'family'"
+      (click)="selectScope('family')">
+      {{ 'rankingHub.family' | translate }}
+    </button>
+  </div>
+
+  @if (scope() === 'individual') {
+    <app-ranking-content></app-ranking-content>
+  } @else {
+    <app-family-ranking-content></app-family-ranking-content>
+  }
+</div>

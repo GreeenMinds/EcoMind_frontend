@@ -140,6 +140,17 @@
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
   },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Familia"
+  },
+  "familyRanking": {
+    "title": "Ranking de familias",
+    "subtitle": "Compite en equipo con tu familia",
+    "yourPosition": "Posición de tu familia",
+    "loading": "Cargando ranking de familias...",
+    "empty": "No hay información disponible"
+  },
   "community": {
     "title": {
       "feed": "Muro de la comunidad",
@@ -336,6 +347,12 @@
       "sentInvitations": "Invitaciones enviadas",
       "membersTitle": "Miembros de la Familia ({{count}})",
       "noMembers": "No hay miembros de familia asociados a este perfil."
+    },
+    "familyAchievements": {
+      "title": "Logros familiares",
+      "registeredCount": "{{count}} registrados",
+      "loading": "Cargando logros familiares...",
+      "empty": "No hay información disponible"
     },
     "friends": {
       "eyebrow": "Comunidad",

@@ -17,6 +17,8 @@ export const environment = {
   platformProviderUserNotificationEndpointPath: '/user_notification',
   platformProviderRankingEndpointPath: '/ranking',
   platformProviderUserRankingEndpointPath: '/user_ranking',
+  platformProviderFamilyRankingEndpointPath: '/family-rankings',
+  platformProviderFamilyAchievementEndpointPath: '/family-achievements',
   platformProviderMinigameEndpointPath: '/minigames',
   platformProviderQuestEndpointPath: '/quests',
   platformProviderActivityEndpointPath: '/activities',

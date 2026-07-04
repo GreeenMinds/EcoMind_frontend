@@ -106,6 +106,10 @@
           (leaveFamily)="leaveCurrentFamily()"
           (openMember)="openFamilyMember($event)">
         </app-profile-family-section>
+
+        <app-family-achievements-section
+          [familyId]="primaryFamily()?.id ?? null">
+        </app-family-achievements-section>
       }
     }
 

@@ -140,6 +140,17 @@
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
   },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Family"
+  },
+  "familyRanking": {
+    "title": "Family Ranking",
+    "subtitle": "Compete as a team with your family",
+    "yourPosition": "Your family's position",
+    "loading": "Loading family ranking...",
+    "empty": "No information available"
+  },
   "community": {
     "title": {
       "feed": "Community Feed",
@@ -336,6 +347,12 @@
       "sentInvitations": "Sent invitations",
       "membersTitle": "Family Members ({{count}})",
       "noMembers": "There are no family members associated with this profile."
+    },
+    "familyAchievements": {
+      "title": "Family Achievements",
+      "registeredCount": "{{count}} registered",
+      "loading": "Loading family achievements...",
+      "empty": "No information available"
     },
     "friends": {
       "eyebrow": "Community",

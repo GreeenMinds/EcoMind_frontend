@@ -43,6 +43,7 @@ import {
   ProfileSummarySection,
 } from '../profile-summary-section/profile-summary-section';
 import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
+import { FamilyAchievementsSection } from '../family-achievements-section/family-achievements-section';
 
 @Component({
   selector: 'app-profile-content',
@@ -51,6 +52,7 @@ import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
     ProfileTabs,
     ProfileSummarySection,
     ProfileFamilySection,
+    FamilyAchievementsSection,
     ProfileProgressSection,
     ProfileFriendsSection,
     ProfileCommitmentModal,
