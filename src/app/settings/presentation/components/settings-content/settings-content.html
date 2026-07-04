@@ -1,2 +1,78 @@
-<p>settings-content works!</p>
-<app-language-switcher></app-language-switcher>
+<section class="settings-page">
+  <header class="settings-header">
+    <p>Ajustes</p>
+    <h1>Configuracion</h1>
+  </header>
+
+  <section class="settings-section">
+    <div>
+      <h2>Idioma</h2>
+      <p>Elige el idioma principal de la aplicacion.</p>
+    </div>
+
+    <app-language-switcher></app-language-switcher>
+  </section>
+
+  <section class="settings-section settings-section--stacked">
+    <button
+      class="settings-disclosure"
+      type="button"
+      [attr.aria-expanded]="notificationSettingsOpen()"
+      (click)="toggleNotificationSettings()">
+      <div>
+        <h2>Notificaciones</h2>
+        <p>Controla que avisos aparecen en la campana del encabezado.</p>
+      </div>
+
+      <div class="settings-disclosure__actions">
+        <span class="settings-status">{{ preferences().enabled ? 'Activadas' : 'Desactivadas' }}</span>
+        <span class="settings-chevron" [class.settings-chevron--open]="notificationSettingsOpen()">
+          &#9662;
+        </span>
+      </div>
+    </button>
+
+    @if (notificationSettingsOpen()) {
+      <div class="settings-disclosure__body">
+        <article class="notification-preference notification-preference--master">
+          <div>
+            <h3>Estado general</h3>
+            <p>Activa o pausa todas las notificaciones de la campana.</p>
+          </div>
+          <label class="settings-switch">
+            <input
+              type="checkbox"
+              [checked]="preferences().enabled"
+              (change)="toggleNotifications($any($event.target).checked)">
+            <span></span>
+            <strong>{{ preferences().enabled ? 'Activadas' : 'Desactivadas' }}</strong>
+          </label>
+        </article>
+
+        <div class="notification-preferences">
+          @for (option of notificationOptions; track option.key) {
+            <article class="notification-preference">
+              <div>
+                <h3>{{ option.title }}</h3>
+                <p>{{ option.description }}</p>
+              </div>
+
+              <label class="settings-switch">
+                <input
+                  type="checkbox"
+                  [disabled]="!preferences().enabled"
+                  [checked]="preferences()[option.key]"
+                  (change)="toggleType(option.key, $any($event.target).checked)">
+                <span></span>
+              </label>
+            </article>
+          }
+        </div>
+
+        <button class="settings-secondary-action" type="button" (click)="resetNotificationPreferences()">
+          Restaurar preferencias
+        </button>
+      </div>
+    }
+  </section>
+</section>

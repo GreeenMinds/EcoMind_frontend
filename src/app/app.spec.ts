@@ -8,6 +8,8 @@ import { User } from './profile/domain/model/user.entity';
 import { App } from './app';
 
 class ProfileServiceStub {
+  readonly notifications = signal([]).asReadonly();
+  readonly unreadNotificationCount = signal(0).asReadonly();
   readonly currentUserProfile = signal(
     Object.assign(new User(), {
       id: 1,
@@ -25,6 +27,18 @@ class ProfileServiceStub {
 
   refreshCurrentUser() {
     return of(this.currentUserProfile());
+  }
+
+  loadNotifications() {
+    return of([]);
+  }
+
+  markNotificationAsRead() {
+    return of(null);
+  }
+
+  markAllNotificationsAsRead() {
+    return of([]);
   }
 }
 
