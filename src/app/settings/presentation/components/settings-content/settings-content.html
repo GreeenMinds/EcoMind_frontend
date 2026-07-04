@@ -6,6 +6,7 @@
 
   <section class="settings-section">
     <div>
+      <span class="settings-section__eyebrow">{{ 'settings.language.eyebrow' | translate }}</span>
       <h2>{{ 'settings.language.title' | translate }}</h2>
       <p>{{ 'settings.language.description' | translate }}</p>
     </div>
@@ -20,6 +21,7 @@
       [attr.aria-expanded]="notificationSettingsOpen()"
       (click)="toggleNotificationSettings()">
       <div>
+        <span class="settings-section__eyebrow">{{ 'settings.notifications.eyebrow' | translate }}</span>
         <h2>{{ 'settings.notifications.title' | translate }}</h2>
         <p>{{ 'settings.notifications.description' | translate }}</p>
       </div>
@@ -80,9 +82,39 @@
     }
   </section>
 
+  <section class="settings-section account-section">
+    <div class="account-section__header">
+      <span class="settings-section__eyebrow">{{ 'settings.account.eyebrow' | translate }}</span>
+      <h2>{{ 'settings.account.title' | translate }}</h2>
+      <p>{{ 'settings.account.description' | translate }}</p>
+    </div>
+
+    <div class="account-action-list">
+      <article class="account-action-item">
+        <div>
+          <h3>{{ 'settings.account.closeTitle' | translate }}</h3>
+          <p>{{ 'settings.account.closeDescription' | translate }}</p>
+        </div>
+        <button class="settings-secondary-action" type="button" (click)="closeAccount()">
+          {{ 'settings.account.closeSession' | translate }}
+        </button>
+      </article>
+
+      <article class="account-action-item account-action-item--danger">
+        <div>
+          <h3>{{ 'settings.account.deleteTitle' | translate }}</h3>
+          <p>{{ 'settings.account.deleteDescription' | translate }}</p>
+        </div>
+        <button class="settings-danger-action" type="button" (click)="openDeleteAccountConfirmation()">
+          {{ 'settings.account.deleteAccount' | translate }}
+        </button>
+      </article>
+    </div>
+  </section>
+
   <section class="settings-section support-section">
     <div class="support-section__content">
-      <span class="support-section__eyebrow">{{ 'settings.support.eyebrow' | translate }}</span>
+      <span class="settings-section__eyebrow">{{ 'settings.support.eyebrow' | translate }}</span>
       <h2>{{ 'settings.support.title' | translate }}</h2>
       <p>{{ 'settings.support.description' | translate }}</p>
 
@@ -111,3 +143,53 @@
       [alt]="'settings.support.imageAlt' | translate">
   </section>
 </section>
+
+@if (deleteAccountConfirmationOpen()) {
+  <div class="settings-modal-backdrop" role="presentation" (click)="closeDeleteAccountConfirmation()">
+    <section
+      class="settings-modal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'delete-account-title'"
+      (click)="$event.stopPropagation()">
+      <header class="settings-modal__header">
+        <span aria-hidden="true">!</span>
+        <div>
+          <h2 id="delete-account-title">{{ 'settings.account.modal.title' | translate }}</h2>
+          <p>{{ 'settings.account.modal.description' | translate }}</p>
+        </div>
+      </header>
+
+      <label class="delete-confirmation-field">
+        <span>{{ 'settings.account.modal.confirmLabel' | translate }}</span>
+        <input
+          type="text"
+          autocomplete="off"
+          [value]="deleteAccountConfirmationText()"
+          (input)="updateDeleteAccountConfirmation($any($event.target).value)">
+      </label>
+
+      <div class="settings-modal__actions">
+        <button
+          class="settings-secondary-action"
+          type="button"
+          [disabled]="deleteAccountInProgress()"
+          (click)="closeDeleteAccountConfirmation()">
+          {{ 'settings.account.modal.cancel' | translate }}
+        </button>
+
+        <button
+          class="settings-danger-action settings-danger-action--solid"
+          type="button"
+          [disabled]="deleteAccountConfirmationText() !== 'ELIMINAR' || deleteAccountInProgress()"
+          (click)="deleteAccount()">
+          {{
+            (deleteAccountInProgress()
+              ? 'settings.account.modal.deleting'
+              : 'settings.account.modal.confirm') | translate
+          }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

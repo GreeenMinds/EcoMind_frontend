@@ -95,12 +95,12 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the shared layout', async () => {
+  it('should render the router outlet', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-layout')).not.toBeNull();
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });

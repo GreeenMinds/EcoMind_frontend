@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { ForgotPassword } from './auth/presentation/components/forgot-password/forgot-password';
+import { SignIn } from './auth/presentation/components/sign-in/sign-in';
+import { SignUp } from './auth/presentation/components/sign-up/sign-up';
 import { SettingsContent } from './settings/presentation/components/settings-content/settings-content';
 import {QuestsContent} from './quests/presentation/components/quests-content/quests-content';
 import {QuestActivitiesContent} from './quests/presentation/components/quest-activities-content/quest-activities-content';
@@ -13,73 +16,97 @@ import {SimpleScoreMinigame} from './quests/presentation/minigames/simple-score/
 import { ProfileContent } from './profile/presentation/components/profile-content';
 import {StoreContentComponent} from './monetization/presentation/components/store-content/store-content';
 import {CommunityContent} from './community/presentation/components/community-content/community-content';
+import { RankingContent } from './ranking/presentation/components/ranking-content';
+import { Layout } from './shared/presentation/components/layout/layout';
 import { RankingHubContent } from './ranking/presentation/components/ranking-hub-content';
 export const routes: Routes = [
   {
-    path: 'profile',
-    component: ProfileContent,
+    path: 'sign-up',
+    component: SignUp,
   },
   {
-    path: 'quests',
-    component: QuestsContent,
+    path: 'sign-in',
+    component: SignIn,
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPassword,
+  },
+  {
+    path: '',
+    component: Layout,
     children: [
       {
+        path: 'profile',
+        component: ProfileContent,
+      },
+      {
+        path: 'quests',
+        component: QuestsContent,
+        children: [
+          {
+            path: '',
+            component: QuestListContent,
+          },
+          {
+            path: 'search',
+            component: QuestSearchContent,
+          },
+          {
+            path: 'family-plans/new',
+            component: FamilyPlanBuilder,
+          },
+          {
+            path: 'family-plans/:planId',
+            component: FamilyPlanDetail,
+          },
+          {
+            path: 'minigames/simple-score',
+            component: SimpleScoreMinigame,
+          },
+          {
+            path: ':questId',
+            component: QuestDetailContent,
+          },
+          {
+            path: ':questId/started',
+            component: QuestStartedContent,
+          },
+          {
+            path: ':questId/activities',
+            component: QuestActivitiesContent,
+          },
+          {
+            path: ':questId/completed',
+            component: QuestCompletedContent,
+          },
+        ],
+      },
+      {
+        path: 'store',
+        component: StoreContentComponent,
+      },
+      {
+        path: 'community',
+        component: CommunityContent,
+      },
+      {
+        path: 'ranking',
+        component: RankingContent,
+      },
+      {
+        path: 'settings',
+        component: SettingsContent,
+      },
+      {
         path: '',
-        component: QuestListContent,
-      },
-      {
-        path: 'search',
-        component: QuestSearchContent,
-      },
-      {
-        path: 'family-plans/new',
-        component: FamilyPlanBuilder,
-      },
-      {
-        path: 'family-plans/:planId',
-        component: FamilyPlanDetail,
-      },
-      {
-        path: 'minigames/simple-score',
-        component: SimpleScoreMinigame,
-      },
-      {
-        path: ':questId',
-        component: QuestDetailContent,
-      },
-      {
-        path: ':questId/started',
-        component: QuestStartedContent,
-      },
-      {
-        path: ':questId/activities',
-        component: QuestActivitiesContent,
-      },
-      {
-        path: ':questId/completed',
-        component: QuestCompletedContent,
+        redirectTo: 'quests',
+        pathMatch: 'full',
       },
     ],
   },
   {
-    path: 'store',
-    component: StoreContentComponent,
-  },
-  {
-    path: 'community',
-    component: CommunityContent,
-  },
-  {
-    path: 'ranking',
-    component: RankingHubContent,
-  },
-  {
-    path: 'settings',
-    component: SettingsContent,
-  },
-  {
-    path: '',
+    path: '**',
     redirectTo: 'quests',
-    pathMatch: 'full',
-  },
+  }
 ];

@@ -1,0 +1,66 @@
+<section class="auth-page">
+  <aside class="auth-brand" aria-label="EcoMind">
+    <div class="auth-logo">
+      <strong>EcoMind</strong>
+      <img src="/assets/images/plantIcon.png" alt="">
+    </div>
+    <p>Aprender a cuidar el planeta empieza contigo</p>
+  </aside>
+
+  <main class="auth-panel">
+    <header class="auth-panel__header">
+      <h1>Welcome back</h1>
+      <p>Sign in to continue your EcoMind progress.</p>
+    </header>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="auth-field">
+        <label for="email">Email address</label>
+        <input id="email" type="email" formControlName="email" placeholder="Enter your email" autocomplete="email">
+      </div>
+
+      <div class="auth-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+
+      <p class="auth-demo">Test account: userexample&#64;gmail.com / ecomind123</p>
+
+      <div class="auth-row">
+        <label class="auth-check">
+          <input type="checkbox">
+          <span>Remember me</span>
+        </label>
+
+        <a class="auth-link" routerLink="/forgot-password">Forgot password?</a>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="auth-status auth-status--error">{{ errorMessage() }}</p>
+      }
+
+      <button class="auth-primary" type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <div class="auth-divider">Or</div>
+
+    <div class="auth-socials">
+      <button class="auth-social" type="button" (click)="signInWithProvider('google')" [disabled]="isSubmitting()">
+        <span class="auth-social__google">G</span>
+        Sign in with Google
+      </button>
+
+      <button class="auth-social" type="button" (click)="signInWithProvider('apple')" [disabled]="isSubmitting()">
+        <span class="auth-social__apple">A</span>
+        Sign in with Apple
+      </button>
+    </div>
+
+    <p class="auth-footer">
+      New to EcoMind?
+      <a class="auth-link" routerLink="/sign-up">Sign up</a>
+    </p>
+  </main>
+</section>

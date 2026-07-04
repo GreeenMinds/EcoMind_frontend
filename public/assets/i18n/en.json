@@ -346,10 +346,12 @@
       "title": "Configuration"
     },
     "language": {
+      "eyebrow": "Language",
       "title": "Language",
       "description": "Choose the main language for the application."
     },
     "notifications": {
+      "eyebrow": "Alerts",
       "title": "Notifications",
       "description": "Control which alerts appear in the header bell.",
       "status": {
@@ -400,6 +402,25 @@
       "emailLabel": "Email",
       "phoneLabel": "Phone",
       "imageAlt": "EcoMind technical support assistant"
+    },
+    "account": {
+      "eyebrow": "Account",
+      "title": "Access and security",
+      "description": "Close your current session or delete your EcoMind account.",
+      "closeTitle": "Close session",
+      "closeDescription": "End the current session and return to the sign-in screen.",
+      "closeSession": "Close account",
+      "deleteTitle": "Delete account",
+      "deleteDescription": "Remove this account access after confirming the action.",
+      "deleteAccount": "Delete account",
+      "modal": {
+        "title": "Are you sure you want to delete your account?",
+        "description": "This action is permanent. To confirm, type ELIMINAR exactly as shown.",
+        "confirmLabel": "Type ELIMINAR to confirm",
+        "cancel": "Cancel",
+        "confirm": "Delete account",
+        "deleting": "Deleting..."
+      }
     }
   },
   "profilePage": {

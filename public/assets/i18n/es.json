@@ -346,10 +346,12 @@
       "title": "Configuración"
     },
     "language": {
+      "eyebrow": "Idioma",
       "title": "Idioma",
       "description": "Elige el idioma principal de la aplicación."
     },
     "notifications": {
+      "eyebrow": "Avisos",
       "title": "Notificaciones",
       "description": "Controla qué avisos aparecen en la campana del encabezado.",
       "status": {
@@ -400,6 +402,25 @@
       "emailLabel": "Correo",
       "phoneLabel": "Teléfono",
       "imageAlt": "Asistente de soporte técnico EcoMind"
+    },
+    "account": {
+      "eyebrow": "Cuenta",
+      "title": "Acceso y seguridad",
+      "description": "Cierra tu sesión actual o elimina la cuenta de EcoMind.",
+      "closeTitle": "Cerrar sesión",
+      "closeDescription": "Finaliza la sesión actual y vuelve a la pantalla de inicio de sesión.",
+      "closeSession": "Cerrar cuenta",
+      "deleteTitle": "Eliminar cuenta",
+      "deleteDescription": "Borra el acceso de esta cuenta después de confirmar la acción.",
+      "deleteAccount": "Eliminar cuenta",
+      "modal": {
+        "title": "¿Estás seguro de eliminar tu cuenta?",
+        "description": "Esta acción es permanente. Para confirmar, escribe ELIMINAR exactamente como aparece.",
+        "confirmLabel": "Escribe ELIMINAR para confirmar",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar cuenta",
+        "deleting": "Eliminando..."
+      }
     }
   },
   "profilePage": {

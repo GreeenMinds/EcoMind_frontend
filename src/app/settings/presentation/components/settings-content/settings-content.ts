@@ -1,5 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '../../../../auth/application/auth.service';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import {
   NotificationPreferenceKey,
@@ -19,9 +22,15 @@ interface NotificationPreferenceOption {
   styleUrl: './settings-content.css',
 })
 export class SettingsContent {
+  private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly notificationPreferences = inject(NotificationPreferencesService);
+  private readonly router = inject(Router);
 
   readonly preferences = this.notificationPreferences.preferences;
+  readonly deleteAccountConfirmationOpen = signal(false);
+  readonly deleteAccountConfirmationText = signal('');
+  readonly deleteAccountInProgress = signal(false);
   readonly notificationSettingsOpen = signal(false);
   readonly notificationOptions: NotificationPreferenceOption[] = [
     {
@@ -75,5 +84,43 @@ export class SettingsContent {
 
   resetNotificationPreferences(): void {
     this.notificationPreferences.reset();
+  }
+
+  closeAccount(): void {
+    this.authService.logout();
+    void this.router.navigateByUrl('/sign-in');
+  }
+
+  openDeleteAccountConfirmation(): void {
+    this.deleteAccountConfirmationText.set('');
+    this.deleteAccountConfirmationOpen.set(true);
+  }
+
+  closeDeleteAccountConfirmation(): void {
+    if (this.deleteAccountInProgress()) {
+      return;
+    }
+
+    this.deleteAccountConfirmationOpen.set(false);
+    this.deleteAccountConfirmationText.set('');
+  }
+
+  updateDeleteAccountConfirmation(value: string): void {
+    this.deleteAccountConfirmationText.set(value);
+  }
+
+  deleteAccount(): void {
+    if (this.deleteAccountConfirmationText() !== 'ELIMINAR') {
+      return;
+    }
+
+    this.deleteAccountInProgress.set(true);
+    this.authService
+      .deleteAccountFacade()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => void this.router.navigateByUrl('/sign-up'),
+        error: () => this.deleteAccountInProgress.set(false),
+      });
   }
 }
