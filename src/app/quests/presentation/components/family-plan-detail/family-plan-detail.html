@@ -4,18 +4,18 @@
       <span aria-hidden="true">&lsaquo;</span>
       Volver
     </a>
-    <span>Retos familiares</span>
+    <span>{{ 'quests.familyPlan.progressTitle' | translate }}</span>
   </header>
 
   @if (plan(); as plan) {
     <section class="plan-hero">
       <div class="plan-title">
-        <p>{{ statusLabel() }}</p>
-        <h1>Retos familiares</h1>
-        <span>{{ completedItems() }} de {{ totalItems() }} retos completados</span>
+        <p>{{ statusKey() | translate }}</p>
+        <h1>{{ 'quests.familyPlan.progressTitle' | translate }}</h1>
+        <span>{{ 'quests.familyPlan.completedCount' | translate: { completed: completedItems(), total: totalItems() } }}</span>
       </div>
       <div class="plan-score">
-        <small>Progreso total</small>
+        <small>{{ 'quests.familyPlan.totalProgress' | translate }}</small>
         <strong>{{ progress() }}%</strong>
       </div>
       <div class="progress-track" aria-hidden="true">
@@ -26,11 +26,11 @@
     <div class="plan-actions">
       @if (canCompletePlan()) {
         <button type="button" class="complete-plan-action" (click)="completePlan()">
-          Completar retos familiares
+          {{ 'quests.familyPlan.completePlan' | translate }}
         </button>
       }
       @if (questsService.isFamilyParent() && plan.status !== 'COMPLETED' && plan.status !== 'CANCELLED') {
-        <button type="button" class="delete-plan-action" (click)="deletePlan()">Eliminar plan familiar</button>
+        <button type="button" class="delete-plan-action" (click)="deletePlan()">{{ 'quests.familyPlan.deletePlan' | translate }}</button>
       }
     </div>
 
@@ -44,7 +44,7 @@
               <p>{{ description }}</p>
             }
           </div>
-          <a [routerLink]="getActivityRoute(item.questId)" [queryParams]="getActivityQueryParams()">Abrir reto</a>
+          <a [routerLink]="getActivityRoute(item.questId)" [queryParams]="getActivityQueryParams()">{{ 'quests.familyPlan.openChallenge' | translate }}</a>
         </article>
       }
     </div>
@@ -59,26 +59,26 @@
           <span></span>
           <span></span>
         </div>
-        <p>Completado</p>
-        <h2>Completaste los retos familiares</h2>
+        <p>{{ 'quests.familyPlan.completedLabel' | translate }}</p>
+        <h2>{{ 'quests.familyPlan.completionTitle' | translate }}</h2>
         @if (celebration.showRewards) {
           <div class="reward-pills">
             @if (celebration.gems > 0) {
-              <span>+{{ celebration.gems }} gemas</span>
+              <span>{{ 'common.gems' | translate: { count: celebration.gems } }}</span>
             }
             @if (celebration.ecopoints > 0) {
-              <span>+{{ celebration.ecopoints }} ecopoints</span>
+              <span>{{ 'common.ecoPoints' | translate: { count: celebration.ecopoints } }}</span>
             }
           </div>
         } @else {
-          <span class="completion-copy">El plan familiar quedó finalizado.</span>
+          <span class="completion-copy">{{ 'quests.familyPlan.completionCopy' | translate }}</span>
         }
-        <button type="button" (click)="continueAfterCompletion()">Continuar</button>
+        <button type="button" (click)="continueAfterCompletion()">{{ 'common.continue' | translate }}</button>
       </section>
     }
   } @else if (questsService.loading()) {
-    <p class="state-text">Cargando plan...</p>
+    <p class="state-text">{{ 'quests.familyPlan.loadingPlan' | translate }}</p>
   } @else {
-    <p class="state-text">No se encontró el plan familiar.</p>
+    <p class="state-text">{{ 'quests.familyPlan.notFound' | translate }}</p>
   }
 </section>

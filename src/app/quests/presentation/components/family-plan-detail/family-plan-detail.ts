@@ -2,12 +2,13 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { QuestsService } from '../../../application/quests.service';
 
 @Component({
   selector: 'app-family-plan-detail',
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, TranslatePipe],
   templateUrl: './family-plan-detail.html',
   styleUrl: './family-plan-detail.css',
 })
@@ -48,13 +49,9 @@ export class FamilyPlanDetail {
         plan.items.every((item) => item.progress >= 100),
     );
   });
-  readonly statusLabel = computed(() => {
+  readonly statusKey = computed(() => {
     const status = this.plan()?.status;
-    if (status === 'ACTIVE') return 'En curso';
-    if (status === 'COMPLETED') return 'Completado';
-    if (status === 'CANCELLED') return 'Cancelado';
-    if (status === 'DRAFT') return 'Borrador';
-    return '';
+    return status ? `quests.familyPlan.statuses.${status}` : '';
   });
 
   constructor() {

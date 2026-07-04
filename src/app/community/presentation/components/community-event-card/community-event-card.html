@@ -17,6 +17,24 @@
       {{ (summary.joined ? 'community.eventCard.alreadyJoined' : 'community.eventCard.joinNow') | translate }}
     </button>
 
-    <button class="cancel" (click)="cancel.emit(summary)">×</button>
+    @if (summary.joined) {
+      <button
+        class="cancel"
+        [attr.aria-label]="'community.eventCard.cancelRegistration' | translate"
+        [title]="'community.eventCard.cancelRegistration' | translate"
+        (click)="cancel.emit(summary)">
+        ×
+      </button>
+    }
+
+    @if (summary.canDelete) {
+      <button
+        class="delete"
+        [attr.aria-label]="'community.eventCard.deleteEvent' | translate"
+        [title]="'community.eventCard.deleteEvent' | translate"
+        (click)="delete.emit(summary)">
+        {{ 'community.eventCard.delete' | translate }}
+      </button>
+    }
   </div>
 </article>

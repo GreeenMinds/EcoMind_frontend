@@ -129,6 +129,44 @@
         "removed": "Removed"
       }
     },
+    "familyPlan": {
+      "title": "Family plan",
+      "progressTitle": "Family challenges",
+      "requiresFamily": "You need to belong to a family to create a plan.",
+      "parentOnly": "Only the parent in the family can create the plan.",
+      "searchPlaceholder": "Search family challenge",
+      "category": "Category",
+      "activityType": "Activity type",
+      "allCategories": "All",
+      "allActivityTypes": "All",
+      "loadingChallenges": "Loading challenges...",
+      "emptyChallenges": "No family challenges available.",
+      "details": "Details",
+      "added": "Added",
+      "addToPlan": "Add to plan",
+      "addedCount": "challenges added",
+      "startPlan": "Start family plan",
+      "remove": "Remove",
+      "emptyDraft": "Add at least one challenge to start the plan.",
+      "createPlan": "Create family plan",
+      "continuePlan": "Continue family plan",
+      "completedCount": "{{ completed }} of {{ total }} challenges completed",
+      "totalProgress": "Total progress",
+      "completePlan": "Complete family challenges",
+      "deletePlan": "Delete family plan",
+      "openChallenge": "Open challenge",
+      "completedLabel": "Completed",
+      "completionTitle": "You completed the family challenges",
+      "completionCopy": "The family plan has been completed.",
+      "loadingPlan": "Loading plan...",
+      "notFound": "Family plan not found.",
+      "statuses": {
+        "ACTIVE": "In progress",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled",
+        "DRAFT": "Draft"
+      }
+    },
     "alt": {
       "search": "Search",
       "activityStarted": "Activity started",
@@ -192,6 +230,22 @@
       "defaultAuthor": "EcoMind user",
       "noPoints": "- points"
     },
+    "reactions": {
+      "react": "React",
+      "count": "reactions",
+      "modalTitle": "Post reactions",
+      "close": "Close",
+      "all": "All",
+      "empty": "There are no reactions to show yet.",
+      "types": {
+        "like": "Like",
+        "funny": "Funny",
+        "love": "Love",
+        "surprise": "Surprise",
+        "sad": "Sad",
+        "angry": "Angry"
+      }
+    },
     "postForm": {
       "title": "New post",
       "content": "Content",
@@ -205,7 +259,11 @@
     },
     "eventCard": {
       "joinNow": "Join now",
-      "alreadyJoined": "Already joined"
+      "alreadyJoined": "Already joined",
+      "cancelRegistration": "Cancel registration",
+      "delete": "Delete",
+      "deleteEvent": "Delete event",
+      "confirmDelete": "Delete \"{{ event }}\"? This action cannot be undone."
     },
     "eventForm": {
       "title": "New Event",

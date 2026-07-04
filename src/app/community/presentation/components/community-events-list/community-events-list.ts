@@ -15,4 +15,5 @@ export class CommunityEventsList {
   @Output() createEvent = new EventEmitter<void>();
   @Output() joinEvent = new EventEmitter<CommunityEventSummary>();
   @Output() cancelRegistration = new EventEmitter<CommunityEventSummary>();
+  @Output() deleteEvent = new EventEmitter<CommunityEventSummary>();
 }

@@ -4,13 +4,13 @@
       <span aria-hidden="true">&lsaquo;</span>
       Volver
     </a>
-    <span>Plan familiar</span>
+    <span>{{ 'quests.familyPlan.title' | translate }}</span>
   </header>
 
   @if (!questsService.familyMembership()) {
-    <p class="state-text">Necesitas pertenecer a una familia para crear un plan.</p>
+    <p class="state-text">{{ 'quests.familyPlan.requiresFamily' | translate }}</p>
   } @else if (!questsService.isFamilyParent()) {
-    <p class="state-text">Solo el padre o madre de la familia puede crear el plan.</p>
+    <p class="state-text">{{ 'quests.familyPlan.parentOnly' | translate }}</p>
   } @else {
     <div class="builder-layout">
       <main class="builder-main">
@@ -21,38 +21,38 @@
               [value]="searchInput()"
               (input)="updateSearchInput($event)"
               (keydown.enter)="applySearch()"
-              placeholder="Buscar reto familiar"
+              [placeholder]="'quests.familyPlan.searchPlaceholder' | translate"
             />
           </label>
-          <button type="button" class="search-action" (click)="applySearch()">Buscar</button>
+          <button type="button" class="search-action" (click)="applySearch()">{{ 'common.search' | translate }}</button>
         </div>
 
         <div class="filter-row">
           <label>
-            <span>Categoría</span>
+            <span>{{ 'quests.familyPlan.category' | translate }}</span>
             <select [value]="selectedCategory()" (change)="updateCategory($event)">
               @for (category of categories; track category) {
-                <option [value]="category">{{ category === 'all' ? 'Todas' : category }}</option>
+                <option [value]="category">{{ category === 'all' ? ('quests.familyPlan.allCategories' | translate) : category }}</option>
               }
             </select>
           </label>
 
           <label>
-            <span>Tipo de actividad</span>
+            <span>{{ 'quests.familyPlan.activityType' | translate }}</span>
             <select [value]="selectedActivityType()" (change)="updateActivityType($event)">
               @for (type of activityTypes; track type) {
-                <option [value]="type">{{ type === 'all' ? 'Todos' : type }}</option>
+                <option [value]="type">{{ type === 'all' ? ('quests.familyPlan.allActivityTypes' | translate) : type }}</option>
               }
             </select>
           </label>
         </div>
 
         @if (questsService.loading()) {
-          <p class="state-text">Cargando retos...</p>
+          <p class="state-text">{{ 'quests.familyPlan.loadingChallenges' | translate }}</p>
         } @else if (questsService.error()) {
           <p class="state-text error">{{ questsService.error() }}</p>
         } @else if (familyQuests().length === 0) {
-          <p class="state-text">No hay retos familiares disponibles.</p>
+          <p class="state-text">{{ 'quests.familyPlan.emptyChallenges' | translate }}</p>
         } @else {
           <div class="family-result-list">
             @for (quest of familyQuests(); track quest.id) {
@@ -70,7 +70,7 @@
                     [routerLink]="['/quests', quest.id]"
                     [queryParams]="{ returnUrl: '/quests/family-plans/new' }"
                   >
-                    Detalles
+                    {{ 'quests.familyPlan.details' | translate }}
                   </a>
                   <button
                     type="button"
@@ -78,7 +78,7 @@
                     [disabled]="selectedQuestIds().has(quest.id)"
                     (click)="addQuest(quest)"
                   >
-                    {{ selectedQuestIds().has(quest.id) ? 'Agregado' : 'Agregar al plan' }}
+                    {{ selectedQuestIds().has(quest.id) ? ('quests.familyPlan.added' | translate) : ('quests.familyPlan.addToPlan' | translate) }}
                   </button>
                 </div>
               </article>
@@ -91,10 +91,10 @@
         <div class="builder-actions">
           <div class="selected-summary">
             <strong>{{ selectedQuests().length }}</strong>
-            <span>retos agregados</span>
+            <span>{{ 'quests.familyPlan.addedCount' | translate }}</span>
           </div>
           <button type="button" [disabled]="!canStartPlan()" (click)="startPlan()">
-            Iniciar plan familiar
+            {{ 'quests.familyPlan.startPlan' | translate }}
           </button>
         </div>
 
@@ -106,12 +106,12 @@
                   <strong>{{ quest.title }}</strong>
                   <span>{{ quest.category }}</span>
                 </div>
-                <button type="button" (click)="removeQuest(quest.id)">Quitar</button>
+                <button type="button" (click)="removeQuest(quest.id)">{{ 'quests.familyPlan.remove' | translate }}</button>
               </article>
             }
           </section>
         } @else {
-          <p class="empty-draft">Agrega al menos un reto para iniciar el plan.</p>
+          <p class="empty-draft">{{ 'quests.familyPlan.emptyDraft' | translate }}</p>
         }
       </aside>
     </div>

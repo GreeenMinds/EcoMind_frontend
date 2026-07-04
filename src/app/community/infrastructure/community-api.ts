@@ -7,6 +7,7 @@ import { CommunityAchievement } from '../domain/model/community-achievement.enti
 import { CommunityGoal } from '../domain/model/community-goal.entity';
 import { CommunityMember } from '../domain/model/community-member.entity';
 import { CommunityPost } from '../domain/model/community-post.entity';
+import { CommunityPostReaction } from '../domain/model/community-post-reaction.entity';
 import { Community } from '../domain/model/community.entity';
 import { EventRegistration } from '../domain/model/event-registration.entity';
 import { Event } from '../domain/model/event.entity';
@@ -17,6 +18,7 @@ import { CommunityAchievementsApiEndpoint } from './community-achievements-api-e
 import { CommunityGoalsApiEndpoint } from './community-goals-api-endpoint';
 import { CommunityMembersApiEndpoint } from './community-members-api-endpoint';
 import { CommunityPostsApiEndpoint } from './community-posts-api-endpoint';
+import { CommunityPostReactionsApiEndpoint } from './community-post-reactions-api-endpoint';
 import { EventRegistrationsApiEndpoint } from './event-registrations-api-endpoint';
 import { EventsApiEndpoint } from './events-api-endpoint';
 import { UserAchievementsApiEndpoint } from './user-achievements-api-endpoint';
@@ -28,6 +30,7 @@ export class CommunityApi extends BaseApi {
   private readonly communitiesEndpoint: CommunitiesApiEndpoint;
   private readonly membersEndpoint: CommunityMembersApiEndpoint;
   private readonly postsEndpoint: CommunityPostsApiEndpoint;
+  private readonly postReactionsEndpoint: CommunityPostReactionsApiEndpoint;
   private readonly goalsEndpoint: CommunityGoalsApiEndpoint;
   private readonly achievementsEndpoint: AchievementsApiEndpoint;
   private readonly communityAchievementsEndpoint: CommunityAchievementsApiEndpoint;
@@ -40,6 +43,7 @@ export class CommunityApi extends BaseApi {
     this.communitiesEndpoint = new CommunitiesApiEndpoint(http);
     this.membersEndpoint = new CommunityMembersApiEndpoint(http);
     this.postsEndpoint = new CommunityPostsApiEndpoint(http);
+    this.postReactionsEndpoint = new CommunityPostReactionsApiEndpoint(http);
     this.goalsEndpoint = new CommunityGoalsApiEndpoint(http);
     this.achievementsEndpoint = new AchievementsApiEndpoint(http);
     this.communityAchievementsEndpoint = new CommunityAchievementsApiEndpoint(http);
@@ -62,6 +66,26 @@ export class CommunityApi extends BaseApi {
 
   createPost(post: CommunityPost): Observable<CommunityPost> {
     return this.postsEndpoint.create(post);
+  }
+
+  updatePost(post: CommunityPost): Observable<CommunityPost> {
+    return this.postsEndpoint.update(post, post.id);
+  }
+
+  getPostReactions(): Observable<CommunityPostReaction[]> {
+    return this.postReactionsEndpoint.getAll();
+  }
+
+  createPostReaction(reaction: CommunityPostReaction): Observable<CommunityPostReaction> {
+    return this.postReactionsEndpoint.create(reaction);
+  }
+
+  updatePostReaction(reaction: CommunityPostReaction): Observable<CommunityPostReaction> {
+    return this.postReactionsEndpoint.update(reaction, reaction.id);
+  }
+
+  deletePostReaction(id: number): Observable<void> {
+    return this.postReactionsEndpoint.delete(id);
   }
 
   getCommunityGoals(): Observable<CommunityGoal[]> {

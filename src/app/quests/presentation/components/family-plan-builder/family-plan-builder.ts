@@ -1,11 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { QuestsService } from '../../../application/quests.service';
 import { Quest } from '../../../domain/model/quest.entity';
 
 @Component({
   selector: 'app-family-plan-builder',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './family-plan-builder.html',
   styleUrl: './family-plan-builder.css',
 })

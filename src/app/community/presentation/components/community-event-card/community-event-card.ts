@@ -12,4 +12,5 @@ export class CommunityEventCard {
   @Input() summary!: CommunityEventSummary;
   @Output() join = new EventEmitter<CommunityEventSummary>();
   @Output() cancel = new EventEmitter<CommunityEventSummary>();
+  @Output() delete = new EventEmitter<CommunityEventSummary>();
 }

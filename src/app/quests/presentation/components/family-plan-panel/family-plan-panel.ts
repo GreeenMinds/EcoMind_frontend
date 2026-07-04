@@ -1,10 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { QuestsService } from '../../../application/quests.service';
 
 @Component({
   selector: 'app-family-plan-panel',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './family-plan-panel.html',
   styleUrl: './family-plan-panel.css',
 })

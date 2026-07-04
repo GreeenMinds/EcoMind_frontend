@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { Observable, retry, tap } from 'rxjs';
+import { map, Observable, retry, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
@@ -10,6 +10,11 @@ import { CommunityAchievement } from '../domain/model/community-achievement.enti
 import { CommunityGoal } from '../domain/model/community-goal.entity';
 import { CommunityMember } from '../domain/model/community-member.entity';
 import { CommunityPost } from '../domain/model/community-post.entity';
+import {
+  COMMUNITY_POST_REACTION_OPTIONS,
+  CommunityPostReaction,
+  CommunityPostReactionType,
+} from '../domain/model/community-post-reaction.entity';
 import { Community } from '../domain/model/community.entity';
 import { EventRegistration } from '../domain/model/event-registration.entity';
 import { Event } from '../domain/model/event.entity';
@@ -19,6 +24,15 @@ import { CommunityApi } from '../infrastructure/community-api';
 export interface CommunityPostSummary {
   post: CommunityPost;
   author?: CommunityMember;
+  reactions: CommunityPostReactionSummary[];
+  currentUserReaction?: CommunityPostReaction;
+}
+
+export interface CommunityPostReactionSummary {
+  reaction: CommunityPostReaction;
+  member?: CommunityMember;
+  imageUrl: string;
+  labelKey: string;
 }
 
 export interface CommunityAchievementSummary {
@@ -34,6 +48,7 @@ export interface CommunityEventSummary {
   author?: CommunityMember;
   registration?: EventRegistration;
   joined: boolean;
+  canDelete: boolean;
 }
 
 export interface CommunityPostFormValue {
@@ -52,6 +67,7 @@ export class CommunityService {
   private readonly membersSignal = signal<CommunityMember[]>([]);
   private readonly postsSignal = signal<CommunityPost[]>([]);
   private readonly realPostsSignal = signal<CommunityPost[]>([]);
+  private readonly postReactionsSignal = signal<CommunityPostReaction[]>([]);
   private readonly goalsSignal = signal<CommunityGoal[]>([]);
   private readonly achievementsSignal = signal<Achievement[]>([]);
   private readonly communityAchievementsSignal = signal<CommunityAchievement[]>([]);
@@ -62,6 +78,7 @@ export class CommunityService {
   readonly communities = this.communitiesSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
   readonly posts = this.postsSignal.asReadonly();
+  readonly postReactions = this.postReactionsSignal.asReadonly();
   readonly goals = this.goalsSignal.asReadonly();
   readonly achievements = this.achievementsSignal.asReadonly();
   readonly communityAchievements = this.communityAchievementsSignal.asReadonly();
@@ -89,6 +106,8 @@ export class CommunityService {
       .map((post) => ({
         post,
         author: this.members().find((member) => member.id === post.user_id),
+        reactions: this.buildPostReactionSummaries(post.id),
+        currentUserReaction: this.findCurrentUserReaction(post.id),
       })),
   );
 
@@ -250,6 +269,34 @@ export class CommunityService {
       });
   }
 
+  deleteEvent(eventId: number): void {
+    const event = this.events().find((item) => item.id === eventId);
+
+    if (!event || event.author_id !== this.currentUserId()) {
+      return;
+    }
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .deleteEvent(eventId)
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.eventsSignal.update((events) => events.filter((item) => item.id !== eventId));
+          this.eventRegistrationsSignal.update((registrations) =>
+            registrations.filter((registration) => registration.event_id !== eventId),
+          );
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not delete the event'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
   createPost(postData: CommunityPostFormValue): void {
     const currentMember = this.currentMember();
     const post = new CommunityPost();
@@ -330,11 +377,63 @@ export class CommunityService {
     });
   }
 
+  selectPostReaction(postId: number, reactionType: CommunityPostReactionType): void {
+    const currentReaction = this.findCurrentUserReaction(postId);
+
+    if (currentReaction?.reaction_type === reactionType) {
+      this.unreactToPost(postId);
+      return;
+    }
+
+    if (currentReaction) {
+      this.updatePostReaction(currentReaction, reactionType);
+      return;
+    }
+
+    this.reactToPost(postId, reactionType);
+  }
+
+  unreactToPost(postId: number): void {
+    const reaction = this.findCurrentUserReaction(postId);
+    const post = this.posts().find((item) => item.id === postId);
+
+    if (!reaction || !post) {
+      return;
+    }
+
+    const updatedPost = Object.assign(new CommunityPost(), post, {
+      likes: Math.max(0, post.likes - 1),
+    });
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .deletePostReaction(reaction.id)
+      .pipe(
+        switchMap(() => this.communityApi.updatePost(updatedPost)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (savedPost) => {
+          this.postReactionsSignal.update((reactions) =>
+            reactions.filter((item) => item.id !== reaction.id),
+          );
+          this.replacePost(savedPost);
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not remove the reaction'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
   private loadCommunityData(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    let pendingRequests = 9;
+    let pendingRequests = 10;
     const finishRequest = () => {
       pendingRequests -= 1;
 
@@ -356,6 +455,11 @@ export class CommunityService {
     this.loadResource(
       this.communityApi.getCommunityPosts(),
       (posts) => this.postsSignal.set(posts),
+      finishRequest,
+    );
+    this.loadResource(
+      this.communityApi.getPostReactions(),
+      (reactions) => this.postReactionsSignal.set(reactions),
       finishRequest,
     );
     this.loadResource(
@@ -450,6 +554,110 @@ export class CommunityService {
       });
   }
 
+  private reactToPost(postId: number, reactionType: CommunityPostReactionType): void {
+    const post = this.posts().find((item) => item.id === postId);
+
+    if (!post) {
+      return;
+    }
+
+    const reaction = new CommunityPostReaction();
+    reaction.id = 0;
+    reaction.post_id = postId;
+    reaction.user_id = this.currentUserId();
+    reaction.reaction_type = reactionType;
+    reaction.created_at = new Date().toISOString();
+
+    const updatedPost = Object.assign(new CommunityPost(), post, {
+      likes: post.likes + 1,
+    });
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .createPostReaction(reaction)
+      .pipe(
+        switchMap((createdReaction) =>
+          this.communityApi.updatePost(updatedPost).pipe(
+            map((savedPost) => ({
+              createdReaction,
+              savedPost,
+            })),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: ({ createdReaction, savedPost }) => {
+          this.postReactionsSignal.update((reactions) => [...reactions, createdReaction]);
+          this.replacePost(savedPost);
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not react to the post'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
+  private updatePostReaction(
+    reaction: CommunityPostReaction,
+    reactionType: CommunityPostReactionType,
+  ): void {
+    const updatedReaction = Object.assign(new CommunityPostReaction(), reaction, {
+      reaction_type: reactionType,
+    });
+
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.communityApi
+      .updatePostReaction(updatedReaction)
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (savedReaction) => {
+          this.postReactionsSignal.update((reactions) =>
+            reactions.map((item) => (item.id === savedReaction.id ? savedReaction : item)),
+          );
+          this.loadingSignal.set(false);
+        },
+        error: (error) => {
+          this.errorSignal.set(this.formatError(error, 'Could not update the reaction'));
+          this.loadingSignal.set(false);
+        },
+      });
+  }
+
+  private buildPostReactionSummaries(postId: number): CommunityPostReactionSummary[] {
+    return this.postReactions()
+      .filter((reaction) => reaction.post_id === postId)
+      .map((reaction) => {
+        const option =
+          COMMUNITY_POST_REACTION_OPTIONS.find((item) => item.type === reaction.reaction_type) ??
+          COMMUNITY_POST_REACTION_OPTIONS[0];
+
+        return {
+          reaction,
+          member: this.members().find((member) => member.id === reaction.user_id),
+          imageUrl: option.imageUrl,
+          labelKey: option.labelKey,
+        };
+      });
+  }
+
+  private findCurrentUserReaction(postId: number): CommunityPostReaction | undefined {
+    return this.postReactions().find(
+      (reaction) => reaction.post_id === postId && reaction.user_id === this.currentUserId(),
+    );
+  }
+
+  private replacePost(updatedPost: CommunityPost): void {
+    this.postsSignal.update((posts) =>
+      posts.map((item) => (item.id === updatedPost.id ? updatedPost : item)),
+    );
+  }
+
   private buildEventSummary(event: Event): CommunityEventSummary {
     const registration = this.findCurrentUserRegistration(event.id);
 
@@ -458,6 +666,7 @@ export class CommunityService {
       author: this.members().find((member) => member.id === event.author_id),
       registration,
       joined: registration?.status === 'active',
+      canDelete: event.author_id === this.currentUserId(),
     };
   }
 
@@ -479,4 +688,5 @@ export class CommunityService {
 
     return fallback;
   }
+
 }
