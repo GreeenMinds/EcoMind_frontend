@@ -14,7 +14,7 @@ export class GoalsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderGoalEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGoalEndpointPath}`,
       new GoalAssembler(),
     );
   }

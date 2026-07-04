@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
@@ -85,7 +85,7 @@ export class CommunityApi extends BaseApi {
   }
 
   updatePostReaction(reaction: CommunityPostReaction): Observable<CommunityPostReaction> {
-    return this.postReactionsEndpoint.update(reaction, reaction.id);
+    return this.postReactionsEndpoint.updateReactionType(reaction);
   }
 
   deletePostReaction(id: number): Observable<void> {
@@ -98,6 +98,22 @@ export class CommunityApi extends BaseApi {
 
   getGoals(): Observable<Goal[]> {
     return this.goalCatalogEndpoint.getAll();
+  }
+
+  getGoalById(id: number): Observable<Goal> {
+    return this.goalCatalogEndpoint.getById(id);
+  }
+
+  createGoal(goal: Goal): Observable<Goal> {
+    return this.goalCatalogEndpoint.create(goal);
+  }
+
+  updateGoal(goal: Goal): Observable<Goal> {
+    return this.goalCatalogEndpoint.update(goal, goal.id);
+  }
+
+  deleteGoal(id: number): Observable<void> {
+    return this.goalCatalogEndpoint.delete(id);
   }
 
   getAchievements(): Observable<Achievement[]> {
@@ -124,23 +140,29 @@ export class CommunityApi extends BaseApi {
     return this.eventsEndpoint.update(event, event.id);
   }
 
-  deleteEvent(id: number): Observable<void> {
-    return this.eventsEndpoint.delete(id);
+  deleteEvent(id: number, authorId: number): Observable<void> {
+    return this.eventsEndpoint.deleteEvent(id, authorId);
   }
 
-  getEventRegistrations(): Observable<EventRegistration[]> {
-    return this.eventRegistrationsEndpoint.getAll();
+  getEventRegistrations(eventId: number): Observable<EventRegistration[]> {
+    return this.eventRegistrationsEndpoint.getByEvent(eventId);
+  }
+
+  getEventRegistrationsForEvents(eventIds: number[]): Observable<EventRegistration[]> {
+    if (eventIds.length === 0) {
+      return of([]);
+    }
+
+    return forkJoin(eventIds.map((eventId) => this.getEventRegistrations(eventId))).pipe(
+      map((registrations) => registrations.flat()),
+    );
   }
 
   createEventRegistration(registration: EventRegistration): Observable<EventRegistration> {
-    return this.eventRegistrationsEndpoint.create(registration);
+    return this.eventRegistrationsEndpoint.createForEvent(registration.event_id, registration);
   }
 
-  updateEventRegistration(registration: EventRegistration): Observable<EventRegistration> {
-    return this.eventRegistrationsEndpoint.update(registration, registration.id);
-  }
-
-  deleteEventRegistration(id: number): Observable<void> {
-    return this.eventRegistrationsEndpoint.delete(id);
+  cancelEventRegistration(registration: EventRegistration): Observable<EventRegistration> {
+    return this.eventRegistrationsEndpoint.cancel(registration.event_id, registration.id);
   }
 }

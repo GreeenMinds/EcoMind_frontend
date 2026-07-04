@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   platformProviderApiBaseUrl: 'https://db-server-eco-1.onrender.com',
   platformProviderBackendApiBaseUrl: 'https://ecomind-backend-t2nh.onrender.com/api/v1',
-  platformProviderCommunityEndpointPath: '/community',
+  platformProviderCommunityEndpointPath: '/community/communities',
   platformProviderUserEndpointPath: '/user',
   platformProviderFamilyEndpointPath: '/family',
   platformProviderFamilyUserEndpointPath: '/family_user',
@@ -11,7 +11,7 @@ export const environment = {
   platformProviderAchievementEndpointPath: '/achievement',
   platformProviderCommunityAchievementEndpointPath: '/community_achievement',
   platformProviderUserAchievementEndpointPath: '/user_achievement',
-  platformProviderEventEndpointPath: '/event',
+  platformProviderEventEndpointPath: '/community/events',
   platformProviderPreferenceEndpointPath: '/preference',
   platformProviderNotificationEndpointPath: '/notification',
   platformProviderUserNotificationEndpointPath: '/user_notification',
@@ -29,11 +29,11 @@ export const environment = {
   platformProviderCollaborativeQuestMemberEndpointPath: '/collaborative-quest-members',
   platformProviderFamilyPlanEndpointPath: '/family-plans',
   platformProviderMinigameAttemptEndpointPath: '/minigame-attempts',
-  platformProviderCommunityPostEndpointPath: '/community_post',
+  platformProviderCommunityPostEndpointPath: '/community/posts',
   platformProviderCommunityPostRealEndpointPath: '/community/posts',
-  platformProviderPostReactionEndpointPath: '/post_reaction',
-  platformProviderGoalEndpointPath: '/goal',
-  platformProviderCommunityGoalEndpointPath: '/community_goal',
+  platformProviderPostReactionEndpointPath: '/community/post-reactions',
+  platformProviderGoalEndpointPath: '/community/goals',
+  platformProviderCommunityGoalEndpointPath: '/community/community-goals',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
   platformProviderCosmeticEndpointPath: '/cosmetic',
   platformProviderUserCosmeticEndpointPath: '/user_cosmetic',
@@ -45,5 +45,6 @@ export const environment = {
 
   // Public keys only (safe to expose client-side). Replace with your own live/sandbox keys.
   platformProviderCulqiPublicKey: 'pk_test_Z2WRdxu0EQOGU2Ge',
-  platformProviderPaypalClientId: 'AUmHZeDzviWVJj_rnXU_c5wEhRKANH7yy_HFdJVDWxgsc1lX_8xYrfG0NJqLJHynBKAsXy4YsaIzZeh2',
+  platformProviderPaypalClientId:
+    'AUmHZeDzviWVJj_rnXU_c5wEhRKANH7yy_HFdJVDWxgsc1lX_8xYrfG0NJqLJHynBKAsXy4YsaIzZeh2',
 };

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { AuthService } from '../../auth/application/auth.service';
 
-const DEFAULT_USER_ID = 3;
+const DEFAULT_USER_ID = 1;
 
 @Injectable({
   providedIn: 'root',

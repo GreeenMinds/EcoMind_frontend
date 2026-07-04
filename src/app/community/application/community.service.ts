@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, retry, switchMap, tap } from 'rxjs';
+import { catchError, Observable, of, retry, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
@@ -70,7 +70,6 @@ export class CommunityService {
   private readonly communitiesSignal = signal<Community[]>([]);
   private readonly membersSignal = signal<CommunityMember[]>([]);
   private readonly postsSignal = signal<CommunityPost[]>([]);
-  private readonly realPostsSignal = signal<CommunityPost[]>([]);
   private readonly postReactionsSignal = signal<CommunityPostReaction[]>([]);
   private readonly goalCatalogSignal = signal<Goal[]>([]);
   private readonly goalsSignal = signal<CommunityGoal[]>([]);
@@ -117,16 +116,11 @@ export class CommunityService {
 
   readonly postSummaries = computed(() => {
     const realMembers = this.realMembersSignal();
-    const mockPosts = this.posts().map((post) => ({
-      post,
-      author: this.members().find((member) => member.id === post.user_id),
-    }));
-    const realPosts = this.realPostsSignal().map((post) => ({
+    return this.posts()
+      .map((post) => ({
       post,
       author: realMembers.get(post.user_id) ?? this.members().find((member) => member.id === post.user_id),
-    }));
-
-    return [...mockPosts, ...realPosts]
+    }))
       .sort((a, b) => new Date(b.post.created_at).getTime() - new Date(a.post.created_at).getTime())
       .map(({ post, author }) => ({
         post,
@@ -139,7 +133,11 @@ export class CommunityService {
   readonly eventSummaries = computed(() =>
     this.events()
       .slice()
-      .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+      .sort(
+        (a, b) =>
+          new Date(`${a.date}T${a.start_time}`).getTime() -
+          new Date(`${b.date}T${b.start_time}`).getTime(),
+      )
       .map((event) => this.buildEventSummary(event)),
   );
 
@@ -194,19 +192,6 @@ export class CommunityService {
     private readonly http: HttpClient,
   ) {
     this.loadCommunityData();
-    this.loadRealPosts();
-  }
-
-  private loadRealPosts(): void {
-    const realPostsUrl =
-      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityPostRealEndpointPath}`;
-    this.http.get<CommunityPost[]>(realPostsUrl).subscribe({
-      next: (posts) => {
-        this.realPostsSignal.set(posts);
-        this.loadRealMembers(posts.map((post) => post.user_id));
-      },
-      error: () => this.realPostsSignal.set([]),
-    });
   }
 
   private loadRealMembers(userIds: number[]): void {
@@ -243,12 +228,11 @@ export class CommunityService {
       return;
     }
 
-    registration.status = 'cancelled';
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
     this.communityApi
-      .updateEventRegistration(registration)
+      .cancelEventRegistration(registration)
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedRegistration) => {
@@ -324,7 +308,7 @@ export class CommunityService {
     this.errorSignal.set(null);
 
     this.communityApi
-      .deleteEvent(eventId)
+      .deleteEvent(eventId, this.currentUserId())
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -363,6 +347,7 @@ export class CommunityService {
       .subscribe({
         next: (createdPost) => {
           this.postsSignal.update((posts) => [...posts, createdPost]);
+          this.loadRealMembers([createdPost.user_id]);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -387,7 +372,7 @@ export class CommunityService {
 
     return this.http.post<CommunityPost>(realPostsUrl, payload).pipe(
       tap((createdPost) => {
-        this.realPostsSignal.update((posts) => [...posts, createdPost]);
+        this.postsSignal.update((posts) => [...posts, createdPost]);
         this.loadRealMembers([createdPost.user_id]);
         this.notifyConnectedFriends(createdPost);
       }),
@@ -440,31 +425,23 @@ export class CommunityService {
 
   unreactToPost(postId: number): void {
     const reaction = this.findCurrentUserReaction(postId);
-    const post = this.posts().find((item) => item.id === postId);
 
-    if (!reaction || !post) {
+    if (!reaction) {
       return;
     }
-
-    const updatedPost = Object.assign(new CommunityPost(), post, {
-      likes: Math.max(0, post.likes - 1),
-    });
 
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
     this.communityApi
       .deletePostReaction(reaction.id)
-      .pipe(
-        switchMap(() => this.communityApi.updatePost(updatedPost)),
-        takeUntilDestroyed(this.destroyRef),
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (savedPost) => {
+        next: () => {
           this.postReactionsSignal.update((reactions) =>
             reactions.filter((item) => item.id !== reaction.id),
           );
-          this.replacePost(savedPost);
+          this.adjustPostLikes(postId, -1);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -478,7 +455,7 @@ export class CommunityService {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    let pendingRequests = 13;
+    let pendingRequests = 12;
     const finishRequest = () => {
       pendingRequests -= 1;
 
@@ -499,7 +476,10 @@ export class CommunityService {
     );
     this.loadResource(
       this.communityApi.getCommunityPosts(),
-      (posts) => this.postsSignal.set(posts),
+      (posts) => {
+        this.postsSignal.set(posts);
+        this.loadRealMembers(posts.map((post) => post.user_id));
+      },
       finishRequest,
     );
     this.loadResource(
@@ -546,12 +526,12 @@ export class CommunityService {
       finishRequest,
     );
     this.loadResource(
-      this.communityApi.getEvents(),
-      (events) => this.eventsSignal.set(events),
-      finishRequest,
-    );
-    this.loadResource(
-      this.communityApi.getEventRegistrations(),
+      this.communityApi.getEvents().pipe(
+        tap((events) => this.eventsSignal.set(events)),
+        switchMap((events) =>
+          this.communityApi.getEventRegistrationsForEvents(events.map((event) => event.id)),
+        ),
+      ),
       (eventRegistrations) => this.eventRegistrationsSignal.set(eventRegistrations),
       finishRequest,
     );
@@ -650,30 +630,16 @@ export class CommunityService {
     reaction.reaction_type = reactionType;
     reaction.created_at = new Date().toISOString();
 
-    const updatedPost = Object.assign(new CommunityPost(), post, {
-      likes: post.likes + 1,
-    });
-
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
     this.communityApi
       .createPostReaction(reaction)
-      .pipe(
-        switchMap((createdReaction) =>
-          this.communityApi.updatePost(updatedPost).pipe(
-            map((savedPost) => ({
-              createdReaction,
-              savedPost,
-            })),
-          ),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ({ createdReaction, savedPost }) => {
+        next: (createdReaction) => {
           this.postReactionsSignal.update((reactions) => [...reactions, createdReaction]);
-          this.replacePost(savedPost);
+          this.adjustPostLikes(postId, 1);
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -737,6 +703,18 @@ export class CommunityService {
   private replacePost(updatedPost: CommunityPost): void {
     this.postsSignal.update((posts) =>
       posts.map((item) => (item.id === updatedPost.id ? updatedPost : item)),
+    );
+  }
+
+  private adjustPostLikes(postId: number, delta: number): void {
+    this.postsSignal.update((posts) =>
+      posts.map((post) =>
+        post.id === postId
+          ? Object.assign(new CommunityPost(), post, {
+              likes: Math.max(0, post.likes + delta),
+            })
+          : post,
+      ),
     );
   }
 

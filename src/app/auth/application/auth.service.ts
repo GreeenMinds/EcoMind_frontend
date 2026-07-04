@@ -23,10 +23,10 @@ export interface SignUpPayload {
 
 const AUTH_STORAGE_KEY = 'ecomind-auth-session';
 const AUTH_ACCOUNTS_STORAGE_KEY = 'ecomind-auth-accounts';
-const MOCK_AUTH_USER_ID = 3;
+const MOCK_AUTH_USER_ID = 1;
 const DEMO_ACCOUNTS: StoredAuthAccount[] = [
   {
-    userId: 3,
+    userId: 1,
     name: 'Example User',
     email: 'userexample@gmail.com',
     password: 'ecomind123',

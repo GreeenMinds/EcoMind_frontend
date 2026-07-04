@@ -14,7 +14,7 @@ export class CommunityGoalsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderCommunityGoalEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityGoalEndpointPath}`,
       new CommunityGoalAssembler(),
     );
   }
