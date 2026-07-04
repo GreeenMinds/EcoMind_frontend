@@ -7,10 +7,10 @@ export interface CommunityGoalResponse extends BaseResponse {
 export interface CommunityGoalResource extends BaseResource {
   id: number;
   community_id: number;
-  title: string;
+  goal_id: number;
+  description: string;
   target: number;
   progress: number;
-  unit: string;
   participants: number;
   status: string;
 }

@@ -5,6 +5,7 @@ import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
 import { CommunityGoal } from '../domain/model/community-goal.entity';
+import { Goal } from '../domain/model/goal.entity';
 import { CommunityMember } from '../domain/model/community-member.entity';
 import { CommunityPost } from '../domain/model/community-post.entity';
 import { CommunityPostReaction } from '../domain/model/community-post-reaction.entity';
@@ -21,6 +22,7 @@ import { CommunityPostsApiEndpoint } from './community-posts-api-endpoint';
 import { CommunityPostReactionsApiEndpoint } from './community-post-reactions-api-endpoint';
 import { EventRegistrationsApiEndpoint } from './event-registrations-api-endpoint';
 import { EventsApiEndpoint } from './events-api-endpoint';
+import { GoalsApiEndpoint } from './goals-api-endpoint';
 import { UserAchievementsApiEndpoint } from './user-achievements-api-endpoint';
 
 @Injectable({
@@ -31,6 +33,7 @@ export class CommunityApi extends BaseApi {
   private readonly membersEndpoint: CommunityMembersApiEndpoint;
   private readonly postsEndpoint: CommunityPostsApiEndpoint;
   private readonly postReactionsEndpoint: CommunityPostReactionsApiEndpoint;
+  private readonly goalCatalogEndpoint: GoalsApiEndpoint;
   private readonly goalsEndpoint: CommunityGoalsApiEndpoint;
   private readonly achievementsEndpoint: AchievementsApiEndpoint;
   private readonly communityAchievementsEndpoint: CommunityAchievementsApiEndpoint;
@@ -44,6 +47,7 @@ export class CommunityApi extends BaseApi {
     this.membersEndpoint = new CommunityMembersApiEndpoint(http);
     this.postsEndpoint = new CommunityPostsApiEndpoint(http);
     this.postReactionsEndpoint = new CommunityPostReactionsApiEndpoint(http);
+    this.goalCatalogEndpoint = new GoalsApiEndpoint(http);
     this.goalsEndpoint = new CommunityGoalsApiEndpoint(http);
     this.achievementsEndpoint = new AchievementsApiEndpoint(http);
     this.communityAchievementsEndpoint = new CommunityAchievementsApiEndpoint(http);
@@ -90,6 +94,10 @@ export class CommunityApi extends BaseApi {
 
   getCommunityGoals(): Observable<CommunityGoal[]> {
     return this.goalsEndpoint.getAll();
+  }
+
+  getGoals(): Observable<Goal[]> {
+    return this.goalCatalogEndpoint.getAll();
   }
 
   getAchievements(): Observable<Achievement[]> {

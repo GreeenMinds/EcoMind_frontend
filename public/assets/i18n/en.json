@@ -209,7 +209,7 @@
       "feed": "Share progress and celebrate sustainable actions with your community.",
       "achievements": "Review the milestones your community has reached.",
       "events": "Find nearby activities and join with your family or community.",
-      "goal": "Track the progress of the current shared goal.",
+      "goal": "Track the progress of the current shared goals.",
       "nearbyEvents": "Activities available near your community."
     },
     "tabs": {
@@ -297,7 +297,13 @@
     "emptyMappedEvents": "No mapped events available.",
     "mapAriaLabel": "Map of nearby community events",
     "goalProgress": "{{ progress }} of {{ target }} {{ unit }}",
-    "participants": "{{ count }} participants"
+    "participants": "{{ count }} participants",
+    "previousGoal": "Show previous goal",
+    "nextGoal": "Show next goal",
+    "goalStatus": {
+      "active": "In progress",
+      "completed": "Completed"
+    }
   },
   "store": {
     "title": "Ecomind Store",

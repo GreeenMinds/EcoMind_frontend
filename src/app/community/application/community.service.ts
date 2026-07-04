@@ -1,13 +1,14 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, retry, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, of, retry, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
 import { CommunityGoal } from '../domain/model/community-goal.entity';
+import { Goal } from '../domain/model/goal.entity';
 import { CommunityMember } from '../domain/model/community-member.entity';
 import { CommunityPost } from '../domain/model/community-post.entity';
 import {
@@ -20,6 +21,9 @@ import { EventRegistration } from '../domain/model/event-registration.entity';
 import { Event } from '../domain/model/event.entity';
 import { UserAchievement } from '../domain/model/user-achievement.entity';
 import { CommunityApi } from '../infrastructure/community-api';
+import { Quest } from '../../quests/domain/model/quest.entity';
+import { QuestUser } from '../../quests/domain/model/quest-user.entity';
+import { QuestsApi } from '../../quests/infrastructure/quests-api';
 
 export interface CommunityPostSummary {
   post: CommunityPost;
@@ -68,7 +72,10 @@ export class CommunityService {
   private readonly postsSignal = signal<CommunityPost[]>([]);
   private readonly realPostsSignal = signal<CommunityPost[]>([]);
   private readonly postReactionsSignal = signal<CommunityPostReaction[]>([]);
+  private readonly goalCatalogSignal = signal<Goal[]>([]);
   private readonly goalsSignal = signal<CommunityGoal[]>([]);
+  private readonly questsSignal = signal<Quest[]>([]);
+  private readonly questUsersSignal = signal<QuestUser[]>([]);
   private readonly achievementsSignal = signal<Achievement[]>([]);
   private readonly communityAchievementsSignal = signal<CommunityAchievement[]>([]);
   private readonly userAchievementsSignal = signal<UserAchievement[]>([]);
@@ -99,7 +106,14 @@ export class CommunityService {
     this.members().find((member) => member.id === this.currentUserId()),
   );
 
-  readonly activeGoal = computed(() => this.goals().find((goal) => goal.status === 'active'));
+  readonly communityGoals = computed(() => {
+    const communityId = this.currentMember()?.community_id ?? this.communities()[0]?.id;
+
+    return this.goals()
+      .filter((goal) => !communityId || goal.community_id === communityId)
+      .map((goal) => this.buildCommunityGoal(goal))
+      .filter((goal) => goal.status !== 'completed');
+  });
 
   readonly postSummaries = computed(() => {
     const realMembers = this.realMembersSignal();
@@ -175,6 +189,7 @@ export class CommunityService {
   });
   constructor(
     private readonly communityApi: CommunityApi,
+    private readonly questsApi: QuestsApi,
     private readonly currentUser: CurrentUser,
     private readonly http: HttpClient,
   ) {
@@ -463,7 +478,7 @@ export class CommunityService {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    let pendingRequests = 10;
+    let pendingRequests = 13;
     const finishRequest = () => {
       pendingRequests -= 1;
 
@@ -493,8 +508,25 @@ export class CommunityService {
       finishRequest,
     );
     this.loadResource(
+      this.communityApi.getGoals(),
+      (goals) => this.goalCatalogSignal.set(goals),
+      finishRequest,
+    );
+    this.loadResource(
       this.communityApi.getCommunityGoals(),
       (goals) => this.goalsSignal.set(goals),
+      finishRequest,
+    );
+    this.loadOptionalResource(
+      this.questsApi.getQuests(),
+      [],
+      (quests) => this.questsSignal.set(quests),
+      finishRequest,
+    );
+    this.loadOptionalResource(
+      this.questsApi.getQuestsUser(),
+      [],
+      (questUsers) => this.questUsersSignal.set(questUsers),
       finishRequest,
     );
     this.loadResource(
@@ -540,6 +572,26 @@ export class CommunityService {
         error: (error) => {
           this.errorSignal.set(this.formatError(error, 'Could not load the community'));
           this.loadingSignal.set(false);
+          finishRequest();
+        },
+      });
+  }
+
+  private loadOptionalResource<T>(
+    request: Observable<T>,
+    fallback: T,
+    applyValue: (value: T) => void,
+    finishRequest: () => void,
+  ): void {
+    request
+      .pipe(
+        retry(2),
+        catchError(() => of(fallback)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (value) => {
+          applyValue(value);
           finishRequest();
         },
       });
@@ -707,6 +759,81 @@ export class CommunityService {
         registration.user_id === this.currentUserId() &&
         registration.status === 'active',
     );
+  }
+
+  private buildCommunityGoal(goal: CommunityGoal): CommunityGoal {
+    const catalogGoal = this.goalCatalogSignal().find((item) => item.id === goal.goal_id);
+    const stats = this.calculateGoalStats(goal, catalogGoal?.title ?? '');
+    const progress = stats?.progress ?? goal.progress;
+    const participants = stats?.participants ?? goal.participants;
+
+    return Object.assign(new CommunityGoal(), goal, {
+      title: catalogGoal?.title ?? '',
+      unit: catalogGoal?.unit ?? '',
+      progress,
+      participants,
+      status: progress >= goal.target ? 'completed' : goal.status,
+    });
+  }
+
+  private calculateGoalStats(
+    communityGoal: CommunityGoal,
+    title: string,
+  ): { progress: number; participants: number } | null {
+    const category = this.resolveGoalCategory(`${title} ${communityGoal.description}`);
+
+    if (!category || this.questsSignal().length === 0 || this.questUsersSignal().length === 0) {
+      return null;
+    }
+
+    const communityUserIds = new Set(
+      this.members()
+        .filter((member) => member.community_id === communityGoal.community_id)
+        .map((member) => member.id),
+    );
+    const questIds = new Set(
+      this.questsSignal()
+        .filter((quest) => this.normalizeText(quest.category) === category)
+        .map((quest) => quest.id),
+    );
+    const completedAssignments = this.questUsersSignal().filter(
+      (questUser) =>
+        questIds.has(questUser.quest_id) &&
+        this.isQuestCompleted(questUser) &&
+        (communityUserIds.size === 0 || communityUserIds.has(questUser.user_id)),
+    );
+
+    return {
+      progress: completedAssignments.length,
+      participants: new Set(completedAssignments.map((questUser) => questUser.user_id)).size,
+    };
+  }
+
+  private resolveGoalCategory(value: string): string | null {
+    const text = this.normalizeText(value);
+    const categoryTerms: Record<string, string[]> = {
+      water: ['agua', 'water'],
+      energy: ['energia', 'energy'],
+      recycle: ['reciclaje', 'reciclar', 'recycling', 'recycle'],
+      daily_quest: ['habitos sostenibles', 'rutinas diarias', 'daily quest'],
+    };
+
+    return (
+      Object.entries(categoryTerms).find(([, terms]) =>
+        terms.some((term) => text.includes(term)),
+      )?.[0] ?? null
+    );
+  }
+
+  private isQuestCompleted(questUser: QuestUser): boolean {
+    return this.normalizeText(questUser.status) === 'completed' || questUser.progress >= 100;
+  }
+
+  private normalizeText(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 
   private formatError(error: unknown, fallback: string): string {

@@ -32,6 +32,7 @@ export const environment = {
   platformProviderCommunityPostEndpointPath: '/community_post',
   platformProviderCommunityPostRealEndpointPath: '/community/posts',
   platformProviderPostReactionEndpointPath: '/post_reaction',
+  platformProviderGoalEndpointPath: '/goal',
   platformProviderCommunityGoalEndpointPath: '/community_goal',
   platformProviderEventRegistrationEndpointPath: '/event_registration',
   platformProviderCosmeticEndpointPath: '/cosmetic',

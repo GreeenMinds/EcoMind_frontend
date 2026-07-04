@@ -209,7 +209,7 @@
       "feed": "Comparte avances y celebra acciones sostenibles con tu comunidad.",
       "achievements": "Revisa los hitos que tu comunidad ha alcanzado.",
       "events": "Encuentra actividades cercanas y participa con tu familia o comunidad.",
-      "goal": "Sigue el progreso del objetivo compartido actual.",
+      "goal": "Sigue el progreso de las metas compartidas actuales.",
       "nearbyEvents": "Actividades disponibles cerca de tu comunidad."
     },
     "tabs": {
@@ -297,7 +297,13 @@
     "emptyMappedEvents": "No hay eventos ubicados disponibles.",
     "mapAriaLabel": "Mapa de eventos cercanos de la comunidad",
     "goalProgress": "{{ progress }} de {{ target }} {{ unit }}",
-    "participants": "{{ count }} participantes"
+    "participants": "{{ count }} participantes",
+    "previousGoal": "Ver meta anterior",
+    "nextGoal": "Ver meta siguiente",
+    "goalStatus": {
+      "active": "En progreso",
+      "completed": "Completada"
+    }
   },
   "store": {
     "title": "Tienda EcoMind",
