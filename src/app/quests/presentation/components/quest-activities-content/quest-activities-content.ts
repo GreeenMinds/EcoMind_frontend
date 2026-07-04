@@ -23,6 +23,10 @@ export class QuestActivitiesContent {
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
     { initialValue: Number(this.route.snapshot.paramMap.get('questId')) },
   );
+  readonly backUrl = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('returnUrl') || null)),
+    { initialValue: this.route.snapshot.queryParamMap.get('returnUrl') },
+  );
 
   constructor() {
     effect(() => {
@@ -129,7 +133,9 @@ export class QuestActivitiesContent {
     if (!detail || !this.canCompleteQuest()) return;
 
     this.questProgressService.updateQuestCompleted(detail.quest.id).subscribe({
-      next: () => void this.router.navigate(['/quests', detail.quest.id, 'completed']),
+      next: () => void this.router.navigate(['/quests', detail.quest.id, 'completed'], {
+        queryParams: this.backUrl() ? { returnUrl: this.backUrl() } : undefined,
+      }),
     });
   }
 }

@@ -8,6 +8,8 @@ import { User } from './profile/domain/model/user.entity';
 import { App } from './app';
 
 class ProfileServiceStub {
+  readonly notifications = signal([]).asReadonly();
+  readonly unreadNotificationCount = signal(0).asReadonly();
   readonly currentUserProfile = signal(
     Object.assign(new User(), {
       id: 1,
@@ -25,6 +27,18 @@ class ProfileServiceStub {
 
   refreshCurrentUser() {
     return of(this.currentUserProfile());
+  }
+
+  loadNotifications() {
+    return of([]);
+  }
+
+  markNotificationAsRead() {
+    return of(null);
+  }
+
+  markAllNotificationsAsRead() {
+    return of([]);
   }
 }
 
@@ -81,12 +95,12 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the shared layout', async () => {
+  it('should render the router outlet', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-layout')).not.toBeNull();
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });

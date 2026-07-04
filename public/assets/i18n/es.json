@@ -34,10 +34,18 @@
     "progress": "Progreso",
     "progressCount": "Progreso: {{ completed }} / {{ total }}",
     "emptyActivities": "Esta misión no tiene actividades registradas.",
-    "completeActivity": "Completar actividad",
-    "activityCompleted": "Actividad completada",
+    "completeActivity": "Completar misión",
+    "activityCompleted": "Misión completada",
     "startedActivity": "¡Iniciaste una actividad!",
-    "completedActivity": "¡Completaste la actividad!",
+    "completedActivity": "¡Completaste la misión!",
+    "share": {
+      "cta": "Compartir en comunidad",
+      "sharing": "Compartiendo...",
+      "success": "¡Compartido en la comunidad!",
+      "error": "No se pudo compartir. Intenta de nuevo.",
+      "retry": "Reintentar",
+      "draftSaved": "Guardado como borrador. Puedes reintentar cuando quieras."
+    },
     "activeEmpty": "Aún no hay misiones activas",
     "seeMore": "Ver más",
     "allActive": "Todas las misiones activas",
@@ -122,6 +130,44 @@
         "removed": "Eliminado"
       }
     },
+    "familyPlan": {
+      "title": "Plan familiar",
+      "progressTitle": "Retos familiares",
+      "requiresFamily": "Necesitas pertenecer a una familia para crear un plan.",
+      "parentOnly": "Solo el padre o madre de la familia puede crear el plan.",
+      "searchPlaceholder": "Buscar reto familiar",
+      "category": "Categoría",
+      "activityType": "Tipo de actividad",
+      "allCategories": "Todas",
+      "allActivityTypes": "Todos",
+      "loadingChallenges": "Cargando retos...",
+      "emptyChallenges": "No hay retos familiares disponibles.",
+      "details": "Detalles",
+      "added": "Agregado",
+      "addToPlan": "Agregar al plan",
+      "addedCount": "retos agregados",
+      "startPlan": "Iniciar plan familiar",
+      "remove": "Quitar",
+      "emptyDraft": "Agrega al menos un reto para iniciar el plan.",
+      "createPlan": "Crear plan familiar",
+      "continuePlan": "Continuar plan familiar",
+      "completedCount": "{{ completed }} de {{ total }} retos completados",
+      "totalProgress": "Progreso total",
+      "completePlan": "Completar retos familiares",
+      "deletePlan": "Eliminar plan familiar",
+      "openChallenge": "Abrir reto",
+      "completedLabel": "Completado",
+      "completionTitle": "Completaste los retos familiares",
+      "completionCopy": "El plan familiar quedó finalizado.",
+      "loadingPlan": "Cargando plan...",
+      "notFound": "No se encontró el plan familiar.",
+      "statuses": {
+        "ACTIVE": "En curso",
+        "COMPLETED": "Completado",
+        "CANCELLED": "Cancelado",
+        "DRAFT": "Borrador"
+      }
+    },
     "alt": {
       "search": "Buscar",
       "activityStarted": "Actividad iniciada",
@@ -139,6 +185,17 @@
     },
     "yourPosition": "Tu puesto",
     "loading": "Cargando ranking..."
+  },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Familia"
+  },
+  "familyRanking": {
+    "title": "Ranking de familias",
+    "subtitle": "Compite en equipo con tu familia",
+    "yourPosition": "Posición de tu familia",
+    "loading": "Cargando ranking de familias...",
+    "empty": "No hay información disponible"
   },
   "community": {
     "title": {
@@ -289,6 +346,89 @@
       "megaBundleMultiplier": "Multiplicador 3x por una semana"
     }
   },
+  "settings": {
+    "header": {
+      "eyebrow": "Ajustes",
+      "title": "Configuración"
+    },
+    "language": {
+      "eyebrow": "Idioma",
+      "title": "Idioma",
+      "description": "Elige el idioma principal de la aplicación."
+    },
+    "notifications": {
+      "eyebrow": "Avisos",
+      "title": "Notificaciones",
+      "description": "Controla qué avisos aparecen en la campana del encabezado.",
+      "status": {
+        "enabled": "Activadas",
+        "disabled": "Desactivadas"
+      },
+      "master": {
+        "title": "Estado general",
+        "description": "Activa o pausa todas las notificaciones de la campana."
+      },
+      "options": {
+        "friendship": {
+          "title": "Amistades",
+          "description": "Solicitudes de amistad, respuestas y cambios de relación."
+        },
+        "quests": {
+          "title": "Misiones",
+          "description": "Retos, progreso, vencimientos y actividades familiares."
+        },
+        "community": {
+          "title": "Comunidad",
+          "description": "Eventos, publicaciones e interacciones del feed."
+        },
+        "achievements": {
+          "title": "Logros",
+          "description": "Medallas, ranking y logros compartidos."
+        },
+        "learning": {
+          "title": "Learning",
+          "description": "Recordatorios educativos y materiales pendientes."
+        },
+        "support": {
+          "title": "Soporte",
+          "description": "Actualizaciones de tickets y respuestas del equipo."
+        },
+        "general": {
+          "title": "General",
+          "description": "Avisos del sistema y mensajes generales."
+        }
+      },
+      "reset": "Restaurar preferencias"
+    },
+    "support": {
+      "eyebrow": "Soporte técnico",
+      "title": "Contacta con EcoMind",
+      "description": "Si necesitas ayuda con tu cuenta, solicitudes o funcionamiento de la plataforma, comunícate con nuestro equipo.",
+      "ariaLabel": "Canales de soporte técnico",
+      "emailLabel": "Correo",
+      "phoneLabel": "Teléfono",
+      "imageAlt": "Asistente de soporte técnico EcoMind"
+    },
+    "account": {
+      "eyebrow": "Cuenta",
+      "title": "Acceso y seguridad",
+      "description": "Cierra tu sesión actual o elimina la cuenta de EcoMind.",
+      "closeTitle": "Cerrar sesión",
+      "closeDescription": "Finaliza la sesión actual y vuelve a la pantalla de inicio de sesión.",
+      "closeSession": "Cerrar cuenta",
+      "deleteTitle": "Eliminar cuenta",
+      "deleteDescription": "Borra el acceso de esta cuenta después de confirmar la acción.",
+      "deleteAccount": "Eliminar cuenta",
+      "modal": {
+        "title": "¿Estás seguro de eliminar tu cuenta?",
+        "description": "Esta acción es permanente. Para confirmar, escribe ELIMINAR exactamente como aparece.",
+        "confirmLabel": "Escribe ELIMINAR para confirmar",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar cuenta",
+        "deleting": "Eliminando..."
+      }
+    }
+  },
   "profilePage": {
     "hero": {
       "eyebrow": "Perfil EcoMind",
@@ -310,7 +450,8 @@
       "accept": "Aceptar",
       "reject": "Rechazar",
       "viewProfile": "Ver perfil",
-      "remove": "Eliminar"
+      "remove": "Eliminar",
+      "cancel": "Cancelar"
     },
     "summary": {
       "selfCommitment": "Mi compromiso",
@@ -349,6 +490,7 @@
       "createFamily": "Crear familia",
       "adultOnlyCreate": "Solo un usuario mayor de edad puede crear una familia.",
       "primaryGroup": "Grupo principal",
+      "viewProgress": "Ver progreso familiar",
       "commitmentLabel": "Compromiso familiar",
       "noCommitment": "Tu familia aun no tiene un compromiso registrado.",
       "editCommitment": "Editar compromiso",
@@ -363,11 +505,26 @@
       "membersTitle": "Miembros de la Familia ({{count}})",
       "noMembers": "No hay miembros de familia asociados a este perfil."
     },
+    "familyAchievements": {
+      "title": "Logros familiares",
+      "registeredCount": "{{count}} registrados",
+      "loading": "Cargando logros familiares...",
+      "empty": "No hay información disponible"
+    },
+    "familyReport": {
+      "title": "Reporte de progreso familiar",
+      "loading": "Generando reporte...",
+      "questsThisWeek": "Retos cumplidos esta semana",
+      "completedRelative": "Completado {{ relative }}",
+      "achievementsEarned": "Logros obtenidos",
+      "noData": "No hay datos suficientes para generar un reporte esta semana"
+    },
     "friends": {
       "eyebrow": "Comunidad",
       "title": "Red de amigos",
       "subtitle": "Contactos registrados.",
       "receivedRequests": "Solicitudes recibidas",
+      "sentRequests": "Solicitudes enviadas",
       "sendRequestTitle": "Enviar solicitud de amistad",
       "searchUserPlaceholder": "Busca un usuario por nombre",
       "sendRequest": "Enviar solicitud",

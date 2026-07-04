@@ -34,10 +34,18 @@
     "progress": "Progress",
     "progressCount": "Progress: {{ completed }} / {{ total }}",
     "emptyActivities": "This quest has no registered activities.",
-    "completeActivity": "Complete activity",
-    "activityCompleted": "Activity completed",
+    "completeActivity": "Complete mission",
+    "activityCompleted": "Mission completed",
     "startedActivity": "You started an activity!",
-    "completedActivity": "You completed the activity!",
+    "completedActivity": "You completed the mission!",
+    "share": {
+      "cta": "Share to community",
+      "sharing": "Sharing...",
+      "success": "Shared to the community!",
+      "error": "Could not share. Please try again.",
+      "retry": "Retry",
+      "draftSaved": "Saved as a draft. You can retry whenever you want."
+    },
     "activeEmpty": "No active quests yet",
     "seeMore": "See more",
     "allActive": "All active quests",
@@ -122,6 +130,44 @@
         "removed": "Removed"
       }
     },
+    "familyPlan": {
+      "title": "Family plan",
+      "progressTitle": "Family challenges",
+      "requiresFamily": "You need to belong to a family to create a plan.",
+      "parentOnly": "Only the parent in the family can create the plan.",
+      "searchPlaceholder": "Search family challenge",
+      "category": "Category",
+      "activityType": "Activity type",
+      "allCategories": "All",
+      "allActivityTypes": "All",
+      "loadingChallenges": "Loading challenges...",
+      "emptyChallenges": "No family challenges available.",
+      "details": "Details",
+      "added": "Added",
+      "addToPlan": "Add to plan",
+      "addedCount": "challenges added",
+      "startPlan": "Start family plan",
+      "remove": "Remove",
+      "emptyDraft": "Add at least one challenge to start the plan.",
+      "createPlan": "Create family plan",
+      "continuePlan": "Continue family plan",
+      "completedCount": "{{ completed }} of {{ total }} challenges completed",
+      "totalProgress": "Total progress",
+      "completePlan": "Complete family challenges",
+      "deletePlan": "Delete family plan",
+      "openChallenge": "Open challenge",
+      "completedLabel": "Completed",
+      "completionTitle": "You completed the family challenges",
+      "completionCopy": "The family plan has been completed.",
+      "loadingPlan": "Loading plan...",
+      "notFound": "Family plan not found.",
+      "statuses": {
+        "ACTIVE": "In progress",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled",
+        "DRAFT": "Draft"
+      }
+    },
     "alt": {
       "search": "Search",
       "activityStarted": "Activity started",
@@ -139,6 +185,17 @@
     },
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
+  },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Family"
+  },
+  "familyRanking": {
+    "title": "Family Ranking",
+    "subtitle": "Compete as a team with your family",
+    "yourPosition": "Your family's position",
+    "loading": "Loading family ranking...",
+    "empty": "No information available"
   },
   "community": {
     "title": {
@@ -289,6 +346,89 @@
       "megaBundleMultiplier": "3x Multiplier for one week"
     }
   },
+  "settings": {
+    "header": {
+      "eyebrow": "Settings",
+      "title": "Configuration"
+    },
+    "language": {
+      "eyebrow": "Language",
+      "title": "Language",
+      "description": "Choose the main language for the application."
+    },
+    "notifications": {
+      "eyebrow": "Alerts",
+      "title": "Notifications",
+      "description": "Control which alerts appear in the header bell.",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "master": {
+        "title": "General status",
+        "description": "Turn all bell notifications on or off."
+      },
+      "options": {
+        "friendship": {
+          "title": "Friendships",
+          "description": "Friend requests, responses, and relationship changes."
+        },
+        "quests": {
+          "title": "Quests",
+          "description": "Challenges, progress, due dates, and family activities."
+        },
+        "community": {
+          "title": "Community",
+          "description": "Events, posts, and feed interactions."
+        },
+        "achievements": {
+          "title": "Achievements",
+          "description": "Badges, ranking, and shared achievements."
+        },
+        "learning": {
+          "title": "Learning",
+          "description": "Educational reminders and pending materials."
+        },
+        "support": {
+          "title": "Support",
+          "description": "Ticket updates and team responses."
+        },
+        "general": {
+          "title": "General",
+          "description": "System notices and general messages."
+        }
+      },
+      "reset": "Restore preferences"
+    },
+    "support": {
+      "eyebrow": "Technical support",
+      "title": "Contact EcoMind",
+      "description": "If you need help with your account, requests, or platform behavior, contact our team.",
+      "ariaLabel": "Technical support channels",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "imageAlt": "EcoMind technical support assistant"
+    },
+    "account": {
+      "eyebrow": "Account",
+      "title": "Access and security",
+      "description": "Close your current session or delete your EcoMind account.",
+      "closeTitle": "Close session",
+      "closeDescription": "End the current session and return to the sign-in screen.",
+      "closeSession": "Close account",
+      "deleteTitle": "Delete account",
+      "deleteDescription": "Remove this account access after confirming the action.",
+      "deleteAccount": "Delete account",
+      "modal": {
+        "title": "Are you sure you want to delete your account?",
+        "description": "This action is permanent. To confirm, type ELIMINAR exactly as shown.",
+        "confirmLabel": "Type ELIMINAR to confirm",
+        "cancel": "Cancel",
+        "confirm": "Delete account",
+        "deleting": "Deleting..."
+      }
+    }
+  },
   "profilePage": {
     "hero": {
       "eyebrow": "EcoMind Profile",
@@ -310,7 +450,8 @@
       "accept": "Accept",
       "reject": "Reject",
       "viewProfile": "View profile",
-      "remove": "Remove"
+      "remove": "Remove",
+      "cancel": "Cancel"
     },
     "summary": {
       "selfCommitment": "My commitment",
@@ -349,6 +490,7 @@
       "createFamily": "Create family",
       "adultOnlyCreate": "Only an adult user can create a family.",
       "primaryGroup": "Primary group",
+      "viewProgress": "View family progress",
       "commitmentLabel": "Family commitment",
       "noCommitment": "Your family does not have a recorded commitment yet.",
       "editCommitment": "Edit commitment",
@@ -363,11 +505,26 @@
       "membersTitle": "Family Members ({{count}})",
       "noMembers": "There are no family members associated with this profile."
     },
+    "familyAchievements": {
+      "title": "Family Achievements",
+      "registeredCount": "{{count}} registered",
+      "loading": "Loading family achievements...",
+      "empty": "No information available"
+    },
+    "familyReport": {
+      "title": "Family Progress Report",
+      "loading": "Generating report...",
+      "questsThisWeek": "Quests completed this week",
+      "completedRelative": "Completed {{ relative }}",
+      "achievementsEarned": "Achievements earned",
+      "noData": "Not enough data to generate a report this week"
+    },
     "friends": {
       "eyebrow": "Community",
       "title": "Friends network",
       "subtitle": "Registered contacts.",
       "receivedRequests": "Received requests",
+      "sentRequests": "Sent requests",
       "sendRequestTitle": "Send a friend request",
       "searchUserPlaceholder": "Search a user by name",
       "sendRequest": "Send request",
