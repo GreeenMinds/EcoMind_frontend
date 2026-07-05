@@ -9,4 +9,5 @@ export type MinigameResource = BaseResource & {
   name: string;
   description: string;
   url: string;
+  completionRules: Record<string, unknown>;
 };

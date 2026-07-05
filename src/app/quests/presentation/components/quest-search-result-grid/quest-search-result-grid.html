@@ -1,0 +1,8 @@
+<div class="result-list">
+  @for (quest of quests(); track quest.id) {
+    <app-quest-search-result-card
+      [quest]="quest"
+      (questAction)="selectQuest($event)"
+    ></app-quest-search-result-card>
+  }
+</div>

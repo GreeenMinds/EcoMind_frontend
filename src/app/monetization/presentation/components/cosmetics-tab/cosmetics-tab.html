@@ -1,4 +1,3 @@
-<!-- Sub-navegación Tienda / Mi Inventario (HU-029 E6) -->
 <div class="sub-tabs">
   <button class="sub-tab" [class.active]="view === 'store'" (click)="view = 'store'">
      Store
@@ -9,7 +8,6 @@
   </button>
 </div>
 
-<!-- Error inline -->
 <div class="inline-error" *ngIf="error()">{{ error() }}</div>
 
 
@@ -24,7 +22,6 @@
       [class.card-owned]="s.owned"
       [class.card-equipped]="s.equipped">
 
-      <!-- Estado badge -->
       <span class="badge equipped-badge" *ngIf="s.equipped">⚡ Equipped</span>
       <span class="badge owned-badge"   *ngIf="s.owned && !s.equipped">✓ In Inventory</span>
 
@@ -75,7 +72,6 @@
 
 </ng-container>
 
-<!-- ══════════ VISTA INVENTARIO (HU-029 E6) ══════════ -->
 <ng-container *ngIf="view === 'inventory'">
 
   <h2 class="section-title">My inventory</h2>

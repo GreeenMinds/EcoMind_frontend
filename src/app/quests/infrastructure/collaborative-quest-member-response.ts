@@ -6,13 +6,17 @@ export type CollaborativeQuestMemberResponse = BaseResponse & {
 
 export type CollaborativeQuestMemberResource = BaseResource & {
   id: number;
-  session_id: number;
-  user_id: number;
-  invited_by_user_id: number | null;
+  sessionId: number;
+  userId: number;
+  ownerId: number | null;
   role: string;
   status: string;
-  invited_at: string | null;
-  responded_at: string | null;
-  left_at: string | null;
-  removed_at: string | null;
+  answerDate: string | null;
+  revokeDate: string | null;
+};
+
+export type InviteCollaborativeQuestMemberPayload = {
+  sessionId: number;
+  invitedByUserId: number;
+  invitedUserId: number;
 };

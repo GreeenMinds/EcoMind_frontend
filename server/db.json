@@ -664,6 +664,159 @@
       "created_at": "2026-05-06T12:30:00",
       "reference_type": "achievement",
       "reference_id": 9
+    },
+    {
+      "user_id": 4,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.510Z",
+      "id": 5
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.513Z",
+      "id": 6
+    },
+    {
+      "user_id": 3,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.514Z",
+      "id": 7
+    },
+    {
+      "user_id": 6,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.515Z",
+      "id": 8
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.512Z",
+      "id": 9
+    },
+    {
+      "user_id": 8,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.516Z",
+      "id": 10
+    },
+    {
+      "user_id": 7,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.515Z",
+      "id": 11
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 2,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:18:34.516Z",
+      "id": 12
+    },
+    {
+      "user_id": 4,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.394Z",
+      "id": 13
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.395Z",
+      "id": 14
+    },
+    {
+      "user_id": 2,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.396Z",
+      "id": 15
+    },
+    {
+      "user_id": 3,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.396Z",
+      "id": 16
+    },
+    {
+      "user_id": 6,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 17
+    },
+    {
+      "user_id": 7,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 18
+    },
+    {
+      "user_id": 8,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 19
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 20
+    },
+    {
+      "user_id": 5,
+      "type": "community_post",
+      "reference_id": 3,
+      "message": "Un amigo compartio un logro en la comunidad",
+      "read": false,
+      "created_at": "2026-07-04T05:23:41.397Z",
+      "id": 21
     }
   ],
   "ranking": [
@@ -1413,10 +1566,130 @@
     {
       "id": 16,
       "user_id": 1,
+      "quest_id": 14,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 17,
+      "user_id": 1,
+      "quest_id": 14,
+      "status": "ready_to_complete",
+      "progress": 100,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 18,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 19,
+      "user_id": 1,
+      "quest_id": 17,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 20,
+      "user_id": 1,
+      "quest_id": 17,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 21,
+      "user_id": 1,
+      "quest_id": 10,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 22,
+      "user_id": 1,
+      "quest_id": 9,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 23,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 24,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 25,
+      "user_id": 1,
+      "quest_id": 4,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 26,
+      "user_id": 1,
       "quest_id": 13,
       "status": "in_progress",
       "progress": 0,
-      "start_date": "2026-06-16",
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 27,
+      "user_id": 1,
+      "quest_id": 13,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 28,
+      "user_id": 1,
+      "quest_id": 13,
+      "status": "in_progress",
+      "progress": 0,
+      "start_date": "2026-07-03",
       "end_date": null,
       "collaborative_session_id": null
     }
@@ -1561,6 +1834,94 @@
     {
       "id": 22,
       "user_id": 1,
+      "activity_id": 14,
+      "progress": 100,
+      "end_date": "2026-07-03",
+      "collaborative_session_id": null
+    },
+    {
+      "id": 23,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 24,
+      "user_id": 1,
+      "activity_id": 17,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 25,
+      "user_id": 1,
+      "activity_id": 17,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 26,
+      "user_id": 1,
+      "activity_id": 11,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 27,
+      "user_id": 1,
+      "activity_id": 10,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 28,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 29,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 30,
+      "user_id": 1,
+      "activity_id": 6,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 31,
+      "user_id": 1,
+      "activity_id": 13,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 32,
+      "user_id": 1,
+      "activity_id": 13,
+      "progress": 0,
+      "end_date": null,
+      "collaborative_session_id": null
+    },
+    {
+      "id": 33,
+      "user_id": 1,
       "activity_id": 13,
       "progress": 0,
       "end_date": null,
@@ -1648,6 +2009,15 @@
       "registration_type": "individual",
       "registered_at": "2026-05-09T23:44:17.135Z",
       "status": "cancelled"
+    },
+    {
+      "id": 7,
+      "event_id": 7,
+      "user_id": 1,
+      "family_id": null,
+      "registration_type": "individual",
+      "registered_at": "2026-07-03T22:37:10.032Z",
+      "status": "cancelled"
     }
   ],
   "community_post": [
@@ -1657,7 +2027,7 @@
       "user_id": 1,
       "content": "My family and I organized a beach cleanup this weekend. We collected 45 kg of waste.",
       "points": 50,
-      "likes": 70,
+      "likes": 5,
       "image_url": "https://i.imgur.com/nscRbEZ.jpeg",
       "created_at": "2026-05-09T09:00:00"
     },
@@ -1667,7 +2037,7 @@
       "user_id": 3,
       "content": "I completed 7 days without using single-use plastic at home.",
       "points": 35,
-      "likes": 70,
+      "likes": 3,
       "image_url": "https://i.imgur.com/E6n0Z8m.jpeg",
       "created_at": "2026-05-09T08:15:00"
     },
@@ -1677,20 +2047,154 @@
       "user_id": 4,
       "content": "I completed the plastic reduction challenge for 30 days. I removed almost all plastic from my home.",
       "points": 45,
-      "likes": 70,
+      "likes": 2,
       "image_url": "https://i.imgur.com/CekJyOh.jpeg",
       "created_at": "2026-05-09T07:50:00"
+    }
+  ],
+  "post_reaction": [
+    {
+      "id": 1,
+      "post_id": 1,
+      "user_id": 2,
+      "reaction_type": "funny",
+      "created_at": "2026-05-09T09:08:00"
+    },
+    {
+      "id": 2,
+      "post_id": 1,
+      "user_id": 3,
+      "reaction_type": "love",
+      "created_at": "2026-05-09T09:12:00"
+    },
+    {
+      "id": 3,
+      "post_id": 1,
+      "user_id": 5,
+      "reaction_type": "like",
+      "created_at": "2026-05-09T09:18:00"
+    },
+    {
+      "id": 4,
+      "post_id": 1,
+      "user_id": 7,
+      "reaction_type": "surprise",
+      "created_at": "2026-05-09T09:21:00"
+    },
+    {
+      "id": 6,
+      "post_id": 2,
+      "user_id": 4,
+      "reaction_type": "love",
+      "created_at": "2026-05-09T08:30:00"
+    },
+    {
+      "id": 7,
+      "post_id": 2,
+      "user_id": 6,
+      "reaction_type": "sad",
+      "created_at": "2026-05-09T08:44:00"
+    },
+    {
+      "id": 8,
+      "post_id": 3,
+      "user_id": 1,
+      "reaction_type": "like",
+      "created_at": "2026-05-09T07:58:00"
+    },
+    {
+      "id": 9,
+      "post_id": 3,
+      "user_id": 9,
+      "reaction_type": "love",
+      "created_at": "2026-05-09T08:05:00"
+    },
+    {
+      "id": 10,
+      "post_id": 1,
+      "user_id": 1,
+      "reaction_type": "like",
+      "created_at": "2026-07-04T05:18:43.367Z"
+    },
+    {
+      "id": 11,
+      "post_id": 2,
+      "user_id": 1,
+      "reaction_type": "funny",
+      "created_at": "2026-07-04T05:18:48.654Z"
+    }
+  ],
+  "goal": [
+    {
+      "id": 1,
+      "title": "Improve our water habits",
+      "unit": "quests",
+      "quest_category": "water"
+    },
+    {
+      "id": 2,
+      "title": "Save energy at home together",
+      "unit": "quests",
+      "quest_category": "energy"
+    },
+    {
+      "id": 3,
+      "title": "Strengthen our recycling habits",
+      "unit": "quests",
+      "quest_category": "recycle"
+    },
+    {
+      "id": 4,
+      "title": "Care for our green spaces",
+      "unit": "quests",
+      "quest_category": "daily_quest"
+    },
+    {
+      "id": 5,
+      "title": "Make our daily routines more sustainable",
+      "unit": "quests",
+      "quest_category": "daily_quest"
     }
   ],
   "community_goal": [
     {
       "id": 1,
       "community_id": 1,
-      "title": "Plant 1000 trees",
-      "target": 1000,
-      "progress": 730,
-      "unit": "trees",
-      "participants": 245,
+      "goal_id": 1,
+      "description": "Complete 20 quests from the Water category.",
+      "target": 20,
+      "progress": 1,
+      "participants": 1,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "community_id": 1,
+      "goal_id": 2,
+      "description": "Complete 20 quests from the Energy category.",
+      "target": 20,
+      "progress": 4,
+      "participants": 1,
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "community_id": 1,
+      "goal_id": 3,
+      "description": "Complete 25 quests from the Recycling category.",
+      "target": 25,
+      "progress": 2,
+      "participants": 2,
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "community_id": 1,
+      "goal_id": 5,
+      "description": "Complete 20 quests from the Daily Quest category.",
+      "target": 20,
+      "progress": 3,
+      "participants": 3,
       "status": "active"
     }
   ],
@@ -2253,325 +2757,325 @@
       "id": 1,
       "user_id": 1,
       "ecopoints": 148,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 2,
       "user_id": 1,
       "ecopoints": 89,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 3,
       "user_id": 1,
       "ecopoints": 148,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 4,
       "user_id": 1,
       "ecopoints": 89,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 5,
       "user_id": 1,
       "ecopoints": 71,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 6,
       "user_id": 1,
       "ecopoints": 47,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 7,
       "user_id": 2,
       "ecopoints": 40,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 8,
       "user_id": 2,
       "ecopoints": 24,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 9,
       "user_id": 2,
       "ecopoints": 40,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 10,
       "user_id": 2,
       "ecopoints": 24,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 11,
       "user_id": 2,
       "ecopoints": 19,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 12,
       "user_id": 2,
       "ecopoints": 13,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 13,
       "user_id": 3,
       "ecopoints": 83,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 14,
       "user_id": 3,
       "ecopoints": 50,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 15,
       "user_id": 3,
       "ecopoints": 83,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 16,
       "user_id": 3,
       "ecopoints": 50,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 17,
       "user_id": 3,
       "ecopoints": 40,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 18,
       "user_id": 3,
       "ecopoints": 26,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 19,
       "user_id": 4,
       "ecopoints": 24,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 20,
       "user_id": 4,
       "ecopoints": 14,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 21,
       "user_id": 4,
       "ecopoints": 24,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 22,
       "user_id": 4,
       "ecopoints": 14,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 23,
       "user_id": 4,
       "ecopoints": 11,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 24,
       "user_id": 4,
       "ecopoints": 8,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 25,
       "user_id": 5,
       "ecopoints": 78,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 26,
       "user_id": 5,
       "ecopoints": 47,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 27,
       "user_id": 5,
       "ecopoints": 78,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 28,
       "user_id": 5,
       "ecopoints": 47,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 29,
       "user_id": 5,
       "ecopoints": 37,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 30,
       "user_id": 5,
       "ecopoints": 25,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 31,
       "user_id": 6,
       "ecopoints": 61,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 32,
       "user_id": 6,
       "ecopoints": 37,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 33,
       "user_id": 6,
       "ecopoints": 61,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 34,
       "user_id": 6,
       "ecopoints": 37,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 35,
       "user_id": 6,
       "ecopoints": 29,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 36,
       "user_id": 6,
       "ecopoints": 20,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 37,
       "user_id": 7,
       "ecopoints": 98,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 38,
       "user_id": 7,
       "ecopoints": 59,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 39,
       "user_id": 7,
       "ecopoints": 98,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 40,
       "user_id": 7,
       "ecopoints": 59,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 41,
       "user_id": 7,
       "ecopoints": 47,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 42,
       "user_id": 7,
       "ecopoints": 31,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 43,
       "user_id": 8,
       "ecopoints": 45,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 44,
       "user_id": 8,
       "ecopoints": 27,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 45,
       "user_id": 8,
       "ecopoints": 45,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 46,
       "user_id": 8,
       "ecopoints": 27,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 47,
       "user_id": 8,
       "ecopoints": 22,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 48,
       "user_id": 8,
       "ecopoints": 14,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     },
     {
       "id": 49,
       "user_id": 9,
       "ecopoints": 89,
-      "created_at": "2026-06-08T23:19:02.905Z"
+      "created_at": "2026-07-02T20:51:45.822Z"
     },
     {
       "id": 50,
       "user_id": 9,
       "ecopoints": 53,
-      "created_at": "2026-06-05T23:19:02.905Z"
+      "created_at": "2026-06-29T20:51:45.822Z"
     },
     {
       "id": 51,
       "user_id": 9,
       "ecopoints": 89,
-      "created_at": "2026-06-02T23:19:02.905Z"
+      "created_at": "2026-06-26T20:51:45.822Z"
     },
     {
       "id": 52,
       "user_id": 9,
       "ecopoints": 53,
-      "created_at": "2026-05-31T23:19:02.905Z"
+      "created_at": "2026-06-24T20:51:45.822Z"
     },
     {
       "id": 53,
       "user_id": 9,
       "ecopoints": 43,
-      "created_at": "2026-04-26T23:19:02.905Z"
+      "created_at": "2026-05-20T20:51:45.822Z"
     },
     {
       "id": 54,
       "user_id": 9,
       "ecopoints": 28,
-      "created_at": "2026-04-01T23:19:02.905Z"
+      "created_at": "2026-04-25T20:51:45.822Z"
     }
   ]
 }

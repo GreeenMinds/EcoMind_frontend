@@ -41,11 +41,13 @@ export class ProfileFriendsSection {
   @Input() friends: FriendProfileView[] = [];
   @Input() inviteCandidates: FriendInviteCandidateView[] = [];
   @Input() incomingRequests: FriendRequestView[] = [];
+  @Input() outgoingRequests: FriendRequestView[] = [];
   @Output() openFriend = new EventEmitter<FriendProfileView>();
   @Output() removeFriend = new EventEmitter<FriendProfileView>();
   @Output() sendFriendRequest = new EventEmitter<number>();
   @Output() acceptFriendRequest = new EventEmitter<number>();
   @Output() rejectFriendRequest = new EventEmitter<number>();
+  @Output() cancelFriendRequest = new EventEmitter<number>();
 
   friendInviteSearch = '';
 
@@ -84,6 +86,10 @@ export class ProfileFriendsSection {
 
   emitRejectFriendRequest(request: FriendRequestView): void {
     this.rejectFriendRequest.emit(request.relationship.id);
+  }
+
+  emitCancelFriendRequest(request: FriendRequestView): void {
+    this.cancelFriendRequest.emit(request.relationship.id);
   }
 
   get filteredInviteCandidates(): FriendInviteCandidateView[] {

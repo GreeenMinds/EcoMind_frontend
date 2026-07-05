@@ -29,7 +29,7 @@
     <label>
       <span>{{ 'quests.category' | translate }}</span>
       <select [value]="selectedCategory()" (change)="updateCategory($event)">
-        @for (category of categories(); track category) {
+        @for (category of categories; track category) {
           <option [value]="category">{{ getCategoryLabel(category) }}</option>
         }
       </select>
@@ -38,7 +38,7 @@
     <label>
       <span>{{ 'quests.questType' | translate }}</span>
       <select [value]="selectedQuestType()" (change)="updateQuestType($event)">
-        @for (type of questTypes(); track type) {
+        @for (type of questTypes; track type) {
           <option [value]="type">{{ getQuestTypeLabel(type) }}</option>
         }
       </select>
@@ -48,10 +48,10 @@
       <span>{{ 'quests.activityType' | translate }}</span>
       <select
         [value]="selectedActivityType()"
-        [disabled]="selectedQuestType() === 'minigame'"
+        [disabled]="selectedQuestType() === 'MINIGAME'"
         (change)="updateActivityType($event)"
       >
-        @for (type of activityTypes(); track type) {
+        @for (type of activityTypes; track type) {
           <option [value]="type">{{ getActivityTypeLabel(type) }}</option>
         }
       </select>
@@ -80,50 +80,9 @@
   } @else if (filteredQuests().length === 0) {
     <p class="state-text">{{ 'quests.noneFound' | translate }}</p>
   } @else {
-    <div class="result-list">
-      @for (quest of filteredQuests(); track quest.id) {
-        <article class="quest-result">
-          <div class="result-copy">
-            <div class="tag-row">
-              <span class="tag category" [class]="quest.category">{{
-                getCategoryLabel(quest.category)
-              }}</span>
-              <span class="tag">{{ getQuestTypeLabel(quest.type) }}</span>
-              <span class="tag">{{ 'common.minutes' | translate: { count: quest.time } }}</span>
-              @if (quest.age > 0) {
-                <span class="tag">{{ getQuestAgeLabel(quest) }}</span>
-              }
-              @if (quest.reward_ecopoints > 0) {
-                <span class="tag reward">{{ getRewardLabel(quest) }}</span>
-              }
-              @if (quest.reward_gems > 0) {
-                <span class="tag gem-reward">{{
-                  'common.gems' | translate: { count: quest.reward_gems }
-                }}</span>
-              }
-            </div>
-
-            <h2>{{ quest.title }}</h2>
-            <p>{{ quest.description }}</p>
-
-            <button type="button" class="result-action" (click)="handleQuestAction(quest)">
-              {{ getActionLabel(quest) }}
-            </button>
-          </div>
-
-          <div
-            class="quest-type-card"
-            [style.--quest-bg]="getQuestTypeTheme(getQuestDisplayType(quest))['--quest-bg']"
-            [style.--quest-shadow]="getQuestTypeTheme(getQuestDisplayType(quest))['--quest-shadow']"
-            [style.--quest-top-light]="
-              getQuestTypeTheme(getQuestDisplayType(quest))['--quest-top-light']
-            "
-            aria-hidden="true"
-          >
-            <img [src]="getQuestTypeIcon(getQuestDisplayType(quest))" alt="" />
-          </div>
-        </article>
-      }
-    </div>
+    <app-quest-search-result-grid
+      [quests]="filteredQuests()"
+      (questAction)="handleQuestAction($event)"
+    ></app-quest-search-result-grid>
   }
 </section>

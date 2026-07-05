@@ -3,7 +3,7 @@
     <header class="activity-route-header">
       <a
         class="back-link"
-        [routerLink]="['/quests', detail.quest.id]"
+        [routerLink]="backUrl() || ['/quests', detail.quest.id]"
         [attr.aria-label]="'common.back' | translate"
       >
         <span aria-hidden="true">&lsaquo;</span>
@@ -23,7 +23,7 @@
             <input
               type="checkbox"
               [checked]="activityProgress.completed"
-              [disabled]="!detail.quest.started || detail.quest.completed"
+              [disabled]="!detail.started || detail.completed"
               (change)="toggleActivity(activityProgress.activity.id, $any($event.target).checked)"
             />
             <span>{{ activityProgress.activity.description }}</span>
@@ -32,16 +32,9 @@
       </div>
 
       <div class="quest-progress">
-        <span>{{
-          'quests.progressCount'
-            | translate
-              : {
-                  completed: detail.quest.completed_activities_count,
-                  total: detail.quest.activities_count,
-                }
-        }}</span>
+        <span>{{ detail.progress }}%</span>
         <div class="progress-track" aria-hidden="true">
-          <div class="progress-value" [style.width.%]="detail.quest.progress"></div>
+          <div class="progress-value" [style.width.%]="detail.progress"></div>
         </div>
       </div>
     } @else {
@@ -51,10 +44,10 @@
     <button
       type="button"
       class="primary-action"
-      [disabled]="!canCompleteQuest() || detail.quest.completed"
+      [disabled]="!canCompleteQuest() || detail.completed"
       (click)="completeQuest()"
     >
-      @if (detail.quest.completed) {
+      @if (detail.completed) {
         {{ 'quests.activityCompleted' | translate }}
       } @else {
         {{ 'quests.completeActivity' | translate }}

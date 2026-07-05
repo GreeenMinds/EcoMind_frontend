@@ -6,15 +6,65 @@
 
     <div class="app-header-profile" aria-label="User summary">
       <div class="header-stat gem-stat">
-        <span class="gem-icon" aria-hidden="true">💎</span>
-        <span>
-          {{ monetizationStore.gemBalance() > 0 ? monetizationStore.gemBalance() : (currentUser()?.gem_balance ?? 0) }}
-        </span>
+        <span class="gem-icon" aria-hidden="true">&#128142;</span>
+        <span>{{ currentUser()?.gem_balance ?? 0 }}</span>
       </div>
 
       <div class="header-stat streak-stat">
         <img class="streak-icon" src="/assets/images/plantIcon.png" alt="" aria-hidden="true">
         <span>{{ currentUser()?.streak ?? 0 }}</span>
+      </div>
+
+      <div class="notification-shell">
+        <button
+          class="notification-button"
+          type="button"
+          aria-label="Notifications"
+          (click)="toggleNotifications()">
+          <span aria-hidden="true">&#128276;</span>
+          @if (unreadNotificationCount() > 0) {
+            <strong>{{ unreadNotificationCount() }}</strong>
+          }
+        </button>
+
+        @if (notificationPanelOpen()) {
+          <section class="notification-panel" aria-label="Notifications panel">
+            <header class="notification-panel__header">
+              <h2>Notificaciones</h2>
+              @if (unreadNotificationCount() > 0) {
+                <button type="button" (click)="markAllNotificationsAsRead()">
+                  Marcar todas
+                </button>
+              }
+            </header>
+
+            @if (!notificationsEnabled()) {
+              <p class="notification-empty">Notificaciones desactivadas.</p>
+            } @else if (notifications().length > 0) {
+              <div class="notification-list">
+                @for (notification of notifications(); track notification.id) {
+                  <article
+                    class="notification-item"
+                    [class.notification-item--unread]="!notification.is_read">
+                    <div>
+                      <strong>{{ notification.title }}</strong>
+                      <p>{{ notification.message }}</p>
+                      <span>{{ formatNotificationDate(notification.created_at) }}</span>
+                    </div>
+
+                    @if (!notification.is_read) {
+                      <button type="button" (click)="markNotificationAsRead(notification.id)">
+                        Leida
+                      </button>
+                    }
+                  </article>
+                }
+              </div>
+            } @else {
+              <p class="notification-empty">No tienes notificaciones.</p>
+            }
+          </section>
+        }
       </div>
 
       <app-profile-avatar

@@ -23,7 +23,6 @@
   box-shadow: 0 8px 32px rgba(46, 125, 50, 0.35);
 }
 
-/* ── Layout general ── */
 .multiplier-body {
   display: flex;
   justify-content: space-between;
@@ -31,14 +30,12 @@
   gap: 1rem;
 }
 
-/* ── Info izquierda ── */
 .multiplier-info {
   flex: 1;
   min-width: 0;
   align-self: center;
 }
 
-/* Título más pequeño que antes */
 .multiplier-title {
   font-size: 1.75rem;
   font-weight: 800;
@@ -48,11 +45,10 @@
 
 .multiplier-desc {
   font-size: 0.88rem;
-  margin: 0 0 1.1rem;   /* más espacio antes de la fila precio+botón */
+  margin: 0 0 1.1rem;
   line-height: 1.5;
 }
 
-/* ── Fila precio + botón en la misma línea ── */
 .price-action-row {
   display: flex;
   align-items: center;
@@ -68,7 +64,6 @@
   flex-shrink: 0;
 }
 
-/* Botón más largo */
 .multiplier-btn {
   padding: 0.6rem 2rem;
   font-size: 0.9rem;
@@ -79,7 +74,6 @@
 .buy-btn-dark  { background: white;   color: #2e7d32; font-weight: 800; }
 .active-btn    { background: #66bb6a; color: white; cursor: default; }
 
-/* ── Imágenes derecha ── */
 .multiplier-imgs {
   flex-shrink: 0;
   display: flex;
@@ -113,7 +107,6 @@
   transform: translateY(-8px) rotate(8deg);
 }
 
-/* ── Responsive ── */
 @media (max-width: 520px) {
   .multiplier-title { font-size: 1.1rem; }
   .planet-img { width: 90px; height: 90px; }

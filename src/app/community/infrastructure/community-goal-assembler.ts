@@ -15,12 +15,12 @@ export class CommunityGoalAssembler implements BaseAssembler<
     const goal = new CommunityGoal();
     goal.id = resource.id;
     goal.community_id = resource.community_id;
-    goal.title = resource.title;
+    goal.goal_id = resource.goal_id;
+    goal.description = resource.description;
     goal.target = resource.target;
     goal.progress = resource.progress;
-    goal.unit = resource.unit;
     goal.participants = resource.participants;
-    goal.status = resource.status;
+    goal.status = resource.progress >= resource.target ? 'completed' : resource.status;
     return goal;
   }
 
@@ -28,12 +28,12 @@ export class CommunityGoalAssembler implements BaseAssembler<
     return {
       id: entity.id,
       community_id: entity.community_id,
-      title: entity.title,
+      goal_id: entity.goal_id,
+      description: entity.description,
       target: entity.target,
       progress: entity.progress,
-      unit: entity.unit,
       participants: entity.participants,
-      status: entity.status,
+      status: entity.progress >= entity.target ? 'completed' : entity.status,
     };
   }
 }

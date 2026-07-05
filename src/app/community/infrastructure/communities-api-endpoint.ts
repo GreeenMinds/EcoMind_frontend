@@ -14,7 +14,7 @@ export class CommunitiesApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderCommunityEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityEndpointPath}`,
       new CommunityAssembler(),
     );
   }

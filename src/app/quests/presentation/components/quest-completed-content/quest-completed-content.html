@@ -11,5 +11,26 @@
     }
   }
 
-  <a class="continue-action" routerLink="/quests">{{ 'common.continue' | translate }}</a>
+  @if (shareState() === 'shared') {
+    <p class="share-status share-status--success">{{ 'quests.share.success' | translate }}</p>
+  } @else if (shareState() === 'error' || hasDraft()) {
+    <p class="share-status share-status--error">{{ 'quests.share.draftSaved' | translate }}</p>
+    <button
+      class="share-action"
+      type="button"
+      [disabled]="shareState() === 'sharing'"
+      (click)="shareToCommunity()">
+      {{ shareState() === 'sharing' ? ('quests.share.sharing' | translate) : ('quests.share.retry' | translate) }}
+    </button>
+  } @else {
+    <button
+      class="share-action"
+      type="button"
+      [disabled]="shareState() === 'sharing'"
+      (click)="shareToCommunity()">
+      {{ shareState() === 'sharing' ? ('quests.share.sharing' | translate) : ('quests.share.cta' | translate) }}
+    </button>
+  }
+
+  <a class="continue-action" [routerLink]="returnUrl()">{{ 'common.continue' | translate }}</a>
 </section>

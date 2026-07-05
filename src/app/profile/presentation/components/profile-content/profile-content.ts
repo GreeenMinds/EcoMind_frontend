@@ -43,6 +43,8 @@ import {
   ProfileSummarySection,
 } from '../profile-summary-section/profile-summary-section';
 import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
+import { FamilyAchievementsSection } from '../family-achievements-section/family-achievements-section';
+import { FamilyProgressModal } from '../family-progress-modal/family-progress-modal';
 
 @Component({
   selector: 'app-profile-content',
@@ -51,6 +53,8 @@ import { ProfileTab, ProfileTabs } from '../profile-tabs/profile-tabs';
     ProfileTabs,
     ProfileSummarySection,
     ProfileFamilySection,
+    FamilyAchievementsSection,
+    FamilyProgressModal,
     ProfileProgressSection,
     ProfileFriendsSection,
     ProfileCommitmentModal,
@@ -66,6 +70,16 @@ export class ProfileContent {
   private readonly communityService = inject(CommunityService);
   private readonly monetizationApi = inject(MonetizationApi);
   private readonly translate = inject(TranslateService);
+
+  readonly showFamilyProgressModal = signal(false);
+
+  openFamilyProgressModal(): void {
+    this.showFamilyProgressModal.set(true);
+  }
+
+  closeFamilyProgressModal(): void {
+    this.showFamilyProgressModal.set(false);
+  }
 
   readonly currentUser = this.profileService.currentUserProfile;
   readonly activeTab = signal<ProfileTab>('summary');
@@ -87,14 +101,8 @@ export class ProfileContent {
   private readonly cosmetics = signal<CosmeticEntity[]>([]);
   private readonly userCosmetics = signal<UserCosmeticEntity[]>([]);
 
-  readonly loading = computed(
-    () =>
-      this.profileLoading() || this.questsService.loading() || this.communityService.loading(),
-  );
-  readonly error = computed(
-    () =>
-      this.profileError() ?? this.questsService.error() ?? this.communityService.error() ?? null,
-  );
+  readonly loading = computed(() => this.profileLoading() || this.questsService.loading());
+  readonly error = computed(() => this.profileError() ?? this.questsService.error() ?? null);
 
   readonly currentUserFamilyMembership = computed(() => {
     const currentUserId = this.currentUser()?.id;
@@ -275,6 +283,34 @@ export class ProfileContent {
       .sort((left, right) => right.relationship.id - left.relationship.id);
   });
 
+  readonly outgoingFriendRequests = computed<FriendRequestView[]>(() => {
+    const currentUserId = this.currentUser()?.id;
+    if (!currentUserId) {
+      return [];
+    }
+
+    return this.friends()
+      .filter(
+        (relationship) =>
+          relationship.status === 'pending' && relationship.user_id === currentUserId,
+      )
+      .map((relationship) => {
+        const relatedUser = this.users().find((user) => user.id === relationship.friend_id);
+        if (!relatedUser) {
+          return null;
+        }
+
+        return {
+          relationship,
+          user: relatedUser,
+          statusLabel: 'Esperando respuesta',
+          ...this.getUserAvatarVisual(relatedUser.id),
+        };
+      })
+      .filter((item): item is FriendRequestView => Boolean(item))
+      .sort((left, right) => right.relationship.id - left.relationship.id);
+  });
+
   readonly selectedFriendProfile = computed(() => {
     const friendId = this.selectedFriendId();
     if (!friendId) {
@@ -341,6 +377,10 @@ export class ProfileContent {
 
     return 'Eliminar';
   });
+
+  readonly showHeroRemoveAction = computed(
+    () => !(this.activeTab() === 'friends' && this.selectedFriendId() !== null),
+  );
 
   readonly selectedFriendAchievements = computed<AchievementView[]>(() => {
     const friendId = this.selectedFriendProfile()?.user.id;
@@ -755,13 +795,9 @@ export class ProfileContent {
       return;
     }
 
-    const updatedFriendship = new Friend();
-    Object.assign(updatedFriendship, relationship);
-    updatedFriendship.status = 'accepted';
-
     this.savingProfile.set(true);
     this.profileService
-      .updateFriend(updatedFriendship)
+      .acceptFriend(friendshipId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -790,7 +826,7 @@ export class ProfileContent {
 
     this.savingProfile.set(true);
     this.profileService
-      .removeFriend(friendshipId)
+      .rejectFriend(friendshipId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -801,6 +837,35 @@ export class ProfileContent {
         error: (error: Error) => {
           this.savingProfile.set(false);
           this.showFeedback(error.message || 'No se pudo rechazar la solicitud');
+        },
+      });
+  }
+
+  cancelFriendRequest(friendshipId: number): void {
+    const currentUserId = this.currentUser()?.id;
+    const relationship = this.friends().find((friend) => friend.id === friendshipId);
+    if (!currentUserId || !relationship) {
+      return;
+    }
+
+    if (relationship.status !== 'pending' || relationship.user_id !== currentUserId) {
+      this.showFeedback('La solicitud de amistad ya no esta disponible');
+      return;
+    }
+
+    this.savingProfile.set(true);
+    this.profileService
+      .removeFriend(friendshipId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.showFeedback('Solicitud de amistad cancelada');
+          this.loadProfileContext();
+        },
+        error: (error: Error) => {
+          this.savingProfile.set(false);
+          this.showFeedback(error.message || 'No se pudo cancelar la solicitud');
         },
       });
   }
@@ -832,7 +897,7 @@ export class ProfileContent {
           familyUser.user_id = this.currentUser()?.id ?? 0;
           familyUser.family_id = createdFamily.id;
           familyUser.family_role = 'parent';
-          familyUser.joined_at = new Date().toISOString().slice(0, 10);
+          familyUser.joined_at = new Date().toISOString();
           return this.profileService.addFamilyMember(familyUser);
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -882,7 +947,7 @@ export class ProfileContent {
     membership.user_id = currentUser.id;
     membership.family_id = invitation.family_id;
     membership.family_role = acceptedRole;
-    membership.joined_at = new Date().toISOString().slice(0, 10);
+    membership.joined_at = new Date().toISOString();
 
     const updatedInvitation = new FamilyInvitation();
     Object.assign(updatedInvitation, invitation);
@@ -1054,6 +1119,7 @@ export class ProfileContent {
       familyUsers: this.profileService.getFamilyUsers(),
       familyInvitations: this.profileService.getFamilyInvitations(),
       friends: this.profileService.getFriends(),
+      notifications: this.profileService.loadNotifications(),
       cosmetics: this.monetizationApi.getCosmetics(),
       userCosmetics: this.monetizationApi.getUserCosmetics(),
     })
@@ -1076,6 +1142,7 @@ export class ProfileContent {
           this.cosmetics.set(cosmetics);
           this.userCosmetics.set(userCosmetics);
           this.profileLoading.set(false);
+          this.questsService.refreshFamilyContext();
         },
         error: (error: Error) => {
           this.profileError.set(error.message || 'No se pudo cargar el perfil');
@@ -1502,7 +1569,7 @@ export class ProfileContent {
       return 'Tienes una solicitud pendiente por responder';
     }
 
-    return 'No se puede enviar la solicitud de amistad';
+    return null;
   }
 }
 

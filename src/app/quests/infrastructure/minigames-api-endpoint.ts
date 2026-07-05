@@ -18,7 +18,7 @@ export class MinigamesApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderMinigameEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderMinigameEndpointPath}`,
       new MinigameAssembler(),
     );
   }

@@ -20,11 +20,12 @@
       <div class="community-overview">
         <app-community-feed
           [posts]="filteredPosts()"
-          (createPost)="openPostForm()">
+          (createPost)="openPostForm()"
+          (selectReaction)="communityService.selectPostReaction($event.postId, $event.reactionType)">
         </app-community-feed>
 
         <aside class="community-side">
-          <app-community-goal-card [goal]="communityService.activeGoal()"></app-community-goal-card>
+          <app-community-goal-card [goals]="communityService.communityGoals()"></app-community-goal-card>
           <app-community-events-map [events]="filteredEvents()"></app-community-events-map>
         </aside>
       </div>
@@ -43,7 +44,8 @@
         [events]="filteredEvents()"
         (createEvent)="openEventForm()"
         (joinEvent)="openRegistrationModal($event)"
-        (cancelRegistration)="communityService.cancelEventRegistration($event.event.id)">
+        (cancelRegistration)="communityService.cancelEventRegistration($event.event.id)"
+        (deleteEvent)="deleteEvent($event)">
       </app-community-events-list>
     }
   }

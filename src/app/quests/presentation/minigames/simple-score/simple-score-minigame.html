@@ -1,0 +1,78 @@
+<section class="simple-game">
+  <button type="button" class="back-button" (click)="backToQuest()">Volver</button>
+
+  <div class="game-header">
+    <p>MINIJUEGO</p>
+    <h1>Recolector Eco</h1>
+  </div>
+
+  @if (loading()) {
+    <p class="status">Preparando intento...</p>
+  } @else if (!finished()) {
+    <div class="score-panel">
+      <span>Score</span>
+      <strong>{{ score() }}</strong>
+      <small>Meta {{ targetScore }}</small>
+    </div>
+
+    <div class="progress-track" aria-label="Progreso del score">
+      <div class="progress-fill" [style.width.%]="progress()"></div>
+    </div>
+
+    <button type="button" class="collect-button" [disabled]="finished()" (click)="collect()">
+      +100
+    </button>
+
+    <button type="button" class="finish-button" [disabled]="!canFinish() || finished()" (click)="finish()">
+      @if (finishing()) {
+        Enviando...
+      } @else if (finished()) {
+        Resultado enviado
+      } @else {
+        Finalizar intento
+      }
+    </button>
+  } @else {
+    <div class="finish-summary">
+      <div class="celebration" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <p class="result">
+        @if (score() >= targetScore) {
+          Completado
+        } @else {
+          Intento terminado
+        }
+      </p>
+
+      <div class="reward-card">
+        <span class="reward-title">Rewards</span>
+        @if (hasRewards()) {
+          <div class="reward-row">
+            @if (rewardGems() > 0) {
+              <span class="reward-pill gem">+{{ rewardGems() }} gemas</span>
+            }
+            @if (rewardEcopoints() > 0) {
+              <span class="reward-pill eco">+{{ rewardEcopoints() }} ecopoints</span>
+            }
+          </div>
+        } @else {
+          <span class="reward-pill empty">Sin rewards esta vez</span>
+        }
+      </div>
+
+      <button type="button" class="continue-button" (click)="continueToQuests()">
+        Continuar
+      </button>
+    </div>
+  }
+
+  @if (error(); as message) {
+    <p class="error">{{ message }}</p>
+  }
+</section>

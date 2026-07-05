@@ -1,0 +1,259 @@
+.simple-game {
+  display: grid;
+  min-height: calc(100vh - 84px);
+  align-content: start;
+  justify-items: center;
+  gap: 22px;
+  padding: 44px 20px 32px;
+  color: #111111;
+  text-align: center;
+}
+
+.back-button {
+  justify-self: start;
+  border: 0;
+  background: transparent;
+  color: #111111;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.game-header {
+  display: grid;
+  gap: 8px;
+}
+
+.game-header p,
+.status,
+.result,
+.error {
+  margin: 0;
+  font-weight: 800;
+}
+
+.game-header p {
+  font-size: 0.78rem;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  line-height: 1.05;
+}
+
+.score-panel {
+  display: grid;
+  width: min(360px, 100%);
+  gap: 4px;
+  padding: 20px;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.score-panel span,
+.score-panel small {
+  color: #666666;
+  font-weight: 700;
+}
+
+.score-panel strong {
+  color: #5ca846;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.progress-track {
+  width: min(420px, 100%);
+  height: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dedede;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #72c255;
+  transition: width 180ms ease;
+}
+
+.collect-button,
+.finish-button {
+  width: min(340px, 100%);
+  min-height: 58px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.collect-button {
+  background: #5ca846;
+  box-shadow: 0 8px 0 #407d32;
+}
+
+.finish-button {
+  background: #4f9cf7;
+  box-shadow: 0 8px 0 #4962d6;
+}
+
+.collect-button:disabled,
+.finish-button:disabled {
+  background: #b8b8b8;
+  box-shadow: none;
+  cursor: default;
+}
+
+.result {
+  color: #5ca846;
+}
+
+.finish-summary {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: min(420px, 100%);
+  padding: 28px 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+  animation: summary-pop 360ms ease-out both;
+}
+
+.celebration {
+  position: absolute;
+  inset: -18px 24px auto;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.celebration span {
+  width: 10px;
+  height: 18px;
+  border-radius: 3px;
+  background: #72c255;
+  animation: confetti-fall 900ms ease-out both;
+}
+
+.celebration span:nth-child(2) {
+  background: #4f9cf7;
+  animation-delay: 80ms;
+}
+
+.celebration span:nth-child(3) {
+  background: #ffd85a;
+  animation-delay: 140ms;
+}
+
+.celebration span:nth-child(4) {
+  background: #5ca846;
+  animation-delay: 200ms;
+}
+
+.celebration span:nth-child(5) {
+  background: #8ac7ff;
+  animation-delay: 260ms;
+}
+
+.reward-card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.reward-title {
+  color: #666666;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.reward-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.reward-pill {
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.reward-pill.eco {
+  background: #d9f4cf;
+  color: #4f9543;
+}
+
+.reward-pill.gem {
+  background: #d9ecff;
+  color: #2f7fbd;
+}
+
+.reward-pill.empty {
+  background: #eeeeee;
+  color: #666666;
+}
+
+.continue-button {
+  width: min(260px, 100%);
+  min-height: 52px;
+  border: 0;
+  border-radius: 8px;
+  background: #4f9cf7;
+  box-shadow: 0 7px 0 #4962d6;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.error {
+  color: #c0392b;
+}
+
+@keyframes summary-pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes confetti-fall {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) rotate(0deg);
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(62px) rotate(180deg);
+  }
+}
+
+@media (max-width: 680px) {
+  .simple-game {
+    padding-top: 24px;
+  }
+
+  .game-header h1 {
+    font-size: 2rem;
+  }
+}

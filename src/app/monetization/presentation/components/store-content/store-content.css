@@ -1,4 +1,3 @@
-/* ── SKELETON ───────────────────────────────────────────────────────────────── */
 .store-skeleton { padding: 2rem; }
 .skeleton-title,
 .skeleton-tabs,
@@ -14,10 +13,8 @@
 .skeleton-card   { height: 280px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
-/* ── PAGE ───────────────────────────────────────────────────────────────────── */
 .store-page { width: 100%; padding: 2rem; box-sizing: border-box; }
 
-/* ── HEADER ─────────────────────────────────────────────────────────────────── */
 .store-header {
   display: flex; align-items: flex-start; justify-content: space-between;
   margin-bottom: 1.8rem; flex-wrap: wrap; gap: 1rem;
@@ -33,7 +30,6 @@
 .gem-chip-value { font-size: 1.2rem; font-weight: 800; color: #29b6e8; }
 .gem-chip-label { font-size: 0.8rem; color: #888; }
 
-/* ── TABS ───────────────────────────────────────────────────────────────────── */
 .store-tabs { display: flex; gap: 0.7rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
 .tab-btn {
   border: none; background: #ececec; border-radius: 14px;
@@ -44,6 +40,5 @@
 .active-green      { background: #74b34d; color: white; }
 .active-blue       { background: #29b6e8; color: white; }
 
-/* ── TAB CONTENT ────────────────────────────────────────────────────────────── */
 .tab-content { animation: fadeIn 0.2s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
