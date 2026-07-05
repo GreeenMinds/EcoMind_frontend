@@ -55,7 +55,7 @@
           {{ 'tutorial.skip' | translate }}
         </button>
 
-        @if (isLastStep) {
+        @if (isLastStep()) {
           <button class="start-button" (click)="onStart()">
             {{ 'tutorial.start' | translate }}
           </button>

@@ -1,10 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LearningService } from '../../../application/learning.service';
 
 @Component({
   selector: 'app-learning-history-section',
-  imports: [TranslatePipe],
+  imports: [DatePipe, TranslatePipe],
   templateUrl: './learning-history-section.html',
   styleUrl: './learning-history-section.css',
 })

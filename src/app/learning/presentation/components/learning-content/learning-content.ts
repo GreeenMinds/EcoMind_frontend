@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LearningService } from '../../application/learning.service';
+import { LearningService } from '../../../application/learning.service';
 import { MaterialsList } from '../materials-list/materials-list';
 import { FavoritesSection } from '../favorites-section/favorites-section';
 import { LearningHistorySection } from '../learning-history-section/learning-history-section';

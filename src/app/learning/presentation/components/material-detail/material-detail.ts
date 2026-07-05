@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
-import { LearningService } from '../../application/learning.service';
+import { LearningService } from '../../../application/learning.service';
 
 @Component({
   selector: 'app-material-detail',

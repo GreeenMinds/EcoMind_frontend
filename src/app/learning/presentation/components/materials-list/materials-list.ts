@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LearningService } from '../../application/learning.service';
+import { LearningService } from '../../../application/learning.service';
 import { MaterialCard } from '../material-card/material-card';
 
 @Component({

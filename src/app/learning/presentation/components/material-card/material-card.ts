@@ -1,11 +1,10 @@
-import { NgStyle } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EducationalMaterial } from '../../../domain/model/educational-material.entity';
 
 @Component({
   selector: 'app-material-card',
-  imports: [TranslatePipe, NgStyle],
+  imports: [TranslatePipe],
   templateUrl: './material-card.html',
   styleUrl: './material-card.css',
 })
