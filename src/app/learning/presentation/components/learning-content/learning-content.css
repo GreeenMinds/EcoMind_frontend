@@ -1,37 +1,35 @@
 .learning-header h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: #1b5e20;
-  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6cab4f;
+  margin: 0 0 1.8rem;
 }
 
 .learning-tabs {
   display: flex;
-  gap: 0.25rem;
-  border-bottom: 2px solid #e0e0e0;
+  gap: 0.7rem;
   margin-bottom: 1.5rem;
 }
 
 .learning-tabs button {
-  background: none;
   border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #666;
+  background: #ececec;
+  border-radius: 14px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #555;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: color 0.2s, border-color 0.2s;
+  transition: all 0.2s;
 }
 
 .learning-tabs button:hover {
-  color: #2e7d32;
+  background: #d4d4d4;
 }
 
 .learning-tabs button.active {
-  color: #2e7d32;
-  border-bottom-color: #2e7d32;
+  background: #74b34d;
+  color: #fff;
 }
 
 .learning-content {

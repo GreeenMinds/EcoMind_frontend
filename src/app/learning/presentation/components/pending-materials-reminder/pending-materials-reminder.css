@@ -5,15 +5,16 @@
   padding: 0.75rem 1rem;
   background: #fff3e0;
   border: 1px solid #ffe0b2;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+  font-weight: 500;
   color: #e65100;
 }
 
 .pending-banner a {
-  color: #2e7d32;
-  font-weight: 600;
+  color: #74b34d;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }

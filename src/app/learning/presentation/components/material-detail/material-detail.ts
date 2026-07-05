@@ -53,9 +53,9 @@ export class MaterialDetail implements OnInit {
     const material = this.material();
     if (!material) return '';
     const typeMap: Record<string, string> = {
-      TEXT: 'learning.types.text',
-      VIDEO: 'learning.types.video',
-      INFOGRAPHIC: 'learning.types.infographic',
+      TEXT: 'learning.filters.text',
+      VIDEO: 'learning.filters.video',
+      INFOGRAPHIC: 'learning.filters.infographic',
     };
     return typeMap[material.materialType] ?? material.materialType;
   }
@@ -64,10 +64,10 @@ export class MaterialDetail implements OnInit {
     const material = this.material();
     if (!material) return '';
     const categoryMap: Record<string, string> = {
-      RECYCLE: 'learning.categories.recycle',
-      WATER: 'learning.categories.water',
-      ENERGY: 'learning.categories.energy',
-      ENVIRONMENT: 'learning.categories.environment',
+      RECYCLE: 'learning.filters.recycle',
+      WATER: 'learning.filters.water',
+      ENERGY: 'learning.filters.energy',
+      ENVIRONMENT: 'learning.filters.environment',
     };
     return categoryMap[material.category] ?? material.category;
   }

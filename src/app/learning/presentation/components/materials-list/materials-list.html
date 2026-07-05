@@ -6,7 +6,7 @@
       [class.active]="selectedCategory() === ''"
       (click)="selectCategory('')"
     >
-      {{ 'learning.categories.all' | translate }}
+      {{ 'learning.filters.allCategories' | translate }}
     </button>
     <button
       type="button"
@@ -14,7 +14,7 @@
       [class.active]="selectedCategory() === 'RECYCLE'"
       (click)="selectCategory('RECYCLE')"
     >
-      {{ 'learning.categories.recycle' | translate }}
+      {{ 'learning.filters.recycle' | translate }}
     </button>
     <button
       type="button"
@@ -22,7 +22,7 @@
       [class.active]="selectedCategory() === 'WATER'"
       (click)="selectCategory('WATER')"
     >
-      {{ 'learning.categories.water' | translate }}
+      {{ 'learning.filters.water' | translate }}
     </button>
     <button
       type="button"
@@ -30,7 +30,7 @@
       [class.active]="selectedCategory() === 'ENERGY'"
       (click)="selectCategory('ENERGY')"
     >
-      {{ 'learning.categories.energy' | translate }}
+      {{ 'learning.filters.energy' | translate }}
     </button>
     <button
       type="button"
@@ -38,7 +38,7 @@
       [class.active]="selectedCategory() === 'ENVIRONMENT'"
       (click)="selectCategory('ENVIRONMENT')"
     >
-      {{ 'learning.categories.environment' | translate }}
+      {{ 'learning.filters.environment' | translate }}
     </button>
   </div>
 
@@ -49,7 +49,7 @@
       [class.active]="selectedMaterialType() === ''"
       (click)="selectMaterialType('')"
     >
-      {{ 'learning.types.all' | translate }}
+      {{ 'learning.filters.allTypes' | translate }}
     </button>
     <button
       type="button"
@@ -57,7 +57,7 @@
       [class.active]="selectedMaterialType() === 'TEXT'"
       (click)="selectMaterialType('TEXT')"
     >
-      {{ 'learning.types.text' | translate }}
+      {{ 'learning.filters.text' | translate }}
     </button>
     <button
       type="button"
@@ -65,7 +65,7 @@
       [class.active]="selectedMaterialType() === 'VIDEO'"
       (click)="selectMaterialType('VIDEO')"
     >
-      {{ 'learning.types.video' | translate }}
+      {{ 'learning.filters.video' | translate }}
     </button>
     <button
       type="button"
@@ -73,7 +73,7 @@
       [class.active]="selectedMaterialType() === 'INFOGRAPHIC'"
       (click)="selectMaterialType('INFOGRAPHIC')"
     >
-      {{ 'learning.types.infographic' | translate }}
+      {{ 'learning.filters.infographic' | translate }}
     </button>
   </div>
 </div>

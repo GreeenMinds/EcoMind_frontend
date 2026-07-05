@@ -10,8 +10,8 @@
 
 .tutorial-modal {
   background: #fff;
-  border-radius: 16px;
-  padding: 2rem;
+  border-radius: 22px;
+  padding: 2rem 2.5rem;
   max-width: 480px;
   width: 90%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -22,13 +22,13 @@
   font-size: 0.85rem;
   color: #888;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .step-content h2 {
   font-size: 1.4rem;
-  font-weight: 600;
-  color: #1b5e20;
+  font-weight: 700;
+  color: #6cab4f;
   margin: 0 0 0.75rem;
 }
 
@@ -47,17 +47,18 @@
 
 .skip-button {
   padding: 0.6rem 1.5rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
   background: #fff;
   color: #888;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .skip-button:hover {
-  background: #f5f5f5;
+  border-color: #ccc;
   color: #666;
 }
 
@@ -65,16 +66,16 @@
 .start-button {
   padding: 0.6rem 1.5rem;
   border: none;
-  border-radius: 8px;
-  background: #2e7d32;
+  border-radius: 12px;
+  background: #74b34d;
   color: #fff;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .next-button:hover,
 .start-button:hover {
-  background: #1b5e20;
+  background: #5a9a38;
 }
