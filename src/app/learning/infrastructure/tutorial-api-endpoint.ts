@@ -4,7 +4,7 @@ import { TutorialProgressResponse, TutorialProgressResource } from './tutorial-p
 import { TutorialProgressAssembler } from './tutorial-progress-assembler';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export class TutorialApiEndpoint extends BaseApiEndpoint<
