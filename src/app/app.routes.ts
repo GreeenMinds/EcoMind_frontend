@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { ForgotPassword } from './auth/presentation/components/forgot-password/forgot-password';
 import { SignIn } from './auth/presentation/components/sign-in/sign-in';
 import { SignUp } from './auth/presentation/components/sign-up/sign-up';
+import { anonymousOnlyGuard, iamGuard } from './iam/infrastructure/iam.guard';
+import { ResetPassword } from './iam/presentation/components/reset-password/reset-password';
 import { SettingsContent } from './settings/presentation/components/settings-content/settings-content';
 import {QuestsContent} from './quests/presentation/components/quests-content/quests-content';
 import {QuestActivitiesContent} from './quests/presentation/components/quest-activities-content/quest-activities-content';
@@ -23,18 +25,28 @@ export const routes: Routes = [
   {
     path: 'sign-up',
     component: SignUp,
+    canActivate: [anonymousOnlyGuard],
   },
   {
     path: 'sign-in',
     component: SignIn,
+    canActivate: [anonymousOnlyGuard],
   },
   {
     path: 'forgot-password',
     component: ForgotPassword,
+    canActivate: [anonymousOnlyGuard],
+  },
+  {
+    path: 'reset-password',
+    component: ResetPassword,
+    canActivate: [anonymousOnlyGuard],
   },
   {
     path: '',
     component: Layout,
+    canActivate: [iamGuard],
+    canActivateChild: [iamGuard],
     children: [
       {
         path: 'profile',
