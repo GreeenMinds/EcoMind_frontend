@@ -101,14 +101,8 @@ export class ProfileContent {
   private readonly cosmetics = signal<CosmeticEntity[]>([]);
   private readonly userCosmetics = signal<UserCosmeticEntity[]>([]);
 
-  readonly loading = computed(
-    () =>
-      this.profileLoading() || this.questsService.loading() || this.communityService.loading(),
-  );
-  readonly error = computed(
-    () =>
-      this.profileError() ?? this.questsService.error() ?? this.communityService.error() ?? null,
-  );
+  readonly loading = computed(() => this.profileLoading() || this.questsService.loading());
+  readonly error = computed(() => this.profileError() ?? this.questsService.error() ?? null);
 
   readonly currentUserFamilyMembership = computed(() => {
     const currentUserId = this.currentUser()?.id;
