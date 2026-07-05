@@ -147,6 +147,10 @@ export class ProfileService {
     return this.profileApi.getFriends();
   }
 
+  getFriendsByUser(userId: number, status?: string): Observable<Friend[]> {
+    return this.profileApi.getFriendsByUser(userId, status);
+  }
+
   createFriend(friend: Friend): Observable<Friend> {
     return this.profileApi.createFriend(friend);
   }

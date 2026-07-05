@@ -667,7 +667,7 @@ export class QuestsService {
       },
     });
 
-    this.profileService.getFriends().subscribe({
+    this.profileService.getFriendsByUser(this.currentUserId(), 'accepted').subscribe({
       next: (friends) => this.friendsSignal.set(friends),
       error: (err) => {
         this.errorSignal.set(this.formatError(err, 'Failed to load friends'));

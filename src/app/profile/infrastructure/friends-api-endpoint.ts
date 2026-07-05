@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -18,6 +18,23 @@ export class FriendsApiEndpoint extends BaseApiEndpoint<
       http,
       `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFriendEndpointPath}`,
       new FriendAssembler(),
+    );
+  }
+
+  getByUser(userId: number, status?: string): Observable<Friend[]> {
+    let params = new HttpParams().set('user_id', userId);
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<FriendResponse | FriendResource[]>(this.endpointUrl, { params }).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response.map((resource) => this.assembler.toEntityFromResource(resource));
+        }
+        return this.assembler.toEntitiesFromResponse(response);
+      }),
+      catchError(this.handleError('Failed to fetch friend relationships')),
     );
   }
 

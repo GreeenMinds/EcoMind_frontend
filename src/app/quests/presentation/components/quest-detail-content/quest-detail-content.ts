@@ -277,7 +277,11 @@ export class QuestDetailContent {
     const currentUserId = this.questsService.currentUserId();
     const friends = this.questsService
       .friends()
-      .filter((friend) => friend.status.toUpperCase() === 'ACCEPTED')
+      .filter(
+        (friend) =>
+          friend.status.toUpperCase() === 'ACCEPTED' &&
+          (friend.user_id === currentUserId || friend.friend_id === currentUserId),
+      )
       .map((friend) => (friend.user_id === currentUserId ? friend.friend_id : friend.user_id));
     return [...new Set(friends)]
       .map((friendUserId) => this.questsService.users().find((user) => user.id === friendUserId))

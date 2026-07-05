@@ -88,6 +88,10 @@ export class ProfileApi extends BaseApi {
     return this.friendsEndpoint.getAll();
   }
 
+  getFriendsByUser(userId: number, status?: string): Observable<Friend[]> {
+    return this.friendsEndpoint.getByUser(userId, status);
+  }
+
   createFriend(friend: Friend): Observable<Friend> {
     return this.friendsEndpoint.create(friend);
   }
