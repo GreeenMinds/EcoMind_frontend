@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../application/auth.service';
 
 @Component({
@@ -14,6 +14,7 @@ export class SignIn {
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   readonly isSubmitting = signal(false);
@@ -37,7 +38,7 @@ export class SignIn {
       .signIn(this.form.getRawValue())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => void this.router.navigateByUrl('/quests'),
+        next: () => void this.router.navigateByUrl(this.redirectUrl()),
         error: () => {
           this.errorMessage.set('Invalid email or password.');
           this.isSubmitting.set(false);
@@ -53,11 +54,15 @@ export class SignIn {
       .signInWithProvider(provider)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => void this.router.navigateByUrl('/quests'),
+        next: () => void this.router.navigateByUrl(this.redirectUrl()),
         error: () => {
           this.errorMessage.set('Provider sign in is temporarily unavailable.');
           this.isSubmitting.set(false);
         },
       });
+  }
+
+  private redirectUrl(): string {
+    return this.route.snapshot.queryParamMap.get('redirectTo') ?? '/quests';
   }
 }

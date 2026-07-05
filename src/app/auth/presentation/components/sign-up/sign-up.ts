@@ -22,7 +22,9 @@ export class SignUp {
   readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
+    birthDate: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    commitment: ['', [Validators.maxLength(1000)]],
     terms: [false, Validators.requiredTrue],
   });
 
@@ -32,12 +34,18 @@ export class SignUp {
       return;
     }
 
-    const { name, email, password } = this.form.getRawValue();
+    const { name, email, password, birthDate, commitment } = this.form.getRawValue();
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
     this.authService
-      .signUp({ name, email, password })
+      .signUp({
+        name,
+        email,
+        password,
+        birthDate,
+        commitment: commitment.trim() || null,
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => void this.router.navigateByUrl('/quests'),
