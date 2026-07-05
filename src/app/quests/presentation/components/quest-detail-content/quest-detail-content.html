@@ -208,3 +208,35 @@
     <a class="back-link" routerLink="/quests">{{ 'quests.backToQuests' | translate }}</a>
   </section>
 }
+
+@if (soloCollaborativeConfirmationOpen()) {
+  <div
+    class="solo-confirmation-backdrop"
+    role="presentation"
+    (click)="closeSoloCollaborativeConfirmation()">
+  </div>
+
+  <section
+    class="solo-confirmation-modal"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'quests.collaboration.soloConfirmTitle' | translate">
+    <h3>{{ 'quests.collaboration.soloConfirmTitle' | translate }}</h3>
+    <p>{{ 'quests.collaboration.soloConfirmMessage' | translate }}</p>
+
+    <div class="solo-confirmation-actions">
+      <button
+        type="button"
+        class="solo-confirmation-secondary"
+        (click)="closeSoloCollaborativeConfirmation()">
+        {{ 'quests.collaboration.soloConfirmCancel' | translate }}
+      </button>
+      <button
+        type="button"
+        class="solo-confirmation-primary"
+        (click)="confirmSoloCollaborativeStart()">
+        {{ 'quests.collaboration.soloConfirmStart' | translate }}
+      </button>
+    </div>
+  </section>
+}

@@ -117,6 +117,10 @@
       "remove": "Eliminar participante",
       "organizer": "Organizador",
       "unknownUser": "Usuario desconocido",
+      "soloConfirmTitle": "Las misiones se completan mejor en compañía",
+      "soloConfirmMessage": "Estás por iniciar una misión colaborativa en solitario. Puedes continuar ahora o invitar a tus amigos para completarla juntos.",
+      "soloConfirmCancel": "Cancelar",
+      "soloConfirmStart": "Iniciar de todos modos",
       "statuses": {
         "ACCEPTED": "Participante",
         "PENDING": "Esperando confirmación",

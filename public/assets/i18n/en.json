@@ -117,6 +117,10 @@
       "remove": "Remove participant",
       "organizer": "Organizer",
       "unknownUser": "Unknown user",
+      "soloConfirmTitle": "Quests are better completed together",
+      "soloConfirmMessage": "You are about to start a collaborative quest on your own. You can continue now or invite friends to complete it together.",
+      "soloConfirmCancel": "Cancel",
+      "soloConfirmStart": "Start anyway",
       "statuses": {
         "ACCEPTED": "Participant",
         "PENDING": "Waiting for confirmation",

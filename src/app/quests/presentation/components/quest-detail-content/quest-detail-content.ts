@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -22,6 +22,7 @@ export class QuestDetailContent {
   private readonly monetizationSvc = inject(MonetizationStoreService);
   private readonly questProgressService = inject(QuestProgressService);
   private readonly collaborativeQuestsService = inject(CollaborativeQuestsService);
+  readonly soloCollaborativeConfirmationOpen = signal(false);
 
   readonly questId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('questId')))),
@@ -131,9 +132,12 @@ export class QuestDetailContent {
           return;
         }
 
-        this.questProgressService.addQuestProgress(detail.quest.id).subscribe({
-          next: () => void this.router.navigate(['/quests', detail.quest.id, 'started']),
-        });
+        if (detail.quest.type === 'COLLABORATIVE') {
+          this.soloCollaborativeConfirmationOpen.set(true);
+          return;
+        }
+
+        this.startSoloQuest(detail.quest.id);
         return;
       }
 
@@ -149,6 +153,21 @@ export class QuestDetailContent {
     }
 
     void this.router.navigate(['/quests', detail.quest.id, 'activities']);
+  }
+
+  closeSoloCollaborativeConfirmation(): void {
+    this.soloCollaborativeConfirmationOpen.set(false);
+  }
+
+  confirmSoloCollaborativeStart(): void {
+    const detail = this.detail();
+    if (!detail || detail.quest.type !== 'COLLABORATIVE' || detail.started) {
+      this.closeSoloCollaborativeConfirmation();
+      return;
+    }
+
+    this.closeSoloCollaborativeConfirmation();
+    this.startSoloQuest(detail.quest.id);
   }
 
   formatCategory(category: string): string {
@@ -315,5 +334,11 @@ export class QuestDetailContent {
     const minigameUrl = new URL(url, window.location.origin);
     minigameUrl.searchParams.set('questId', String(questId));
     return minigameUrl.toString();
+  }
+
+  private startSoloQuest(questId: number): void {
+    this.questProgressService.addQuestProgress(questId).subscribe({
+      next: () => void this.router.navigate(['/quests', questId, 'started']),
+    });
   }
 }
