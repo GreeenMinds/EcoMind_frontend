@@ -132,7 +132,7 @@ export class LearningService {
   loadReviews(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.learningApi.getMaterialReviews().subscribe({
+    this.learningApi.getMaterialReviews(this.currentUserId()).subscribe({
       next: (reviews) => {
         this.reviewsSignal.set(reviews);
         this.loadingSignal.set(false);
@@ -153,6 +153,11 @@ export class LearningService {
         this.loadingSignal.set(false);
       },
       error: (err) => {
+        if (err instanceof HttpErrorResponse && err.status === 404) {
+          this.tutorialProgressSignal.set(null);
+          this.loadingSignal.set(false);
+          return;
+        }
         this.errorSignal.set(this.formatError(err, 'Failed to load tutorial progress'));
         this.loadingSignal.set(false);
       },

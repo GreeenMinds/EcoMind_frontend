@@ -2,7 +2,7 @@ import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { TutorialProgress } from '../domain/model/tutorial-progress.entity';
 import { TutorialProgressResponse, TutorialProgressResource } from './tutorial-progress-response';
 import { TutorialProgressAssembler } from './tutorial-progress-assembler';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -25,7 +25,12 @@ export class TutorialApiEndpoint extends BaseApiEndpoint<
     const params = new HttpParams().set('userId', userId.toString());
     return this.http.get<TutorialProgressResource>(`${this.endpointUrl}/progress`, { params }).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError('Failed to get tutorial progress')),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return throwError(() => error);
+        }
+        return throwError(() => new Error('Failed to get tutorial progress: ' + error.message));
+      }),
     );
   }
 

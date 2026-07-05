@@ -40,8 +40,8 @@ export class LearningApi extends BaseApi {
     return this.educationalMaterialsEndpoint.getById(id);
   }
 
-  getMaterialReviews(): Observable<MaterialReview[]> {
-    return this.materialReviewsEndpoint.getAll();
+  getMaterialReviews(userId: number): Observable<MaterialReview[]> {
+    return this.materialReviewsEndpoint.getByUserId(userId);
   }
 
   markMaterialAsReviewed(userId: number, materialId: number): Observable<MaterialReview> {
