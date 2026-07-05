@@ -1,15 +1,13 @@
 import { Injectable, inject } from '@angular/core';
-import { AuthService } from '../../auth/application/auth.service';
-
-const DEFAULT_USER_ID = 1;
+import { IamService } from '../../iam/application/iam.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CurrentUser {
-  private readonly authService = inject(AuthService);
+  private readonly iamService = inject(IamService);
 
   getCurrentUserId(): number {
-    return this.authService.getCurrentUserId(DEFAULT_USER_ID);
+    return this.iamService.getCurrentUserId();
   }
 }
