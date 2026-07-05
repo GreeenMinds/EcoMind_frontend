@@ -9,7 +9,7 @@ export const environment = {
   platformProviderFamilyUserEndpointPath: '/family_user',
   platformProviderFamilyInvitationEndpointPath: '/family_invitation',
   platformProviderFriendEndpointPath: '/friend',
-  platformProviderAchievementEndpointPath: '/achievement',
+  platformProviderAchievementEndpointPath: '/achievements',
   platformProviderCommunityAchievementEndpointPath: '/community_achievement',
   platformProviderUserAchievementEndpointPath: '/user_achievement',
   platformProviderEventEndpointPath: '/community/events',

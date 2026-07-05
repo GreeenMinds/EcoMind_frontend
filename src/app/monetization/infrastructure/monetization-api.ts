@@ -71,8 +71,16 @@ export class MonetizationApi extends BaseApi {
     return this.userCosmeticsEndpoint.getAll();
   }
 
+  getUserCosmeticsByUser(userId: number): Observable<UserCosmeticEntity[]> {
+    return this.userCosmeticsEndpoint.getByUser(userId);
+  }
+
   getUserMultipliers(): Observable<UserMultiplierEntity[]> {
     return this.userMultipliersEndpoint.getAll();
+  }
+
+  getUserMultipliersByUser(userId: number): Observable<UserMultiplierEntity[]> {
+    return this.userMultipliersEndpoint.getByUser(userId);
   }
 
   purchaseCosmetic(userCosmetic: UserCosmeticEntity): Observable<UserCosmeticEntity> {

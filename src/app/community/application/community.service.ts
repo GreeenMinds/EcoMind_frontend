@@ -5,6 +5,8 @@ import { catchError, Observable, of, retry, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
+import { ProfileApi } from '../../profile/infrastructure/profile-api';
+import { User } from '../../profile/domain/model/user.entity';
 import { Achievement } from '../domain/model/achievement.entity';
 import { CommunityAchievement } from '../domain/model/community-achievement.entity';
 import { CommunityGoal } from '../domain/model/community-goal.entity';
@@ -102,6 +104,7 @@ export class CommunityService {
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
 
   readonly currentMember = computed(() =>
+    this.realMembersSignal().get(this.currentUserId()) ??
     this.members().find((member) => member.id === this.currentUserId()),
   );
 
@@ -189,6 +192,7 @@ export class CommunityService {
     private readonly communityApi: CommunityApi,
     private readonly questsApi: QuestsApi,
     private readonly currentUser: CurrentUser,
+    private readonly profileApi: ProfileApi,
     private readonly http: HttpClient,
   ) {
     this.loadCommunityData();
@@ -199,13 +203,28 @@ export class CommunityService {
     const missingIds = [...new Set(userIds)].filter((id) => !knownIds.has(id));
 
     missingIds.forEach((userId) => {
-      const realUserUrl =
-        `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderUserEndpointPath}/${userId}`;
-      this.http.get<CommunityMember>(realUserUrl).subscribe({
+      this.profileApi.getUser(userId).subscribe({
         next: (member) =>
-          this.realMembersSignal.update((members) => new Map(members).set(userId, member)),
+          this.realMembersSignal.update((members) =>
+            new Map(members).set(userId, this.toCommunityMember(member)),
+          ),
         error: () => {},
       });
+    });
+  }
+
+  private toCommunityMember(user: User): CommunityMember {
+    return Object.assign(new CommunityMember(), {
+      id: user.id,
+      community_id: user.community_id,
+      email: user.email,
+      birth_date: user.birth_date,
+      name: user.name,
+      streak: user.streak,
+      commitment: user.commitment,
+      registered_at: user.registered_at,
+      gem_balance: user.gem_balance,
+      ecopoints: user.ecopoints,
     });
   }
 
@@ -484,7 +503,10 @@ export class CommunityService {
     );
     this.loadResource(
       this.communityApi.getPostReactions(),
-      (reactions) => this.postReactionsSignal.set(reactions),
+      (reactions) => {
+        this.postReactionsSignal.set(reactions);
+        this.loadRealMembers(reactions.map((reaction) => reaction.user_id));
+      },
       finishRequest,
     );
     this.loadResource(
@@ -514,14 +536,16 @@ export class CommunityService {
       (achievements) => this.achievementsSignal.set(achievements),
       finishRequest,
     );
-    this.loadResource(
+    this.loadOptionalResource(
       this.communityApi.getCommunityAchievements(),
+      [],
       (communityAchievements) =>
         this.communityAchievementsSignal.set(communityAchievements),
       finishRequest,
     );
-    this.loadResource(
+    this.loadOptionalResource(
       this.communityApi.getUserAchievements(),
+      [],
       (userAchievements) => this.userAchievementsSignal.set(userAchievements),
       finishRequest,
     );
@@ -639,6 +663,7 @@ export class CommunityService {
       .subscribe({
         next: (createdReaction) => {
           this.postReactionsSignal.update((reactions) => [...reactions, createdReaction]);
+          this.loadRealMembers([createdReaction.user_id]);
           this.adjustPostLikes(postId, 1);
           this.loadingSignal.set(false);
         },
@@ -678,6 +703,8 @@ export class CommunityService {
   }
 
   private buildPostReactionSummaries(postId: number): CommunityPostReactionSummary[] {
+    const realMembers = this.realMembersSignal();
+
     return this.postReactions()
       .filter((reaction) => reaction.post_id === postId)
       .map((reaction) => {
@@ -687,7 +714,9 @@ export class CommunityService {
 
         return {
           reaction,
-          member: this.members().find((member) => member.id === reaction.user_id),
+          member:
+            realMembers.get(reaction.user_id) ??
+            this.members().find((member) => member.id === reaction.user_id),
           imageUrl: option.imageUrl,
           labelKey: option.labelKey,
         };

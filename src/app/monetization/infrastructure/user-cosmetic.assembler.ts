@@ -8,9 +8,9 @@ export class UserCosmeticAssembler
   toEntityFromResource(resource: any): UserCosmeticEntity {
     return {
       id: resource.id,
-      userId: resource.userId,
-      cosmeticId: resource.cosmeticId,
-      acquiredAt: resource.acquiredAt,
+      userId: resource.userId ?? resource.user_id,
+      cosmeticId: resource.cosmeticId ?? resource.cosmetic_id,
+      acquiredAt: resource.acquiredAt ?? resource.acquired_at,
       equipped: resource.equipped,
     };
   }
