@@ -322,7 +322,8 @@
       "allTypes": "All types",
       "text": "Text",
       "video": "Video",
-      "infographic": "Infographic"
+      "infographic": "Infographic",
+      "viewLink": "View favorites"
     },
     "loading": "Loading materials...",
     "noneFound": "No materials found",
@@ -340,8 +341,9 @@
       "reviewedOn": "Reviewed on {{ date }}"
     },
     "pending": {
-      "message": "You have {{ count }} pending materials to review",
-      "singular": "You have 1 pending material to review"
+      "message": "You have {{ count }} pending material(s) to review",
+      "singular": "You have 1 pending material to review",
+      "viewLink": "View favorites"
     },
     "tutorial": {
       "step1Title": "Welcome to EcoMind!",

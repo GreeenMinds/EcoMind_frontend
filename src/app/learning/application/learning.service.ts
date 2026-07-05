@@ -135,6 +135,7 @@ export class LearningService {
     this.learningApi.getMaterialReviews(this.currentUserId()).subscribe({
       next: (reviews) => {
         this.reviewsSignal.set(reviews);
+        this.loadPendingCount();
         this.loadingSignal.set(false);
       },
       error: (err) => {
@@ -219,7 +220,6 @@ export class LearningService {
     this.loadMaterials();
     this.loadReviews();
     this.loadTutorialProgress();
-    this.loadPendingCount();
   }
 
   formatError(error: unknown, fallback: string): string {
