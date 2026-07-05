@@ -1,9 +1,17 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../application/auth.service';
+import { environment } from '../../../../../environments/environment';
+
+interface SignUpCommunity {
+  id: number;
+  name: string;
+  location: string;
+  user_count: number;
+}
 
 @Component({
   selector: 'app-sign-up',
@@ -15,19 +23,28 @@ export class SignUp {
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
+  readonly communities = signal<SignUpCommunity[]>([]);
+  readonly communitiesLoading = signal(false);
+  readonly communitiesError = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
+    communityId: [0, [Validators.required, Validators.min(1)]],
     birthDate: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     commitment: ['', [Validators.maxLength(1000)]],
     terms: [false, Validators.requiredTrue],
   });
+
+  constructor() {
+    this.loadCommunities();
+  }
 
   submit(): void {
     if (this.form.invalid) {
@@ -36,7 +53,7 @@ export class SignUp {
       return;
     }
 
-    const { name, email, password, birthDate, commitment } = this.form.getRawValue();
+    const { name, email, password, communityId, birthDate, commitment } = this.form.getRawValue();
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
@@ -45,6 +62,7 @@ export class SignUp {
         name,
         email,
         password,
+        communityId,
         birthDate,
         commitment: commitment.trim() || null,
       })
@@ -54,6 +72,26 @@ export class SignUp {
         error: (error) => {
           this.errorMessage.set(this.formatError(error));
           this.isSubmitting.set(false);
+        },
+      });
+  }
+
+  private loadCommunities(): void {
+    const url = `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityEndpointPath}`;
+    this.communitiesLoading.set(true);
+    this.communitiesError.set('');
+
+    this.http
+      .get<SignUpCommunity[]>(url)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (communities) => {
+          this.communities.set(communities);
+          this.communitiesLoading.set(false);
+        },
+        error: () => {
+          this.communitiesError.set('Communities could not be loaded.');
+          this.communitiesLoading.set(false);
         },
       });
   }
