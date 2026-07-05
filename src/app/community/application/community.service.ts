@@ -536,14 +536,16 @@ export class CommunityService {
       (achievements) => this.achievementsSignal.set(achievements),
       finishRequest,
     );
-    this.loadResource(
+    this.loadOptionalResource(
       this.communityApi.getCommunityAchievements(),
+      [],
       (communityAchievements) =>
         this.communityAchievementsSignal.set(communityAchievements),
       finishRequest,
     );
-    this.loadResource(
+    this.loadOptionalResource(
       this.communityApi.getUserAchievements(),
+      [],
       (userAchievements) => this.userAchievementsSignal.set(userAchievements),
       finishRequest,
     );

@@ -8,10 +8,10 @@ export class UserMultiplierAssembler
   toEntityFromResource(resource: any): UserMultiplierEntity {
     return {
       id: resource.id,
-      multiplierId: resource.multiplierId,
-      userId: resource.userId,
-      startDate: resource.startDate,
-      endDate: resource.endDate,
+      multiplierId: resource.multiplierId ?? resource.multiplier_id,
+      userId: resource.userId ?? resource.user_id,
+      startDate: resource.startDate ?? resource.start_date,
+      endDate: resource.endDate ?? resource.end_date,
     };
   }
 

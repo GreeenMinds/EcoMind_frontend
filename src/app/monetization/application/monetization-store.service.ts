@@ -1,7 +1,8 @@
-import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, retry, switchMap } from 'rxjs';
 import { CurrentUser } from '../../shared/application/current-user';
+import { IamService } from '../../iam/application/iam.service';
 import { MonetizationApi } from '../infrastructure/monetization-api';
 import { ProfileService } from '../../profile/application/profile.service';
 import { CosmeticEntity }       from '../domain/cosmetic.entity';
@@ -31,6 +32,7 @@ export class MonetizationStoreService {
   private readonly destroyRef       = inject(DestroyRef);
   private readonly monetizationApi  = inject(MonetizationApi);
   private readonly currentUser      = inject(CurrentUser);
+  private readonly iamService       = inject(IamService);
   private readonly profileService   = inject(ProfileService);
   private readonly cosmeticsSignal        = signal<CosmeticEntity[]>([]);
   private readonly multipliersSignal      = signal<MultiplierEntity[]>([]);
@@ -105,10 +107,19 @@ export class MonetizationStoreService {
   );
 
   constructor() {
-    this.loadData();
+    effect(() => {
+      const session = this.iamService.currentSession();
+
+      if (!session) {
+        this.clearUserState();
+        return;
+      }
+
+      this.loadData(session.userId);
+    });
   }
   refresh(): void {
-    this.loadData();
+    this.loadData(this.currentUserId());
   }
 
   refreshGemPackages(): void {
@@ -118,7 +129,7 @@ export class MonetizationStoreService {
       .subscribe((packages) => this.gemPackagesSignal.set(packages));
   }
 
-  private loadData(): void {
+  private loadData(userId: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -126,29 +137,34 @@ export class MonetizationStoreService {
       cosmetics:       this.monetizationApi.getCosmetics(),
       multipliers:     this.monetizationApi.getMultipliers(),
       gemPackages:     this.monetizationApi.getGemPackages(),
-      userCosmetics:   this.monetizationApi.getUserCosmetics(),
-      userMultipliers: this.monetizationApi.getUserMultipliers(),
-      gemBalance:      this.monetizationApi.getUserGemBalance(this.currentUserId()),
+      userCosmetics:   this.monetizationApi.getUserCosmeticsByUser(userId),
+      allUserCosmetics: this.monetizationApi.getUserCosmetics(),
+      userMultipliers: this.monetizationApi.getUserMultipliersByUser(userId),
+      gemBalance:      this.monetizationApi.getUserGemBalance(userId),
     })
       .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
+          if (this.iamService.currentSession()?.userId !== userId) {
+            return;
+          }
+
           this.cosmeticsSignal.set(data.cosmetics);
           this.multipliersSignal.set(data.multipliers);
           this.gemPackagesSignal.set(data.gemPackages);
-          this.allUserCosmeticsSignal.set(data.userCosmetics);
-          this.userCosmeticsSignal.set(
-            data.userCosmetics.filter((uc) => uc.userId === this.currentUserId()),
-          );
-          this.userMultipliersSignal.set(
-            data.userMultipliers.filter((um) => um.userId === this.currentUserId()),
-          );
+          this.allUserCosmeticsSignal.set(data.allUserCosmetics);
+          this.userCosmeticsSignal.set(data.userCosmetics);
+          this.userMultipliersSignal.set(data.userMultipliers);
 
           this.gemBalanceSignal.set(data.gemBalance);
           this.profileService.syncGemBalance(data.gemBalance);
           this.loadingSignal.set(false);
         },
         error: (err) => {
+          if (this.iamService.currentSession()?.userId !== userId) {
+            return;
+          }
+
           this.setError(this.formatError(err, 'Error loading store'));
           this.loadingSignal.set(false);
         },
@@ -194,6 +210,12 @@ export class MonetizationStoreService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (created) => {
+          if (created.userId !== this.currentUserId()) {
+            this.setError('The purchase was assigned to a different user.');
+            this.loadingSignal.set(false);
+            return;
+          }
+
           this.userCosmeticsSignal.update((list) => [...list, created]);
           this.allUserCosmeticsSignal.update((list) => [...list, created]);
           this.refreshBalance();
@@ -270,10 +292,10 @@ export class MonetizationStoreService {
         .subscribe({
           next: (res) => {
             this.userCosmeticsSignal.update((list) =>
-              list.map((uc) => (uc.cosmeticId === res.cosmeticId ? res : uc)),
+              list.map((uc) => (uc.id === res.id ? res : uc)),
             );
             this.allUserCosmeticsSignal.update((list) =>
-              list.map((uc) => (uc.cosmeticId === res.cosmeticId && uc.userId === res.userId ? res : uc)),
+              list.map((uc) => (uc.id === res.id ? res : uc)),
             );
           },
           error: (err) => {
@@ -288,10 +310,10 @@ export class MonetizationStoreService {
       .subscribe({
         next: (res) => {
           this.userCosmeticsSignal.update((list) =>
-            list.map((uc) => (uc.cosmeticId === res.cosmeticId ? res : uc)),
+            list.map((uc) => (uc.id === res.id ? res : uc)),
           );
           this.allUserCosmeticsSignal.update((list) =>
-            list.map((uc) => (uc.cosmeticId === res.cosmeticId && uc.userId === res.userId ? res : uc)),
+            list.map((uc) => (uc.id === res.id ? res : uc)),
           );
           this.errorSignal.set(null);
         },
@@ -381,13 +403,13 @@ export class MonetizationStoreService {
 
     forkJoin({
       cosmetics: this.monetizationApi.getCosmetics(),
-      userCosmetics: this.monetizationApi.getUserCosmetics(),
+      userCosmetics: this.monetizationApi.getUserCosmeticsByUser(userId),
       multipliers: this.monetizationApi.getMultipliers(),
     })
       .pipe(
         switchMap(({ cosmetics, userCosmetics, multipliers }) => {
           const ownedIds = new Set(
-            userCosmetics.filter((uc) => uc.userId === userId).map((uc) => uc.cosmeticId),
+            userCosmetics.map((uc) => uc.cosmeticId),
           );
 
           const avatarRequests = cosmetics
@@ -424,7 +446,7 @@ export class MonetizationStoreService {
       )
       .subscribe({
         next: () => {
-          this.loadData();
+          this.loadData(this.currentUserId());
           console.log('¡Special package delivered!');
         },
         error: (err) => {
@@ -433,5 +455,14 @@ export class MonetizationStoreService {
         },
         complete: () => this.loadingSignal.set(false),
       });
+  }
+
+  private clearUserState(): void {
+    this.userCosmeticsSignal.set([]);
+    this.allUserCosmeticsSignal.set([]);
+    this.userMultipliersSignal.set([]);
+    this.gemBalanceSignal.set(0);
+    this.loadingSignal.set(false);
+    this.errorSignal.set(null);
   }
 }

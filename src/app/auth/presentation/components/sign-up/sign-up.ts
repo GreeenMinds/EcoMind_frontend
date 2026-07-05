@@ -1,5 +1,6 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../application/auth.service';
@@ -31,6 +32,7 @@ export class SignUp {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.errorMessage.set('Please review the highlighted fields.');
       return;
     }
 
@@ -49,8 +51,8 @@ export class SignUp {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => void this.router.navigateByUrl('/quests'),
-        error: () => {
-          this.errorMessage.set('We could not create your account.');
+        error: (error) => {
+          this.errorMessage.set(this.formatError(error));
           this.isSubmitting.set(false);
         },
       });
@@ -70,5 +72,40 @@ export class SignUp {
           this.isSubmitting.set(false);
         },
       });
+  }
+
+  shouldShowError(controlName: keyof typeof this.form.controls, errorName?: string): boolean {
+    const control = this.form.controls[controlName];
+    const hasError = errorName ? control.hasError(errorName) : control.invalid;
+    return hasError && (control.touched || control.dirty);
+  }
+
+  private formatError(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const message = this.extractServerMessage(error.error);
+
+      if (message) {
+        return message;
+      }
+
+      if (error.status === 409) {
+        return 'This email is already registered.';
+      }
+    }
+
+    return 'We could not create your account.';
+  }
+
+  private extractServerMessage(errorBody: unknown): string | null {
+    if (typeof errorBody === 'string') {
+      return errorBody;
+    }
+
+    if (errorBody && typeof errorBody === 'object' && 'message' in errorBody) {
+      const message = (errorBody as { message?: unknown }).message;
+      return typeof message === 'string' ? message : null;
+    }
+
+    return null;
   }
 }

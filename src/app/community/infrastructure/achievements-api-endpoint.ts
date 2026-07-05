@@ -14,7 +14,7 @@ export class AchievementsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderAchievementEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderAchievementEndpointPath}`,
       new AchievementAssembler(),
     );
   }
