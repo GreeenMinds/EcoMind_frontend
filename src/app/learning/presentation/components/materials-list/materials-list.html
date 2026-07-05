@@ -1,0 +1,103 @@
+<div class="materials-filter-bar">
+  <div class="filter-group">
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedCategory() === ''"
+      (click)="selectCategory('')"
+    >
+      {{ 'learning.categories.all' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedCategory() === 'RECYCLE'"
+      (click)="selectCategory('RECYCLE')"
+    >
+      {{ 'learning.categories.recycle' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedCategory() === 'WATER'"
+      (click)="selectCategory('WATER')"
+    >
+      {{ 'learning.categories.water' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedCategory() === 'ENERGY'"
+      (click)="selectCategory('ENERGY')"
+    >
+      {{ 'learning.categories.energy' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedCategory() === 'ENVIRONMENT'"
+      (click)="selectCategory('ENVIRONMENT')"
+    >
+      {{ 'learning.categories.environment' | translate }}
+    </button>
+  </div>
+
+  <div class="filter-group">
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedMaterialType() === ''"
+      (click)="selectMaterialType('')"
+    >
+      {{ 'learning.types.all' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedMaterialType() === 'TEXT'"
+      (click)="selectMaterialType('TEXT')"
+    >
+      {{ 'learning.types.text' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedMaterialType() === 'VIDEO'"
+      (click)="selectMaterialType('VIDEO')"
+    >
+      {{ 'learning.types.video' | translate }}
+    </button>
+    <button
+      type="button"
+      class="filter-btn"
+      [class.active]="selectedMaterialType() === 'INFOGRAPHIC'"
+      (click)="selectMaterialType('INFOGRAPHIC')"
+    >
+      {{ 'learning.types.infographic' | translate }}
+    </button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    {{ 'common.loading' | translate }}
+  </div>
+} @else if (error(); as errorMsg) {
+  <div class="error-state">
+    {{ errorMsg }}
+  </div>
+} @else if (filteredMaterials().length === 0) {
+  <div class="empty-state">
+    {{ 'learning.noMaterials' | translate }}
+  </div>
+} @else {
+  <div class="materials-grid">
+    @for (material of filteredMaterials(); track material.id) {
+      <app-material-card
+        [material]="material"
+        (materialSelected)="onMaterialSelected($event)"
+        (favoriteToggled)="onFavoriteToggled($event)"
+      />
+    }
+  </div>
+}

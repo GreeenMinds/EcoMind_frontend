@@ -2,6 +2,7 @@
   "sidebar": {
     "profile": "Perfil",
     "quests": "Misiones",
+    "learning": "Aprender",
     "community": "Comunidad",
     "ranking": "Ranking",
     "store": "Tienda",
@@ -303,6 +304,63 @@
     "goalStatus": {
       "active": "En progreso",
       "completed": "Completada"
+    }
+  },
+  "learning": {
+    "title": "Aprendizaje",
+    "tabs": {
+      "materials": "Materiales",
+      "favorites": "Favoritos",
+      "history": "Historial"
+    },
+    "filters": {
+      "allCategories": "Todas las categorías",
+      "recycle": "Reciclaje",
+      "water": "Agua",
+      "energy": "Energía",
+      "environment": "Medio Ambiente",
+      "allTypes": "Todos los tipos",
+      "text": "Texto",
+      "video": "Video",
+      "infographic": "Infografía"
+    },
+    "loading": "Cargando materiales...",
+    "noneFound": "No se encontraron materiales",
+    "materialNotFound": "Material no encontrado",
+    "backToMaterials": "Volver a materiales",
+    "duration": "{{ minutes }} min",
+    "favorites": {
+      "title": "Mis Favoritos",
+      "empty": "No tienes materiales favoritos todavía",
+      "viewMaterial": "Ver material"
+    },
+    "history": {
+      "title": "Historial de Aprendizaje",
+      "empty": "Aún no has revisado ningún material",
+      "reviewedOn": "Revisado el {{ date }}"
+    },
+    "pending": {
+      "message": "Tienes {{ count }} materiales pendientes por revisar",
+      "singular": "Tienes 1 material pendiente por revisar"
+    },
+    "tutorial": {
+      "step1Title": "¡Bienvenido a EcoMind!",
+      "step1Desc": "Hagamos un recorrido rápido para mostrarte el camino.",
+      "step2Title": "Misiones",
+      "step2Desc": "Completa desafíos y gana recompensas para ayudar al planeta.",
+      "step3Title": "Perfil",
+      "step3Desc": "Sigue tu progreso, logros e impacto ecológico.",
+      "step4Title": "Comunidad",
+      "step4Desc": "Conecta con otros y comparte tu viaje sostenible.",
+      "step5Title": "Tienda",
+      "step5Desc": "Personaliza tu experiencia con cosméticos y potenciadores.",
+      "step6Title": "Aprendizaje",
+      "step6Desc": "Explora materiales educativos para aprender más sobre sostenibilidad.",
+      "step7Title": "¡Estás listo!",
+      "step7Desc": "Comienza tu viaje y marca la diferencia para nuestro planeta.",
+      "next": "Siguiente",
+      "skip": "Omitir tutorial",
+      "start": "Comenzar"
     }
   },
   "store": {

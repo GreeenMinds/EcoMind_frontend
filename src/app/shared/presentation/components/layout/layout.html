@@ -79,10 +79,17 @@
   </div>
 </header>
 
+<app-tutorial-overlay
+  [visible]="showTutorial()"
+  (completeTutorial)="learningService.completeTutorial()"
+  (skipTutorial)="learningService.skipTutorial()">
+</app-tutorial-overlay>
+
 <div class="app-layout">
   <app-sidebar></app-sidebar>
 
   <main class="app-content">
+    <app-pending-materials-reminder></app-pending-materials-reminder>
     <router-outlet></router-outlet>
   </main>
 </div>

@@ -21,6 +21,8 @@ import {CommunityContent} from './community/presentation/components/community-co
 import { RankingContent } from './ranking/presentation/components/ranking-content';
 import { Layout } from './shared/presentation/components/layout/layout';
 import { RankingHubContent } from './ranking/presentation/components/ranking-hub-content';
+import { LearningContent } from './learning/presentation/components/learning-content/learning-content';
+import { MaterialDetail } from './learning/presentation/components/material-detail/material-detail';
 export const routes: Routes = [
   {
     path: 'sign-up',
@@ -51,6 +53,16 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: ProfileContent,
+      },
+      {
+        path: 'learning',
+        component: LearningContent,
+        children: [
+          {
+            path: 'materials/:id',
+            component: MaterialDetail,
+          },
+        ],
       },
       {
         path: 'quests',

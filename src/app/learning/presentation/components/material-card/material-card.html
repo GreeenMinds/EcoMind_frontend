@@ -1,0 +1,36 @@
+<article class="material-card" (click)="selectMaterial()" role="button" tabindex="0">
+  <div class="material-card-image">
+    @if (material.imageUrl; as imageUrl) {
+      <img [src]="imageUrl" [alt]="material.title" />
+    } @else {
+      <div class="material-card-placeholder">
+        <span>{{ material.title.charAt(0) }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="material-card-body">
+    <h3 class="material-card-title">{{ material.title }}</h3>
+
+    <div class="material-card-meta">
+      <span class="material-type-badge">{{ getMaterialTypeLabel() | translate }}</span>
+      <span class="material-category-tag">{{ getCategoryLabel() | translate }}</span>
+      @if (material.durationMinutes; as duration) {
+        <span class="material-duration">{{ 'common.minutes' | translate: { count: duration } }}</span>
+      }
+    </div>
+
+    @if (material.description; as description) {
+      <p class="material-card-description">{{ description }}</p>
+    }
+  </div>
+
+  <button
+    type="button"
+    class="favorite-btn"
+    (click)="toggleFavorite($event)"
+    [attr.aria-label]="'learning.toggleFavorite' | translate"
+  >
+    ★
+  </button>
+</article>

@@ -1,0 +1,41 @@
+<header class="learning-header">
+  <h1>{{ 'learning.title' | translate }}</h1>
+</header>
+
+<nav class="learning-tabs" role="tablist">
+  <button
+    type="button"
+    role="tab"
+    [class.active]="selectedTab() === 'materials'"
+    (click)="selectedTab.set('materials')"
+  >
+    {{ 'learning.tabs.materials' | translate }}
+  </button>
+  <button
+    type="button"
+    role="tab"
+    [class.active]="selectedTab() === 'favorites'"
+    (click)="selectedTab.set('favorites')"
+  >
+    {{ 'learning.tabs.favorites' | translate }}
+  </button>
+  <button
+    type="button"
+    role="tab"
+    [class.active]="selectedTab() === 'history'"
+    (click)="selectedTab.set('history')"
+  >
+    {{ 'learning.tabs.history' | translate }}
+  </button>
+</nav>
+
+<section class="learning-content" role="tabpanel">
+  @if (selectedTab() === 'materials') {
+    <app-materials-list />
+  } @else if (selectedTab() === 'favorites') {
+    <app-favorites-section />
+  } @else if (selectedTab() === 'history') {
+    <app-learning-history-section />
+  }
+  <router-outlet />
+</section>

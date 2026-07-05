@@ -1,0 +1,24 @@
+<section>
+  <h2>{{ 'learning.favorites.title' | translate }}</h2>
+
+  @if (loading()) {
+    <p>{{ 'learning.favorites.loading' | translate }}</p>
+  } @else if (error()) {
+    <p>{{ 'learning.favorites.error' | translate }}</p>
+  } @else {
+    @if (favorites().length === 0) {
+      <p>{{ 'learning.favorites.empty' | translate }}</p>
+    } @else {
+      <div class="favorites-list">
+        @for (material of favorites(); track material.id) {
+          <div class="favorite-item">
+            <h3>{{ material.title }}</h3>
+            <span class="category">{{ material.category }}</span>
+            <span class="type-badge">{{ material.materialType }}</span>
+            <a [routerLink]="['/learning', material.id]">{{ 'learning.favorites.viewMaterial' | translate }}</a>
+          </div>
+        }
+      </div>
+    }
+  }
+</section>
