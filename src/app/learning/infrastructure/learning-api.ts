@@ -24,7 +24,10 @@ export class LearningApi extends BaseApi {
     this.tutorialEndpoint = new TutorialApiEndpoint(http);
   }
 
-  getEducationalMaterials(): Observable<EducationalMaterial[]> {
+  getEducationalMaterials(lang?: string): Observable<EducationalMaterial[]> {
+    if (lang) {
+      return this.educationalMaterialsEndpoint.getByLang(lang);
+    }
     return this.educationalMaterialsEndpoint.getAll();
   }
 

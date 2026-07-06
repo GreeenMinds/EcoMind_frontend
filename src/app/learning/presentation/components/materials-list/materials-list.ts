@@ -1,5 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LearningService } from '../../../application/learning.service';
 import { MaterialCard } from '../material-card/material-card';
 
@@ -11,6 +11,12 @@ import { MaterialCard } from '../material-card/material-card';
 })
 export class MaterialsList {
   private readonly learningService = inject(LearningService);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
+  }
 
   readonly materials = this.learningService.materials;
   readonly loading = this.learningService.loading;

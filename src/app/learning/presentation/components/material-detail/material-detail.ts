@@ -1,7 +1,7 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { LearningService } from '../../../application/learning.service';
 
@@ -13,8 +13,18 @@ import { LearningService } from '../../../application/learning.service';
 })
 export class MaterialDetail implements OnInit {
   private readonly learningService = inject(LearningService);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly langVersion = signal(0);
+
+  constructor() {
+    this.translate.onLangChange.subscribe(() => {
+      this.langVersion.update(v => v + 1);
+      this.cdr.markForCheck();
+    });
+  }
 
   readonly materialId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('id')))),

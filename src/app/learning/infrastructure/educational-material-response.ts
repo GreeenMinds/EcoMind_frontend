@@ -13,4 +13,5 @@ export type EducationalMaterialResource = BaseResource & {
   category: string;
   imageUrl: string | null;
   durationMinutes: number | null;
+  language?: string;
 };

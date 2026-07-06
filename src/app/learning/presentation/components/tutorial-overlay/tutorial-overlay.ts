@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, computed, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, computed, inject, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LearningService } from '../../../application/learning.service';
 
 @Component({
@@ -10,6 +10,12 @@ import { LearningService } from '../../../application/learning.service';
 })
 export class TutorialOverlay {
   private readonly learningService = inject(LearningService);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
+  }
 
   @Input({ required: true }) visible = false;
   @Output() nextStep = new EventEmitter<number>();

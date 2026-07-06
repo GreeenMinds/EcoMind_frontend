@@ -1,10 +1,10 @@
 <article class="material-card" (click)="selectMaterial()" role="button" tabindex="0">
   <div class="material-card-image">
-    @if (material.imageUrl; as imageUrl) {
-      <img [src]="imageUrl" [alt]="material.title" />
+    @if (imageLoaded()) {
+      <img [src]="material.imageUrl" [alt]="material.title" (error)="imageLoaded.set(false)" />
     } @else {
       <div class="material-card-placeholder">
-        <span>{{ material.title.charAt(0) }}</span>
+        <span>{{ placeholderIcon() }}</span>
       </div>
     }
   </div>

@@ -21,6 +21,14 @@ export class EducationalMaterialsApiEndpoint extends BaseApiEndpoint<
     );
   }
 
+  getByLang(lang: string): Observable<EducationalMaterial[]> {
+    const params = new HttpParams().set('lang', lang);
+    return this.http.get<EducationalMaterialResource[]>(this.endpointUrl, { params }).pipe(
+      map((resources) => resources.map((r) => this.assembler.toEntityFromResource(r))),
+      catchError(this.handleError('Failed to fetch educational materials by language')),
+    );
+  }
+
   toggleFavorite(materialId: number, userId: number): Observable<void> {
     const params = new HttpParams().set('userId', userId.toString());
     return this.http.post<void>(`${this.endpointUrl}/${materialId}/favorite`, null, { params }).pipe(

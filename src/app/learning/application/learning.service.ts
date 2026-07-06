@@ -1,5 +1,6 @@
-import { Injectable, Signal, signal, computed } from '@angular/core';
+import { Injectable, Injector, Signal, signal, computed } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 import { EducationalMaterial } from '../domain/model/educational-material.entity';
 import { MaterialReview } from '../domain/model/material-review.entity';
 import { TutorialProgress } from '../domain/model/tutorial-progress.entity';
@@ -32,18 +33,26 @@ export class LearningService {
   readonly pendingCount = this.pendingCountSignal.asReadonly();
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
+  readonly currentLang = signal<string>('en');
 
   constructor(
     private readonly learningApi: LearningApi,
     private readonly currentUser: CurrentUser,
+    private readonly translate: TranslateService,
+    private readonly injector: Injector,
   ) {
+    this.currentLang.set(this.translate.getCurrentLang() || 'en');
+    this.translate.onLangChange.subscribe((event) => {
+      this.currentLang.set(event.lang);
+      this.loadMaterials(event.lang);
+    });
     this.refreshAll();
   }
 
-  loadMaterials(): void {
+  loadMaterials(lang?: string): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.learningApi.getEducationalMaterials().subscribe({
+    this.learningApi.getEducationalMaterials(lang).subscribe({
       next: (materials) => {
         this.materialsSignal.set(materials);
         this.loadingSignal.set(false);
@@ -217,7 +226,7 @@ export class LearningService {
   }
 
   refreshAll(): void {
-    this.loadMaterials();
+    this.loadMaterials(this.currentLang());
     this.loadReviews();
     this.loadTutorialProgress();
   }

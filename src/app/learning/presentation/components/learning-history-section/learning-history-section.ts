@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, computed, inject } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LearningService } from '../../../application/learning.service';
 
 @Component({
@@ -11,6 +11,12 @@ import { LearningService } from '../../../application/learning.service';
 })
 export class LearningHistorySection {
   private readonly learningService = inject(LearningService);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
+  }
 
   readonly reviews = this.learningService.reviews;
   readonly materials = this.learningService.materials;
