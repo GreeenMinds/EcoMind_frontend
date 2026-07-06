@@ -6,7 +6,10 @@ export interface UserAchievementResponse extends BaseResponse {
 
 export interface UserAchievementResource extends BaseResource {
   id: number;
-  achievement_id: number;
-  user_id: number;
-  date: string;
+  achievementId: number;
+  userId: number;
+  achievementName: string | null;
+  achievementDescription: string | null;
+  earnedAt: string;
+  newlyUnlocked: boolean;
 }

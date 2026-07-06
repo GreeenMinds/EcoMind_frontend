@@ -11,10 +11,10 @@ export class CommunityAchievementCard {
   @Input() summary!: CommunityAchievementSummary;
 
   get title(): string {
-    return this.summary.member?.name ?? this.summary.achievement.name;
+    return this.summary.achievement.name;
   }
 
   get icon(): string {
-    return this.summary.achievement.type === 'community' ? '🏅' : '🏆';
+    return '🏅';
   }
 }

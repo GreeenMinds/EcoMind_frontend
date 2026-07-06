@@ -7,6 +7,7 @@ import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
 import { FamilyInvitation } from '../domain/model/family-invitation.entity';
 import { Notification } from '../domain/model/notification.entity';
+import { FamilyAchievement } from '../domain/model/family-achievement.entity';
 import { ProfileApi } from '../infrastructure/profile-api';
 
 @Injectable({
@@ -137,6 +138,10 @@ export class ProfileService {
 
   createFamily(family: Family): Observable<Family> {
     return this.profileApi.createFamily(family);
+  }
+
+  getFamilyAchievements(familyId: number): Observable<FamilyAchievement[]> {
+    return this.profileApi.getFamilyAchievements(familyId);
   }
 
   addFamilyMember(familyUser: FamilyUser): Observable<FamilyUser> {

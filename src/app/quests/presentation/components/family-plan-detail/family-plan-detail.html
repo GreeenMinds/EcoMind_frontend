@@ -73,7 +73,12 @@
         } @else {
           <span class="completion-copy">{{ 'quests.familyPlan.completionCopy' | translate }}</span>
         }
-        <button type="button" (click)="continueAfterCompletion()">{{ 'common.continue' | translate }}</button>
+        <button
+          type="button"
+          [disabled]="checkingAchievements()"
+          (click)="continueAfterCompletion()">
+          {{ 'common.continue' | translate }}
+        </button>
       </section>
     }
   } @else if (questsService.loading()) {
@@ -82,3 +87,10 @@
     <p class="state-text">{{ 'quests.familyPlan.notFound' | translate }}</p>
   }
 </section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

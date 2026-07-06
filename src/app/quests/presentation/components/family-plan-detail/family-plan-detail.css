@@ -250,6 +250,11 @@
   font-weight: 900;
 }
 
+.completion-celebration button:disabled {
+  opacity: 0.68;
+  cursor: wait;
+}
+
 .confetti-field {
   position: absolute;
   inset: 0;

@@ -32,5 +32,18 @@
     </button>
   }
 
-  <a class="continue-action" [routerLink]="returnUrl()">{{ 'common.continue' | translate }}</a>
+  <button
+    class="continue-action"
+    type="button"
+    [disabled]="checkingAchievements()"
+    (click)="continueAfterCompletion()">
+    {{ 'common.continue' | translate }}
+  </button>
 </section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

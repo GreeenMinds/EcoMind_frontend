@@ -1,10 +1,12 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { QuestsService } from '../../../application/quests.service';
 import { CommunityService } from '../../../../community/application/community.service';
+import { UserAchievement } from '../../../../community/domain/model/user-achievement.entity';
+import { AchievementUnlockedModal } from '../../../../shared/presentation/components/achievement-unlocked-modal/achievement-unlocked-modal';
 
 type ShareState = 'idle' | 'sharing' | 'shared' | 'error';
 
@@ -17,17 +19,22 @@ interface ShareAchievementDraft {
 
 @Component({
   selector: 'app-quest-completed-content',
-  imports: [RouterLink, TranslatePipe],
+  imports: [AchievementUnlockedModal, TranslatePipe],
   templateUrl: './quest-completed-content.html',
   styleUrl: './quest-completed-content.css',
 })
-export class QuestCompletedContent {
+export class QuestCompletedContent implements OnDestroy {
   private readonly questsService = inject(QuestsService);
   private readonly communityService = inject(CommunityService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private achievementCheckTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
 
   readonly shareState = signal<ShareState>('idle');
   readonly hasDraft = signal<boolean>(false);
+  readonly checkingAchievements = signal(true);
+  readonly achievementQueue = signal<string[]>([]);
+  readonly activeAchievementName = computed(() => this.achievementQueue()[0] ?? null);
 
   readonly imageSrc = '/assets/images/quests/activity-completed.png';
   readonly questId = toSignal(
@@ -50,6 +57,15 @@ export class QuestCompletedContent {
 
   constructor() {
     this.hasDraft.set(this.readShareDraft() !== null);
+    this.achievementCheckTimer = globalThis.setTimeout(() => {
+      this.checkNewAchievements();
+    }, 700);
+  }
+
+  ngOnDestroy(): void {
+    if (this.achievementCheckTimer !== null) {
+      globalThis.clearTimeout(this.achievementCheckTimer);
+    }
   }
 
   shareToCommunity(): void {
@@ -76,6 +92,58 @@ export class QuestCompletedContent {
           this.shareState.set('error');
         },
       });
+  }
+
+  continueAfterCompletion(): void {
+    if (this.checkingAchievements()) {
+      return;
+    }
+
+    if (this.activeAchievementName()) {
+      return;
+    }
+
+    void this.router.navigateByUrl(this.returnUrl());
+  }
+
+  continueAchievementModal(): void {
+    const [, ...remaining] = this.achievementQueue();
+    this.achievementQueue.set(remaining);
+
+    if (remaining.length === 0) {
+      void this.router.navigateByUrl(this.returnUrl());
+    }
+  }
+
+  private checkNewAchievements(): void {
+    if (this.completedExpiredQuest()) {
+      this.checkingAchievements.set(false);
+      return;
+    }
+
+    this.communityService.refreshCurrentUserAchievements().subscribe({
+      next: (achievements) => {
+        this.achievementQueue.set(
+          achievements
+            .filter((achievement) => achievement.newly_unlocked)
+            .map((achievement) => this.getAchievementName(achievement)),
+        );
+        this.checkingAchievements.set(false);
+      },
+      error: () => {
+        this.checkingAchievements.set(false);
+      },
+    });
+  }
+
+  private getAchievementName(achievement: UserAchievement): string {
+    return (
+      achievement.achievement_name ||
+      this.communityService
+        .achievements()
+        .find((item) => item.id === achievement.achievement_id)?.name ||
+      'Logro'
+    );
   }
 
   private buildShareDraft(): ShareAchievementDraft | null {

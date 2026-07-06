@@ -7,6 +7,8 @@ import {
   CommunityAchievementResource,
   CommunityAchievementResponse,
 } from './community-achievement-response';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export class CommunityAchievementsApiEndpoint extends BaseApiEndpoint<
   CommunityAchievement,
@@ -17,8 +19,15 @@ export class CommunityAchievementsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderCommunityAchievementEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityAchievementEndpointPath}`,
       new CommunityAchievementAssembler(),
+    );
+  }
+
+  getByCommunityId(communityId: number): Observable<CommunityAchievement[]> {
+    return this.http.get<CommunityAchievementResource[]>(`${this.endpointUrl}/${communityId}`).pipe(
+      map((resources) => resources.map((resource) => this.assembler.toEntityFromResource(resource))),
+      catchError(this.handleError('Failed to fetch community achievements')),
     );
   }
 }

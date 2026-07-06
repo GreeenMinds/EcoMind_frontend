@@ -73,4 +73,11 @@
       (joinFamily)="joinSelectedEventAsFamily()">
     </app-community-event-registration-modal>
   }
+
+  @if (activeAchievementName(); as achievementName) {
+    <app-achievement-unlocked-modal
+      [achievementName]="achievementName"
+      (continue)="continueAchievementModal()">
+    </app-achievement-unlocked-modal>
+  }
 </section>

@@ -60,8 +60,7 @@ export class QuestProgressService {
   updateQuestCompleted(questId: number): Observable<QuestUser | null> {
     const sessionId = this.store.getCurrentProgressSessionId(questId);
     if (sessionId !== null) {
-      this.collaborativeQuests.completeQuest(questId, sessionId);
-      return of(null);
+      return this.collaborativeQuests.completeQuest(questId, sessionId);
     }
 
     const questUser = this.store.findCurrentUserActiveQuest(questId, sessionId);
