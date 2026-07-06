@@ -5,6 +5,7 @@ export class FamilyAchievement {
   achievementName: string;
   achievementDescription: string;
   earnedAt: string;
+  newlyUnlocked: boolean;
 
   constructor() {
     this.id = 0;
@@ -13,5 +14,6 @@ export class FamilyAchievement {
     this.achievementName = '';
     this.achievementDescription = '';
     this.earnedAt = '';
+    this.newlyUnlocked = false;
   }
 }

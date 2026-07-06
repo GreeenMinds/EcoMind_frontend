@@ -59,12 +59,19 @@ strong {
 .continue-action {
   min-width: 150px;
   padding: 11px 26px;
+  border: 0;
   border-radius: 12px;
   background: #65a850;
   box-shadow: 0 5px 0 #3f7d34;
   color: #ffffff;
   font-weight: 800;
+  cursor: pointer;
   text-decoration: none;
+}
+
+.continue-action:disabled {
+  opacity: 0.68;
+  cursor: wait;
 }
 
 .continue-action:active {

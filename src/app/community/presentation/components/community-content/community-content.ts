@@ -11,6 +11,8 @@ import { CommunityEventsList } from '../community-events-list/community-events-l
 import { CommunityEventFormModal } from '../community-event-form-modal/community-event-form-modal';
 import { CommunityEventRegistrationModal } from '../community-event-registration-modal/community-event-registration-modal';
 import { CommunityPostFormModal } from '../community-post-form-modal/community-post-form-modal';
+import { AchievementUnlockedModal } from '../../../../shared/presentation/components/achievement-unlocked-modal/achievement-unlocked-modal';
+import { CommunityAchievement } from '../../../domain/model/community-achievement.entity';
 
 type CommunityTab = 'all' | 'achievements' | 'events';
 type AchievementPeriod = 'all' | 'week' | 'month';
@@ -28,6 +30,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
     CommunityEventFormModal,
     CommunityEventRegistrationModal,
     CommunityPostFormModal,
+    AchievementUnlockedModal,
     TranslatePipe,
   ],
   templateUrl: './community-content.html',
@@ -44,6 +47,8 @@ export class CommunityContent {
   readonly showPostForm = signal(false);
   readonly selectedEvent = signal<CommunityEventSummary | null>(null);
   readonly familyRegistrationWarning = signal(false);
+  readonly achievementQueue = signal<string[]>([]);
+  readonly activeAchievementName = computed(() => this.achievementQueue()[0] ?? null);
 
   readonly filteredPosts = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -89,6 +94,10 @@ export class CommunityContent {
 
   selectTab(tab: CommunityTab): void {
     this.activeTab.set(tab);
+
+    if (tab === 'achievements') {
+      this.refreshCommunityAchievements();
+    }
   }
 
   selectAchievementPeriod(period: AchievementPeriod): void {
@@ -156,5 +165,34 @@ export class CommunityContent {
 
       this.familyRegistrationWarning.set(true);
     });
+  }
+
+  continueAchievementModal(): void {
+    const [, ...remaining] = this.achievementQueue();
+    this.achievementQueue.set(remaining);
+  }
+
+  private refreshCommunityAchievements(): void {
+    this.communityService.refreshCurrentCommunityAchievements().subscribe({
+      next: (achievements) => {
+        this.achievementQueue.set(
+          this.communityService
+            .filterCommunityScopedAchievements(achievements)
+            .filter((achievement) => achievement.newly_unlocked)
+            .map((achievement) => this.getAchievementName(achievement)),
+        );
+      },
+      error: () => {},
+    });
+  }
+
+  private getAchievementName(achievement: CommunityAchievement): string {
+    return (
+      achievement.achievement_name ||
+      this.communityService
+        .achievements()
+        .find((item) => item.id === achievement.achievement_id)?.name ||
+      'Logro'
+    );
   }
 }

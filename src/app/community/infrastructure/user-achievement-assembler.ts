@@ -14,18 +14,24 @@ export class UserAchievementAssembler implements BaseAssembler<
   toEntityFromResource(resource: UserAchievementResource): UserAchievement {
     const userAchievement = new UserAchievement();
     userAchievement.id = resource.id;
-    userAchievement.achievement_id = resource.achievement_id;
-    userAchievement.user_id = resource.user_id;
-    userAchievement.date = resource.date;
+    userAchievement.achievement_id = resource.achievementId;
+    userAchievement.user_id = resource.userId;
+    userAchievement.date = resource.earnedAt;
+    userAchievement.achievement_name = resource.achievementName ?? '';
+    userAchievement.achievement_description = resource.achievementDescription ?? '';
+    userAchievement.newly_unlocked = resource.newlyUnlocked;
     return userAchievement;
   }
 
   toResourceFromEntity(entity: UserAchievement): UserAchievementResource {
     return {
       id: entity.id,
-      achievement_id: entity.achievement_id,
-      user_id: entity.user_id,
-      date: entity.date,
+      achievementId: entity.achievement_id,
+      userId: entity.user_id,
+      achievementName: entity.achievement_name,
+      achievementDescription: entity.achievement_description,
+      earnedAt: entity.date,
+      newlyUnlocked: entity.newly_unlocked,
     };
   }
 }

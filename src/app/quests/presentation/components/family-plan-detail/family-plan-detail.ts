@@ -1,26 +1,34 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { QuestsService } from '../../../application/quests.service';
+import { ProfileService } from '../../../../profile/application/profile.service';
+import { FamilyAchievement } from '../../../../profile/domain/model/family-achievement.entity';
+import { AchievementUnlockedModal } from '../../../../shared/presentation/components/achievement-unlocked-modal/achievement-unlocked-modal';
 
 @Component({
   selector: 'app-family-plan-detail',
-  imports: [RouterLink, DecimalPipe, TranslatePipe],
+  imports: [RouterLink, DecimalPipe, AchievementUnlockedModal, TranslatePipe],
   templateUrl: './family-plan-detail.html',
   styleUrl: './family-plan-detail.css',
 })
-export class FamilyPlanDetail {
+export class FamilyPlanDetail implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
+  private achievementCheckTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
   readonly questsService = inject(QuestsService);
   readonly completionCelebration = signal<{
     gems: number;
     ecopoints: number;
     showRewards: boolean;
   } | null>(null);
+  readonly checkingAchievements = signal(false);
+  readonly achievementQueue = signal<string[]>([]);
+  readonly activeAchievementName = computed(() => this.achievementQueue()[0] ?? null);
 
   readonly planId = toSignal(
     this.route.paramMap.pipe(map((params) => Number(params.get('planId')))),
@@ -70,6 +78,12 @@ export class FamilyPlanDetail {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.achievementCheckTimer !== null) {
+      globalThis.clearTimeout(this.achievementCheckTimer);
+    }
+  }
+
   getQuestTitle(questId: number): string {
     return this.questsService.getQuestById(questId)()?.title ?? `Reto #${questId}`;
   }
@@ -109,12 +123,53 @@ export class FamilyPlanDetail {
           ...rewards,
           showRewards: rewards.gems > 0 || rewards.ecopoints > 0,
         });
+        this.scheduleFamilyAchievementCheck(plan.familyId);
       },
     });
   }
 
   continueAfterCompletion(): void {
+    if (this.checkingAchievements()) {
+      return;
+    }
+
+    if (this.activeAchievementName()) {
+      return;
+    }
+
     void this.router.navigate(['/quests']);
+  }
+
+  continueAchievementModal(): void {
+    const [, ...remaining] = this.achievementQueue();
+    this.achievementQueue.set(remaining);
+
+    if (remaining.length === 0) {
+      void this.router.navigate(['/quests']);
+    }
+  }
+
+  private scheduleFamilyAchievementCheck(familyId: number): void {
+    this.checkingAchievements.set(true);
+    this.achievementCheckTimer = globalThis.setTimeout(() => {
+      this.profileService.getFamilyAchievements(familyId).subscribe({
+        next: (achievements) => {
+          this.achievementQueue.set(
+            achievements
+              .filter((achievement) => achievement.newlyUnlocked)
+              .map((achievement) => this.getAchievementName(achievement)),
+          );
+          this.checkingAchievements.set(false);
+        },
+        error: () => {
+          this.checkingAchievements.set(false);
+        },
+      });
+    }, 700);
+  }
+
+  private getAchievementName(achievement: FamilyAchievement): string {
+    return achievement.achievementName || 'Logro';
   }
 
   private calculatePendingRewards(plan: NonNullable<ReturnType<typeof this.plan>>): {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { CollaborativeQuestMember } from '../domain/model/collaborative-quest-member.entity';
 import { CollaborativeQuestSession } from '../domain/model/collaborative-quest-session.entity';
 import { QuestUser } from '../domain/model/quest-user.entity';
@@ -116,25 +116,34 @@ export class CollaborativeQuestsService {
     );
   }
 
-  completeQuest(questId: number, sessionId: number): void {
+  completeQuest(questId: number, sessionId: number): Observable<QuestUser | null> {
     const questUser = this.store.findCurrentUserActiveQuest(questId, sessionId);
     if (!questUser) {
-      return;
+      return of(null);
     }
 
-    this.withLoading(
-      this.store.questsApi.completeQuestUser(questUser.id).pipe(
-        tap((completedQuestUser) => {
-          this.store.questsUserSignal.update((questsUser) =>
-            this.store.mergeById(questsUser, [completedQuestUser]),
-          );
-          this.store.refreshCurrentUserProfile();
-          this.store.refreshFamilyPlans();
-          this.store.updateAllQuestStates();
-        }),
-        switchMap(() => this.syncCollaborativeState(questId)),
+    this.store.loadingSignal.set(true);
+    this.store.errorSignal.set(null);
+
+    return this.store.questsApi.completeQuestUser(questUser.id).pipe(
+      tap((completedQuestUser) => {
+        this.store.questsUserSignal.update((questsUser) =>
+          this.store.mergeById(questsUser, [completedQuestUser]),
+        );
+        this.store.refreshCurrentUserProfile();
+        this.store.refreshFamilyPlans();
+        this.store.updateAllQuestStates();
+      }),
+      switchMap((completedQuestUser) =>
+        this.syncCollaborativeState(questId).pipe(map(() => completedQuestUser)),
       ),
-      'Failed to complete collaborative quest',
+      catchError((error) => {
+        this.store.errorSignal.set(
+          this.store.formatError(error, 'Failed to complete collaborative quest'),
+        );
+        return EMPTY;
+      }),
+      finalize(() => this.store.loadingSignal.set(false)),
     );
   }
 

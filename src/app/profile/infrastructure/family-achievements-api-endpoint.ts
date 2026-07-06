@@ -1,4 +1,3 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -11,13 +10,14 @@ interface FamilyAchievementResource {
   achievementName: string;
   achievementDescription: string;
   earnedAt: string;
+  newlyUnlocked: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
 export class FamilyAchievementsApiEndpoint {
   private readonly baseUrl =
     `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFamilyAchievementEndpointPath}`;
-  private readonly http = inject(HttpClient);
+
+  constructor(private readonly http: HttpClient) {}
 
   getByFamilyId(familyId: number): Observable<FamilyAchievement[]> {
     return this.http.get<FamilyAchievementResource[]>(`${this.baseUrl}/${familyId}`).pipe(
@@ -30,6 +30,7 @@ export class FamilyAchievementsApiEndpoint {
           achievement.achievementName = resource.achievementName;
           achievement.achievementDescription = resource.achievementDescription;
           achievement.earnedAt = resource.earnedAt;
+          achievement.newlyUnlocked = resource.newlyUnlocked;
           return achievement;
         }),
       ),

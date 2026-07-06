@@ -14,18 +14,24 @@ export class CommunityAchievementAssembler implements BaseAssembler<
   toEntityFromResource(resource: CommunityAchievementResource): CommunityAchievement {
     const communityAchievement = new CommunityAchievement();
     communityAchievement.id = resource.id;
-    communityAchievement.community_id = resource.community_id;
-    communityAchievement.achievement_id = resource.achievement_id;
-    communityAchievement.date = resource.date;
+    communityAchievement.community_id = resource.communityId;
+    communityAchievement.achievement_id = resource.achievementId;
+    communityAchievement.date = resource.earnedAt;
+    communityAchievement.achievement_name = resource.achievementName ?? '';
+    communityAchievement.achievement_description = resource.achievementDescription ?? '';
+    communityAchievement.newly_unlocked = resource.newlyUnlocked;
     return communityAchievement;
   }
 
   toResourceFromEntity(entity: CommunityAchievement): CommunityAchievementResource {
     return {
       id: entity.id,
-      community_id: entity.community_id,
-      achievement_id: entity.achievement_id,
-      date: entity.date,
+      communityId: entity.community_id,
+      achievementId: entity.achievement_id,
+      achievementName: entity.achievement_name,
+      achievementDescription: entity.achievement_description,
+      earnedAt: entity.date,
+      newlyUnlocked: entity.newly_unlocked,
     };
   }
 }

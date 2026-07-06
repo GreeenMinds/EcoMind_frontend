@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FamilyAchievementsApiEndpoint } from '../../../infrastructure/family-achievements-api-endpoint';
 import { FamilyAchievement } from '../../../domain/model/family-achievement.entity';
+import { ProfileService } from '../../../application/profile.service';
 
 @Component({
   selector: 'app-family-achievements-section',
@@ -10,7 +10,7 @@ import { FamilyAchievement } from '../../../domain/model/family-achievement.enti
   styleUrl: './family-achievements-section.css',
 })
 export class FamilyAchievementsSection {
-  private readonly api = inject(FamilyAchievementsApiEndpoint);
+  private readonly profileService = inject(ProfileService);
   private readonly translate = inject(TranslateService);
 
   readonly familyId = input<number | null>(null);
@@ -30,7 +30,7 @@ export class FamilyAchievementsSection {
       }
 
       this.loadingSignal.set(true);
-      this.api.getByFamilyId(id).subscribe({
+      this.profileService.getFamilyAchievements(id).subscribe({
         next: (achievements) => {
           this.achievementsSignal.set(achievements);
           this.loadingSignal.set(false);

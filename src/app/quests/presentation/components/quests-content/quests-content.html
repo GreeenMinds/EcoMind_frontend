@@ -22,3 +22,10 @@
   </aside>
   }
 </section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

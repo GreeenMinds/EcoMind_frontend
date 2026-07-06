@@ -124,8 +124,16 @@ export class CommunityApi extends BaseApi {
     return this.communityAchievementsEndpoint.getAll();
   }
 
+  getCommunityAchievementsByCommunityId(communityId: number): Observable<CommunityAchievement[]> {
+    return this.communityAchievementsEndpoint.getByCommunityId(communityId);
+  }
+
   getUserAchievements(): Observable<UserAchievement[]> {
     return this.userAchievementsEndpoint.getAll();
+  }
+
+  getUserAchievementsByUserId(userId: number): Observable<UserAchievement[]> {
+    return this.userAchievementsEndpoint.getByUserId(userId);
   }
 
   getEvents(): Observable<Event[]> {

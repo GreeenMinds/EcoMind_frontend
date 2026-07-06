@@ -497,6 +497,10 @@ export class ProfileContent {
   openFamilyMember(member: FamilyMemberView): void {
     this.activeTab.set('family');
     this.selectedFamilyMemberId.set(member.user.id);
+    this.communityService
+      .refreshUserAchievements(member.user.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: () => {} });
   }
 
   closeFamilyMemberProfile(): void {
@@ -506,6 +510,10 @@ export class ProfileContent {
   openFriendProfile(friend: FriendProfileView): void {
     this.selectedFamilyMemberId.set(null);
     this.selectedFriendId.set(friend.user.id);
+    this.communityService
+      .refreshUserAchievements(friend.user.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: () => {} });
   }
 
   closeFriendProfile(): void {

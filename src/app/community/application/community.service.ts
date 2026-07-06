@@ -44,9 +44,7 @@ export interface CommunityPostReactionSummary {
 
 export interface CommunityAchievementSummary {
   achievement: Achievement;
-  communityAchievement?: CommunityAchievement;
-  userAchievement?: UserAchievement;
-  member?: CommunityMember;
+  communityAchievement: CommunityAchievement;
   date: string;
 }
 
@@ -69,6 +67,11 @@ export interface CommunityPostFormValue {
 })
 export class CommunityService {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly communityAchievementTypes = new Set([
+    'COMMUNITY_MEMBERS_COUNT',
+    'COMMUNITY_POSTS_COUNT',
+    'COMMUNITY_EVENTS_COUNT',
+  ]);
 
   private readonly communitiesSignal = signal<Community[]>([]);
   private readonly membersSignal = signal<CommunityMember[]>([]);
@@ -171,7 +174,6 @@ export class CommunityService {
 
   readonly achievementSummaries = computed<CommunityAchievementSummary[]>(() => {
     const communityId = this.currentCommunityId();
-    const realMembers = this.realMembersSignal();
     const summaries: CommunityAchievementSummary[] = [];
 
     this.communityAchievements().forEach((communityAchievement) => {
@@ -183,7 +185,7 @@ export class CommunityService {
         (item) => item.id === communityAchievement.achievement_id,
       );
 
-      if (!achievement) {
+      if (!achievement || !this.isCommunityScopedAchievement(achievement)) {
         return;
       }
 
@@ -191,31 +193,6 @@ export class CommunityService {
         achievement,
         communityAchievement,
         date: communityAchievement.date,
-      });
-    });
-
-    this.userAchievements().forEach((userAchievement) => {
-      const member =
-        realMembers.get(userAchievement.user_id) ??
-        this.members().find((item) => item.id === userAchievement.user_id);
-
-      if (communityId === null || member?.community_id !== communityId) {
-        return;
-      }
-
-      const achievement = this.achievements().find(
-        (item) => item.id === userAchievement.achievement_id,
-      );
-
-      if (!achievement) {
-        return;
-      }
-
-      summaries.push({
-        achievement,
-        userAchievement,
-        member,
-        date: userAchievement.date,
       });
     });
 
@@ -263,6 +240,53 @@ export class CommunityService {
 
   refresh(): void {
     this.loadCommunityData();
+  }
+
+  refreshCurrentUserAchievements(): Observable<UserAchievement[]> {
+    return this.refreshUserAchievements(this.currentUserId());
+  }
+
+  refreshUserAchievements(userId: number): Observable<UserAchievement[]> {
+    return this.communityApi.getUserAchievementsByUserId(userId).pipe(
+      tap((userAchievements) => {
+        this.userAchievementsSignal.update((current) =>
+          this.mergeById(
+            current.filter((achievement) => achievement.user_id !== userId),
+            userAchievements,
+          ),
+        );
+        this.loadRealMembers(userAchievements.map((achievement) => achievement.user_id));
+      }),
+    );
+  }
+
+  refreshCurrentCommunityAchievements(): Observable<CommunityAchievement[]> {
+    const communityId = this.currentCommunityId();
+
+    if (communityId === null) {
+      return of([]);
+    }
+
+    return this.communityApi.getCommunityAchievementsByCommunityId(communityId).pipe(
+      tap((communityAchievements) => {
+        this.communityAchievementsSignal.update((current) =>
+          this.mergeById(
+            current.filter((achievement) => achievement.community_id !== communityId),
+            communityAchievements,
+          ),
+        );
+      }),
+    );
+  }
+
+  filterCommunityScopedAchievements(communityAchievements: CommunityAchievement[]): CommunityAchievement[] {
+    return communityAchievements.filter((communityAchievement) => {
+      const achievement = this.achievements().find(
+        (item) => item.id === communityAchievement.achievement_id,
+      );
+
+      return achievement ? this.isCommunityScopedAchievement(achievement) : false;
+    });
   }
 
   joinEventAsIndividual(eventId: number): void {
@@ -545,7 +569,7 @@ export class CommunityService {
     this.errorSignal.set(null);
     this.loadRealMembers([this.currentUserId()]);
 
-    let pendingRequests = 13;
+    let pendingRequests = 11;
     const finishRequest = () => {
       pendingRequests -= 1;
 
@@ -611,22 +635,6 @@ export class CommunityService {
     this.loadResource(
       this.communityApi.getAchievements(),
       (achievements) => this.achievementsSignal.set(achievements),
-      finishRequest,
-    );
-    this.loadOptionalResource(
-      this.communityApi.getCommunityAchievements(),
-      [],
-      (communityAchievements) =>
-        this.communityAchievementsSignal.set(communityAchievements),
-      finishRequest,
-    );
-    this.loadOptionalResource(
-      this.communityApi.getUserAchievements(),
-      [],
-      (userAchievements) => {
-        this.userAchievementsSignal.set(userAchievements);
-        this.loadRealMembers(userAchievements.map((achievement) => achievement.user_id));
-      },
       finishRequest,
     );
     this.loadResource(
@@ -867,6 +875,17 @@ export class CommunityService {
       participants,
       status: progress >= goal.target ? 'completed' : goal.status,
     });
+  }
+
+  private isCommunityScopedAchievement(achievement: Achievement): boolean {
+    return this.communityAchievementTypes.has(achievement.type);
+  }
+
+  private mergeById<T extends { id: number }>(current: T[], incoming: T[]): T[] {
+    const merged = new Map<number, T>();
+    current.forEach((item) => merged.set(item.id, item));
+    incoming.forEach((item) => merged.set(item.id, item));
+    return Array.from(merged.values());
   }
 
   private calculateGoalStats(
