@@ -1,10 +1,11 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, retry, switchMap, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, retry, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
+import { FamilyUser } from '../../profile/domain/model/family-user.entity';
 import { ProfileApi } from '../../profile/infrastructure/profile-api';
 import { User } from '../../profile/domain/model/user.entity';
 import { Achievement } from '../domain/model/achievement.entity';
@@ -82,6 +83,7 @@ export class CommunityService {
   private readonly userAchievementsSignal = signal<UserAchievement[]>([]);
   private readonly eventsSignal = signal<Event[]>([]);
   private readonly eventRegistrationsSignal = signal<EventRegistration[]>([]);
+  private readonly familyUsersSignal = signal<FamilyUser[]>([]);
   private readonly realMembersSignal = signal<Map<number, CommunityMember>>(new Map());
 
   readonly communities = this.communitiesSignal.asReadonly();
@@ -94,6 +96,7 @@ export class CommunityService {
   readonly userAchievements = this.userAchievementsSignal.asReadonly();
   readonly events = this.eventsSignal.asReadonly();
   readonly eventRegistrations = this.eventRegistrationsSignal.asReadonly();
+  readonly familyUsers = this.familyUsersSignal.asReadonly();
 
   private readonly loadingSignal = signal<boolean>(false);
   readonly loading = this.loadingSignal.asReadonly();
@@ -109,6 +112,12 @@ export class CommunityService {
   );
 
   readonly currentCommunityId = computed(() => this.currentMember()?.community_id ?? null);
+
+  readonly currentFamilyMembership = computed(
+    () => this.familyUsers().find((membership) => membership.user_id === this.currentUserId()) ?? null,
+  );
+
+  readonly currentFamilyId = computed(() => this.currentFamilyMembership()?.family_id ?? null);
 
   readonly communityGoals = computed(() => {
     const communityId = this.currentCommunityId();
@@ -260,8 +269,28 @@ export class CommunityService {
     this.createRegistration(eventId, 'individual', null);
   }
 
-  joinEventAsFamily(eventId: number, familyId: number): void {
-    this.createRegistration(eventId, 'family', familyId);
+  joinEventAsFamily(eventId: number): Observable<boolean> {
+    const familyId = this.currentFamilyId();
+
+    if (familyId !== null) {
+      this.createRegistration(eventId, 'family', familyId);
+      return of(true);
+    }
+
+    return this.profileApi.getFamilyUsers().pipe(
+      tap((familyUsers) => this.familyUsersSignal.set(familyUsers)),
+      map(() => {
+        const refreshedFamilyId = this.currentFamilyId();
+
+        if (refreshedFamilyId === null) {
+          return false;
+        }
+
+        this.createRegistration(eventId, 'family', refreshedFamilyId);
+        return true;
+      }),
+      catchError(() => of(false)),
+    );
   }
 
   cancelEventRegistration(eventId: number): void {
@@ -516,7 +545,7 @@ export class CommunityService {
     this.errorSignal.set(null);
     this.loadRealMembers([this.currentUserId()]);
 
-    let pendingRequests = 12;
+    let pendingRequests = 13;
     const finishRequest = () => {
       pendingRequests -= 1;
 
@@ -533,6 +562,12 @@ export class CommunityService {
     this.loadResource(
       this.communityApi.getCommunityMembers(),
       (members) => this.membersSignal.set(members),
+      finishRequest,
+    );
+    this.loadOptionalResource(
+      this.profileApi.getFamilyUsers(),
+      [],
+      (familyUsers) => this.familyUsersSignal.set(familyUsers),
       finishRequest,
     );
     this.loadResource(

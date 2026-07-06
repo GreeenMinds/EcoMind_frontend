@@ -13,9 +13,17 @@
     <button class="individual" (click)="joinIndividual.emit()">
       {{ 'community.registration.individual' | translate }}
     </button>
-    <button class="family" (click)="joinFamily.emit()">
+    <button
+      class="family"
+      [attr.aria-describedby]="showFamilyWarning ? 'family-registration-warning' : null"
+      (click)="selectFamilyRegistration()">
       {{ 'community.registration.family' | translate }}
     </button>
+    @if (showFamilyWarning) {
+      <p id="family-registration-warning" class="warning">
+        {{ 'community.registration.familyRequired' | translate }}
+      </p>
+    }
     <button class="close" (click)="close.emit()">×</button>
   </section>
 </div>

@@ -295,7 +295,8 @@
       "dateAndTime": "Fecha y hora:",
       "location": "Ubicación:",
       "individual": "Individual",
-      "family": "Familia"
+      "family": "Familia",
+      "familyRequired": "Necesitas pertenecer a una familia para registrarte a este evento como familia."
     },
     "loading": "Cargando comunidad...",
     "searchPlaceholder": "Buscar en la comunidad",

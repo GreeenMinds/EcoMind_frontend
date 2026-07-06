@@ -295,7 +295,8 @@
       "dateAndTime": "Date and time:",
       "location": "Location:",
       "individual": "Individual",
-      "family": "Family"
+      "family": "Family",
+      "familyRequired": "You need to belong to a family to register for this event as a family."
     },
     "loading": "Loading community...",
     "searchPlaceholder": "Search the community",
