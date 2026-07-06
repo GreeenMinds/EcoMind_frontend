@@ -1,0 +1,56 @@
+section {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #6cab4f;
+  margin: 0 0 1.25rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.3rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 22px;
+  background: #fafafa;
+  transition: box-shadow 0.2s;
+}
+
+.history-item:hover {
+  box-shadow: 0 2px 8px rgba(116, 179, 77, 0.08);
+}
+
+.history-item h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  flex: 1;
+}
+
+.history-item .category {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: #e8f5e9;
+  color: #74b34d;
+  font-weight: 700;
+}
+
+.history-item .review-date {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+  font-weight: 500;
+}

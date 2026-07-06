@@ -2,6 +2,7 @@
   "sidebar": {
     "profile": "Profile",
     "quests": "Quests",
+    "learning": "Learn",
     "community": "Community",
     "ranking": "Ranking",
     "store": "Store",
@@ -309,6 +310,65 @@
     "goalStatus": {
       "active": "In progress",
       "completed": "Completed"
+    }
+  },
+  "learning": {
+    "title": "Learning",
+    "tabs": {
+      "materials": "Materials",
+      "favorites": "Favorites",
+      "history": "History"
+    },
+    "filters": {
+      "allCategories": "All categories",
+      "recycle": "Recycling",
+      "water": "Water",
+      "energy": "Energy",
+      "environment": "Environment",
+      "allTypes": "All types",
+      "text": "Text",
+      "video": "Video",
+      "infographic": "Infographic",
+      "viewLink": "View favorites"
+    },
+    "loading": "Loading materials...",
+    "noneFound": "No materials found",
+    "materialNotFound": "Material not found",
+    "backToMaterials": "Back to materials",
+    "duration": "{{ minutes }} min",
+    "favorites": {
+      "title": "My Favorites",
+      "empty": "You don't have any favorite materials yet",
+      "viewMaterial": "View material"
+    },
+    "history": {
+      "title": "Learning History",
+      "empty": "You haven't reviewed any materials yet",
+      "reviewedOn": "Reviewed on {{ date }}"
+    },
+    "pending": {
+      "message": "You have {{ count }} pending material(s) to review",
+      "singular": "You have 1 pending material to review",
+      "viewLink": "View favorites"
+    },
+    "tutorial": {
+      "step1Title": "Welcome to EcoMind!",
+      "step1Desc": "Let's take a quick tour to show you around.",
+      "step2Title": "Quests",
+      "step2Desc": "Complete challenges and earn rewards to help the planet.",
+      "step3Title": "Profile",
+      "step3Desc": "Track your progress, achievements, and eco-impact.",
+      "step4Title": "Community",
+      "step4Desc": "Connect with others and share your sustainable journey.",
+      "step5Title": "Store",
+      "step5Desc": "Customize your experience with cosmetics and boosters.",
+      "step6Title": "Learning",
+      "step6Desc": "Explore educational materials to learn more about sustainability.",
+      "step7Title": "You're all set!",
+      "step7Desc": "Start your journey and make a difference for our planet.",
+      "next": "Next",
+      "skip": "Skip tutorial",
+      "start": "Get started"
     }
   },
   "store": {

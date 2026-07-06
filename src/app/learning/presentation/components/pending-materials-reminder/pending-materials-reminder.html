@@ -1,0 +1,6 @@
+@if (pendingCount() > 0) {
+  <div class="pending-banner">
+    <span>{{ 'learning.pending.message' | translate: { count: pendingCount() } }}</span>
+    <a routerLink="/learning/favorites">{{ 'learning.pending.viewLink' | translate }}</a>
+  </div>
+}

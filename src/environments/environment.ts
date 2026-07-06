@@ -44,6 +44,14 @@ export const environment = {
   platformProviderGemPurchaseEndpointPath: '/gem_purchase',
   platformProviderGemMovementEndpointPath: '/gem_movement',
 
+  // Learning module endpoints
+  platformProviderEducationalMaterialEndpointPath: '/educational-materials',
+  platformProviderMaterialReviewEndpointPath: '/material-reviews',
+  platformProviderTutorialEndpointPath: '/tutorials',
+
+  // Ranking module endpoints
+  platformProviderLeaderboardEndpointPath: '/rankings',
+
   // Public keys only (safe to expose client-side). Replace with your own live/sandbox keys.
   platformProviderCulqiPublicKey: 'pk_test_Z2WRdxu0EQOGU2Ge',
   platformProviderPaypalClientId:

@@ -34,5 +34,6 @@ export class LanguageSwitcher {
   useLanguage(language: string) {
     this.translate.use(language);
     this.currentLang = language;
+    localStorage.setItem('ecomind_lang', language);
   }
 }

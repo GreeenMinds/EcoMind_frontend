@@ -1,0 +1,37 @@
+.learning-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6cab4f;
+  margin: 0 0 1.8rem;
+}
+
+.learning-tabs {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+}
+
+.learning-tabs button {
+  border: none;
+  background: #ececec;
+  border-radius: 14px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.learning-tabs button:hover {
+  background: #d4d4d4;
+}
+
+.learning-tabs button.active {
+  background: #74b34d;
+  color: #fff;
+}
+
+.learning-content {
+  min-height: 300px;
+}

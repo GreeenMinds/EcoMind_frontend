@@ -1,0 +1,70 @@
+@if (visible) {
+  <div class="tutorial-backdrop">
+    <div class="tutorial-modal">
+      <div class="step-indicator">
+        {{ currentStep() }} / {{ totalSteps }}
+      </div>
+
+      @switch (currentStep()) {
+        @case (1) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step1Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step1Desc' | translate }}</p>
+          </div>
+        }
+        @case (2) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step2Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step2Desc' | translate }}</p>
+          </div>
+        }
+        @case (3) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step3Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step3Desc' | translate }}</p>
+          </div>
+        }
+        @case (4) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step4Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step4Desc' | translate }}</p>
+          </div>
+        }
+        @case (5) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step5Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step5Desc' | translate }}</p>
+          </div>
+        }
+        @case (6) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step6Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step6Desc' | translate }}</p>
+          </div>
+        }
+        @case (7) {
+          <div class="step-content">
+            <h2>{{ 'learning.tutorial.step7Title' | translate }}</h2>
+            <p>{{ 'learning.tutorial.step7Desc' | translate }}</p>
+          </div>
+        }
+      }
+
+      <div class="tutorial-actions">
+        <button class="skip-button" (click)="onSkip()">
+          {{ 'learning.tutorial.skip' | translate }}
+        </button>
+
+        @if (isLastStep()) {
+          <button class="start-button" (click)="onStart()">
+            {{ 'learning.tutorial.start' | translate }}
+          </button>
+        } @else {
+          <button class="next-button" (click)="onNext()">
+            {{ 'learning.tutorial.next' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

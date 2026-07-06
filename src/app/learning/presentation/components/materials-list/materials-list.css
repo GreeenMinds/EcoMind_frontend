@@ -1,0 +1,55 @@
+.materials-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.3rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  border-color: #74b34d;
+  color: #74b34d;
+}
+
+.filter-btn.active {
+  background: #74b34d;
+  color: #fff;
+  border-color: #74b34d;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #888;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.error-state {
+  color: #c62828;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.3rem;
+}

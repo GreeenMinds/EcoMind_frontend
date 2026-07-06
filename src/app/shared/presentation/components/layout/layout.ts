@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -7,17 +7,21 @@ import { ProfileService } from '../../../../profile/application/profile.service'
 import { Sidebar } from '../sidebar/sidebar';
 import { MonetizationStoreService } from '../../../../monetization/application/monetization-store.service';
 import { ProfileAvatar } from '../../../../profile/presentation/components/profile-avatar/profile-avatar';
+import { LearningService } from '../../../../learning/application/learning.service';
+import { TutorialOverlay } from '../../../../learning/presentation/components/tutorial-overlay/tutorial-overlay';
+import { PendingMaterialsReminder } from '../../../../learning/presentation/components/pending-materials-reminder/pending-materials-reminder';
 
 @Component({
   selector: 'app-layout',
-  imports: [Sidebar, RouterOutlet, ProfileAvatar],
+  imports: [Sidebar, RouterOutlet, ProfileAvatar, TutorialOverlay, PendingMaterialsReminder],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
-export class Layout {
+export class Layout implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly notificationPreferences = inject(NotificationPreferencesService);
   private readonly profileService = inject(ProfileService);
+  readonly learningService = inject(LearningService);
   readonly monetizationStore = inject(MonetizationStoreService);
   readonly currentUser = this.profileService.currentUserProfile;
   readonly notificationPanelOpen = signal(false);
@@ -30,6 +34,15 @@ export class Layout {
   readonly unreadNotificationCount = computed(
     () => this.notifications().filter((notification) => !notification.is_read).length
   );
+
+  readonly showTutorial = computed(() => {
+    const progress = this.learningService.tutorialProgress();
+    return !progress || !progress.completed;
+  });
+
+  ngOnInit(): void {
+    this.learningService.refreshAll();
+  }
 
   /** URL del avatar equipado (tipo 'avatar'), o null si solo tiene iniciales */
   readonly equippedAvatarUrl = computed(() => {

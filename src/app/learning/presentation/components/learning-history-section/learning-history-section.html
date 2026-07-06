@@ -1,0 +1,23 @@
+<section>
+  <h2>{{ 'learning.history.title' | translate }}</h2>
+
+  @if (loading()) {
+    <p>{{ 'learning.history.loading' | translate }}</p>
+  } @else if (error()) {
+    <p>{{ 'learning.history.error' | translate }}</p>
+  } @else {
+    @if (reviewedMaterials().length === 0) {
+      <p>{{ 'learning.history.empty' | translate }}</p>
+    } @else {
+      <div class="history-list">
+        @for (item of reviewedMaterials(); track item.review.id) {
+          <div class="history-item">
+            <h3>{{ item.material?.title ?? ('learning.history.unknownTitle' | translate) }}</h3>
+            <span class="category">{{ item.material?.category ?? '' }}</span>
+            <span class="review-date">{{ item.review.reviewedAt | date }}</span>
+          </div>
+        }
+      </div>
+    }
+  }
+</section>

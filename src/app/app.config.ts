@@ -22,7 +22,8 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => {
       const translate = inject(TranslateService);
-      translate.use(translate.getBrowserLang() || "en");
+      const saved = localStorage.getItem('ecomind_lang');
+      translate.use(saved || translate.getBrowserLang() || 'en');
     }),
     provideAppInitializer(() => {
       const iamService = inject(IamService);
