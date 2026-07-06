@@ -116,7 +116,12 @@ export class QuestActivitiesContent {
     const detail = this.detail();
     if (!detail) return false;
 
-    return detail.status === 'READY_TO_COMPLETE';
+    return (
+      detail.status === 'READY_TO_COMPLETE' ||
+      (detail.status === 'EXPIRED' &&
+        this.isDailyQuest(detail.quest.type) &&
+        (detail.progress >= 100 || detail.activities.every((item) => item.completed)))
+    );
   });
 
   toggleActivity(activityId: number, checked: boolean): void {
@@ -134,8 +139,15 @@ export class QuestActivitiesContent {
 
     this.questProgressService.updateQuestCompleted(detail.quest.id).subscribe({
       next: () => void this.router.navigate(['/quests', detail.quest.id, 'completed'], {
-        queryParams: this.backUrl() ? { returnUrl: this.backUrl() } : undefined,
+        queryParams: {
+          ...(this.backUrl() ? { returnUrl: this.backUrl() } : {}),
+          ...(detail.status === 'EXPIRED' ? { expired: true } : {}),
+        },
       }),
     });
+  }
+
+  isDailyQuest(type: string): boolean {
+    return type.toUpperCase() === 'DAILY_QUEST';
   }
 }

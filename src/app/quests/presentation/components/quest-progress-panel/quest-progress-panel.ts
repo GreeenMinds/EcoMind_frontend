@@ -11,6 +11,7 @@ type ProgressPanelItem = {
   progress: number;
   route: (string | number)[];
   canAbandon: boolean;
+  isDailyQuest: boolean;
 };
 
 @Component({
@@ -75,7 +76,7 @@ export class QuestProgressPanel {
 
   private pickProgressQuests(quests: Quest[]): Quest[] {
     return quests.sort((a, b) => {
-      const categoryOrder = this.getCategoryOrder(a.category) - this.getCategoryOrder(b.category);
+      const categoryOrder = this.getCategoryOrder(a) - this.getCategoryOrder(b);
       return categoryOrder === 0 ? a.id - b.id : categoryOrder;
     });
   }
@@ -83,7 +84,13 @@ export class QuestProgressPanel {
   private getVisibleProgressQuests(): Quest[] {
     const activeQuests = this.questsService
       .quests()
-      .filter((quest) => quest.type !== 'FAMILY' && quest.started && !quest.completed);
+      .filter(
+        (quest) =>
+          quest.type !== 'FAMILY' &&
+          quest.started &&
+          !quest.completed &&
+          quest.status !== 'EXPIRED',
+      );
     const activeIds = new Set(activeQuests.map((quest) => quest.id));
     const pendingCollaborativeQuestIds = new Set(
       this.questsService
@@ -112,8 +119,8 @@ export class QuestProgressPanel {
     return [...activeQuests, ...pendingCollaborativeQuests];
   }
 
-  private getCategoryOrder(category: string): number {
-    if (category === 'DAILY_QUEST') {
+  private getCategoryOrder(quest: Quest): number {
+    if (quest.type.toUpperCase() === 'DAILY_QUEST') {
       return 0;
     }
     return 1;
@@ -128,12 +135,15 @@ export class QuestProgressPanel {
   }
 
   private toProgressPanelItem(quest: Quest): ProgressPanelItem {
+    const isDailyQuest = quest.type.toUpperCase() === 'DAILY_QUEST';
+
     return {
       questId: quest.id,
       label: quest.title,
       progress: Math.round(quest.progress),
       route: this.getProgressItemRoute(quest),
-      canAbandon: true,
+      canAbandon: !isDailyQuest,
+      isDailyQuest,
     };
   }
 }

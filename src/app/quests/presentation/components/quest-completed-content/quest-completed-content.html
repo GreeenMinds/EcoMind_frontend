@@ -3,10 +3,10 @@
   <img src="/assets/images/quests/complete.png" [alt]="'quests.alt.activityCompleted' | translate">
 
   @if (detail(); as detail) {
-    @if (detail.quest.reward_gems > 0) {
+    @if (!completedExpiredQuest() && detail.quest.reward_gems > 0) {
       <strong>{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</strong>
     }
-    @if (detail.quest.reward_ecopoints > 0) {
+    @if (!completedExpiredQuest() && detail.quest.reward_ecopoints > 0) {
       <strong>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</strong>
     }
   }

@@ -5,7 +5,7 @@
     <div class="progress-list">
       @for (item of progressItems(); track item.questId) {
         <div class="progress-item">
-          <div class="progress-item__head">
+          <div class="progress-item__head" [class.no-abandon]="!item.canAbandon">
             <a [routerLink]="item.route">{{ item.label }}</a>
             @if (item.canAbandon) {
               <button
@@ -19,7 +19,11 @@
             }
           </div>
           <div class="progress-track" aria-hidden="true">
-            <div class="progress-value" [style.width.%]="item.progress"></div>
+            <div
+              class="progress-value"
+              [class.daily-progress-value]="item.isDailyQuest"
+              [style.width.%]="item.progress"
+            ></div>
           </div>
         </div>
       }
@@ -42,7 +46,7 @@
     <div class="modal-progress-list">
       @for (item of allProgressItems(); track item.questId) {
         <div class="modal-progress-item">
-          <div class="progress-item__head">
+          <div class="progress-item__head" [class.no-abandon]="!item.canAbandon">
             <a [routerLink]="item.route" (click)="closeModal()">{{ item.label }}</a>
             @if (item.canAbandon) {
               <button
@@ -56,7 +60,11 @@
             }
           </div>
           <div class="progress-track" aria-hidden="true">
-            <div class="progress-value" [style.width.%]="item.progress"></div>
+            <div
+              class="progress-value"
+              [class.daily-progress-value]="item.isDailyQuest"
+              [style.width.%]="item.progress"
+            ></div>
           </div>
         </div>
       }

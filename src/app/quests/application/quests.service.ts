@@ -173,7 +173,7 @@ export class QuestsService {
           questUser.quest_id === questId &&
           questUser.user_id === this.currentUserId() &&
           questUser.collaborative_session_id === collaborativeSessionId &&
-          questUser.status !== 'COMPLETED',
+          !['COMPLETED'].includes(questUser.status),
       )
       .sort((a, b) => b.id - a.id)[0];
   }
@@ -231,7 +231,7 @@ export class QuestsService {
         (questUser) =>
           questUser.quest_id === questId &&
           questUser.user_id === this.currentUserId() &&
-          questUser.status !== 'COMPLETED',
+          !['COMPLETED'].includes(questUser.status),
       )
       .sort((a, b) => b.id - a.id)[0];
   }
@@ -510,7 +510,8 @@ export class QuestsService {
     const acceptedQuestUserIds = this.questsUser()
       .filter(
         (questUser) =>
-          questUser.collaborative_session_id === sessionId && questUser.status !== 'COMPLETED',
+          questUser.collaborative_session_id === sessionId &&
+          !['COMPLETED', 'EXPIRED'].includes(questUser.status),
       )
       .map((questUser) => questUser.id);
     let highestProgress = 0;
@@ -574,12 +575,12 @@ export class QuestsService {
 
   private loadCurrentUserQuestAssignments(): void {
     this.questsUserSignal.set([]);
-    ['IN_PROGRESS', 'READY_TO_COMPLETE', 'COMPLETED'].forEach((status) => {
+    ['IN_PROGRESS', 'READY_TO_COMPLETE', 'COMPLETED', 'EXPIRED'].forEach((status) => {
       this.questsApi.getQuestUsersByUserAndStatus(this.currentUserId(), status).subscribe({
         next: (questsUser) => {
           this.questsUserSignal.update((current) => this.mergeById(current, questsUser));
           questsUser
-            .filter((questUser) => questUser.status !== 'COMPLETED')
+            .filter((questUser) => !['COMPLETED', 'EXPIRED'].includes(questUser.status))
             .forEach((questUser) => this.loadActivityUsersByQuestUserId(questUser.id));
           this.updateAllQuestStates();
         },

@@ -30,6 +30,11 @@ export class QuestCardGrid {
 
   readonly sortedQuests = computed(() =>
     [...this.quests()].sort((a, b) => {
+      if (this.isDailyQuest(a) && this.isDailyQuest(b)) {
+        const dateDifference = this.getAssignedDateTime(b) - this.getAssignedDateTime(a);
+        return dateDifference === 0 ? b.id - a.id : dateDifference;
+      }
+
       const statusDifference = this.getStatusOrder(a) - this.getStatusOrder(b);
       return statusDifference === 0 ? a.id - b.id : statusDifference;
     }),
@@ -127,13 +132,21 @@ export class QuestCardGrid {
   }
 
   private getStatusOrder(quest: Quest): number {
-    if (quest.started && !quest.completed) {
+    if (quest.started && !quest.completed && quest.status !== 'EXPIRED') {
       return 0;
     }
     if (quest.completed) {
       return 2;
     }
     return 1;
+  }
+
+  private isDailyQuest(quest: Quest): boolean {
+    return quest.type.toUpperCase() === 'DAILY_QUEST';
+  }
+
+  private getAssignedDateTime(quest: Quest): number {
+    return quest.assignedDate ? new Date(quest.assignedDate).getTime() : 0;
   }
 
   private clampPage(page: number): number {

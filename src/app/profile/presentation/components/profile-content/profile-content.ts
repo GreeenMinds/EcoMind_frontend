@@ -1257,11 +1257,17 @@ export class ProfileContent {
 
     this.questsService.quests().forEach((quest) => {
       const record = latestRecords.get(quest.id);
+      if (!record) {
+        return;
+      }
+
       const activityCount = this.questsService
         .activities()
         .filter((activity) => activity.quest_id === quest.id).length;
 
-      if (record?.status === 'completed') {
+      const recordStatus = record?.status.toUpperCase();
+
+      if (recordStatus === 'COMPLETED') {
         completed.push({
           quest,
           progress: 100,
@@ -1274,11 +1280,11 @@ export class ProfileContent {
         return;
       }
 
-      if (record?.status !== 'in_progress') {
+      if (recordStatus === 'EXPIRED') {
         return;
       }
 
-      if (this.isQuestExpired(quest)) {
+      if (!['IN_PROGRESS', 'READY_TO_COMPLETE'].includes(recordStatus ?? '')) {
         return;
       }
 
@@ -1329,10 +1335,6 @@ export class ProfileContent {
         .map((record) => new Date(record.end_date ?? record.start_date).getTime())
         .sort((left, right) => right - left)[0] ?? 0
     );
-  }
-
-  private isQuestExpired(quest: Quest): boolean {
-    return quest.expiration_date ? new Date(quest.expiration_date).getTime() < Date.now() : false;
   }
 
   private getRoleOrder(role: string): number {
