@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, retry, switchMap, tap } from 'rxjs';
+import { catchError, Observable, of, retry, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUser } from '../../shared/application/current-user';
 import { Friend } from '../../profile/domain/model/friend.entity';
@@ -108,22 +108,29 @@ export class CommunityService {
     this.members().find((member) => member.id === this.currentUserId()),
   );
 
+  readonly currentCommunityId = computed(() => this.currentMember()?.community_id ?? null);
+
   readonly communityGoals = computed(() => {
-    const communityId = this.currentMember()?.community_id ?? this.communities()[0]?.id;
+    const communityId = this.currentCommunityId();
 
     return this.goals()
-      .filter((goal) => !communityId || goal.community_id === communityId)
+      .filter((goal) => communityId !== null && goal.community_id === communityId)
       .map((goal) => this.buildCommunityGoal(goal))
       .filter((goal) => goal.status !== 'completed');
   });
 
   readonly postSummaries = computed(() => {
+    const communityId = this.currentCommunityId();
     const realMembers = this.realMembersSignal();
+
     return this.posts()
+      .filter((post) => communityId !== null && post.community_id === communityId)
       .map((post) => ({
-      post,
-      author: realMembers.get(post.user_id) ?? this.members().find((member) => member.id === post.user_id),
-    }))
+        post,
+        author:
+          realMembers.get(post.user_id) ??
+          this.members().find((member) => member.id === post.user_id),
+      }))
       .sort((a, b) => new Date(b.post.created_at).getTime() - new Date(a.post.created_at).getTime())
       .map(({ post, author }) => ({
         post,
@@ -133,16 +140,19 @@ export class CommunityService {
       }));
   });
 
-  readonly eventSummaries = computed(() =>
-    this.events()
+  readonly eventSummaries = computed(() => {
+    const communityId = this.currentCommunityId();
+
+    return this.events()
+      .filter((event) => communityId !== null && event.community_id === communityId)
       .slice()
       .sort(
         (a, b) =>
           new Date(`${a.date}T${a.start_time}`).getTime() -
           new Date(`${b.date}T${b.start_time}`).getTime(),
       )
-      .map((event) => this.buildEventSummary(event)),
-  );
+      .map((event) => this.buildEventSummary(event));
+  });
 
   readonly joinedEvents = computed(() => this.eventSummaries().filter((summary) => summary.joined));
 
@@ -151,9 +161,15 @@ export class CommunityService {
   );
 
   readonly achievementSummaries = computed<CommunityAchievementSummary[]>(() => {
+    const communityId = this.currentCommunityId();
+    const realMembers = this.realMembersSignal();
     const summaries: CommunityAchievementSummary[] = [];
 
     this.communityAchievements().forEach((communityAchievement) => {
+      if (communityId === null || communityAchievement.community_id !== communityId) {
+        return;
+      }
+
       const achievement = this.achievements().find(
         (item) => item.id === communityAchievement.achievement_id,
       );
@@ -170,6 +186,14 @@ export class CommunityService {
     });
 
     this.userAchievements().forEach((userAchievement) => {
+      const member =
+        realMembers.get(userAchievement.user_id) ??
+        this.members().find((item) => item.id === userAchievement.user_id);
+
+      if (communityId === null || member?.community_id !== communityId) {
+        return;
+      }
+
       const achievement = this.achievements().find(
         (item) => item.id === userAchievement.achievement_id,
       );
@@ -181,7 +205,7 @@ export class CommunityService {
       summaries.push({
         achievement,
         userAchievement,
-        member: this.members().find((item) => item.id === userAchievement.user_id),
+        member,
         date: userAchievement.date,
       });
     });
@@ -281,11 +305,17 @@ export class CommunityService {
     capacity: number;
     image_url: string | null;
   }): void {
-    const currentMember = this.currentMember();
+    const communityId = this.currentCommunityId();
+
+    if (communityId === null) {
+      this.errorSignal.set('Could not create the event: community is not available');
+      return;
+    }
+
     const event = new Event();
 
     event.id = 0;
-    event.community_id = currentMember?.community_id ?? 1;
+    event.community_id = communityId;
     event.author_id = this.currentUserId();
     event.name = eventData.name;
     event.description = eventData.description;
@@ -345,11 +375,17 @@ export class CommunityService {
   }
 
   createPost(postData: CommunityPostFormValue): void {
-    const currentMember = this.currentMember();
+    const communityId = this.currentCommunityId();
+
+    if (communityId === null) {
+      this.errorSignal.set('Could not create the post: community is not available');
+      return;
+    }
+
     const post = new CommunityPost();
 
     post.id = 0;
-    post.community_id = currentMember?.community_id ?? 1;
+    post.community_id = communityId;
     post.user_id = this.currentUserId();
     post.content = postData.content;
     post.points = postData.points;
@@ -377,12 +413,17 @@ export class CommunityService {
   }
 
   shareAchievement(postData: CommunityPostFormValue): Observable<CommunityPost> {
-    const currentMember = this.currentMember();
+    const communityId = this.currentCommunityId();
+
+    if (communityId === null) {
+      return throwError(() => new Error('Could not share the achievement: community is not available'));
+    }
+
     const realPostsUrl =
       `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderCommunityPostRealEndpointPath}`;
 
     const payload = {
-      community_id: currentMember?.community_id ?? 1,
+      community_id: communityId,
       user_id: this.currentUserId(),
       content: postData.content,
       points: postData.points,
@@ -473,6 +514,7 @@ export class CommunityService {
   private loadCommunityData(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
+    this.loadRealMembers([this.currentUserId()]);
 
     let pendingRequests = 12;
     const finishRequest = () => {
@@ -546,12 +588,18 @@ export class CommunityService {
     this.loadOptionalResource(
       this.communityApi.getUserAchievements(),
       [],
-      (userAchievements) => this.userAchievementsSignal.set(userAchievements),
+      (userAchievements) => {
+        this.userAchievementsSignal.set(userAchievements);
+        this.loadRealMembers(userAchievements.map((achievement) => achievement.user_id));
+      },
       finishRequest,
     );
     this.loadResource(
       this.communityApi.getEvents().pipe(
-        tap((events) => this.eventsSignal.set(events)),
+        tap((events) => {
+          this.eventsSignal.set(events);
+          this.loadRealMembers(events.map((event) => event.author_id));
+        }),
         switchMap((events) =>
           this.communityApi.getEventRegistrationsForEvents(events.map((event) => event.id)),
         ),
@@ -749,10 +797,13 @@ export class CommunityService {
 
   private buildEventSummary(event: Event): CommunityEventSummary {
     const registration = this.findCurrentUserRegistration(event.id);
+    const realMembers = this.realMembersSignal();
 
     return {
       event,
-      author: this.members().find((member) => member.id === event.author_id),
+      author:
+        realMembers.get(event.author_id) ??
+        this.members().find((member) => member.id === event.author_id),
       registration,
       joined: registration?.status === 'active',
       canDelete: event.author_id === this.currentUserId(),
