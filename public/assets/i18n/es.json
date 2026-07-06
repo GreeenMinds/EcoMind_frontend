@@ -258,8 +258,6 @@
       "title": "Nuevo post",
       "content": "Contenido",
       "contentPlaceholder": "Comparte tu avance sostenible con la comunidad",
-      "points": "Puntos",
-      "pointsPlaceholder": "0",
       "imageUrl": "URL de imagen",
       "optional": "(opcional)",
       "create": "Crear post",

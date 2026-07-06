@@ -258,8 +258,6 @@
       "title": "New post",
       "content": "Content",
       "contentPlaceholder": "Share your sustainable progress with the community",
-      "points": "Points",
-      "pointsPlaceholder": "0",
       "imageUrl": "Image URL",
       "optional": "(optional)",
       "create": "Create post",
