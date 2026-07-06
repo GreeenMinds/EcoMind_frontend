@@ -1134,6 +1134,7 @@ export class ProfileContent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ({
+          currentUser,
           users,
           families,
           familyUsers,
@@ -1149,14 +1150,24 @@ export class ProfileContent {
           this.friends.set(friends);
           this.cosmetics.set(cosmetics);
           this.userCosmetics.set(userCosmetics);
-          this.profileLoading.set(false);
-          this.questsService.refreshFamilyContext();
+          this.communityService
+            .refreshUserAchievements(currentUser.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              complete: () => this.finishProfileContextLoad(),
+              error: () => this.finishProfileContextLoad(),
+            });
         },
         error: (error: Error) => {
           this.profileError.set(error.message || 'No se pudo cargar el perfil');
           this.profileLoading.set(false);
         },
       });
+  }
+
+  private finishProfileContextLoad(): void {
+    this.profileLoading.set(false);
+    this.questsService.refreshFamilyContext();
   }
 
   private persistUserCommitment(commitment: string | null): void {

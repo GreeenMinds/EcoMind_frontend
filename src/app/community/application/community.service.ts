@@ -627,7 +627,7 @@ export class CommunityService {
       finishRequest,
     );
     this.loadOptionalResource(
-      this.questsApi.getQuestsUser(),
+      of([] as QuestUser[]),
       [],
       (questUsers) => this.questUsersSignal.set(questUsers),
       finishRequest,
