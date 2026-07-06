@@ -16,6 +16,7 @@ export class EducationalMaterialAssembler implements BaseAssembler<EducationalMa
       materialType: resource.materialType,
       category: resource.category,
       imageUrl: resource.imageUrl,
+      videoUrl: resource.videoUrl,
       durationMinutes: resource.durationMinutes,
     });
   }
@@ -29,6 +30,7 @@ export class EducationalMaterialAssembler implements BaseAssembler<EducationalMa
       materialType: entity.materialType,
       category: entity.category,
       imageUrl: entity.imageUrl,
+      videoUrl: entity.videoUrl,
       durationMinutes: entity.durationMinutes,
     };
   }

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LearningService } from '../../../application/learning.service';
 import { MaterialCard } from '../material-card/material-card';
@@ -13,6 +14,7 @@ export class MaterialsList {
   private readonly learningService = inject(LearningService);
   private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
 
   constructor() {
     this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
@@ -44,7 +46,7 @@ export class MaterialsList {
   }
 
   onMaterialSelected(materialId: number): void {
-    this.learningService.getMaterialById(materialId);
+    this.router.navigate(['/learning', 'materials', materialId]);
   }
 
   onFavoriteToggled(materialId: number): void {

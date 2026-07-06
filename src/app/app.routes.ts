@@ -116,7 +116,7 @@ export const routes: Routes = [
       },
       {
         path: 'ranking',
-        component: RankingContent,
+        component: RankingHubContent,
       },
       {
         path: 'settings',

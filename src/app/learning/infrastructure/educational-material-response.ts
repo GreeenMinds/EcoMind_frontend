@@ -12,6 +12,7 @@ export type EducationalMaterialResource = BaseResource & {
   materialType: string;
   category: string;
   imageUrl: string | null;
+  videoUrl: string | null;
   durationMinutes: number | null;
   language?: string;
 };

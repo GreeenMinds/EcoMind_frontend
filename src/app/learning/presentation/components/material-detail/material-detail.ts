@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -17,6 +18,7 @@ export class MaterialDetail implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly langVersion = signal(0);
 
   constructor() {
@@ -34,6 +36,12 @@ export class MaterialDetail implements OnInit {
   readonly material = computed(() => {
     const id = this.materialId();
     return Number.isFinite(id) ? this.learningService.getMaterialById(id)() : undefined;
+  });
+
+  readonly safeVideoUrl = computed<SafeResourceUrl | null>(() => {
+    const m = this.material();
+    if (!m || m.materialType !== 'VIDEO' || !m.videoUrl) return null;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(m.videoUrl);
   });
 
   ngOnInit(): void {

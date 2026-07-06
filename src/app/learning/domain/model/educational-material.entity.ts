@@ -8,6 +8,7 @@ export class EducationalMaterial implements BaseEntity {
   materialType: string;
   category: string;
   imageUrl: string | null;
+  videoUrl: string | null;
   durationMinutes: number | null;
 
   constructor(data: {
@@ -18,6 +19,7 @@ export class EducationalMaterial implements BaseEntity {
     materialType: string;
     category: string;
     imageUrl: string | null;
+    videoUrl: string | null;
     durationMinutes: number | null;
   }) {
     this.id = data.id;
@@ -27,6 +29,7 @@ export class EducationalMaterial implements BaseEntity {
     this.materialType = data.materialType;
     this.category = data.category;
     this.imageUrl = data.imageUrl;
+    this.videoUrl = data.videoUrl;
     this.durationMinutes = data.durationMinutes;
   }
 }
