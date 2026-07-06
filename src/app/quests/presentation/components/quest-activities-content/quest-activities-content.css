@@ -103,6 +103,10 @@
   transition: width 360ms ease;
 }
 
+.progress-value.daily-progress-value {
+  background: #3b82f6;
+}
+
 .primary-action {
   position: relative;
   isolation: isolate;

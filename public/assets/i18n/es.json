@@ -84,10 +84,12 @@
       "IN_PROGRESS": "En progreso",
       "READY_TO_COMPLETE": "Lista para completar",
       "COMPLETED": "Completada",
+      "EXPIRED": "Vencida",
       "pending": "Pendiente",
       "in_progress": "En progreso",
       "ready_to_complete": "Lista para completar",
-      "completed": "Completada"
+      "completed": "Completada",
+      "expired": "Vencida"
     },
     "pagination": {
       "pages": "Páginas de misiones",

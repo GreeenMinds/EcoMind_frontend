@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { QuestsService } from '../../../application/quests.service';
+import { Quest } from '../../../domain/model/quest.entity';
 import { QuestCardGrid } from '../quest-card-grid/quest-card-grid';
 import { QuestCategorySelector } from '../quest-category-selector/quest-category-selector';
 
@@ -19,15 +20,12 @@ export class QuestListContent {
   readonly selectedPage = this.questsService.selectedListPage;
 
   readonly filteredQuests = computed(() =>
-    this.questsService
-      .quests()
-      .filter((quest) => quest.type !== 'FAMILY')
-      .filter((quest) => quest.category === this.selectedCategory())
-      .filter(
-        (quest) =>
-          this.selectedCategory() !== 'DAILY_QUEST' ||
-          !this.isFutureDailyQuest(quest.expiration_date),
-      ),
+    this.sortQuestsForSelectedCategory(
+      this.questsService
+        .quests()
+        .filter((quest) => quest.type !== 'FAMILY')
+        .filter((quest) => this.matchesSelectedCategory(quest)),
+    ),
   );
 
   selectCategory(category: string): void {
@@ -42,9 +40,29 @@ export class QuestListContent {
     void this.router.navigate(['/quests', questId]);
   }
 
-  private isFutureDailyQuest(expirationDate: string | null): boolean {
-    return (
-      expirationDate !== null && expirationDate.slice(0, 10) > new Date().toISOString().slice(0, 10)
+  private matchesSelectedCategory(quest: Quest): boolean {
+    if (this.selectedCategory() === 'DAILY_QUEST') {
+      return this.isDailyQuest(quest);
+    }
+
+    return quest.category === this.selectedCategory() && !this.isDailyQuest(quest);
+  }
+
+  private sortQuestsForSelectedCategory(quests: Quest[]): Quest[] {
+    if (this.selectedCategory() !== 'DAILY_QUEST') {
+      return quests;
+    }
+
+    return [...quests].sort(
+      (left, right) => this.getAssignedDateTime(right) - this.getAssignedDateTime(left),
     );
+  }
+
+  private getAssignedDateTime(quest: Quest): number {
+    return quest.assignedDate ? new Date(quest.assignedDate).getTime() : 0;
+  }
+
+  private isDailyQuest(quest: Quest): boolean {
+    return quest.type.toUpperCase() === 'DAILY_QUEST';
   }
 }

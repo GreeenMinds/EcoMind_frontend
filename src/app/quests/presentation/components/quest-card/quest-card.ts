@@ -18,6 +18,10 @@ export class QuestCard {
     this.questSelected.emit(this.quest.id);
   }
 
+  isInProgress(): boolean {
+    return this.quest.started && !this.quest.completed && this.quest.status !== 'EXPIRED';
+  }
+
   getDisplayType(): string {
     return getQuestDisplayType(this.quest.type, this.quest.theme_type);
   }

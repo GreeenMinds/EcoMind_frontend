@@ -38,6 +38,10 @@ export class QuestCompletedContent {
     this.route.queryParamMap.pipe(map((params) => params.get('returnUrl') || '/quests')),
     { initialValue: this.route.snapshot.queryParamMap.get('returnUrl') || '/quests' },
   );
+  readonly completedExpiredQuest = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('expired') === 'true')),
+    { initialValue: this.route.snapshot.queryParamMap.get('expired') === 'true' },
+  );
   readonly detail = computed(() => {
     const id = this.questId();
     const quest = Number.isFinite(id) ? this.questsService.getQuestById(id)() : undefined;
@@ -90,7 +94,7 @@ export class QuestCompletedContent {
     const quest = detail.quest;
     return {
       content: `Complete el reto "${quest.title}"`,
-      points: quest.reward_ecopoints,
+      points: this.completedExpiredQuest() ? 0 : quest.reward_ecopoints,
       image_url: quest.image_url,
       savedAt: new Date().toISOString(),
     };

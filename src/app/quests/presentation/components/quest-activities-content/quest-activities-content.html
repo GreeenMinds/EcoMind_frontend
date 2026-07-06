@@ -34,7 +34,11 @@
       <div class="quest-progress">
         <span>{{ detail.progress }}%</span>
         <div class="progress-track" aria-hidden="true">
-          <div class="progress-value" [style.width.%]="detail.progress"></div>
+          <div
+            class="progress-value"
+            [class.daily-progress-value]="isDailyQuest(detail.quest.type)"
+            [style.width.%]="detail.progress"
+          ></div>
         </div>
       </div>
     } @else {
