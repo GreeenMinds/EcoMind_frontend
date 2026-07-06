@@ -21,6 +21,10 @@ export class MultipliersTabComponent {
   readonly loading   = this.svc.loading;
   readonly error     = this.svc.error;
 
+  constructor() {
+    this.svc.refreshMultipliers();
+  }
+
   buy(summary: MultiplierSummary): void {
     this.svc.purchaseMultiplier(summary.multiplier);
   }
