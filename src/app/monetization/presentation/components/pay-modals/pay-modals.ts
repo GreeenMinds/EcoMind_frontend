@@ -121,7 +121,11 @@ export class PayModalComponent implements OnChanges {
         const script = document.createElement('script');
         script.src = 'https://checkout.culqi.com/js/v4';
         script.onload = () => resolve();
-        script.onerror = () => reject(new Error('Could not load the Culqi SDK'));
+        script.onerror = () => {
+          PayModalComponent.culqiSdkPromise = null;
+          script.remove();
+          reject(new Error('Could not load the Culqi SDK'));
+        };
         document.body.appendChild(script);
       });
     }
