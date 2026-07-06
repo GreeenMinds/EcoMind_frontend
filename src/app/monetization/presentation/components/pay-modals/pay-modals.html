@@ -19,16 +19,17 @@
       <p class="pay-label">Choose a payment method</p>
       <div class="pay-methods">
 
-        <button class="method-btn" (click)="selectMethod('culqi')">
+        <button class="method-btn" (click)="selectMethod('culqi')" [disabled]="culqiLoading">
           <span class="method-logo method-logo-card">
-            <svg viewBox="0 0 24 14" width="26" height="15" xmlns="http://www.w3.org/2000/svg">
+            <svg *ngIf="!culqiLoading" viewBox="0 0 24 14" width="26" height="15" xmlns="http://www.w3.org/2000/svg">
               <circle cx="9" cy="7" r="7" fill="#EB001B"/>
               <circle cx="15" cy="7" r="7" fill="#F79E1B" fill-opacity="0.85"/>
             </svg>
-            <span class="yape-word">yape</span>
+            <span *ngIf="!culqiLoading" class="yape-word">yape</span>
+            <span *ngIf="culqiLoading" class="method-spinner"></span>
           </span>
-          <span class="method-name">Card / Yape</span>
-          <span class="method-desc">Powered by Culqi</span>
+          <span class="method-name">{{ culqiLoading ? 'Loading...' : 'Card / Yape' }}</span>
+          <span class="method-desc">{{ culqiLoading ? 'Please wait' : 'Powered by Culqi' }}</span>
         </button>
 
         <button class="method-btn" (click)="selectMethod('paypal')">

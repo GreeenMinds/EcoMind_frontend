@@ -27,6 +27,10 @@ export class CosmeticsTabComponent {
   readonly loading      = this.svc.loading;
   readonly error        = this.svc.error;
 
+  constructor() {
+    this.svc.refreshCosmetics();
+  }
+
   buy(summary: CosmeticSummary): void {
     this.svc.purchaseCosmetic(summary.cosmetic);
   }

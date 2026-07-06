@@ -129,6 +129,20 @@ export class MonetizationStoreService {
       .subscribe((packages) => this.gemPackagesSignal.set(packages));
   }
 
+  refreshCosmetics(): void {
+    this.monetizationApi
+      .getCosmetics()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((cosmetics) => this.cosmeticsSignal.set(cosmetics));
+  }
+
+  refreshMultipliers(): void {
+    this.monetizationApi
+      .getMultipliers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((multipliers) => this.multipliersSignal.set(multipliers));
+  }
+
   private loadData(userId: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);

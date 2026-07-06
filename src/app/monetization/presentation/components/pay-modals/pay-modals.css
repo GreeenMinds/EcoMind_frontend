@@ -7,6 +7,23 @@
 .method-btn:hover {
   box-shadow: 0 6px 18px rgba(41,182,232,0.14);
 }
+.method-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.method-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(41,182,232,0.25);
+  border-top-color: #29b6e8;
+  border-radius: 50%;
+  animation: method-spin 0.7s linear infinite;
+}
+@keyframes method-spin {
+  to { transform: rotate(360deg); }
+}
 
 .method-logo {
   display: flex;

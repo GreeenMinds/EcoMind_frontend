@@ -31,6 +31,7 @@ export class PayModalComponent implements OnChanges {
 
   step: PayStep = 'method';
   errorMessage = '';
+  culqiLoading = false;
 
   private static paypalSdkPromise: Promise<void> | null = null;
   private static culqiSdkPromise: Promise<void> | null = null;
@@ -42,6 +43,7 @@ export class PayModalComponent implements OnChanges {
       this.step = 'method';
       this.paypalButtonsRendered = false;
       this.errorMessage = '';
+      this.loadCulqiSdk().catch(() => {});
     }
   }
 
@@ -61,10 +63,12 @@ export class PayModalComponent implements OnChanges {
   }
 
   private openCulqiCheckout(): void {
-    if (!this.gemPackage) return;
+    if (!this.gemPackage || this.culqiLoading) return;
 
+    this.culqiLoading = true;
     this.loadCulqiSdk()
       .then(() => {
+        this.culqiLoading = false;
         Culqi.publicKey = environment.platformProviderCulqiPublicKey;
         Culqi.settings({
           title: 'EcoMind',
@@ -86,7 +90,10 @@ export class PayModalComponent implements OnChanges {
         (window as any).culqi = () => this.handleCulqiResult();
         Culqi.open();
       })
-      .catch((err) => this.handleError(err));
+      .catch((err) => {
+        this.culqiLoading = false;
+        this.handleError(err);
+      });
   }
 
   private handleCulqiResult(): void {
