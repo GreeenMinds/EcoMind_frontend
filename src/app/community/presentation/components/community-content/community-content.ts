@@ -43,6 +43,7 @@ export class CommunityContent {
   readonly showEventForm = signal(false);
   readonly showPostForm = signal(false);
   readonly selectedEvent = signal<CommunityEventSummary | null>(null);
+  readonly familyRegistrationWarning = signal(false);
 
   readonly filteredPosts = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -112,11 +113,13 @@ export class CommunityContent {
 
   openRegistrationModal(summary: CommunityEventSummary): void {
     if (!summary.joined) {
+      this.familyRegistrationWarning.set(false);
       this.selectedEvent.set(summary);
     }
   }
 
   closeRegistrationModal(): void {
+    this.familyRegistrationWarning.set(false);
     this.selectedEvent.set(null);
   }
 
@@ -144,7 +147,14 @@ export class CommunityContent {
     const summary = this.selectedEvent();
     if (!summary) return;
 
-    this.communityService.joinEventAsFamily(summary.event.id, 1);
-    this.closeRegistrationModal();
+    this.familyRegistrationWarning.set(false);
+    this.communityService.joinEventAsFamily(summary.event.id).subscribe((joined) => {
+      if (joined) {
+        this.closeRegistrationModal();
+        return;
+      }
+
+      this.familyRegistrationWarning.set(true);
+    });
   }
 }

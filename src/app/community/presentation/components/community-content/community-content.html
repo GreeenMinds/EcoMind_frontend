@@ -67,6 +67,7 @@
   @if (selectedEvent()) {
     <app-community-event-registration-modal
       [summary]="selectedEvent()"
+      [showFamilyWarning]="familyRegistrationWarning()"
       (close)="closeRegistrationModal()"
       (joinIndividual)="joinSelectedEventAsIndividual()"
       (joinFamily)="joinSelectedEventAsFamily()">
