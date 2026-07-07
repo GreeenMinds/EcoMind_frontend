@@ -1,0 +1,25 @@
+<article class="surface-card">
+  <div class="surface-card__header">
+    <h2>{{ 'profilePage.familyAchievements.title' | translate }}</h2>
+    <span class="surface-link surface-link--static">
+      {{ 'profilePage.familyAchievements.registeredCount' | translate: { count: achievements().length } }}
+    </span>
+  </div>
+
+  @if (loading()) {
+    <p class="empty-copy">{{ 'profilePage.familyAchievements.loading' | translate }}</p>
+  } @else if (achievements().length > 0) {
+    <div class="achievement-grid">
+      @for (item of achievements(); track item.id; let index = $index) {
+        <article class="achievement-card" [attr.data-tone]="getTone(index)">
+          <div class="achievement-card__badge">★</div>
+          <h3>{{ item.achievementName }}</h3>
+          <p>{{ item.achievementDescription }}</p>
+          <span>{{ formatRelativeDate(item.earnedAt) }}</span>
+        </article>
+      }
+    </div>
+  } @else {
+    <p class="empty-copy">{{ 'profilePage.familyAchievements.empty' | translate }}</p>
+  }
+</article>

@@ -2,6 +2,7 @@
   "sidebar": {
     "profile": "Profile",
     "quests": "Quests",
+    "learning": "Learn",
     "community": "Community",
     "ranking": "Ranking",
     "store": "Store",
@@ -34,10 +35,18 @@
     "progress": "Progress",
     "progressCount": "Progress: {{ completed }} / {{ total }}",
     "emptyActivities": "This quest has no registered activities.",
-    "completeActivity": "Complete activity",
-    "activityCompleted": "Activity completed",
+    "completeActivity": "Complete mission",
+    "activityCompleted": "Mission completed",
     "startedActivity": "You started an activity!",
-    "completedActivity": "You completed the activity!",
+    "completedActivity": "You completed the mission!",
+    "share": {
+      "cta": "Share to community",
+      "sharing": "Sharing...",
+      "success": "Shared to the community!",
+      "error": "Could not share. Please try again.",
+      "retry": "Retry",
+      "draftSaved": "Saved as a draft. You can retry whenever you want."
+    },
     "activeEmpty": "No active quests yet",
     "seeMore": "See more",
     "allActive": "All active quests",
@@ -72,10 +81,16 @@
       "minigame": "Minigame"
     },
     "statuses": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "READY_TO_COMPLETE": "Ready to complete",
+      "COMPLETED": "Completed",
+      "EXPIRED": "Expired",
       "pending": "Pending",
       "in_progress": "In progress",
       "ready_to_complete": "Ready to complete",
-      "completed": "Completed"
+      "completed": "Completed",
+      "expired": "Expired"
     },
     "pagination": {
       "pages": "Quest pages",
@@ -105,12 +120,59 @@
       "remove": "Remove participant",
       "organizer": "Organizer",
       "unknownUser": "Unknown user",
+      "soloConfirmTitle": "Quests are better completed together",
+      "soloConfirmMessage": "You are about to start a collaborative quest on your own. You can continue now or invite friends to complete it together.",
+      "soloConfirmCancel": "Cancel",
+      "soloConfirmStart": "Start anyway",
       "statuses": {
+        "ACCEPTED": "Participant",
+        "PENDING": "Waiting for confirmation",
+        "REJECTED": "Declined",
+        "LEFT": "Left",
+        "REMOVED": "Removed",
         "accepted": "Participant",
         "pending": "Waiting for confirmation",
         "declined": "Declined",
         "left": "Left",
         "removed": "Removed"
+      }
+    },
+    "familyPlan": {
+      "title": "Family plan",
+      "progressTitle": "Family challenges",
+      "requiresFamily": "You need to belong to a family to create a plan.",
+      "parentOnly": "Only the parent in the family can create the plan.",
+      "searchPlaceholder": "Search family challenge",
+      "category": "Category",
+      "activityType": "Activity type",
+      "allCategories": "All",
+      "allActivityTypes": "All",
+      "loadingChallenges": "Loading challenges...",
+      "emptyChallenges": "No family challenges available.",
+      "details": "Details",
+      "added": "Added",
+      "addToPlan": "Add to plan",
+      "addedCount": "challenges added",
+      "startPlan": "Start family plan",
+      "remove": "Remove",
+      "emptyDraft": "Add at least one challenge to start the plan.",
+      "createPlan": "Create family plan",
+      "continuePlan": "Continue family plan",
+      "completedCount": "{{ completed }} of {{ total }} challenges completed",
+      "totalProgress": "Total progress",
+      "completePlan": "Complete family challenges",
+      "deletePlan": "Delete family plan",
+      "openChallenge": "Open challenge",
+      "completedLabel": "Completed",
+      "completionTitle": "You completed the family challenges",
+      "completionCopy": "The family plan has been completed.",
+      "loadingPlan": "Loading plan...",
+      "notFound": "Family plan not found.",
+      "statuses": {
+        "ACTIVE": "In progress",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled",
+        "DRAFT": "Draft"
       }
     },
     "alt": {
@@ -131,6 +193,17 @@
     "yourPosition": "Your position",
     "loading": "Loading ranking..."
   },
+  "rankingHub": {
+    "individual": "Individual",
+    "family": "Family"
+  },
+  "familyRanking": {
+    "title": "Family Ranking",
+    "subtitle": "Compete as a team with your family",
+    "yourPosition": "Your family's position",
+    "loading": "Loading family ranking...",
+    "empty": "No information available"
+  },
   "community": {
     "title": {
       "feed": "Community Feed",
@@ -143,7 +216,7 @@
       "feed": "Share progress and celebrate sustainable actions with your community.",
       "achievements": "Review the milestones your community has reached.",
       "events": "Find nearby activities and join with your family or community.",
-      "goal": "Track the progress of the current shared goal.",
+      "goal": "Track the progress of the current shared goals.",
       "nearbyEvents": "Activities available near your community."
     },
     "tabs": {
@@ -165,12 +238,26 @@
       "defaultAuthor": "EcoMind user",
       "noPoints": "- points"
     },
+    "reactions": {
+      "react": "React",
+      "count": "reactions",
+      "modalTitle": "Post reactions",
+      "close": "Close",
+      "all": "All",
+      "empty": "There are no reactions to show yet.",
+      "types": {
+        "like": "Like",
+        "funny": "Funny",
+        "love": "Love",
+        "surprise": "Surprise",
+        "sad": "Sad",
+        "angry": "Angry"
+      }
+    },
     "postForm": {
       "title": "New post",
       "content": "Content",
       "contentPlaceholder": "Share your sustainable progress with the community",
-      "points": "Points",
-      "pointsPlaceholder": "0",
       "imageUrl": "Image URL",
       "optional": "(optional)",
       "create": "Create post",
@@ -178,7 +265,11 @@
     },
     "eventCard": {
       "joinNow": "Join now",
-      "alreadyJoined": "Already joined"
+      "alreadyJoined": "Already joined",
+      "cancelRegistration": "Cancel registration",
+      "delete": "Delete",
+      "deleteEvent": "Delete event",
+      "confirmDelete": "Delete \"{{ event }}\"? This action cannot be undone."
     },
     "eventForm": {
       "title": "New Event",
@@ -202,7 +293,8 @@
       "dateAndTime": "Date and time:",
       "location": "Location:",
       "individual": "Individual",
-      "family": "Family"
+      "family": "Family",
+      "familyRequired": "You need to belong to a family to register for this event as a family."
     },
     "loading": "Loading community...",
     "searchPlaceholder": "Search the community",
@@ -211,7 +303,72 @@
     "emptyMappedEvents": "No mapped events available.",
     "mapAriaLabel": "Map of nearby community events",
     "goalProgress": "{{ progress }} of {{ target }} {{ unit }}",
-    "participants": "{{ count }} participants"
+    "participants": "{{ count }} participants",
+    "previousGoal": "Show previous goal",
+    "nextGoal": "Show next goal",
+    "goalStatus": {
+      "active": "In progress",
+      "completed": "Completed"
+    }
+  },
+  "learning": {
+    "title": "Learning",
+    "tabs": {
+      "materials": "Materials",
+      "favorites": "Favorites",
+      "history": "History"
+    },
+    "filters": {
+      "allCategories": "All categories",
+      "recycle": "Recycling",
+      "water": "Water",
+      "energy": "Energy",
+      "environment": "Environment",
+      "allTypes": "All types",
+      "text": "Text",
+      "video": "Video",
+      "infographic": "Infographic",
+      "viewLink": "View favorites"
+    },
+    "loading": "Loading materials...",
+    "noneFound": "No materials found",
+    "materialNotFound": "Material not found",
+    "backToMaterials": "Back to materials",
+    "duration": "{{ minutes }} min",
+    "favorites": {
+      "title": "My Favorites",
+      "empty": "You don't have any favorite materials yet",
+      "viewMaterial": "View material"
+    },
+    "history": {
+      "title": "Learning History",
+      "empty": "You haven't reviewed any materials yet",
+      "reviewedOn": "Reviewed on {{ date }}"
+    },
+    "pending": {
+      "message": "You have {{ count }} pending material(s) to review",
+      "singular": "You have 1 pending material to review",
+      "viewLink": "View favorites"
+    },
+    "tutorial": {
+      "step1Title": "Welcome to EcoMind!",
+      "step1Desc": "Let's take a quick tour to show you around.",
+      "step2Title": "Quests",
+      "step2Desc": "Complete challenges and earn rewards to help the planet.",
+      "step3Title": "Profile",
+      "step3Desc": "Track your progress, achievements, and eco-impact.",
+      "step4Title": "Community",
+      "step4Desc": "Connect with others and share your sustainable journey.",
+      "step5Title": "Store",
+      "step5Desc": "Customize your experience with cosmetics and boosters.",
+      "step6Title": "Learning",
+      "step6Desc": "Explore educational materials to learn more about sustainability.",
+      "step7Title": "You're all set!",
+      "step7Desc": "Start your journey and make a difference for our planet.",
+      "next": "Next",
+      "skip": "Skip tutorial",
+      "start": "Get started"
+    }
   },
   "store": {
     "title": "Ecomind Store",
@@ -254,6 +411,127 @@
       "megaBundleMultiplier": "3x Multiplier for one week"
     }
   },
+  "settings": {
+    "header": {
+      "eyebrow": "Settings",
+      "title": "Configuration"
+    },
+    "language": {
+      "eyebrow": "Language",
+      "title": "Language",
+      "description": "Choose the main language for the application."
+    },
+    "notifications": {
+      "eyebrow": "Alerts",
+      "title": "Notifications",
+      "description": "Control which alerts appear in the header bell.",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "master": {
+        "title": "General status",
+        "description": "Turn all bell notifications on or off."
+      },
+      "options": {
+        "friendship": {
+          "title": "Friendships",
+          "description": "Friend requests, responses, and relationship changes."
+        },
+        "quests": {
+          "title": "Quests",
+          "description": "Challenges, progress, due dates, and family activities."
+        },
+        "community": {
+          "title": "Community",
+          "description": "Events, posts, and feed interactions."
+        },
+        "achievements": {
+          "title": "Achievements",
+          "description": "Badges, ranking, and shared achievements."
+        },
+        "learning": {
+          "title": "Learning",
+          "description": "Educational reminders and pending materials."
+        },
+        "support": {
+          "title": "Support",
+          "description": "Ticket updates and team responses."
+        },
+        "general": {
+          "title": "General",
+          "description": "System notices and general messages."
+        }
+      },
+      "reset": "Restore preferences"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "categories": {
+        "account": "Account & Privacy",
+        "points": "Points & Rewards",
+        "community": "Community & Family"
+      },
+      "questions": {
+        "offline": {
+          "question": "Can I use the app without an internet connection?",
+          "answer": "Yes, the application is designed to work offline. You can complete challenges and read guides without a connection. Your progress will sync automatically the next time you connect to the internet."
+        },
+        "deleteAccount": {
+          "question": "Can I delete my account?",
+          "answer": "Yes, you can delete your account at any time from the 'Settings' section in your profile. Keep in mind that this action is irreversible and all your data and progress will be deleted."
+        },
+        "freeActivities": {
+          "question": "Are activities free?",
+          "answer": "Yes! All EcoMind educational activities, challenges, and main features are completely free. Our goal is to make environmental learning accessible to everyone."
+        },
+        "commitment": {
+          "question": "Can I change my environmental commitment?",
+          "answer": "Of course. You can edit or update your personal environmental commitments at any time from your profile. The important thing is to stay motivated!"
+        },
+        "morePoints": {
+          "question": "How can I earn more points?",
+          "answer": "You earn points (EcoPoints) by completing daily challenges, finishing educational activities (such as readings or videos), participating in community events, and maintaining weekly streaks."
+        },
+        "inviteFamily": {
+          "question": "How do I invite my family?",
+          "answer": "In your profile, you will find the \"My Family\" section. From there, you can create a family group and send invitations to your parents or children using their emails or usernames."
+        },
+        "rewards": {
+          "question": "How do points and rewards work?",
+          "answer": "The points you earn help you climb the ranking and unlock special badges. Rewards are virtual recognitions that celebrate your achievements and your consistency in caring for the planet."
+        }
+      }
+    },
+    "support": {
+      "eyebrow": "Technical support",
+      "title": "Contact EcoMind",
+      "description": "If you need help with your account, requests, or platform behavior, contact our team.",
+      "ariaLabel": "Technical support channels",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "imageAlt": "EcoMind technical support assistant"
+    },
+    "account": {
+      "eyebrow": "Account",
+      "title": "Access and security",
+      "description": "Close your current session or delete your EcoMind account.",
+      "closeTitle": "Close session",
+      "closeDescription": "End the current session and return to the sign-in screen.",
+      "closeSession": "Close account",
+      "deleteTitle": "Delete account",
+      "deleteDescription": "Remove this account access after confirming the action.",
+      "deleteAccount": "Delete account",
+      "modal": {
+        "title": "Are you sure you want to delete your account?",
+        "description": "This action is permanent. To confirm, type ELIMINAR exactly as shown.",
+        "confirmLabel": "Type ELIMINAR to confirm",
+        "cancel": "Cancel",
+        "confirm": "Delete account",
+        "deleting": "Deleting..."
+      }
+    }
+  },
   "profilePage": {
     "hero": {
       "eyebrow": "EcoMind Profile",
@@ -275,7 +553,8 @@
       "accept": "Accept",
       "reject": "Reject",
       "viewProfile": "View profile",
-      "remove": "Remove"
+      "remove": "Remove",
+      "cancel": "Cancel"
     },
     "summary": {
       "selfCommitment": "My commitment",
@@ -314,6 +593,7 @@
       "createFamily": "Create family",
       "adultOnlyCreate": "Only an adult user can create a family.",
       "primaryGroup": "Primary group",
+      "viewProgress": "View family progress",
       "commitmentLabel": "Family commitment",
       "noCommitment": "Your family does not have a recorded commitment yet.",
       "editCommitment": "Edit commitment",
@@ -328,11 +608,26 @@
       "membersTitle": "Family Members ({{count}})",
       "noMembers": "There are no family members associated with this profile."
     },
+    "familyAchievements": {
+      "title": "Family Achievements",
+      "registeredCount": "{{count}} registered",
+      "loading": "Loading family achievements...",
+      "empty": "No information available"
+    },
+    "familyReport": {
+      "title": "Family Progress Report",
+      "loading": "Generating report...",
+      "questsThisWeek": "Quests completed this week",
+      "completedRelative": "Completed {{ relative }}",
+      "achievementsEarned": "Achievements earned",
+      "noData": "Not enough data to generate a report this week"
+    },
     "friends": {
       "eyebrow": "Community",
       "title": "Friends network",
       "subtitle": "Registered contacts.",
       "receivedRequests": "Received requests",
+      "sentRequests": "Sent requests",
       "sendRequestTitle": "Send a friend request",
       "searchUserPlaceholder": "Search a user by name",
       "sendRequest": "Send request",

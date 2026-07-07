@@ -1,18 +1,20 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAppInitializer, inject } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
+import { IamService } from './iam/application/iam.service';
+import { iamInterceptor } from './iam/infrastructure/iam.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
 
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([iamInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({prefix: './assets/i18n/', suffix: '.json'}),
       lang: 'en',
@@ -20,7 +22,12 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => {
       const translate = inject(TranslateService);
-      translate.use(translate.getBrowserLang() || "en");
-    })
+      const saved = localStorage.getItem('ecomind_lang');
+      translate.use(saved || translate.getBrowserLang() || 'en');
+    }),
+    provideAppInitializer(() => {
+      const iamService = inject(IamService);
+      return firstValueFrom(iamService.restoreSession());
+    }),
   ]
 };

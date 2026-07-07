@@ -6,7 +6,10 @@ export interface CommunityAchievementResponse extends BaseResponse {
 
 export interface CommunityAchievementResource extends BaseResource {
   id: number;
-  community_id: number;
-  achievement_id: number;
-  date: string;
+  communityId: number;
+  achievementId: number;
+  achievementName: string | null;
+  achievementDescription: string | null;
+  earnedAt: string;
+  newlyUnlocked: boolean;
 }

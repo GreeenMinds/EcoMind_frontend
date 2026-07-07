@@ -1,0 +1,119 @@
+<section class="family-builder">
+  <header class="builder-header">
+    <a class="back-link" routerLink="/quests">
+      <span aria-hidden="true">&lsaquo;</span>
+      Volver
+    </a>
+    <span>{{ 'quests.familyPlan.title' | translate }}</span>
+  </header>
+
+  @if (!questsService.familyMembership()) {
+    <p class="state-text">{{ 'quests.familyPlan.requiresFamily' | translate }}</p>
+  } @else if (!questsService.isFamilyParent()) {
+    <p class="state-text">{{ 'quests.familyPlan.parentOnly' | translate }}</p>
+  } @else {
+    <div class="builder-layout">
+      <main class="builder-main">
+        <div class="search-toolbar">
+          <label class="search-bar">
+            <input
+              type="search"
+              [value]="searchInput()"
+              (input)="updateSearchInput($event)"
+              (keydown.enter)="applySearch()"
+              [placeholder]="'quests.familyPlan.searchPlaceholder' | translate"
+            />
+          </label>
+          <button type="button" class="search-action" (click)="applySearch()">{{ 'common.search' | translate }}</button>
+        </div>
+
+        <div class="filter-row">
+          <label>
+            <span>{{ 'quests.familyPlan.category' | translate }}</span>
+            <select [value]="selectedCategory()" (change)="updateCategory($event)">
+              @for (category of categories; track category) {
+                <option [value]="category">{{ category === 'all' ? ('quests.familyPlan.allCategories' | translate) : category }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>{{ 'quests.familyPlan.activityType' | translate }}</span>
+            <select [value]="selectedActivityType()" (change)="updateActivityType($event)">
+              @for (type of activityTypes; track type) {
+                <option [value]="type">{{ type === 'all' ? ('quests.familyPlan.allActivityTypes' | translate) : type }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        @if (questsService.loading()) {
+          <p class="state-text">{{ 'quests.familyPlan.loadingChallenges' | translate }}</p>
+        } @else if (questsService.error()) {
+          <p class="state-text error">{{ questsService.error() }}</p>
+        } @else if (familyQuests().length === 0) {
+          <p class="state-text">{{ 'quests.familyPlan.emptyChallenges' | translate }}</p>
+        } @else {
+          <div class="family-result-list">
+            @for (quest of familyQuests(); track quest.id) {
+              <article class="family-result">
+                <div class="tag-row">
+                  <span class="tag">{{ quest.category }}</span>
+                  <span class="tag">{{ quest.theme_type }}</span>
+                  <span class="tag">{{ quest.time }} min</span>
+                </div>
+                <h2>{{ quest.title }}</h2>
+                <p>{{ quest.description }}</p>
+                <div class="result-actions">
+                  <a
+                    class="result-action secondary"
+                    [routerLink]="['/quests', quest.id]"
+                    [queryParams]="{ returnUrl: '/quests/family-plans/new' }"
+                  >
+                    {{ 'quests.familyPlan.details' | translate }}
+                  </a>
+                  <button
+                    type="button"
+                    class="result-action"
+                    [disabled]="selectedQuestIds().has(quest.id)"
+                    (click)="addQuest(quest)"
+                  >
+                    {{ selectedQuestIds().has(quest.id) ? ('quests.familyPlan.added' | translate) : ('quests.familyPlan.addToPlan' | translate) }}
+                  </button>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </main>
+
+      <aside class="plan-draft-panel">
+        <div class="builder-actions">
+          <div class="selected-summary">
+            <strong>{{ selectedQuests().length }}</strong>
+            <span>{{ 'quests.familyPlan.addedCount' | translate }}</span>
+          </div>
+          <button type="button" [disabled]="!canStartPlan()" (click)="startPlan()">
+            {{ 'quests.familyPlan.startPlan' | translate }}
+          </button>
+        </div>
+
+        @if (selectedQuests().length > 0) {
+          <section class="selected-list" aria-label="Retos seleccionados">
+            @for (quest of selectedQuests(); track quest.id) {
+              <article class="selected-item">
+                <div>
+                  <strong>{{ quest.title }}</strong>
+                  <span>{{ quest.category }}</span>
+                </div>
+                <button type="button" (click)="removeQuest(quest.id)">{{ 'quests.familyPlan.remove' | translate }}</button>
+              </article>
+            }
+          </section>
+        } @else {
+          <p class="empty-draft">{{ 'quests.familyPlan.emptyDraft' | translate }}</p>
+        }
+      </aside>
+    </div>
+  }
+</section>

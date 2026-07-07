@@ -1,0 +1,150 @@
+.quest-result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 142px;
+  gap: 22px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.result-copy {
+  min-width: 0;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eeeeee;
+  color: #666666;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.tag.category {
+  background: #fff1c8;
+  color: #ba8421;
+}
+
+.tag.category.energy {
+  background: #ffe8a3;
+  color: #a96f12;
+}
+
+.tag.category.water {
+  background: #d8ecff;
+  color: #2670b8;
+}
+
+.tag.category.recycle {
+  background: #dcf6df;
+  color: #3f8b48;
+}
+
+.tag.category.daily_quest {
+  background: #ffe1db;
+  color: #bd4636;
+}
+
+.tag.reward {
+  background: #d9f4cf;
+  color: #4f9543;
+}
+
+.tag.gem-reward {
+  background: #d9ecff;
+  color: #2f7fbd;
+}
+
+.quest-result h2 {
+  margin: 0 0 8px;
+  color: #222222;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.quest-result p {
+  margin: 0 0 16px;
+  color: #555555;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.result-action {
+  display: inline-grid;
+  place-items: center;
+  min-width: 174px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 16px;
+  background: #3fa8f5;
+  box-shadow: 0 6px 0 #4b66df;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.result-action.secondary {
+  background: #72c255;
+  box-shadow: 0 6px 0 #4f9543;
+  color: #ffffff;
+}
+
+.quest-type-card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 104px;
+  border-radius: 28px;
+  background: var(--quest-bg);
+  box-shadow:
+    0 10px 16px rgba(0, 0, 0, 0.16),
+    0 10px 0 var(--quest-shadow);
+  overflow: hidden;
+}
+
+.quest-type-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 12px 0 var(--quest-top-light);
+  z-index: -1;
+}
+
+.quest-type-card img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.24));
+}
+
+@media (max-width: 860px) {
+  .quest-result {
+    grid-template-columns: 1fr;
+  }
+
+  .quest-type-card {
+    width: min(180px, 100%);
+    justify-self: center;
+  }
+}

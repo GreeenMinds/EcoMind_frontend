@@ -1,0 +1,122 @@
+<section class="auth-page">
+  <aside class="auth-brand" aria-label="EcoMind">
+    <div class="auth-logo">
+      <strong>EcoMind</strong>
+      <img src="/assets/images/plantIcon.png" alt="">
+    </div>
+    <p>Aprender a cuidar el planeta empieza contigo</p>
+  </aside>
+
+  <main class="auth-panel">
+    <header class="auth-panel__header">
+      <h1>Create account</h1>
+      <p>Join EcoMind and start building better habits for the planet.</p>
+    </header>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="auth-field">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" placeholder="Enter your name" autocomplete="name">
+        @if (shouldShowError('name', 'required')) {
+          <p class="auth-field-error">Name is required.</p>
+        } @else if (shouldShowError('name', 'minlength')) {
+          <p class="auth-field-error">Name must have at least 2 characters.</p>
+        }
+      </div>
+
+      <div class="auth-field">
+        <label for="email">Email address</label>
+        <input id="email" type="email" formControlName="email" placeholder="Enter your email" autocomplete="email">
+        @if (shouldShowError('email', 'required')) {
+          <p class="auth-field-error">Email is required.</p>
+        } @else if (shouldShowError('email', 'email')) {
+          <p class="auth-field-error">Enter a valid email address.</p>
+        }
+      </div>
+
+      <div class="auth-field">
+        <label for="communityId">Community</label>
+        <select id="communityId" formControlName="communityId">
+          <option [ngValue]="0" disabled>
+            {{ communitiesLoading() ? 'Loading communities...' : 'Choose your community' }}
+          </option>
+          @for (community of communities(); track community.id) {
+            <option [ngValue]="community.id">
+              {{ community.name }} - {{ community.location }}
+            </option>
+          }
+        </select>
+        @if (shouldShowError('communityId')) {
+          <p class="auth-field-error">Community is required.</p>
+        } @else if (communitiesError()) {
+          <p class="auth-field-error">{{ communitiesError() }}</p>
+        }
+      </div>
+
+      <div class="auth-field">
+        <label for="birthDate">Birth date</label>
+        <input id="birthDate" type="date" formControlName="birthDate" autocomplete="bday">
+        @if (shouldShowError('birthDate', 'required')) {
+          <p class="auth-field-error">Birth date is required.</p>
+        }
+      </div>
+
+      <div class="auth-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter your password" autocomplete="new-password">
+        @if (shouldShowError('password', 'required')) {
+          <p class="auth-field-error">Password is required.</p>
+        } @else if (shouldShowError('password', 'minlength')) {
+          <p class="auth-field-error">Password must have at least 6 characters.</p>
+        }
+      </div>
+
+      <div class="auth-field">
+        <label for="commitment">First commitment</label>
+        <textarea
+          id="commitment"
+          formControlName="commitment"
+          rows="4"
+          placeholder="Example: I will recycle and save water every week."></textarea>
+        @if (shouldShowError('commitment', 'maxlength')) {
+          <p class="auth-field-error">Commitment must be 1000 characters or less.</p>
+        }
+      </div>
+
+      <label class="auth-check">
+        <input type="checkbox" formControlName="terms">
+        <span>I agree to the <a class="auth-link auth-link--quiet" href="#">terms & policy</a></span>
+      </label>
+      @if (shouldShowError('terms', 'required')) {
+        <p class="auth-field-error">You must accept the terms and policy.</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="auth-status auth-status--error">{{ errorMessage() }}</p>
+      }
+
+      <button class="auth-primary" type="submit" [disabled]="isSubmitting() || communitiesLoading() || communities().length === 0">
+        {{ isSubmitting() ? 'Creating account...' : 'Sign up' }}
+      </button>
+    </form>
+
+    <div class="auth-divider">Or</div>
+
+    <div class="auth-socials">
+      <button class="auth-social" type="button" (click)="signInWithProvider('google')" [disabled]="isSubmitting()">
+        <span class="auth-social__google">G</span>
+        Sign in with Google
+      </button>
+
+      <button class="auth-social" type="button" (click)="signInWithProvider('apple')" [disabled]="isSubmitting()">
+        <span class="auth-social__apple">A</span>
+        Sign in with Apple
+      </button>
+    </div>
+
+    <p class="auth-footer">
+      Have an account?
+      <a class="auth-link" routerLink="/sign-in">Sign In</a>
+    </p>
+  </main>
+</section>

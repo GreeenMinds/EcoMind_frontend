@@ -1,31 +1,36 @@
-import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
-import {ActivityUser} from '../domain/model/activity-user.entity';
-import {ActivityUserResponse, ActivityUserResource} from './activity-user-response';
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { ActivityUser } from '../domain/model/activity-user.entity';
+import { ActivityUserResponse, ActivityUserResource } from './activity-user-response';
 
-export class ActivityUserAssembler implements BaseAssembler<ActivityUser, ActivityUserResource, ActivityUserResponse> {
+export class ActivityUserAssembler
+  implements BaseAssembler<ActivityUser, ActivityUserResource, ActivityUserResponse>
+{
   toEntitiesFromResponse(response: ActivityUserResponse): ActivityUser[] {
-    return response.activitiesUser.map((resource) => this.toEntityFromResource(resource as ActivityUserResource));
+    return response.activitiesUser.map((resource) => this.toEntityFromResource(resource));
   }
 
   toEntityFromResource(resource: ActivityUserResource): ActivityUser {
     return new ActivityUser({
       id: resource.id,
-      user_id: resource.user_id,
-      activity_id: resource.activity_id,
+      quest_user_id: resource.questUserId,
+      user_id: 0,
+      activity_id: resource.activityId,
       progress: resource.progress,
-      end_date: resource.end_date,
-      collaborative_session_id: resource.collaborative_session_id ?? null,
+      end_date: resource.endDate,
+      collaborative_session_id: resource.collaborativeSessionId ?? null,
     });
   }
 
   toResourceFromEntity(entity: ActivityUser): ActivityUserResource {
     return {
       id: entity.id,
-      user_id: entity.user_id,
-      activity_id: entity.activity_id,
+      questUserId: entity.quest_user_id,
+      activityId: entity.activity_id,
       progress: entity.progress,
-      end_date: entity.end_date,
-      collaborative_session_id: entity.collaborative_session_id,
-    } as ActivityUserResource;
+      endDate: entity.end_date,
+      activityDescription: null,
+      activityConfiguration: null,
+      collaborativeSessionId: entity.collaborative_session_id,
+    };
   }
 }

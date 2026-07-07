@@ -14,7 +14,7 @@ export class FamilyUsersApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderFamilyUserEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFamilyUserEndpointPath}`,
       new FamilyUserAssembler(),
     );
   }

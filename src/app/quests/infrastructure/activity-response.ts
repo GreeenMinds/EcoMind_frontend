@@ -6,9 +6,10 @@ export type ActivityResponse = BaseResponse & {
 
 export type ActivityResource = BaseResource & {
   id: number;
-  quest_id: number;
+  questId: number;
   description: string;
   order: number;
   type: string;
-  image_url: string | null;
+  activityConfiguration: Record<string, unknown> | null;
+  image: string | null;
 };

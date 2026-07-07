@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommunityService, CommunityEventSummary } from '../../../application/community.service';
 import { CommunitySearchBar } from '../community-search-bar/community-search-bar';
 import { CommunityTabs } from '../community-tabs/community-tabs';
@@ -11,6 +11,8 @@ import { CommunityEventsList } from '../community-events-list/community-events-l
 import { CommunityEventFormModal } from '../community-event-form-modal/community-event-form-modal';
 import { CommunityEventRegistrationModal } from '../community-event-registration-modal/community-event-registration-modal';
 import { CommunityPostFormModal } from '../community-post-form-modal/community-post-form-modal';
+import { AchievementUnlockedModal } from '../../../../shared/presentation/components/achievement-unlocked-modal/achievement-unlocked-modal';
+import { CommunityAchievement } from '../../../domain/model/community-achievement.entity';
 
 type CommunityTab = 'all' | 'achievements' | 'events';
 type AchievementPeriod = 'all' | 'week' | 'month';
@@ -28,6 +30,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
     CommunityEventFormModal,
     CommunityEventRegistrationModal,
     CommunityPostFormModal,
+    AchievementUnlockedModal,
     TranslatePipe,
   ],
   templateUrl: './community-content.html',
@@ -35,6 +38,7 @@ type AchievementPeriod = 'all' | 'week' | 'month';
 })
 export class CommunityContent {
   readonly communityService = inject(CommunityService);
+  private readonly translate = inject(TranslateService);
 
   readonly searchTerm = signal('');
   readonly activeTab = signal<CommunityTab>('all');
@@ -42,6 +46,9 @@ export class CommunityContent {
   readonly showEventForm = signal(false);
   readonly showPostForm = signal(false);
   readonly selectedEvent = signal<CommunityEventSummary | null>(null);
+  readonly familyRegistrationWarning = signal(false);
+  readonly achievementQueue = signal<string[]>([]);
+  readonly activeAchievementName = computed(() => this.achievementQueue()[0] ?? null);
 
   readonly filteredPosts = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -87,6 +94,10 @@ export class CommunityContent {
 
   selectTab(tab: CommunityTab): void {
     this.activeTab.set(tab);
+
+    if (tab === 'achievements') {
+      this.refreshCommunityAchievements();
+    }
   }
 
   selectAchievementPeriod(period: AchievementPeriod): void {
@@ -111,12 +122,26 @@ export class CommunityContent {
 
   openRegistrationModal(summary: CommunityEventSummary): void {
     if (!summary.joined) {
+      this.familyRegistrationWarning.set(false);
       this.selectedEvent.set(summary);
     }
   }
 
   closeRegistrationModal(): void {
+    this.familyRegistrationWarning.set(false);
     this.selectedEvent.set(null);
+  }
+
+  deleteEvent(summary: CommunityEventSummary): void {
+    const confirmed = window.confirm(
+      this.translate.instant('community.eventCard.confirmDelete', {
+        event: summary.event.name,
+      }),
+    );
+
+    if (confirmed) {
+      this.communityService.deleteEvent(summary.event.id);
+    }
   }
 
   joinSelectedEventAsIndividual(): void {
@@ -131,7 +156,43 @@ export class CommunityContent {
     const summary = this.selectedEvent();
     if (!summary) return;
 
-    this.communityService.joinEventAsFamily(summary.event.id, 1);
-    this.closeRegistrationModal();
+    this.familyRegistrationWarning.set(false);
+    this.communityService.joinEventAsFamily(summary.event.id).subscribe((joined) => {
+      if (joined) {
+        this.closeRegistrationModal();
+        return;
+      }
+
+      this.familyRegistrationWarning.set(true);
+    });
+  }
+
+  continueAchievementModal(): void {
+    const [, ...remaining] = this.achievementQueue();
+    this.achievementQueue.set(remaining);
+  }
+
+  private refreshCommunityAchievements(): void {
+    this.communityService.refreshCurrentCommunityAchievements().subscribe({
+      next: (achievements) => {
+        this.achievementQueue.set(
+          this.communityService
+            .filterCommunityScopedAchievements(achievements)
+            .filter((achievement) => achievement.newly_unlocked)
+            .map((achievement) => this.getAchievementName(achievement)),
+        );
+      },
+      error: () => {},
+    });
+  }
+
+  private getAchievementName(achievement: CommunityAchievement): string {
+    return (
+      achievement.achievement_name ||
+      this.communityService
+        .achievements()
+        .find((item) => item.id === achievement.achievement_id)?.name ||
+      'Logro'
+    );
   }
 }

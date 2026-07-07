@@ -18,6 +18,14 @@
     </section>
 
     <app-quest-progress-panel></app-quest-progress-panel>
+    <app-family-plan-panel></app-family-plan-panel>
   </aside>
   }
 </section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

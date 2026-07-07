@@ -1,0 +1,17 @@
+@if (shouldShow()) {
+  <section class="family-plan-card" [attr.aria-label]="'quests.familyPlan.title' | translate">
+    @if (activePlan(); as plan) {
+      <h2>{{ 'quests.familyPlan.progressTitle' | translate }}</h2>
+      <a class="plan-progress" [routerLink]="['/quests/family-plans', plan.id]">
+        <span>{{ progress() }}%</span>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-value" [style.width.%]="progress()"></div>
+        </div>
+      </a>
+    } @else if (isParent()) {
+      <button type="button" class="create-plan" (click)="createPlan()">
+        {{ draftPlan() ? ('quests.familyPlan.continuePlan' | translate) : ('quests.familyPlan.createPlan' | translate) }}
+      </button>
+    }
+  </section>
+}

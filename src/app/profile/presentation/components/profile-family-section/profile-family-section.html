@@ -70,6 +70,9 @@
       </div>
 
       <div class="family-banner__actions">
+        <button class="family-banner__cta" type="button" (click)="viewProgress.emit()">
+          {{ 'profilePage.family.viewProgress' | translate }}
+        </button>
         @if (canManageFamily) {
           <button class="family-banner__cta" type="button" (click)="editCommitment.emit()">
             {{ 'profilePage.family.editCommitment' | translate }}

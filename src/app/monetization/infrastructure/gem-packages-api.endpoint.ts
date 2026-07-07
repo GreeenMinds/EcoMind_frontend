@@ -23,7 +23,7 @@ export class GemPackagesApiEndpoint extends BaseApiEndpoint<
   constructor() {
     super(
       inject(HttpClient),
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderGemPackageEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderGemPackageEndpointPath}`,
       new GemPackageAssembler(),
     );
   }

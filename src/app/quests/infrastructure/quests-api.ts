@@ -5,19 +5,32 @@ import { QuestsApiEndpoint } from './quests-api-endpoint';
 import { QuestUser } from '../domain/model/quest-user.entity';
 import { QuestsUserApiEndpoint } from './quests-user-api-endpoint';
 import { MinigameAttempt } from '../domain/model/minigame-attempt.entity';
-import { MinigameAttemptsApiEndpoint } from './minigame-attempts-api-endpoint';
+import { CreateMinigameAttemptPayload, FinishMinigameAttemptPayload, MinigameAttemptsApiEndpoint} from './minigame-attempts-api-endpoint';
 import { Minigame } from '../domain/model/minigame.entity';
 import { MinigamesApiEndpoint } from './minigames-api-endpoint';
 import { Activity } from '../domain/model/activity.entity';
 import { ActivitiesApiEndpoint } from './activities-api-endpoint';
 import { ActivityUser } from '../domain/model/activity-user.entity';
-import { ActivitiesUserApiEndpoint } from './activities-user-api-endpoint';
+import { ActivitiesUserApiEndpoint, SubmitActivityUserPayload } from './activities-user-api-endpoint';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CollaborativeQuestSession } from '../domain/model/collaborative-quest-session.entity';
 import { CollaborativeQuestMember } from '../domain/model/collaborative-quest-member.entity';
 import { CollaborativeQuestSessionsApiEndpoint } from './collaborative-quest-sessions-api-endpoint';
 import { CollaborativeQuestMembersApiEndpoint } from './collaborative-quest-members-api-endpoint';
+import { QuestSearchFilters } from './quest-search-filters';
+import {
+  CollaborativeQuestCountersResource,
+  CollaborativeQuestPermissionsResource,
+  CreateCollaborativeQuestSessionPayload,
+} from './collaborative-quest-session-response';
+import { InviteCollaborativeQuestMemberPayload } from './collaborative-quest-member-response';
+import { FamilyPlan } from '../domain/model/family-plan.entity';
+import {
+  CreateFamilyPlanPayload,
+  UpdateFamilyPlanPayload,
+} from './family-plan-response';
+import { FamilyPlansApiEndpoint } from './family-plans-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +44,7 @@ export class QuestsApi extends BaseApi {
   private readonly activitiesUserEndpoint: ActivitiesUserApiEndpoint;
   private readonly collaborativeSessionsEndpoint: CollaborativeQuestSessionsApiEndpoint;
   private readonly collaborativeMembersEndpoint: CollaborativeQuestMembersApiEndpoint;
+  private readonly familyPlansEndpoint: FamilyPlansApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -42,6 +56,7 @@ export class QuestsApi extends BaseApi {
     this.activitiesUserEndpoint = new ActivitiesUserApiEndpoint(http);
     this.collaborativeSessionsEndpoint = new CollaborativeQuestSessionsApiEndpoint(http);
     this.collaborativeMembersEndpoint = new CollaborativeQuestMembersApiEndpoint(http);
+    this.familyPlansEndpoint = new FamilyPlansApiEndpoint(http);
   }
 
   //get all quests
@@ -49,8 +64,20 @@ export class QuestsApi extends BaseApi {
     return this.questsEndpoint.getAll();
   }
 
+  searchQuests(filters: QuestSearchFilters): Observable<Quest[]> {
+    return this.questsEndpoint.search(filters);
+  }
+
   getQuestsUser(): Observable<QuestUser[]> {
     return this.questsUserEndpoint.getAll();
+  }
+
+  getQuestUserByUserAndQuest(userId: number, questId: number): Observable<QuestUser> {
+    return this.questsUserEndpoint.getByUserAndQuest(userId, questId);
+  }
+
+  getQuestUsersByUserAndStatus(userId: number, status: string): Observable<QuestUser[]> {
+    return this.questsUserEndpoint.getByUserAndStatus(userId, status);
   }
 
   createQuestUser(questUser: QuestUser): Observable<QuestUser> {
@@ -59,6 +86,10 @@ export class QuestsApi extends BaseApi {
 
   updateQuestUser(questUser: QuestUser): Observable<QuestUser> {
     return this.questsUserEndpoint.update(questUser, questUser.id);
+  }
+
+  completeQuestUser(questUserId: number): Observable<QuestUser> {
+    return this.questsUserEndpoint.complete(questUserId);
   }
 
   deleteQuestUser(id: number): Observable<void> {
@@ -73,16 +104,46 @@ export class QuestsApi extends BaseApi {
     return this.minigameAttemptsEndpoint.getAll();
   }
 
-  deleteMinigameAttempt(id: number): Observable<void> {
-    return this.minigameAttemptsEndpoint.delete(id);
+  getMinigameAttemptsByUserAndMinigame(
+    userId: number,
+    minigameId: number,
+  ): Observable<MinigameAttempt[]> {
+    return this.minigameAttemptsEndpoint.getByUserAndMinigame(userId, minigameId);
+  }
+
+  createMinigameAttempt(payload: CreateMinigameAttemptPayload): Observable<MinigameAttempt> {
+    return this.minigameAttemptsEndpoint.createAttempt(payload);
+  }
+
+  finishMinigameAttempt(
+    attemptId: number,
+    payload: FinishMinigameAttemptPayload,
+  ): Observable<MinigameAttempt> {
+    return this.minigameAttemptsEndpoint.finishAttempt(attemptId, payload);
+  }
+
+  cancelMinigameAttempt(attemptId: number): Observable<MinigameAttempt> {
+    return this.minigameAttemptsEndpoint.cancelAttempt(attemptId);
+  }
+
+  deleteMinigameAttempt(id: number): Observable<MinigameAttempt> {
+    return this.cancelMinigameAttempt(id);
   }
 
   getActivities(): Observable<Activity[]> {
     return this.activitiesEndpoint.getAll();
   }
 
+  getActivitiesByQuestId(questId: number): Observable<Activity[]> {
+    return this.activitiesEndpoint.getByQuestId(questId);
+  }
+
   getActivitiesUser(): Observable<ActivityUser[]> {
     return this.activitiesUserEndpoint.getAll();
+  }
+
+  getActivityUsersByQuestUserId(questUserId: number): Observable<ActivityUser[]> {
+    return this.activitiesUserEndpoint.getByQuestUserId(questUserId);
   }
 
   createActivityUser(activityUser: ActivityUser): Observable<ActivityUser> {
@@ -91,6 +152,13 @@ export class QuestsApi extends BaseApi {
 
   updateActivityUser(activityUser: ActivityUser): Observable<ActivityUser> {
     return this.activitiesUserEndpoint.update(activityUser, activityUser.id);
+  }
+
+  submitActivityUser(
+    activityUserId: number,
+    payload: SubmitActivityUserPayload,
+  ): Observable<ActivityUser> {
+    return this.activitiesUserEndpoint.submit(activityUserId, payload);
   }
 
   deleteActivityUser(id: number): Observable<void> {
@@ -102,15 +170,38 @@ export class QuestsApi extends BaseApi {
   }
 
   createCollaborativeQuestSession(
-    session: CollaborativeQuestSession,
+    payload: CreateCollaborativeQuestSessionPayload,
   ): Observable<CollaborativeQuestSession> {
-    return this.collaborativeSessionsEndpoint.create(session);
+    return this.collaborativeSessionsEndpoint.createSession(payload);
   }
 
-  updateCollaborativeQuestSession(
-    session: CollaborativeQuestSession,
+  startCollaborativeQuestSession(
+    sessionId: number,
+    ownerUserId: number,
   ): Observable<CollaborativeQuestSession> {
-    return this.collaborativeSessionsEndpoint.update(session, session.id);
+    return this.collaborativeSessionsEndpoint.startSession(sessionId, ownerUserId);
+  }
+
+  deletePendingCollaborativeQuestSession(
+    sessionId: number,
+    ownerUserId: number,
+  ): Observable<void> {
+    return this.collaborativeSessionsEndpoint.deletePendingSession(sessionId, ownerUserId);
+  }
+
+  getCollaborativeQuestState(
+    questId: number,
+    userId: number,
+  ): Observable<{
+    session: CollaborativeQuestSession | null;
+    members: CollaborativeQuestMember[];
+    currentMember: CollaborativeQuestMember | null;
+    pendingInvitation: CollaborativeQuestMember | null;
+    permissions: CollaborativeQuestPermissionsResource;
+    counters: CollaborativeQuestCountersResource;
+    unavailableUserIds: number[];
+  }> {
+    return this.collaborativeSessionsEndpoint.getState(questId, userId);
   }
 
   getCollaborativeQuestMembers(): Observable<CollaborativeQuestMember[]> {
@@ -118,14 +209,62 @@ export class QuestsApi extends BaseApi {
   }
 
   createCollaborativeQuestMember(
-    member: CollaborativeQuestMember,
+    payload: InviteCollaborativeQuestMemberPayload,
   ): Observable<CollaborativeQuestMember> {
-    return this.collaborativeMembersEndpoint.create(member);
+    return this.collaborativeMembersEndpoint.invite(payload);
   }
 
-  updateCollaborativeQuestMember(
-    member: CollaborativeQuestMember,
+  acceptCollaborativeQuestMember(memberId: number): Observable<CollaborativeQuestMember> {
+    return this.collaborativeMembersEndpoint.accept(memberId);
+  }
+
+  declineCollaborativeQuestMember(memberId: number): Observable<CollaborativeQuestMember> {
+    return this.collaborativeMembersEndpoint.decline(memberId);
+  }
+
+  leaveCollaborativeQuestMember(memberId: number): Observable<CollaborativeQuestMember> {
+    return this.collaborativeMembersEndpoint.leave(memberId);
+  }
+
+  removeCollaborativeQuestMember(
+    memberId: number,
+    ownerUserId: number,
   ): Observable<CollaborativeQuestMember> {
-    return this.collaborativeMembersEndpoint.update(member, member.id);
+    return this.collaborativeMembersEndpoint.remove(memberId, ownerUserId);
+  }
+
+  getFamilyPlansByFamilyId(familyId: number): Observable<FamilyPlan[]> {
+    return this.familyPlansEndpoint.getByFamilyId(familyId);
+  }
+
+  getActiveFamilyPlan(familyId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.getActiveByFamilyId(familyId);
+  }
+
+  getFamilyPlanById(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.getById(familyPlanId);
+  }
+
+  createFamilyPlan(payload: CreateFamilyPlanPayload): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.create(payload);
+  }
+
+  updateFamilyPlan(
+    familyPlanId: number,
+    payload: UpdateFamilyPlanPayload,
+  ): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.update(familyPlanId, payload);
+  }
+
+  activateFamilyPlan(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.activate(familyPlanId);
+  }
+
+  completeFamilyPlan(familyPlanId: number, ownerUserId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.complete(familyPlanId, ownerUserId);
+  }
+
+  deleteFamilyPlan(familyPlanId: number): Observable<FamilyPlan> {
+    return this.familyPlansEndpoint.delete(familyPlanId);
   }
 }

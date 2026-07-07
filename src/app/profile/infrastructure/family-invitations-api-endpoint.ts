@@ -17,7 +17,7 @@ export class FamilyInvitationsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderFamilyInvitationEndpointPath}`,
+      `${environment.platformProviderBackendApiBaseUrl}${environment.platformProviderFamilyInvitationEndpointPath}`,
       new FamilyInvitationAssembler(),
     );
   }

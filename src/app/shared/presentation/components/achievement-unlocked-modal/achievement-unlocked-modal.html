@@ -1,0 +1,22 @@
+<div class="achievement-modal-backdrop" aria-hidden="true"></div>
+
+<section class="achievement-modal" role="dialog" aria-modal="true" aria-label="Nuevo logro obtenido">
+  <div class="confetti-field" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="achievement-badge" aria-hidden="true">★</div>
+  <p class="achievement-kicker">¡Nuevo logro obtenido!</p>
+  <h2>{{ achievementName }}</h2>
+
+  <button type="button" class="achievement-continue" (click)="continue.emit()">
+    Continuar
+  </button>
+</section>

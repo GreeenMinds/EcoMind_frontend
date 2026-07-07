@@ -3,13 +3,47 @@
   <img src="/assets/images/quests/complete.png" [alt]="'quests.alt.activityCompleted' | translate">
 
   @if (detail(); as detail) {
-    @if (detail.quest.reward_gems > 0) {
+    @if (!completedExpiredQuest() && detail.quest.reward_gems > 0) {
       <strong>{{ 'common.gems' | translate: {count: detail.quest.reward_gems} }}</strong>
     }
-    @if (detail.quest.reward_ecopoints > 0) {
+    @if (!completedExpiredQuest() && detail.quest.reward_ecopoints > 0) {
       <strong>{{ 'common.ecoPoints' | translate: {count: detail.quest.reward_ecopoints} }}</strong>
     }
   }
 
-  <a class="continue-action" routerLink="/quests">{{ 'common.continue' | translate }}</a>
+  @if (shareState() === 'shared') {
+    <p class="share-status share-status--success">{{ 'quests.share.success' | translate }}</p>
+  } @else if (shareState() === 'error' || hasDraft()) {
+    <p class="share-status share-status--error">{{ 'quests.share.draftSaved' | translate }}</p>
+    <button
+      class="share-action"
+      type="button"
+      [disabled]="shareState() === 'sharing'"
+      (click)="shareToCommunity()">
+      {{ shareState() === 'sharing' ? ('quests.share.sharing' | translate) : ('quests.share.retry' | translate) }}
+    </button>
+  } @else {
+    <button
+      class="share-action"
+      type="button"
+      [disabled]="shareState() === 'sharing'"
+      (click)="shareToCommunity()">
+      {{ shareState() === 'sharing' ? ('quests.share.sharing' | translate) : ('quests.share.cta' | translate) }}
+    </button>
+  }
+
+  <button
+    class="continue-action"
+    type="button"
+    [disabled]="checkingAchievements()"
+    (click)="continueAfterCompletion()">
+    {{ 'common.continue' | translate }}
+  </button>
 </section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

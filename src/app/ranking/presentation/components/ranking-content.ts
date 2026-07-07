@@ -20,13 +20,10 @@ export class RankingContent implements OnInit {
   private translate = inject(TranslateService);
 
   readonly rankingData = this.rankingService.rankingData;
-  readonly currentDate = this.rankingService.currentDate;
   readonly loading = this.rankingService.loading;
   readonly activeRankingId = signal(1);
 
   readonly entries = computed(() => this.rankingData().get(this.activeRankingId()) ?? []);
-
-  readonly rankingTypes = this.rankingService.rankings;
 
   readonly TITLE_KEYS: Record<number, string> = {
     1: 'ranking.title.global',
@@ -35,15 +32,12 @@ export class RankingContent implements OnInit {
   };
 
   readonly dateRangeText = computed(() => {
-    const now = this.currentDate();
-    if (!now) return '';
     const locale = this.translate.currentLang || 'en';
-    return this.timeApi.formatDateRange(now, this.activeRankingId(), locale);
+    return this.timeApi.formatDateRange(new Date(), this.activeRankingId(), locale);
   });
 
   ngOnInit(): void {
     this.rankingService.loadAllRankings();
-    this.rankingService.loadRankingTypes();
   }
 
   prev(): void {

@@ -86,6 +86,8 @@ class ProfileServiceStub {
   readonly createFriendCalls: Friend[] = [];
   readonly createFamilyInvitationCalls: FamilyInvitation[] = [];
   readonly updateFriendCalls: Friend[] = [];
+  readonly acceptFriendCalls: number[] = [];
+  readonly rejectFriendCalls: number[] = [];
   readonly removeFriendCalls: number[] = [];
 
   private readonly currentUserSignal = signal(
@@ -144,6 +146,18 @@ class ProfileServiceStub {
       gem_balance: 300,
       ecopoints: 190,
     }),
+    createUser({
+      id: 5,
+      community_id: 1,
+      email: 'mateo@ecomind.test',
+      birth_date: '1996-08-10',
+      name: 'Mateo Silva',
+      streak: 2,
+      commitment: 'I will walk more.',
+      registered_at: '2026-05-05',
+      gem_balance: 120,
+      ecopoints: 140,
+    }),
   ];
 
   refreshCurrentUser() {
@@ -196,7 +210,12 @@ class ProfileServiceStub {
       createFriend({ id: 1, user_id: 1, friend_id: 2, status: 'accepted' }),
       createFriend({ id: 2, user_id: 2, friend_id: 1, status: 'accepted' }),
       createFriend({ id: 3, user_id: 4, friend_id: 1, status: 'pending' }),
+      createFriend({ id: 4, user_id: 1, friend_id: 5, status: 'pending' }),
     ]);
+  }
+
+  loadNotifications() {
+    return of([]);
   }
 
   getFamilyInvitations() {
@@ -235,6 +254,16 @@ class ProfileServiceStub {
   updateFriend(friend: Friend) {
     this.updateFriendCalls.push(friend);
     return of(friend);
+  }
+
+  acceptFriend(friendId: number) {
+    this.acceptFriendCalls.push(friendId);
+    return of(createFriend({ id: friendId, user_id: 4, friend_id: 1, status: 'accepted' }));
+  }
+
+  rejectFriend(friendId: number) {
+    this.rejectFriendCalls.push(friendId);
+    return of(createFriend({ id: friendId, user_id: 4, friend_id: 1, status: 'rejected' }));
   }
 
   removeFriend(friendId: number) {
@@ -281,16 +310,16 @@ class QuestsServiceStub {
   readonly quests = signal([
     new Quest({
       id: 1,
-      minigame_id: null,
+      minigameId: null,
       category: 'energy',
       title: 'Turn off unnecessary lights',
       description: 'Check the rooms at home and turn off any lights you are not using.',
-      image_url: null,
+      imageUrl: null,
       age: 0,
       type: 'activities',
-      reward_gems: 20,
-      reward_ecopoints: 25,
-      expiration_date: null,
+      rewardGems: 20,
+      rewardEcopoints: 25,
+      assignedDate: null,
       time: 10,
     }),
   ]);
@@ -427,12 +456,26 @@ describe('ProfileContent', () => {
     expect(component.incomingFriendRequests().map((request) => request.user.id)).toEqual([4]);
   });
 
+  it('exposes sent friend requests so they can be cancelled', () => {
+    expect(component.outgoingFriendRequests().map((request) => request.user.id)).toEqual([5]);
+  });
+
   it('accepts an incoming friend request', () => {
     component.acceptFriendRequest(3);
 
-    expect(profileService.updateFriendCalls).toHaveLength(1);
-    expect(profileService.updateFriendCalls[0].id).toBe(3);
-    expect(profileService.updateFriendCalls[0].status).toBe('accepted');
+    expect(profileService.acceptFriendCalls).toEqual([3]);
+  });
+
+  it('rejects an incoming friend request', () => {
+    component.rejectFriendRequest(3);
+
+    expect(profileService.rejectFriendCalls).toEqual([3]);
+  });
+
+  it('cancels an outgoing friend request', () => {
+    component.cancelFriendRequest(4);
+
+    expect(profileService.removeFriendCalls).toEqual([4]);
   });
 
   it('shows no pending quests when there are no missions in progress', () => {

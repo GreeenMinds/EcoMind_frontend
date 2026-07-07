@@ -1,7 +1,25 @@
-@if (goal) {
-  <section class="goal-card">
-    <h3>{{ 'community.title.goal' | translate: { goal: goal.title } }}</h3>
-    <p>{{ 'community.subtitle.goal' | translate }}</p>
+@if (goal; as currentGoal) {
+  <section class="goal-card" [class.completed]="currentGoal.status === 'completed'">
+    <header class="goal-header">
+      <div>
+        <span class="goal-status">{{ ('community.goalStatus.' + currentGoal.status) | translate }}</span>
+        <h3>{{ 'community.title.goal' | translate: { goal: currentGoal.title } }}</h3>
+      </div>
+
+      @if (hasMultipleGoals) {
+        <div class="goal-controls" aria-label="Community goal carousel controls">
+          <button type="button" (click)="showPreviousGoal()" [attr.aria-label]="'community.previousGoal' | translate">
+            &lsaquo;
+          </button>
+          <span>{{ currentIndex + 1 }}/{{ goals.length }}</span>
+          <button type="button" (click)="showNextGoal()" [attr.aria-label]="'community.nextGoal' | translate">
+            &rsaquo;
+          </button>
+        </div>
+      }
+    </header>
+
+    <p class="goal-description">{{ currentGoal.description }}</p>
 
     <div class="progress-track">
       <div class="progress-fill" [style.width.%]="progressPercent"></div>
@@ -15,8 +33,8 @@
     </div>
 
     <footer>
-      <strong>{{ 'community.goalProgress' | translate: { progress: goal.progress, target: goal.target, unit: goal.unit } }}</strong>
-      <span>{{ 'community.participants' | translate: { count: goal.participants } }}</span>
+      <strong>{{ 'community.goalProgress' | translate: { progress: currentGoal.progress, target: currentGoal.target, unit: currentGoal.unit } }}</strong>
+      <span>{{ 'community.participants' | translate: { count: currentGoal.participants } }}</span>
     </footer>
   </section>
 }

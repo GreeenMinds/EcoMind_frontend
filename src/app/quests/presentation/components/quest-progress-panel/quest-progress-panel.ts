@@ -11,6 +11,7 @@ type ProgressPanelItem = {
   progress: number;
   route: (string | number)[];
   canAbandon: boolean;
+  isDailyQuest: boolean;
 };
 
 @Component({
@@ -28,10 +29,7 @@ export class QuestProgressPanel {
   readonly abandonConfirmation = signal<ProgressPanelItem | null>(null);
 
   private readonly activeProgressSummaries = computed(() =>
-    this.pickProgressQuests(
-      this.questsService.quests(),
-      (quest) => quest.started && !quest.completed,
-    ),
+    this.pickProgressQuests(this.getVisibleProgressQuests()),
   );
 
   readonly progressItems = computed<ProgressPanelItem[]>(() => {
@@ -76,22 +74,60 @@ export class QuestProgressPanel {
     this.abandonConfirmation.set(null);
   }
 
-  private pickProgressQuests(quests: Quest[], predicate: (quest: Quest) => boolean): Quest[] {
-    return quests.filter(predicate).sort((a, b) => {
-      const categoryOrder = this.getCategoryOrder(a.category) - this.getCategoryOrder(b.category);
+  private pickProgressQuests(quests: Quest[]): Quest[] {
+    return quests.sort((a, b) => {
+      const categoryOrder = this.getCategoryOrder(a) - this.getCategoryOrder(b);
       return categoryOrder === 0 ? a.id - b.id : categoryOrder;
     });
   }
 
-  private getCategoryOrder(category: string): number {
-    if (category === 'daily_quest') {
+  private getVisibleProgressQuests(): Quest[] {
+    const activeQuests = this.questsService
+      .quests()
+      .filter(
+        (quest) =>
+          quest.type !== 'FAMILY' &&
+          quest.started &&
+          !quest.completed &&
+          quest.status !== 'EXPIRED',
+      );
+    const activeIds = new Set(activeQuests.map((quest) => quest.id));
+    const pendingCollaborativeQuestIds = new Set(
+      this.questsService
+        .collaborativeSessions()
+        .filter((session) => session.status === 'PENDING')
+        .filter((session) =>
+          this.questsService.collaborativeMembers().some(
+            (member) =>
+              member.session_id === session.id &&
+              member.user_id === this.questsService.currentUserId() &&
+              member.status === 'ACCEPTED',
+          ),
+        )
+        .map((session) => session.quest_id),
+    );
+    const pendingCollaborativeQuests = this.questsService
+      .quests()
+      .filter(
+        (quest) =>
+          quest.type !== 'FAMILY' &&
+          pendingCollaborativeQuestIds.has(quest.id) &&
+          !activeIds.has(quest.id) &&
+          !quest.completed,
+      );
+
+    return [...activeQuests, ...pendingCollaborativeQuests];
+  }
+
+  private getCategoryOrder(quest: Quest): number {
+    if (quest.type.toUpperCase() === 'DAILY_QUEST') {
       return 0;
     }
     return 1;
   }
 
   private getProgressItemRoute(quest: Quest): (string | number)[] {
-    if (quest.type === 'activities') {
+    if (quest.type === 'ACTIVITIES') {
       return ['/quests', quest.id, 'activities'];
     }
 
@@ -99,12 +135,15 @@ export class QuestProgressPanel {
   }
 
   private toProgressPanelItem(quest: Quest): ProgressPanelItem {
+    const isDailyQuest = quest.type.toUpperCase() === 'DAILY_QUEST';
+
     return {
       questId: quest.id,
       label: quest.title,
       progress: Math.round(quest.progress),
       route: this.getProgressItemRoute(quest),
-      canAbandon: quest.type !== 'collaborative',
+      canAbandon: !isDailyQuest,
+      isDailyQuest,
     };
   }
 }

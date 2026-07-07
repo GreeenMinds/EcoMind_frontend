@@ -59,6 +59,7 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "proxyConfig": "proxy.conf.json",
           "configurations": {
             "production": {
               "buildTarget": "EcoMind_frontend:build:production"

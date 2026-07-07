@@ -6,11 +6,13 @@ export type MinigameAttemptResponse = BaseResponse & {
 
 export type MinigameAttemptResource = BaseResource & {
   id: number;
-  user_id: number;
-  quest_id: number;
-  score: number;
+  userId: number;
+  questId: number;
+  score: number | null;
   status: string;
-  start_date: string;
-  end_date: string | null;
+  startDate: string;
+  endDate: string | null;
   metadata: Record<string, unknown>;
+  givenGems: number;
+  givenEcopoints: number;
 };

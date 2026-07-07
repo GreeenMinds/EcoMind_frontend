@@ -6,6 +6,8 @@ import { Family } from '../domain/model/family.entity';
 import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
 import { FamilyInvitation } from '../domain/model/family-invitation.entity';
+import { Notification } from '../domain/model/notification.entity';
+import { FamilyAchievement } from '../domain/model/family-achievement.entity';
 import { ProfileApi } from '../infrastructure/profile-api';
 
 @Injectable({
@@ -15,22 +17,21 @@ export class ProfileService {
   private readonly profileApi = inject(ProfileApi);
   private readonly currentUser = inject(CurrentUser);
   private readonly currentUserSignal = signal<User | null>(null);
+  private readonly notificationsSignal = signal<Notification[]>([]);
+  private readonly unreadNotificationCountSignal = signal(0);
 
   readonly currentUserId = computed(() => this.currentUser.getCurrentUserId());
   readonly currentUserProfile = this.currentUserSignal.asReadonly();
+  readonly notifications = this.notificationsSignal.asReadonly();
+  readonly unreadNotificationCount = this.unreadNotificationCountSignal.asReadonly();
 
   /**
    * Sincroniza el balance de gemas del usuario actual.
    */
   syncGemBalance(newBalance: number): void {
-    if (this.currentUserSignal()) {
-      this.currentUserSignal.update((user) => {
-        if (user) {
-          user.gem_balance = newBalance;
-        }
-        return user;
-      });
-    }
+    this.currentUserSignal.update((user) =>
+      user ? { ...user, gem_balance: newBalance } : user,
+    );
   }
 
   getCurrentUser(): Observable<User> {
@@ -55,22 +56,6 @@ export class ProfileService {
 
   updateUser(user: User): Observable<User> {
     return this.profileApi.updateUser(user);
-  }
-
-  awardQuestRewards(userId: number, gems: number, ecopoints: number, todayDate: string,): Observable<User> {
-    return this.profileApi.getUser(userId).pipe(
-      switchMap((user) => {
-        user.gem_balance += gems;
-        user.ecopoints += ecopoints;
-
-        if (user.last_streak_date !== todayDate) {
-          user.streak += 1;
-          user.last_streak_date = todayDate;
-        }
-
-        return this.profileApi.updateUser(user);
-      }),
-    );
   }
 
   getUserGemBalance(userId = this.currentUserId()): Observable<number> {
@@ -155,6 +140,10 @@ export class ProfileService {
     return this.profileApi.createFamily(family);
   }
 
+  getFamilyAchievements(familyId: number): Observable<FamilyAchievement[]> {
+    return this.profileApi.getFamilyAchievements(familyId);
+  }
+
   addFamilyMember(familyUser: FamilyUser): Observable<FamilyUser> {
     return this.profileApi.createFamilyUser(familyUser);
   }
@@ -163,12 +152,24 @@ export class ProfileService {
     return this.profileApi.getFriends();
   }
 
+  getFriendsByUser(userId: number, status?: string): Observable<Friend[]> {
+    return this.profileApi.getFriendsByUser(userId, status);
+  }
+
   createFriend(friend: Friend): Observable<Friend> {
     return this.profileApi.createFriend(friend);
   }
 
   updateFriend(friend: Friend): Observable<Friend> {
     return this.profileApi.updateFriend(friend);
+  }
+
+  acceptFriend(friendId: number): Observable<Friend> {
+    return this.profileApi.acceptFriend(friendId);
+  }
+
+  rejectFriend(friendId: number): Observable<Friend> {
+    return this.profileApi.rejectFriend(friendId);
   }
 
   removeFamilyMember(familyUserId: number): Observable<void> {
@@ -189,5 +190,51 @@ export class ProfileService {
 
   removeFriend(friendId: number): Observable<void> {
     return this.profileApi.deleteFriend(friendId);
+  }
+
+  loadNotifications(userId = this.currentUserId()): Observable<Notification[]> {
+    return this.profileApi.getNotifications(userId).pipe(
+      tap((notifications) => {
+        this.notificationsSignal.set(notifications);
+        this.unreadNotificationCountSignal.set(
+          notifications.filter((notification) => !notification.is_read).length,
+        );
+      }),
+    );
+  }
+
+  refreshUnreadNotificationCount(userId = this.currentUserId()): Observable<number> {
+    return this.profileApi
+      .getUnreadNotificationCount(userId)
+      .pipe(tap((count) => this.unreadNotificationCountSignal.set(count)));
+  }
+
+  markNotificationAsRead(notificationId: number): Observable<Notification> {
+    return this.profileApi.markNotificationAsRead(notificationId).pipe(
+      tap((updated) => {
+        this.notificationsSignal.update((notifications) =>
+          notifications.map((notification) =>
+            notification.id === updated.id ? updated : notification,
+          ),
+        );
+        this.unreadNotificationCountSignal.set(
+          this.notificationsSignal().filter((notification) => !notification.is_read).length,
+        );
+      }),
+    );
+  }
+
+  markAllNotificationsAsRead(userId = this.currentUserId()): Observable<Notification[]> {
+    return this.profileApi.markAllNotificationsAsRead(userId).pipe(
+      tap((updatedNotifications) => {
+        const updatedById = new Map(
+          updatedNotifications.map((notification) => [notification.id, notification]),
+        );
+        this.notificationsSignal.update((notifications) =>
+          notifications.map((notification) => updatedById.get(notification.id) ?? notification),
+        );
+        this.unreadNotificationCountSignal.set(0);
+      }),
+    );
   }
 }

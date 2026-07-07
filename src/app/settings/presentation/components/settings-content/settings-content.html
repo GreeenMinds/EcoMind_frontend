@@ -1,2 +1,213 @@
-<p>settings-content works!</p>
-<app-language-switcher></app-language-switcher>
+<section class="settings-page">
+  <header class="settings-header">
+    <p>{{ 'settings.header.eyebrow' | translate }}</p>
+    <h1>{{ 'settings.header.title' | translate }}</h1>
+  </header>
+
+  <section class="settings-section">
+    <div>
+      <span class="settings-section__eyebrow">{{ 'settings.language.eyebrow' | translate }}</span>
+      <h2>{{ 'settings.language.title' | translate }}</h2>
+      <p>{{ 'settings.language.description' | translate }}</p>
+    </div>
+
+    <app-language-switcher></app-language-switcher>
+  </section>
+
+  <section class="settings-section settings-section--stacked">
+    <button
+      class="settings-disclosure"
+      type="button"
+      [attr.aria-expanded]="notificationSettingsOpen()"
+      (click)="toggleNotificationSettings()">
+      <div>
+        <span class="settings-section__eyebrow">{{ 'settings.notifications.eyebrow' | translate }}</span>
+        <h2>{{ 'settings.notifications.title' | translate }}</h2>
+        <p>{{ 'settings.notifications.description' | translate }}</p>
+      </div>
+
+      <div class="settings-disclosure__actions">
+        <span class="settings-status">
+          {{ (preferences().enabled ? 'settings.notifications.status.enabled' : 'settings.notifications.status.disabled') | translate }}
+        </span>
+        <span class="settings-chevron" [class.settings-chevron--open]="notificationSettingsOpen()">
+          &#9662;
+        </span>
+      </div>
+    </button>
+
+    @if (notificationSettingsOpen()) {
+      <div class="settings-disclosure__body">
+        <article class="notification-preference notification-preference--master">
+          <div>
+            <h3>{{ 'settings.notifications.master.title' | translate }}</h3>
+            <p>{{ 'settings.notifications.master.description' | translate }}</p>
+          </div>
+          <label class="settings-switch">
+            <input
+              type="checkbox"
+              [checked]="preferences().enabled"
+              (change)="toggleNotifications($any($event.target).checked)">
+            <span></span>
+            <strong>
+              {{ (preferences().enabled ? 'settings.notifications.status.enabled' : 'settings.notifications.status.disabled') | translate }}
+            </strong>
+          </label>
+        </article>
+
+        <div class="notification-preferences">
+          @for (option of notificationOptions; track option.key) {
+            <article class="notification-preference">
+              <div>
+                <h3>{{ option.title | translate }}</h3>
+                <p>{{ option.description | translate }}</p>
+              </div>
+
+              <label class="settings-switch">
+                <input
+                  type="checkbox"
+                  [disabled]="!preferences().enabled"
+                  [checked]="preferences()[option.key]"
+                  (change)="toggleType(option.key, $any($event.target).checked)">
+                <span></span>
+              </label>
+            </article>
+          }
+        </div>
+
+        <button class="settings-secondary-action" type="button" (click)="resetNotificationPreferences()">
+          {{ 'settings.notifications.reset' | translate }}
+        </button>
+      </div>
+    }
+  </section>
+
+  <section class="settings-section account-section">
+    <div class="account-section__header">
+      <span class="settings-section__eyebrow">{{ 'settings.account.eyebrow' | translate }}</span>
+      <h2>{{ 'settings.account.title' | translate }}</h2>
+      <p>{{ 'settings.account.description' | translate }}</p>
+    </div>
+
+    <div class="account-action-list">
+      <article class="account-action-item">
+        <div>
+          <h3>{{ 'settings.account.closeTitle' | translate }}</h3>
+          <p>{{ 'settings.account.closeDescription' | translate }}</p>
+        </div>
+        <button class="settings-secondary-action" type="button" (click)="closeAccount()">
+          {{ 'settings.account.closeSession' | translate }}
+        </button>
+      </article>
+
+      <article class="account-action-item account-action-item--danger">
+        <div>
+          <h3>{{ 'settings.account.deleteTitle' | translate }}</h3>
+          <p>{{ 'settings.account.deleteDescription' | translate }}</p>
+        </div>
+        <button class="settings-danger-action" type="button" (click)="openDeleteAccountConfirmation()">
+          {{ 'settings.account.deleteAccount' | translate }}
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <section class="settings-section support-section">
+    <div class="support-section__content">
+      <span class="settings-section__eyebrow">{{ 'settings.support.eyebrow' | translate }}</span>
+      <h2>{{ 'settings.support.title' | translate }}</h2>
+      <p>{{ 'settings.support.description' | translate }}</p>
+
+      <div class="support-contact-list" [attr.aria-label]="'settings.support.ariaLabel' | translate">
+        <a class="support-contact" href="mailto:soporte@ecomind.app">
+          <span aria-hidden="true">&#9993;</span>
+          <div>
+            <strong>{{ 'settings.support.emailLabel' | translate }}</strong>
+            <small>soporte&#64;ecomind.app</small>
+          </div>
+        </a>
+
+        <a class="support-contact" href="tel:+51987654321">
+          <span aria-hidden="true">&#9742;</span>
+          <div>
+            <strong>{{ 'settings.support.phoneLabel' | translate }}</strong>
+            <small>+51 987 654 321</small>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <img
+      class="support-section__image"
+      src="/assets/images/support-agent.png"
+      [alt]="'settings.support.imageAlt' | translate">
+  </section>
+
+  <section class="faq-section" [attr.aria-labelledby]="'settings-faq-title'">
+    <h2 id="settings-faq-title">{{ 'settings.faq.title' | translate }}</h2>
+
+    @for (category of faqCategories; track category.key) {
+      <div class="faq-category">
+        <h3 class="faq-category-title">{{ category.label | translate }}</h3>
+        <div class="faq-list">
+          @for (item of category.items; track item.question) {
+            <details class="faq-item">
+              <summary>{{ item.question | translate }}</summary>
+              <p>{{ item.answer | translate }}</p>
+            </details>
+          }
+        </div>
+      </div>
+    }
+  </section>
+</section>
+
+@if (deleteAccountConfirmationOpen()) {
+  <div class="settings-modal-backdrop" role="presentation" (click)="closeDeleteAccountConfirmation()">
+    <section
+      class="settings-modal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'delete-account-title'"
+      (click)="$event.stopPropagation()">
+      <header class="settings-modal__header">
+        <span aria-hidden="true">!</span>
+        <div>
+          <h2 id="delete-account-title">{{ 'settings.account.modal.title' | translate }}</h2>
+          <p>{{ 'settings.account.modal.description' | translate }}</p>
+        </div>
+      </header>
+
+      <label class="delete-confirmation-field">
+        <span>{{ 'settings.account.modal.confirmLabel' | translate }}</span>
+        <input
+          type="text"
+          autocomplete="off"
+          [value]="deleteAccountConfirmationText()"
+          (input)="updateDeleteAccountConfirmation($any($event.target).value)">
+      </label>
+
+      <div class="settings-modal__actions">
+        <button
+          class="settings-secondary-action"
+          type="button"
+          [disabled]="deleteAccountInProgress()"
+          (click)="closeDeleteAccountConfirmation()">
+          {{ 'settings.account.modal.cancel' | translate }}
+        </button>
+
+        <button
+          class="settings-danger-action settings-danger-action--solid"
+          type="button"
+          [disabled]="deleteAccountConfirmationText() !== 'ELIMINAR' || deleteAccountInProgress()"
+          (click)="deleteAccount()">
+          {{
+            (deleteAccountInProgress()
+              ? 'settings.account.modal.deleting'
+              : 'settings.account.modal.confirm') | translate
+          }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

@@ -7,11 +7,15 @@ import { Family } from '../domain/model/family.entity';
 import { FamilyUser } from '../domain/model/family-user.entity';
 import { Friend } from '../domain/model/friend.entity';
 import { FamilyInvitation } from '../domain/model/family-invitation.entity';
+import { Notification } from '../domain/model/notification.entity';
+import { FamilyAchievement } from '../domain/model/family-achievement.entity';
 import { UsersApiEndpoint } from './users-api-endpoint';
 import { FamiliesApiEndpoint } from './families-api-endpoint';
 import { FamilyUsersApiEndpoint } from './family-users-api-endpoint';
 import { FriendsApiEndpoint } from './friends-api-endpoint';
 import { FamilyInvitationsApiEndpoint } from './family-invitations-api-endpoint';
+import { NotificationsApiEndpoint } from './notifications-api-endpoint';
+import { FamilyAchievementsApiEndpoint } from './family-achievements-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +26,8 @@ export class ProfileApi extends BaseApi {
   private readonly familyUsersEndpoint: FamilyUsersApiEndpoint;
   private readonly friendsEndpoint: FriendsApiEndpoint;
   private readonly familyInvitationsEndpoint: FamilyInvitationsApiEndpoint;
+  private readonly notificationsEndpoint: NotificationsApiEndpoint;
+  private readonly familyAchievementsEndpoint: FamilyAchievementsApiEndpoint;
 
   constructor(http: HttpClient) {
     super();
@@ -30,6 +36,8 @@ export class ProfileApi extends BaseApi {
     this.familyUsersEndpoint = new FamilyUsersApiEndpoint(http);
     this.friendsEndpoint = new FriendsApiEndpoint(http);
     this.familyInvitationsEndpoint = new FamilyInvitationsApiEndpoint(http);
+    this.notificationsEndpoint = new NotificationsApiEndpoint(http);
+    this.familyAchievementsEndpoint = new FamilyAchievementsApiEndpoint(http);
   }
 
   getUsers(): Observable<User[]> {
@@ -54,6 +62,10 @@ export class ProfileApi extends BaseApi {
 
   updateFamily(family: Family): Observable<Family> {
     return this.familiesEndpoint.update(family, family.id);
+  }
+
+  getFamilyAchievements(familyId: number): Observable<FamilyAchievement[]> {
+    return this.familyAchievementsEndpoint.getByFamilyId(familyId);
   }
 
   getFamilyUsers(): Observable<FamilyUser[]> {
@@ -84,6 +96,10 @@ export class ProfileApi extends BaseApi {
     return this.friendsEndpoint.getAll();
   }
 
+  getFriendsByUser(userId: number, status?: string): Observable<Friend[]> {
+    return this.friendsEndpoint.getByUser(userId, status);
+  }
+
   createFriend(friend: Friend): Observable<Friend> {
     return this.friendsEndpoint.create(friend);
   }
@@ -92,7 +108,31 @@ export class ProfileApi extends BaseApi {
     return this.friendsEndpoint.update(friend, friend.id);
   }
 
+  acceptFriend(friendId: number): Observable<Friend> {
+    return this.friendsEndpoint.accept(friendId);
+  }
+
+  rejectFriend(friendId: number): Observable<Friend> {
+    return this.friendsEndpoint.reject(friendId);
+  }
+
   deleteFriend(id: number): Observable<void> {
     return this.friendsEndpoint.delete(id);
+  }
+
+  getNotifications(userId: number): Observable<Notification[]> {
+    return this.notificationsEndpoint.getByUser(userId);
+  }
+
+  getUnreadNotificationCount(userId: number): Observable<number> {
+    return this.notificationsEndpoint.getUnreadCount(userId);
+  }
+
+  markNotificationAsRead(notificationId: number): Observable<Notification> {
+    return this.notificationsEndpoint.markAsRead(notificationId);
+  }
+
+  markAllNotificationsAsRead(userId: number): Observable<Notification[]> {
+    return this.notificationsEndpoint.markAllAsRead(userId);
   }
 }

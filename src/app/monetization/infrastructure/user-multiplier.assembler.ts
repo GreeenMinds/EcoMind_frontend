@@ -7,21 +7,21 @@ export class UserMultiplierAssembler
 {
   toEntityFromResource(resource: any): UserMultiplierEntity {
     return {
-      id: resource.id,               // ← ID real del registro en DB
-      multiplierId: resource.multiplier_id,
-      userId: resource.user_id,
-      startDate: resource.start_date,
-      endDate: resource.end_date,
+      id: resource.id,
+      multiplierId: resource.multiplierId ?? resource.multiplier_id,
+      userId: resource.userId ?? resource.user_id,
+      startDate: resource.startDate ?? resource.start_date,
+      endDate: resource.endDate ?? resource.end_date,
     };
   }
 
   toResourceFromEntity(entity: UserMultiplierEntity): any {
     return {
       id: entity.id,
-      multiplier_id: entity.multiplierId,
-      user_id: entity.userId,
-      start_date: entity.startDate,
-      end_date: entity.endDate,
+      multiplierId: entity.multiplierId,
+      userId: entity.userId,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
     };
   }
 

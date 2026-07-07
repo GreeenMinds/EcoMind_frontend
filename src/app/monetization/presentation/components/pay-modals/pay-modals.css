@@ -1,1 +1,138 @@
 @import '../shared.css';
+
+.method-btn {
+  padding: 1.4rem 0.8rem;
+  gap: 0.6rem;
+}
+.method-btn:hover {
+  box-shadow: 0 6px 18px rgba(41,182,232,0.14);
+}
+.method-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.method-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(41,182,232,0.25);
+  border-top-color: #29b6e8;
+  border-radius: 50%;
+  animation: method-spin 0.7s linear infinite;
+}
+@keyframes method-spin {
+  to { transform: rotate(360deg); }
+}
+
+.method-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  font-size: 1rem;
+}
+.method-logo-card {
+  background: linear-gradient(135deg, #eef2f5, #dde3e8);
+  flex-direction: column;
+  gap: 3px;
+}
+.yape-word {
+  font-weight: 800;
+  font-size: 0.6rem;
+  color: #742284;
+  letter-spacing: -0.02em;
+}
+.method-logo-paypal {
+  background: #eef4ff;
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: -0.02em;
+}
+.pp-pay { color: #003087; }
+.pp-pal { color: #0070e0; }
+
+.modal-box {
+  border: 1px solid #eee;
+}
+.modal-icon {
+  filter: drop-shadow(0 2px 4px rgba(41,182,232,0.35));
+}
+
+.step-center {
+  padding: 0.8rem 0 0.4rem;
+  gap: 0.6rem;
+}
+
+.result-compact {
+  gap: 0.35rem;
+}
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.result-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.result-badge-success {
+  background: rgba(108,171,79,0.14);
+  color: #6cab4f;
+}
+.result-badge-error {
+  background: rgba(198,90,86,0.12);
+  color: #c65a56;
+}
+
+.close-confirm {
+  background: #6cab4f;
+}
+
+.result-title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #333;
+}
+.result-msg {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #777;
+}
+.result-msg-success {
+  color: #6cab4f;
+}
+
+.confirm-btn {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.retry-confirm {
+  background: #c65a56;
+}
+
+.step-center-toast {
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0;
+}
+.result-badge-sm {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+.result-msg-sm {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 0;
+}

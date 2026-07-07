@@ -2,7 +2,7 @@
   type="button"
   class="quest-card"
   [class.completed]="quest.has_completed_attempt"
-  [class.in-progress]="quest.started && !quest.completed"
+  [class.in-progress]="isInProgress()"
   [ngStyle]="getQuestTypeTheme(getDisplayType())"
   (click)="selectQuest()"
 >

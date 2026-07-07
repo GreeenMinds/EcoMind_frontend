@@ -1,0 +1,68 @@
+@if (material(); as material) {
+  <div class="material-detail">
+    <header class="detail-header">
+      <button type="button" class="back-btn" (click)="goBack()">
+        {{ 'common.back' | translate }}
+      </button>
+    </header>
+
+    @if (material.materialType === 'VIDEO' && safeVideoUrl(); as videoUrl) {
+      <div class="video-container">
+        <iframe
+          [src]="videoUrl"
+          title="{{ material.title }}"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    } @else if (material.imageUrl; as imageUrl) {
+      <div class="detail-image">
+        <img [src]="imageUrl" [alt]="material.title" />
+      </div>
+    }
+
+    <h2 class="detail-title">{{ material.title }}</h2>
+
+    <div class="detail-meta">
+      <span class="category-tag">{{ getCategoryLabel() | translate }}</span>
+      <span class="type-badge">{{ getMaterialTypeLabel() | translate }}</span>
+      @if (material.durationMinutes; as duration) {
+        <span class="duration">{{ 'common.minutes' | translate: { count: duration } }}</span>
+      }
+    </div>
+
+    @if (material.description; as description) {
+      <p class="detail-description">{{ description }}</p>
+    }
+
+    @if (material.materialType === 'VIDEO' || material.materialType === 'INFOGRAPHIC') {
+      <div class="detail-content">
+        {{ material.content }}
+      </div>
+    } @else {
+      <div class="detail-content detail-content--text">
+        {{ material.content }}
+      </div>
+    }
+
+    <button
+      type="button"
+      class="favorite-toggle"
+      (click)="toggleFavorite()"
+    >
+      @if (isFavorite()) {
+        {{ 'learning.removeFromFavorites' | translate }}
+      } @else {
+        {{ 'learning.addToFavorites' | translate }}
+      }
+    </button>
+  </div>
+} @else {
+  <div class="empty-state">
+    <h2>{{ 'learning.materialNotFound' | translate }}</h2>
+    <button type="button" class="back-btn" (click)="goBack()">
+      {{ 'common.back' | translate }}
+    </button>
+  </div>
+}

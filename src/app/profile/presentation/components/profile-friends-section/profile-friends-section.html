@@ -49,6 +49,42 @@
     </article>
   }
 
+  @if (outgoingRequests.length > 0) {
+    <article class="friends-requests">
+      <h3>{{ 'profilePage.friends.sentRequests' | translate }}</h3>
+
+      <div class="friends-requests__list">
+        @for (request of outgoingRequests; track request.relationship.id) {
+          <div class="friends-requests__item">
+            <div class="friends-requests__identity">
+              <app-profile-avatar
+                [name]="request.user.name"
+                [userId]="request.user.id"
+                [avatarUrl]="request.equippedAvatarUrl"
+                [overlayUrl]="request.equippedOverlayUrl"
+                [overlayType]="request.equippedOverlayType">
+              </app-profile-avatar>
+
+              <div>
+                <strong>{{ request.user.name }}</strong>
+                <p>{{ request.statusLabel }}</p>
+              </div>
+            </div>
+
+            <div class="friends-requests__actions">
+              <button
+                class="profile-action profile-action--danger"
+                type="button"
+                (click)="emitCancelFriendRequest(request)">
+                {{ 'profilePage.common.cancel' | translate }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  }
+
   <article class="friends-invite">
     <h3>{{ 'profilePage.friends.sendRequestTitle' | translate }}</h3>
 

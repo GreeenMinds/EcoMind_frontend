@@ -1,0 +1,96 @@
+<section class="family-plan-detail">
+  <header class="detail-header">
+    <a class="back-link" routerLink="/quests">
+      <span aria-hidden="true">&lsaquo;</span>
+      Volver
+    </a>
+    <span>{{ 'quests.familyPlan.progressTitle' | translate }}</span>
+  </header>
+
+  @if (plan(); as plan) {
+    <section class="plan-hero">
+      <div class="plan-title">
+        <p>{{ statusKey() | translate }}</p>
+        <h1>{{ 'quests.familyPlan.progressTitle' | translate }}</h1>
+        <span>{{ 'quests.familyPlan.completedCount' | translate: { completed: completedItems(), total: totalItems() } }}</span>
+      </div>
+      <div class="plan-score">
+        <small>{{ 'quests.familyPlan.totalProgress' | translate }}</small>
+        <strong>{{ progress() }}%</strong>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-value" [style.width.%]="progress()"></div>
+      </div>
+    </section>
+
+    <div class="plan-actions">
+      @if (canCompletePlan()) {
+        <button type="button" class="complete-plan-action" (click)="completePlan()">
+          {{ 'quests.familyPlan.completePlan' | translate }}
+        </button>
+      }
+      @if (questsService.isFamilyParent() && plan.status !== 'COMPLETED' && plan.status !== 'CANCELLED') {
+        <button type="button" class="delete-plan-action" (click)="deletePlan()">{{ 'quests.familyPlan.deletePlan' | translate }}</button>
+      }
+    </div>
+
+    <div class="plan-items">
+      @for (item of plan.items; track item.id) {
+        <article class="plan-item">
+          <div>
+            <span>{{ item.progress | number:'1.0-0' }}%</span>
+            <h2>{{ getQuestTitle(item.questId) }}</h2>
+            @if (getQuestDescription(item.questId); as description) {
+              <p>{{ description }}</p>
+            }
+          </div>
+          <a [routerLink]="getActivityRoute(item.questId)" [queryParams]="getActivityQueryParams()">{{ 'quests.familyPlan.openChallenge' | translate }}</a>
+        </article>
+      }
+    </div>
+
+    @if (completionCelebration(); as celebration) {
+      <section class="completion-celebration" aria-live="polite">
+        <div class="confetti-field" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <p>{{ 'quests.familyPlan.completedLabel' | translate }}</p>
+        <h2>{{ 'quests.familyPlan.completionTitle' | translate }}</h2>
+        @if (celebration.showRewards) {
+          <div class="reward-pills">
+            @if (celebration.gems > 0) {
+              <span>{{ 'common.gems' | translate: { count: celebration.gems } }}</span>
+            }
+            @if (celebration.ecopoints > 0) {
+              <span>{{ 'common.ecoPoints' | translate: { count: celebration.ecopoints } }}</span>
+            }
+          </div>
+        } @else {
+          <span class="completion-copy">{{ 'quests.familyPlan.completionCopy' | translate }}</span>
+        }
+        <button
+          type="button"
+          [disabled]="checkingAchievements()"
+          (click)="continueAfterCompletion()">
+          {{ 'common.continue' | translate }}
+        </button>
+      </section>
+    }
+  } @else if (questsService.loading()) {
+    <p class="state-text">{{ 'quests.familyPlan.loadingPlan' | translate }}</p>
+  } @else {
+    <p class="state-text">{{ 'quests.familyPlan.notFound' | translate }}</p>
+  }
+</section>
+
+@if (activeAchievementName(); as achievementName) {
+  <app-achievement-unlocked-modal
+    [achievementName]="achievementName"
+    (continue)="continueAchievementModal()">
+  </app-achievement-unlocked-modal>
+}

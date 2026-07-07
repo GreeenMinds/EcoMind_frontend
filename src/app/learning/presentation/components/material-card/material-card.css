@@ -1,0 +1,133 @@
+.material-card {
+  position: relative;
+  border: 1px solid #e0e0e0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.material-card:hover {
+  box-shadow: 0 4px 16px rgba(116, 179, 77, 0.15);
+  transform: translateY(-2px);
+}
+
+.material-card:focus-visible {
+  outline: 2px solid #74b34d;
+  outline-offset: 2px;
+}
+
+.material-card-image {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #e8f5e9;
+}
+
+.material-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.material-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+.material-card-placeholder span {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #74b34d;
+  text-transform: uppercase;
+}
+
+.material-card-body {
+  padding: 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.material-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #444;
+  line-height: 1.3;
+}
+
+.material-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.material-type-badge,
+.material-category-tag {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.material-type-badge {
+  background: #e3f2fd;
+  color: #0288d1;
+}
+
+.material-category-tag {
+  background: #e8f5e9;
+  color: #74b34d;
+}
+
+.material-duration {
+  font-size: 0.75rem;
+  color: #888;
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.material-card-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #777;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #bdbdbd;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-btn:hover {
+  color: #f44336;
+  transform: scale(1.15);
+}

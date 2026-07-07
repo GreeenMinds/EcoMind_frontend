@@ -52,6 +52,17 @@ button {
   background: #5eb1e3;
 }
 
+.warning {
+  margin: -4px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff4d6;
+  color: #75530b;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .close {
   position: absolute;
   right: 18px;

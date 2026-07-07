@@ -14,7 +14,6 @@ export class CommunityPostFormModal {
   @Output() create = new EventEmitter<CommunityPostFormValue>();
 
   content = '';
-  points: number | null = null;
   imageUrl = '';
 
   submit(): void {
@@ -26,7 +25,7 @@ export class CommunityPostFormModal {
 
     this.create.emit({
       content,
-      points: Math.max(0, this.points ?? 0),
+      points: 0,
       image_url: this.imageUrl.trim() || null,
     });
   }

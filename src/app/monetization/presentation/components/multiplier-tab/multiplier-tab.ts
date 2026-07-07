@@ -21,6 +21,10 @@ export class MultipliersTabComponent {
   readonly loading   = this.svc.loading;
   readonly error     = this.svc.error;
 
+  constructor() {
+    this.svc.refreshMultipliers();
+  }
+
   buy(summary: MultiplierSummary): void {
     this.svc.purchaseMultiplier(summary.multiplier);
   }
@@ -41,7 +45,6 @@ export class MultipliersTabComponent {
     return index === 2 ? 'white' : '#29b6e8';
   }
 
-  /** Main planet image according to the card */
   planetImg(index: number): string {
     const imgs = ['world_happy', 'world_run', 'world_trophy'];
     return `assets/images/multiplier/${imgs[index] ?? 'world_happy'}.png`;

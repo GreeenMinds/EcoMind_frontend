@@ -33,13 +33,25 @@ export class EventAssembler implements BaseAssembler<Event, EventResource, Event
       name: entity.name,
       description: entity.description,
       date: entity.date,
-      start_time: entity.start_time,
-      end_time: entity.end_time,
+      start_time: this.toLocalTime(entity.start_time),
+      end_time: this.toLocalTime(entity.end_time),
       location: entity.location,
       latitude: entity.latitude,
       longitude: entity.longitude,
       capacity: entity.capacity,
       image_url: entity.image_url,
     };
+  }
+
+  private toLocalTime(value: string): string {
+    if (!value) {
+      return value;
+    }
+
+    if (value.includes('T')) {
+      return value.split('T')[1].slice(0, 8);
+    }
+
+    return value.length === 5 ? `${value}:00` : value;
   }
 }

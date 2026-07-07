@@ -29,8 +29,7 @@ img {
 
 .actions {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 44px;
+  display: flex;
   gap: 12px;
 }
 
@@ -44,6 +43,7 @@ button {
 }
 
 .join {
+  flex: 1 1 auto;
   background: #68a94f;
 }
 
@@ -52,6 +52,7 @@ button {
 }
 
 .cancel {
+  flex: 0 0 44px;
   border-radius: 50%;
   background: #bfbfbf;
   font-size: 22px;
@@ -59,4 +60,14 @@ button {
 
 .cancel:hover {
   background: #ef5350;
+}
+
+.delete {
+  flex: 0 0 auto;
+  padding: 0 18px;
+  background: #d95f5f;
+}
+
+.delete:hover {
+  background: #c94747;
 }
