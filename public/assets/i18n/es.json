@@ -465,6 +465,39 @@
       },
       "reset": "Restaurar preferencias"
     },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "questions": {
+        "offline": {
+          "question": "\u00bfPuedo usar la app sin conexi\u00f3n a internet?",
+          "answer": "S\u00ed, la aplicaci\u00f3n est\u00e1 dise\u00f1ada para funcionar en modo offline. Puedes completar retos y leer gu\u00edas sin conexi\u00f3n. Tu progreso se sincronizar\u00e1 autom\u00e1ticamente la pr\u00f3xima vez que te conectes a internet."
+        },
+        "deleteAccount": {
+          "question": "\u00bfPuedo eliminar mi cuenta?",
+          "answer": "S\u00ed, puedes eliminar tu cuenta en cualquier momento desde la secci\u00f3n de 'Ajustes' en tu perfil. Ten en cuenta que esta acci\u00f3n es irreversible y se borrar\u00e1n todos tus datos y progreso."
+        },
+        "freeActivities": {
+          "question": "\u00bfLas actividades son gratuitas?",
+          "answer": "\u00a1S\u00ed! Todas las actividades educativas, retos y funciones principales de EcoMind son completamente gratuitas. Nuestro objetivo es que el aprendizaje ambiental sea accesible para todos."
+        },
+        "commitment": {
+          "question": "\u00bfPuedo cambiar mi compromiso ambiental?",
+          "answer": "Claro. Puedes editar o actualizar tus compromisos ambientales personales en cualquier momento desde tu perfil. \u00a1Lo importante es mantener la motivaci\u00f3n!"
+        },
+        "morePoints": {
+          "question": "\u00bfC\u00f3mo puedo ganar mas puntos?",
+          "answer": "Ganas puntos (EcoPoints) completando retos diarios, terminando actividades educativas (como lecturas o videos), participando en eventos de la comunidad y manteniendo rachas semanales."
+        },
+        "inviteFamily": {
+          "question": "\u00bfC\u00f3mo invito a mi familia?",
+          "answer": "En tu perfil, encontrar\u00e1s la secci\u00f3n \"Mi Familia\". Desde all\u00ed, puedes crear un grupo familiar y enviar invitaciones a tus padres o hijos usando sus correos electr\u00f3nicos o nombres de usuario."
+        },
+        "rewards": {
+          "question": "\u00bfC\u00f3mo funcionan los puntos y recompensas?",
+          "answer": "Los puntos que ganas te ayudan a subir en el ranking y a desbloquear insignias especiales. Las recompensas son reconocimientos virtuales que celebran tus logros y tu constancia en el cuidado del planeta."
+        }
+      }
+    },
     "support": {
       "eyebrow": "Soporte técnico",
       "title": "Contacta con EcoMind",

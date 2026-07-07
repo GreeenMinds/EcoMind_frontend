@@ -465,6 +465,39 @@
       },
       "reset": "Restore preferences"
     },
+    "faq": {
+      "title": "Frequently asked questions",
+      "questions": {
+        "offline": {
+          "question": "Can I use the app without an internet connection?",
+          "answer": "Yes, the application is designed to work offline. You can complete challenges and read guides without a connection. Your progress will sync automatically the next time you connect to the internet."
+        },
+        "deleteAccount": {
+          "question": "Can I delete my account?",
+          "answer": "Yes, you can delete your account at any time from the 'Settings' section in your profile. Keep in mind that this action is irreversible and all your data and progress will be deleted."
+        },
+        "freeActivities": {
+          "question": "Are activities free?",
+          "answer": "Yes! All EcoMind educational activities, challenges, and main features are completely free. Our goal is to make environmental learning accessible to everyone."
+        },
+        "commitment": {
+          "question": "Can I change my environmental commitment?",
+          "answer": "Of course. You can edit or update your personal environmental commitments at any time from your profile. The important thing is to stay motivated!"
+        },
+        "morePoints": {
+          "question": "How can I earn more points?",
+          "answer": "You earn points (EcoPoints) by completing daily challenges, finishing educational activities (such as readings or videos), participating in community events, and maintaining weekly streaks."
+        },
+        "inviteFamily": {
+          "question": "How do I invite my family?",
+          "answer": "In your profile, you will find the \"My Family\" section. From there, you can create a family group and send invitations to your parents or children using their emails or usernames."
+        },
+        "rewards": {
+          "question": "How do points and rewards work?",
+          "answer": "The points you earn help you climb the ranking and unlock special badges. Rewards are virtual recognitions that celebrate your achievements and your consistency in caring for the planet."
+        }
+      }
+    },
     "support": {
       "eyebrow": "Technical support",
       "title": "Contact EcoMind",
