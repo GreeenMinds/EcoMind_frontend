@@ -467,6 +467,11 @@
     },
     "faq": {
       "title": "Frequently asked questions",
+      "categories": {
+        "account": "Account & Privacy",
+        "points": "Points & Rewards",
+        "community": "Community & Family"
+      },
       "questions": {
         "offline": {
           "question": "Can I use the app without an internet connection?",

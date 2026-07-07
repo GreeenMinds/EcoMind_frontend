@@ -3,6 +3,7 @@ import { RankingEntry } from '../domain/model/ranking-entry.entity';
 import { RankingApiService } from '../infrastructure/ranking-api';
 import { RankingEntryAssembler } from '../infrastructure/ranking-entry-assembler';
 import { CurrentUser } from '../../shared/application/current-user';
+import { CommunityService } from '../../community/application/community.service';
 import { forkJoin } from 'rxjs';
 
 const RANKING_TYPES: Record<number, string> = {
@@ -18,6 +19,7 @@ export class RankingService {
 
   private api = inject(RankingApiService);
   private currentUser = inject(CurrentUser);
+  private communityService = inject(CommunityService);
 
   readonly rankingData = this.rankingDataSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
@@ -27,9 +29,10 @@ export class RankingService {
     this.loadingSignal.set(true);
 
     const userId = this.currentUser.getCurrentUserId() ?? undefined;
+    const communityId = this.communityService.currentCommunityId() ?? undefined;
 
     const calls = [1, 2, 3].map((id) =>
-      this.api.getLeaderboard(RANKING_TYPES[id], userId),
+      this.api.getLeaderboard(RANKING_TYPES[id], userId, communityId),
     );
 
     forkJoin(calls).subscribe({

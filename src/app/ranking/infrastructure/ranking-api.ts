@@ -10,10 +10,13 @@ export class RankingApiService {
   private baseUrl = environment.platformProviderBackendApiBaseUrl;
   private leaderboardPath = environment.platformProviderLeaderboardEndpointPath;
 
-  getLeaderboard(rankingType: string, currentUserId?: number): Observable<RankingEntryResponse[]> {
+  getLeaderboard(rankingType: string, currentUserId?: number, communityId?: number): Observable<RankingEntryResponse[]> {
     let params = new HttpParams();
     if (currentUserId) {
       params = params.set('currentUserId', currentUserId);
+    }
+    if (communityId) {
+      params = params.set('communityId', communityId);
     }
     return this.http.get<RankingEntryResponse[]>(
       `${this.baseUrl}${this.leaderboardPath}/${rankingType}/leaderboard`,

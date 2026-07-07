@@ -146,14 +146,19 @@
   <section class="faq-section" [attr.aria-labelledby]="'settings-faq-title'">
     <h2 id="settings-faq-title">{{ 'settings.faq.title' | translate }}</h2>
 
-    <div class="faq-list">
-      @for (item of faqOptions; track item.question) {
-        <details class="faq-item">
-          <summary>{{ item.question | translate }}</summary>
-          <p>{{ item.answer | translate }}</p>
-        </details>
-      }
-    </div>
+    @for (category of faqCategories; track category.key) {
+      <div class="faq-category">
+        <h3 class="faq-category-title">{{ category.label | translate }}</h3>
+        <div class="faq-list">
+          @for (item of category.items; track item.question) {
+            <details class="faq-item">
+              <summary>{{ item.question | translate }}</summary>
+              <p>{{ item.answer | translate }}</p>
+            </details>
+          }
+        </div>
+      </div>
+    }
   </section>
 </section>
 

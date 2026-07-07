@@ -18,6 +18,13 @@ interface NotificationPreferenceOption {
 interface FaqOption {
   question: string;
   answer: string;
+  category: string;
+}
+
+interface FaqCategory {
+  key: string;
+  label: string;
+  items: FaqOption[];
 }
 
 @Component({
@@ -74,36 +81,63 @@ export class SettingsContent {
       description: 'settings.notifications.options.general.description',
     },
   ];
-  readonly faqOptions: FaqOption[] = [
+  readonly faqCategories: FaqCategory[] = [
     {
-      question: 'settings.faq.questions.offline.question',
-      answer: 'settings.faq.questions.offline.answer',
+      key: 'account',
+      label: 'settings.faq.categories.account',
+      items: [
+        {
+          question: 'settings.faq.questions.deleteAccount.question',
+          answer: 'settings.faq.questions.deleteAccount.answer',
+          category: 'account',
+        },
+        {
+          question: 'settings.faq.questions.offline.question',
+          answer: 'settings.faq.questions.offline.answer',
+          category: 'account',
+        },
+      ],
     },
     {
-      question: 'settings.faq.questions.deleteAccount.question',
-      answer: 'settings.faq.questions.deleteAccount.answer',
+      key: 'points',
+      label: 'settings.faq.categories.points',
+      items: [
+        {
+          question: 'settings.faq.questions.morePoints.question',
+          answer: 'settings.faq.questions.morePoints.answer',
+          category: 'points',
+        },
+        {
+          question: 'settings.faq.questions.rewards.question',
+          answer: 'settings.faq.questions.rewards.answer',
+          category: 'points',
+        },
+        {
+          question: 'settings.faq.questions.commitment.question',
+          answer: 'settings.faq.questions.commitment.answer',
+          category: 'points',
+        },
+      ],
     },
     {
-      question: 'settings.faq.questions.freeActivities.question',
-      answer: 'settings.faq.questions.freeActivities.answer',
-    },
-    {
-      question: 'settings.faq.questions.commitment.question',
-      answer: 'settings.faq.questions.commitment.answer',
-    },
-    {
-      question: 'settings.faq.questions.morePoints.question',
-      answer: 'settings.faq.questions.morePoints.answer',
-    },
-    {
-      question: 'settings.faq.questions.inviteFamily.question',
-      answer: 'settings.faq.questions.inviteFamily.answer',
-    },
-    {
-      question: 'settings.faq.questions.rewards.question',
-      answer: 'settings.faq.questions.rewards.answer',
+      key: 'community',
+      label: 'settings.faq.categories.community',
+      items: [
+        {
+          question: 'settings.faq.questions.freeActivities.question',
+          answer: 'settings.faq.questions.freeActivities.answer',
+          category: 'community',
+        },
+        {
+          question: 'settings.faq.questions.inviteFamily.question',
+          answer: 'settings.faq.questions.inviteFamily.answer',
+          category: 'community',
+        },
+      ],
     },
   ];
+
+  readonly faqOptions: FaqOption[] = this.faqCategories.flatMap((c) => c.items);
 
   toggleNotifications(enabled: boolean): void {
     this.notificationPreferences.updatePreference('enabled', enabled);

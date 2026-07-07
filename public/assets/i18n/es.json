@@ -467,6 +467,11 @@
     },
     "faq": {
       "title": "Preguntas frecuentes",
+      "categories": {
+        "account": "Cuenta y privacidad",
+        "points": "Puntos y recompensas",
+        "community": "Comunidad y familia"
+      },
       "questions": {
         "offline": {
           "question": "\u00bfPuedo usar la app sin conexi\u00f3n a internet?",

@@ -268,6 +268,20 @@
   line-height: 1.7;
 }
 
+.faq-category {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-category-title {
+  margin: 0;
+  color: #3d7f2f;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #e8f5e9;
+}
+
 .support-section {
   align-items: stretch;
   overflow: hidden;

@@ -192,13 +192,13 @@ export class LearningService {
   completeTutorial(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
+    this.tutorialProgressSignal.set(new TutorialProgress({ id: 0, userId: this.currentUserId(), currentStep: 7, totalSteps: 7, completed: true, skipped: false, completedAt: new Date().toISOString() }));
     this.learningApi.completeTutorial(this.currentUserId()).subscribe({
       next: (progress) => {
         this.tutorialProgressSignal.set(progress);
         this.loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to complete tutorial'));
         this.loadingSignal.set(false);
       },
     });
@@ -207,13 +207,13 @@ export class LearningService {
   skipTutorial(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
+    this.tutorialProgressSignal.set(new TutorialProgress({ id: 0, userId: this.currentUserId(), currentStep: 0, totalSteps: 7, completed: true, skipped: true, completedAt: new Date().toISOString() }));
     this.learningApi.skipTutorial(this.currentUserId()).subscribe({
       next: (progress) => {
         this.tutorialProgressSignal.set(progress);
         this.loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to skip tutorial'));
         this.loadingSignal.set(false);
       },
     });
