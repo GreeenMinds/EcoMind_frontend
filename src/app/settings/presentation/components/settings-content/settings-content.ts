@@ -15,6 +15,11 @@ interface NotificationPreferenceOption {
   description: string;
 }
 
+interface FaqOption {
+  question: string;
+  answer: string;
+}
+
 @Component({
   selector: 'app-settings-content',
   imports: [LanguageSwitcher, TranslatePipe],
@@ -67,6 +72,36 @@ export class SettingsContent {
       key: 'general',
       title: 'settings.notifications.options.general.title',
       description: 'settings.notifications.options.general.description',
+    },
+  ];
+  readonly faqOptions: FaqOption[] = [
+    {
+      question: 'settings.faq.questions.offline.question',
+      answer: 'settings.faq.questions.offline.answer',
+    },
+    {
+      question: 'settings.faq.questions.deleteAccount.question',
+      answer: 'settings.faq.questions.deleteAccount.answer',
+    },
+    {
+      question: 'settings.faq.questions.freeActivities.question',
+      answer: 'settings.faq.questions.freeActivities.answer',
+    },
+    {
+      question: 'settings.faq.questions.commitment.question',
+      answer: 'settings.faq.questions.commitment.answer',
+    },
+    {
+      question: 'settings.faq.questions.morePoints.question',
+      answer: 'settings.faq.questions.morePoints.answer',
+    },
+    {
+      question: 'settings.faq.questions.inviteFamily.question',
+      answer: 'settings.faq.questions.inviteFamily.answer',
+    },
+    {
+      question: 'settings.faq.questions.rewards.question',
+      answer: 'settings.faq.questions.rewards.answer',
     },
   ];
 

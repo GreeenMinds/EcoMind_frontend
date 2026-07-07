@@ -142,6 +142,19 @@
       src="/assets/images/support-agent.png"
       [alt]="'settings.support.imageAlt' | translate">
   </section>
+
+  <section class="faq-section" [attr.aria-labelledby]="'settings-faq-title'">
+    <h2 id="settings-faq-title">{{ 'settings.faq.title' | translate }}</h2>
+
+    <div class="faq-list">
+      @for (item of faqOptions; track item.question) {
+        <details class="faq-item">
+          <summary>{{ item.question | translate }}</summary>
+          <p>{{ item.answer | translate }}</p>
+        </details>
+      }
+    </div>
+  </section>
 </section>
 
 @if (deleteAccountConfirmationOpen()) {
