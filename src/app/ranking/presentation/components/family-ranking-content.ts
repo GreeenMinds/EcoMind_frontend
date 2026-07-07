@@ -44,7 +44,7 @@ export class FamilyRankingContent implements OnInit {
   }
 
   getInitials(name: string): string {
-    if (!name) return 'EM';
+    if (!name) return '--';
     return name
       .split(' ')
       .filter(Boolean)
