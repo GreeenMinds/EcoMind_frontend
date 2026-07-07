@@ -66,7 +66,7 @@ export class RankingContent implements OnInit {
   }
 
   getInitials(name: string): string {
-    if (!name) return 'EM';
+    if (!name) return '--';
     return name
       .split(' ')
       .filter(Boolean)

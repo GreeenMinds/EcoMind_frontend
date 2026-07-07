@@ -24,7 +24,7 @@ export class ProfileAvatar implements OnChanges {
 
   getInitials(name: string | undefined): string {
     if (!name) {
-      return 'EM';
+      return '--';
     }
 
     return name
