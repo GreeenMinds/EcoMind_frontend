@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { IamService } from '../../../../iam/application/iam.service';
+import { IamService } from '../../../application/iam.service';
 
 @Component({
   selector: 'app-forgot-password',

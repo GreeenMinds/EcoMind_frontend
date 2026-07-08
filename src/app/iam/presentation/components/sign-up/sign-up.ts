@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { IamService } from '../../../../iam/application/iam.service';
+import { IamService } from '../../../application/iam.service';
 import { environment } from '../../../../../environments/environment';
 
 interface SignUpCommunity {
