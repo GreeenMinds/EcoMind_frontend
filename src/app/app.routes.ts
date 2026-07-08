@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { ForgotPassword } from './auth/presentation/components/forgot-password/forgot-password';
-import { SignIn } from './auth/presentation/components/sign-in/sign-in';
-import { SignUp } from './auth/presentation/components/sign-up/sign-up';
+import { ForgotPassword } from './iam/presentation/components/forgot-password/forgot-password';
+import { SignIn } from './iam/presentation/components/sign-in/sign-in';
+import { SignUp } from './iam/presentation/components/sign-up/sign-up';
 import { anonymousOnlyGuard, iamGuard } from './iam/infrastructure/iam.guard';
 import { ResetPassword } from './iam/presentation/components/reset-password/reset-password';
 import { SettingsContent } from './settings/presentation/components/settings-content/settings-content';

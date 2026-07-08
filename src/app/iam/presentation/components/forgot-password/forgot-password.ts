@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../application/auth.service';
+import { IamService } from '../../../application/iam.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,7 +11,7 @@ import { AuthService } from '../../../application/auth.service';
   styleUrl: '../auth-page.css',
 })
 export class ForgotPassword {
-  private readonly authService = inject(AuthService);
+  private readonly iamService = inject(IamService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
 
@@ -33,7 +33,7 @@ export class ForgotPassword {
     this.statusMessage.set('');
     this.errorMessage.set('');
 
-    this.authService
+    this.iamService
       .recoverPassword(this.form.getRawValue().email)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

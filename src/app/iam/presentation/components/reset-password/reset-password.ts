@@ -8,7 +8,7 @@ import { IamService } from '../../../application/iam.service';
   selector: 'app-reset-password',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './reset-password.html',
-  styleUrl: '../../../../auth/presentation/components/auth-page.css',
+  styleUrl: '../auth-page.css',
 })
 export class ResetPassword {
   private readonly iamService = inject(IamService);
