@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../application/auth.service';
+import { IamService } from '../../../../iam/application/iam.service';
 import { environment } from '../../../../../environments/environment';
 
 interface SignUpCommunity {
@@ -20,7 +20,7 @@ interface SignUpCommunity {
   styleUrl: '../auth-page.css',
 })
 export class SignUp {
-  private readonly authService = inject(AuthService);
+  private readonly iamService = inject(IamService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly http = inject(HttpClient);
@@ -57,7 +57,7 @@ export class SignUp {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    this.authService
+    this.iamService
       .signUp({
         name,
         email,
@@ -100,7 +100,7 @@ export class SignUp {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    this.authService
+    this.iamService
       .signInWithProvider(provider)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

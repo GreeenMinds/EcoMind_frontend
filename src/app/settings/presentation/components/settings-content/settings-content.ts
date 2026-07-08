@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuthService } from '../../../../auth/application/auth.service';
+import { IamService } from '../../../../iam/application/iam.service';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import {
   NotificationPreferenceKey,
@@ -27,7 +27,7 @@ interface FaqOption {
   styleUrl: './settings-content.css',
 })
 export class SettingsContent {
-  private readonly authService = inject(AuthService);
+  private readonly iamService = inject(IamService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notificationPreferences = inject(NotificationPreferencesService);
   private readonly router = inject(Router);
@@ -122,7 +122,7 @@ export class SettingsContent {
   }
 
   closeAccount(): void {
-    this.authService.logout();
+    this.iamService.logout();
     void this.router.navigateByUrl('/sign-in');
   }
 
@@ -150,7 +150,7 @@ export class SettingsContent {
     }
 
     this.deleteAccountInProgress.set(true);
-    this.authService
+    this.iamService
       .deleteAccountFacade()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
