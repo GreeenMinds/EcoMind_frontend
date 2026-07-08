@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../application/auth.service';
+import { IamService } from '../../../../iam/application/iam.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -11,7 +11,7 @@ import { AuthService } from '../../../application/auth.service';
   styleUrl: '../auth-page.css',
 })
 export class SignIn {
-  private readonly authService = inject(AuthService);
+  private readonly iamService = inject(IamService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -34,7 +34,7 @@ export class SignIn {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    this.authService
+    this.iamService
       .signIn(this.form.getRawValue())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -50,7 +50,7 @@ export class SignIn {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    this.authService
+    this.iamService
       .signInWithProvider(provider)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
