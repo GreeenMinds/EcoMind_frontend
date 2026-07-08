@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "ecomind-app",
     "public": "dist/EcoMind_frontend/browser",
     "ignore": [
       "firebase.json",
